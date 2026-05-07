@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "AI大模型学习/Python/欢迎.md",
+                "file": "AI大模型学习/Python/python_进阶.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "欢迎"
+              "title": "python_进阶"
             }
           }
         ]
@@ -192,10 +192,28 @@
       "obsidian-git:Open Git source control": false
     }
   },
-  "active": "e83158f79f242826",
+  "active": "255cc3a5c8fc71d6",
   "lastOpenFiles": [
-    "未命名 1.base",
     "AI大模型学习/Python/欢迎.md",
+    "AI大模型学习/Python/python_进阶.md",
+    "AI大模型学习/Python/16Linux命令.md",
+    "AI大模型学习/Python/16-1Linux命令.md",
+    "AI大模型学习/Python/15Matplotlib.md",
+    "AI大模型学习/Python/14Pandas.md",
+    "AI大模型学习/Python/13NunPy.md",
+    "AI大模型学习/Python/12PyRedis模块.md",
+    "AI大模型学习/Python/11PyMySQL模块.md",
+    "AI大模型学习/Python/10MySQL数据库.md",
+    "AI大模型学习/Python/09正则表达式.md",
+    "AI大模型学习/Python/08迭代器&生成器&协程.md",
+    "AI大模型学习/Python/07线程.md",
+    "AI大模型学习/Python/06进程.md",
+    "AI大模型学习/Python/05深浅拷贝.md",
+    "AI大模型学习/Python/04网络编程.md",
+    "AI大模型学习/Python/03闭包和装饰器.md",
+    "AI大模型学习/Python/02面向对象高级.md",
+    "AI大模型学习/Python/01面向对象基础.md",
+    "未命名 1.base",
     "AI大模型学习/Python",
     "未命名.base",
     "AI大模型学习"
