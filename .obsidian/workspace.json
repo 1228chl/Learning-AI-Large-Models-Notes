@@ -195,8 +195,10 @@
       "markdown-importer:打开 Markdown 格式转换器": false
     }
   },
-  "active": "e83158f79f242826",
+  "active": "a73ebf785a6e6ac6",
   "lastOpenFiles": [
+    "README.md",
+    "LICENSE",
     "AI大模型学习/Linux/16Linux命令.md",
     "AI大模型学习/提示词工程/提示词工程.md",
     "AI大模型学习/Conda/Conda基础命令.md",
@@ -229,9 +231,7 @@
     "Excalidraw/Drawing 2026-05-08 09.18.46.excalidraw.md",
     "Excalidraw",
     "AI大模型学习/Python/欢迎.md",
-    "创建链接.md",
     "未命名 1.base",
-    "AI大模型学习/Python",
-    "未命名.base"
+    "AI大模型学习/Python"
   ]
 }
