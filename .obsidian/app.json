@@ -2,5 +2,7 @@
   "promptDelete": true,
   "autoPairMarkdown": true,
   "propertiesInDocument": "visible",
-  "foldHeading": true
+  "foldHeading": true,
+  "showLineNumber": false,
+  "rightToLeft": false
 }

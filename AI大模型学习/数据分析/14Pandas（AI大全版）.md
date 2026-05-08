@@ -1,25 +1,13 @@
-好的，我将按照你提供的 NumPy 笔记风格（标题层级、代码块、图片占位符、学习目标、小结等）来生成 **Pandas 学习笔记**。由于内容较多，我会先输出前几个主要部分，然后你可以继续要求后续部分。
-
-下面是 **第一部分**。
-
----
-
-# Pandas
-
 # 一、Pandas优势
 
 ## 学习目标
 
 - 目标
-  - 了解 Pandas 与 NumPy 的区别
-  - 知道 Pandas 的核心数据结构：Series 与 DataFrame
-  - 理解 Pandas 在数据处理和分析中的优势
-
----
+    - 了解 Pandas 与 NumPy 的区别
+    - 知道 Pandas 的核心数据结构：Series 与 DataFrame
+    - 理解 Pandas 在数据处理和分析中的优势
 
 ## 1 Pandas 介绍
-
-![Pandas](./images/pandas.png)
 
 **Pandas** 是一个基于 NumPy 构建的开源 Python 数据分析库，提供了**高效、灵活且表达性强的数据结构**，专门用于**数据清洗、转换、分析和可视化**。
 

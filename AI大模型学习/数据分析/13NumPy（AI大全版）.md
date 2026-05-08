@@ -121,7 +121,7 @@ fromiter = np.fromiter(range(5), dtype=int)                # [0,1,2,3,4]
 ```python
 import numpy as np
 arr = np.array([[1, 2, 3],
-                [4, 5, 6]])
+            [4, 5, 6]])
 ```
 
 | 属性                    | 说明                             | 示例输出                         |
@@ -670,6 +670,13 @@ B = np.ones((2, 4))
 # A + B  会抛出 ValueError: operands could not be broadcast together
 # 因为维度 3 != 2 且没有一个为 1
 ```
+>这是因为 NumPy 的广播机制（broadcasting）规则不满足。广播允许两个形状不同数组进行运算，但必须满足：
+>从尾部（最后一个维度）开始向前对齐，每个维度上的长度要么相等，要么其中一个为 1，否则无法广播。
+>对于 `A.shape = (3, 4)`，`B.shape = (2, 4)`：
+> - 尾部维度：`4` 和 `4` → 相等 ✅
+> - 向前一个维度：`3` 和 `2` → 不相等，并且两个都不是 1 ❌
+>
+>因此广播失败，抛出 `ValueError: operands could not be broadcast together`。
 
 #### 手动广播：`np.broadcast_to`
 
