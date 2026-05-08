@@ -1,1 +1,6 @@
-{}
+{
+  "promptDelete": true,
+  "autoPairMarkdown": true,
+  "propertiesInDocument": "visible",
+  "foldHeading": true
+}
