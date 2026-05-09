@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "AI大模型学习/Python/python_进阶.md",
+                "file": "AI大模型学习/数据分析/13NumPy（AI大全版）.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "python_进阶"
+              "title": "13NumPy（AI大全版）"
             }
           },
           {
@@ -31,8 +31,7 @@
               "title": "关系图谱"
             }
           }
-        ],
-        "currentTab": 1
+        ]
       }
     ],
     "direction": "vertical"
@@ -64,7 +63,7 @@
             "state": {
               "type": "search",
               "state": {
-                "query": "tag:#基础",
+                "query": "tag:#sql",
                 "matchingCase": false,
                 "explainSearch": false,
                 "collapseAll": false,
@@ -207,11 +206,17 @@
       "templater-obsidian:Templater": false
     }
   },
-  "active": "e83158f79f242826",
+  "active": "ce350781caf40b13",
   "lastOpenFiles": [
-    "AI大模型学习/Python/09正则表达式.md",
+    "AI大模型学习/数据分析/13-1NumPy模块（课堂版）.md",
+    "AI大模型学习/提示词工程/提示词工程.md",
+    "AI大模型学习/Conda/Conda基础命令.md",
+    "AI大模型学习/SQL/12PyRedis模块.md",
+    "AI大模型学习/SQL/11PyMySQL模块.md",
+    "AI大模型学习/SQL/10MySQL数据库.md",
     "AI大模型学习/Python/01面向对象基础.md",
     "AI大模型学习/Python/python_进阶.md",
+    "AI大模型学习/Python/09正则表达式.md",
     "AI大模型学习/Python/08迭代器&生成器&协程.md",
     "AI大模型学习/Python/07线程.md",
     "AI大模型学习/Python/06进程.md",
@@ -221,17 +226,11 @@
     "AI大模型学习/Python/02面向对象高级.md",
     "Templates/Note_Templater.md",
     "AI大模型学习/未命名.md",
-    "AI大模型学习/数据分析/13-1NumPy模块（课堂版）.md",
     "Templates",
     "新建文件夹",
     "AI大模型学习/Linux/16Linux命令.md",
     "AI大模型学习/Linux/16-1Linux命令（课堂版）.md",
-    "AI大模型学习/Conda/Conda基础命令.md",
-    "AI大模型学习/提示词工程/提示词工程.md",
     "README.md",
-    "AI大模型学习/SQL/12PyRedis模块.md",
-    "AI大模型学习/SQL/11PyMySQL模块.md",
-    "AI大模型学习/SQL/10MySQL数据库.md",
     "AI大模型学习/数据分析/13NumPy（AI大全版）.md",
     "AI大模型学习/数据分析/14-1Pandas模块（课堂版）.md",
     "AI大模型学习/数据分析/14Pandas（AI大全版）.md",
