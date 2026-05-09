@@ -1091,6 +1091,7 @@ result = df_left.join(df_right2.set_index('key'), on=None)  # 需要先设置索
 ### 2.1 分组聚合的基本流程
 
 **拆分-应用-组合**（Split-Apply-Combine）：
+
 1. **split**：根据一个或多个键将数据拆分为多个组
 2. **apply**：对每个组应用函数（聚合、转换、过滤）
 3. **combine**：将结果组合为新的数据结构
@@ -1843,4 +1844,3 @@ result.to_parquet('sales_agg.parquet')   # 更高效的保存格式
   - 与 NumPy、Scikit-learn 等库无缝集成
 
 ---
-

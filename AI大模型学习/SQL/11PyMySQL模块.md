@@ -5,6 +5,7 @@
 PyMySQL 是一个纯 Python 实现的 MySQL 客户端库，用于在 Python 程序中连接和操作 MySQL 数据库。它完全兼容 Python DB API 2.0 规范。
 
 **适用场景：**
+
 - 批量数据插入/更新（例如 10 万条数据）
 - 自动化数据报表生成
 - Web 应用后端数据持久化
@@ -25,6 +26,7 @@ pip install pymysql -i https://pypi.tuna.tsinghua.edu.cn/simple/
 ```
 
 验证安装：
+
 ```python
 import pymysql
 print(pymysql.__version__)   # 输出版本号，例如 1.0.2
@@ -263,6 +265,7 @@ cursor.execute(sql)
 ```
 
 **攻击示例：**
+
 - 用户名：任意（如 `admin`）
 - 密码输入：`' or 1=1 or '`  
   实际执行 SQL：`SELECT * FROM user WHERE user='admin' AND pwd='' or 1=1 or ''`  
@@ -394,6 +397,7 @@ PASSWORD = os.getenv("MYSQL_PASSWORD")
 | 事务控制 | `commit()` / `rollback()`     | -               | 配合 try-except 使用 |
 
 **关键记忆点：**
+
 - 六步法：导包 → 连库 → 建游标 → 执行SQL → 关游标 → 关连接
 - 增删改必须 `commit()`
 - 永远使用参数化查询防注入

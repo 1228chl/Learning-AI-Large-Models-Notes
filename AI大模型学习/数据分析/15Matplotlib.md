@@ -1,5 +1,3 @@
-
-
 # Matplotlib
 
 # 一、Matplotlib 基础与快速绘图
@@ -1086,4 +1084,3 @@ plt.rcParams['axes.prop_cycle'] = cycler(color=['r', 'g', 'b', 'c', 'm', 'y'])
 掌握以上内容，你已具备使用 Matplotlib 进行专业数据可视化的能力。
 
 ---
-

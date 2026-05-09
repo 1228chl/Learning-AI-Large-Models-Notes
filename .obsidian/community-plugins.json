@@ -1,5 +1,10 @@
 [
   "obsidian-git",
   "editing-toolbar",
-  "custom-font-loader"
+  "custom-font-loader",
+  "obsidian-excalidraw-plugin",
+  "obsidian-linter",
+  "floating-toc",
+  "obsidian-minimal-settings",
+  "templater-obsidian"
 ]

@@ -17,6 +17,7 @@
 - 相比 Python 列表，ndarray 在内存占用、执行速度（向量化操作）上更优。
 
 导入方式：
+
 ```python
 import numpy as np
 ```
@@ -118,6 +119,7 @@ fromiter = np.fromiter(range(5), dtype=int)                # [0,1,2,3,4]
 ### 2.1 数组的基本属性
 
 创建一个示例数组：
+
 ```python
 import numpy as np
 arr = np.array([[1, 2, 3],
@@ -137,6 +139,7 @@ arr = np.array([[1, 2, 3],
 | `arr.flags`             | 内存布局信息（C连续/F连续等）    | 查看 `C_CONTIGUOUS` 等           |
 
 代码演示：
+
 ```python
 print("shape:", arr.shape)          # (2, 3)
 print("ndim:", arr.ndim)            # 2
@@ -267,6 +270,7 @@ squeezed = np.squeeze(arr, axis=(0,2))   # shape (2,3)
 ### 2.4 数组连接与堆叠（部分基础，详细在第6部分）
 
 简单示例：
+
 ```python
 a = np.array([[1,2],[3,4]])
 b = np.array([[5,6],[7,8]])
@@ -370,6 +374,7 @@ print(arr)   # [0,99,2,3,4]  原数组被改变
 ```
 
 如果需要独立副本，使用 `.copy()`：
+
 ```python
 copy_slice = arr[1:4].copy()
 copy_slice[0] = 100
@@ -670,6 +675,7 @@ B = np.ones((2, 4))
 # A + B  会抛出 ValueError: operands could not be broadcast together
 # 因为维度 3 != 2 且没有一个为 1
 ```
+
 >这是因为 NumPy 的广播机制（broadcasting）规则不满足。广播允许两个形状不同数组进行运算，但必须满足：
 >从尾部（最后一个维度）开始向前对齐，每个维度上的长度要么相等，要么其中一个为 1，否则无法广播。
 >对于 `A.shape = (3, 4)`，`B.shape = (2, 4)`：
@@ -1132,6 +1138,7 @@ print(matrix_rank(A))  # 2
 ### 5.3 随机数生成（Random）
 
 NumPy 有两个随机数接口：
+
 - **旧版** (`np.random.*`)：仍可用，但推荐使用新版 `Generator` (NumPy 1.17+)。
 - **新版** (`np.random.default_rng`)：更灵活、更快的随机数生成器。
 
@@ -1196,6 +1203,7 @@ np.random.shuffle(arr)
 ```
 
 **区别总结**：
+
 - 新版使用 `rng = np.random.default_rng(seed)`，每个生成器独立，线程安全。
 - 新版函数名略有不同（如 `integers` 代替 `randint`， `random` 代替 `rand`）。
 - 新版性能更好，随机质量更高。
@@ -1249,6 +1257,7 @@ print(rng2.random())   # 0.773956048555963
 | `zipf`                 | Zipf 分布                          |
 
 使用示例：
+
 ```python
 rng = np.random.default_rng()
 samples = rng.poisson(lam=3, size=1000)
@@ -1945,6 +1954,7 @@ print(interface['typestr'])
 掌握这些内容，足以应对绝大多数数据分析、科学计算和机器学习数据预处理的需求。
 
 如果需要深入学习，可以进一步探索：
+
 - `numpy.lib.stride_tricks` 中的滑动窗口技巧  
 - `numpy.polynomial` 多项式拟合  
 - `numpy.fft` 快速傅里叶变换  

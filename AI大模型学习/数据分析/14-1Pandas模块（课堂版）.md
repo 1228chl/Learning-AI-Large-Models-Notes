@@ -30,6 +30,7 @@ pip install -i https://pypi.tuna.tsinghua.edu.cn/simple pandas
 > **注意**：Anaconda 已预装 Pandas，可直接使用 Jupyter Notebook。
 
 ---
+
 ## 二、Pandas 核心数据结构与数据类型
 
 ### 2.1 数据结构层级
@@ -46,7 +47,6 @@ DataFrame
     ├── 列名
     └── 列值（Series）
 ```
-
 
 ---
 
@@ -71,7 +71,6 @@ s3 = pd.Series({'A':1, 'B':2, 'C':3})
 s4 = pd.Series(np.arange(5))
 ```
 
-
 ---
 
 #### 2.2.2 Series 属性与索引
@@ -82,7 +81,6 @@ print(s.index)      # Index(['x', 'y', 'z'], dtype='object')
 print(s.values)     # [10 20 30]
 print(s['y'])       # 20
 ```
-
 
 ---
 
@@ -101,7 +99,6 @@ data = {
 df = pd.DataFrame(data)
 ```
 
-
 **方式二：列表 + 元组**
 
 ```Python
@@ -113,7 +110,6 @@ data = [
 df = pd.DataFrame(data, columns=['日期', '温度', '湿度'], index=['row1','row2','row3'])
 ```
 
-
 **方式三：NumPy 数组 + 指定行列索引**
 
 ```Python
@@ -123,8 +119,8 @@ students = [f'同学{i}' for i in range(10)]
 df = pd.DataFrame(score, columns=subjects, index=students)
 ```
 
-
 ---
+
 #### 2.3.2 DataFrame 常用属性
 
 | 属性        | 说明          | 示例                     |
@@ -135,7 +131,6 @@ df = pd.DataFrame(score, columns=subjects, index=students)
 | `values`  | 底层 NumPy 数组 | `array([[92,55,...]])` |
 | `T`       | 转置（行列互换）    | `df.T`                 |
 | `dtypes`  | 各列数据类型      | `温度 int64`             |
-
 
 ---
 
@@ -158,7 +153,6 @@ df = pd.DataFrame(score, columns=subjects, index=students)
 df.index = ['新索引1', '新索引2', ...]   # 长度必须一致
 ```
 
-
 **重置索引**：
 
 ```Python
@@ -166,13 +160,11 @@ df.reset_index(drop=False)   # drop=False 保留原索引为新列
 df.reset_index(drop=True)    # 丢弃原索引，生成默认整数索引
 ```
 
-
 **将某一列设为新索引**：
 
 ```Python
 df.set_index('列名', drop=True)   # drop=True 删除该列
 ```
-
 
 ---
 
@@ -190,19 +182,17 @@ df.set_index('列名', drop=True)   # drop=True 删除该列
 
 > **拓展**：`category` 类型可节省内存，适合取值有限的列（如性别、星期几）。
 
-
 ---
+
 ## 三、Pandas 基本数据操作
 
 ### 3.1 索引取值（三种方式）
-
 
 **直接索引**（先列后行）：
 
 ```Python
 df['列名']['行标签']        # 先列后行，不推荐，易混淆
 ```
-
 
 **loc 索引**（基于标签，先行后列）：
 
@@ -211,7 +201,6 @@ df.loc['行标签', '列名']                # 单个值
 df.loc['行标签1':'行标签2', '列名']     # 切片（包含端点）
 ```
 
-  
 **iloc 索引**（基于整数下标，先行后列）：
 
 ```Python
@@ -219,15 +208,14 @@ df.iloc[0, 1]                # 第一行第二列
 df.iloc[:3, :5]              # 前3行，前5列
 ```
 
-
 ---
+
 ### 3.2 赋值操作
 
 ```Python
 df['新列'] = 值                  # 新增或修改整列
 df.列名 = 值                     # 等价形式（列名不能有空格）
 ```
-
 
 ---
 
@@ -240,13 +228,11 @@ df.sort_values(by='列名', ascending=False)   # 降序
 df.sort_values(by=['列1', '列2'])             # 多列排序
 ```
 
-
 **按索引排序**：
 
 ```Python
 df.sort_index(ascending=True)
 ```
-
 
 **Series 排序**：
 
@@ -255,8 +241,8 @@ series.sort_values(ascending=False)
 series.sort_index()
 ```
 
-
 ---
+
 ## 四、DataFrame 运算
 
 ### 4.1 算术运算
@@ -267,8 +253,8 @@ df['列名'].sub(5)     # 每个元素 -5
 # 也可直接使用运算符：df['列名'] + 10
 ```
 
-
 ---
+
 ### 4.2 逻辑筛选
 
 **使用逻辑运算符**：
@@ -281,20 +267,17 @@ df[df['open'] > 23]
 df[(df['open'] > 23) & (df['open'] < 24)]
 ```
 
-
 **使用查询函数** **`query()`**：
 
 ```Python
 df.query("open > 23 and open < 24")
 ```
 
-
 **使用** **`isin()`**：
 
 ```Python
 df[df['open'].isin([23.53, 23.85])]
 ```
-
 
 ### 4.3 统计运算
 
@@ -312,9 +295,7 @@ df[df['open'].isin([23.53, 23.85])]
 | `idxmax()` | 最大值所在索引 |
 | `idxmin()` | 最小值所在索引 |
 
-
 **指定轴**：`axis=0`（默认）表示跨行（列方向），`axis=1` 表示跨列（行方向）。
-
 
 ```Python
 df.max(axis=0)          # 每列最大值
@@ -337,6 +318,7 @@ df['p_change'].cumsum()    # 按时间累积收益率
 > **拓展**：累积统计常用于分析趋势，例如股票累计收益、销售额累计等。
 
 ---
+
 ### 4.4 自定义运算 `apply()`
 
 ```Python
@@ -404,6 +386,7 @@ df = pd.read_sql('SELECT * FROM table_name', engine)
 ```
 
 ---
+
 ## 六、高级处理 – 缺失值处理
 
 ### 6.1 缺失值检测
@@ -448,6 +431,7 @@ df.replace('?', np.nan, inplace=True)
 ```
 
 ---
+
 ## 七、高级处理 – 数据合并
 
 ### 7.1 `concat` – 沿轴拼接
@@ -478,6 +462,7 @@ pd.merge(left, right, left_on='左键', right_on='右键')
 > **拓展**：熟悉 SQL 的同学可以对比理解，Pandas 的 merge 非常灵活。
 
 ---
+
 ## 八、高级处理 – 数据分组聚合
 
 ### 8.1 `groupby` 基本用法
@@ -518,6 +503,7 @@ df.groupby('city').filter(lambda x: x['revenue'].mean() > 200)
 > **拓展**：分组后还可用 `transform()` 将聚合结果广播回原 DataFrame，常用于特征工程。
 
 ---
+
 ## 九、高级处理 – 交叉表与透视表
 
 ### 9.1 交叉表 `crosstab`
@@ -544,7 +530,6 @@ pd.pivot_table(df, values='金额', index='性别', columns='购买', aggfunc='m
 df.pivot_table(index='性别', columns='购买', values='金额', aggfunc='mean')
 ```
 
-
 **常用参数**：
 
 - `values`：需要聚合的数值列
@@ -559,11 +544,7 @@ df.pivot_table(index='性别', columns='购买', values='金额', aggfunc='mean'
 > pd.crosstab(df['week'], df['涨跌'])
 > ```
 
-  
-
 ---
-
-  
 
 ## 十、总结与学习建议
 
@@ -579,7 +560,6 @@ df.pivot_table(index='性别', columns='购买', values='金额', aggfunc='mean'
 | 透视    | crosstab（频数）、pivot_table（聚合）                      |
 | 文件 IO | read_csv/to_csv、read_json/to_json、read_sql/to_sql |
 
-
 ---
 
 ### 10.2 学习建议
@@ -588,4 +568,5 @@ df.pivot_table(index='性别', columns='购买', values='金额', aggfunc='mean'
 2. **对比 SQL**：将 groupby、merge 和 SQL 语句对应理解。
 3. **善用文档**：`help(pd.DataFrame.merge)` 或访问 [Pandas 官方文档](https://pandas.pydata.org/)。
 4. **性能优化**：大数据集时注意使用 `category` 类型、避免循环、使用 `inplace=False` 时注意内存。
+
 ---
