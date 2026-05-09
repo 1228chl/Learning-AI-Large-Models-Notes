@@ -30,11 +30,15 @@
 import numpy as np
 ```
 
+---
+
 ## 1.2 ndarray 的核心特点
 
 - 同一数组中所有元素的数据类型**相同**（dtype 一致）。
 - 支持**向量化运算**：对数组整体操作，无需显式循环。
 - 采用**连续内存**存储，访问效率高。
+
+---
 
 ## 1.3 创建数组的详细方法
 
@@ -54,6 +58,8 @@ arr3 = np.array([1, 2, 3], dtype=np.float32)   # 结果为 [1., 2., 3.]
 arr4 = np.array([1, 2, 3], copy=True)          # 强制复制
 ```
 
+---
+
 ### （2）全零、全一、未初始化、填充常数
 
 ```python
@@ -64,6 +70,8 @@ ones = np.ones((2, 3))            # 全1
 empty = np.empty((2, 2))          # 未初始化（内存中的随机值），速度最快
 full = np.full((3, 2), 7)         # 填充为7，形状 3x2
 ```
+
+---
 
 ### （3）等差序列 & 等差数列
 
@@ -80,6 +88,8 @@ lin2, step = np.linspace(0,1,5, retstep=True)  # step = 0.25
 log1 = np.logspace(0, 2, 3)       # [1., 10., 100.]  即 10^0,10^1,10^2
 ```
 
+---
+
 ### （4）单位矩阵与对角矩阵
 
 ```python
@@ -93,6 +103,8 @@ diag1 = np.diag([1, 2, 3])        # 3x3对角阵，对角线为1,2,3
 diag2 = np.diag([1, 2, 3], k=1)   # 偏移对角线
 ```
 
+---
+
 ### （5）使用 `np.fromfunction` 通过函数创建
 
 ```python
@@ -101,6 +113,8 @@ def f(i, j):
 arr = np.fromfunction(f, (3, 4), dtype=int)   # 生成3x4矩阵，每个位置值 = i+j
 ```
 
+---
+
 ### （6）随机数数组（详细在后面的随机数部分展开）
 
 ```python
@@ -108,6 +122,8 @@ np.random.rand(2, 3)          # 均匀分布 [0,1)
 np.random.randn(2, 3)         # 标准正态分布
 np.random.randint(0, 10, (2, 3))  # 整数随机
 ```
+
+---
 
 ## 1.4 常用辅助函数
 
@@ -158,6 +174,8 @@ print("nbytes:", arr.nbytes)        # 48
 print("T:\n", arr.T)                # [[1,4],[2,5],[3,6]]
 ```
 
+---
+
 ## 2.2 数据类型（dtype）详解
 
 NumPy 支持比 Python 更丰富的数据类型，通常以 `类型名+位数` 命名。
@@ -195,6 +213,8 @@ dt = np.dtype('<i4')    # little-endian
 # 可通过 arr.byteswap() 交换字节序
 ```
 
+---
+
 ## 2.3 形状操作
 
 ### （1）查看形状
@@ -203,6 +223,8 @@ dt = np.dtype('<i4')    # little-endian
 arr = np.arange(12)      # shape (12,)
 arr.shape                # (12,)
 ```
+
+---
 
 ### （2）改变形状：`reshape`、`resize`
 
@@ -224,6 +246,8 @@ arr.resize(2, 6)               # arr 形状变为 (2,6)
 b = np.resize(np.arange(4), (3, 3))   # 重复 [0,1,2,3] 填充
 ```
 
+---
+
 ### （3）展平：`flatten` vs `ravel`
 
 ```python
@@ -242,6 +266,8 @@ print(arr[0,0])          # 变为 88
 arr.ravel(order='F')
 ```
 
+---
+
 ### （4）转置与轴交换
 
 ```python
@@ -255,6 +281,8 @@ transposed = arr3d.transpose(1, 0, 2)   # 原轴(0,1,2) -> (1,0,2)
 # 更简单的轴交换：swapaxes
 swapped = arr3d.swapaxes(0, 1)          # 交换第0和第1轴
 ```
+
+---
 
 ### （5）增加或删除维度
 
@@ -274,6 +302,8 @@ e = np.squeeze(b)                 # 变回 (3,)
 arr = np.zeros((1,2,1,3))
 squeezed = np.squeeze(arr, axis=(0,2))   # shape (2,3)
 ```
+
+---
 
 ## 2.4 数组连接与堆叠（部分基础，详细在第6部分）
 
@@ -333,6 +363,8 @@ print(arr2d[1])        # [4,5,6]
 print(arr2d[:, 0])     # [1,4,7]
 ```
 
+---
+
 ## 3.2 切片（slice）
 
 语法：`start:stop:step`，与列表一致，但**多维数组每维可单独切片**。
@@ -389,6 +421,8 @@ copy_slice[0] = 100
 print(arr)   # 未改变
 ```
 
+---
+
 ## 3.3 整数数组索引（花式索引，Fancy Indexing）
 
 使用整数列表或数组作为索引，返回**副本**（不是视图）。
@@ -433,6 +467,8 @@ result = arr2d[rows, cols] # shape (2,2)
 # 取第0行和第2行的第1~3列
 arr2d[[0,2], 1:4]   # shape (2,3)
 ```
+
+---
 
 ## 3.4 布尔索引（Boolean Indexing）
 
@@ -486,6 +522,8 @@ arr2d[arr2d > 0.5] = 1
 arr2d[arr2d <= 0.5] = 0
 ```
 
+---
+
 ## 3.5 使用 `np.where` 进行条件选择
 
 `where(condition, x, y)` 返回满足 condition 的位置取 x，否则取 y。类似三元运算符。
@@ -504,6 +542,8 @@ indices = np.where(arr > 3)           # (array([3,4]),)
 arr2d = np.array([[1,2],[3,4]])
 rows, cols = np.where(arr2d > 2)      # rows=[0,1], cols=[1,1]
 ```
+
+---
 
 ## 3.6 其他高级索引技巧
 
@@ -535,6 +575,8 @@ print(arr[rows])                  # 取 (0,1),(0,3),(2,1),(2,3)
 # [[1,3],
 #  [9,11]]
 ```
+
+---
 
 ## 3.7 索引与视图/副本总结
 
@@ -600,6 +642,8 @@ print(np.negative(a))
 
 **运算符优先级**与 Python 一致，建议使用括号明确意图。
 
+---
+
 ## 4.2 比较运算（返回布尔数组）
 
 逐元素比较，返回布尔型数组。
@@ -615,6 +659,8 @@ print(a <= b)       # [ True  True False  True]
 print(a == b)       # [False  True False  True]
 print(a != b)       # [ True False  True False]
 ```
+
+---
 
 ## 4.3 逻辑运算组合
 
@@ -635,6 +681,8 @@ print(np.logical_not(mask1))
 ```
 
 **注意**：不能使用 `and`、`or`、`not`（它们试图把整个数组当作一个布尔值，会抛出 `ValueError`）。
+
+---
 
 ## 4.4 广播机制（Broadcasting）
 
@@ -710,6 +758,8 @@ print(broadcasted)
 from numpy import broadcast_shapes
 shape = broadcast_shapes((3,1), (5,))   # 返回 (3,5)
 ```
+
+---
 
 ## 4.5 通用函数（ufunc）
 
@@ -800,6 +850,8 @@ b = np.array([4,5,6])
 print(ufunc_my(a, b))   # 返回 object 数组，可 astype(float)
 ```
 
+---
+
 ## 4.6 聚合函数（Aggregations）
 
 虽然是单独的函数，但许多底层也是 ufunc 的 `reduce`。
@@ -838,6 +890,8 @@ print(np.argmax(arr, axis=1))  # [2,2] 每行最大值的列索引
 
 **注意**：`np.median` 和 `np.percentile` 在 NumPy 中不是 ufunc，但也可指定轴。
 
+---
+
 ## 4.7 向量化操作 vs Python 循环
 
 向量化（使用 ufunc/聚合）比显式 Python 循环快 1~3 个数量级。
@@ -854,6 +908,8 @@ total = np.sum(a)
 ```
 
 **基本原则**：尽量避免对 ndarray 进行 Python 级循环，优先使用 NumPy 内置的向量化操作。
+
+---
 
 ## 4.8 高级 ufunc 技巧
 
@@ -892,6 +948,8 @@ print(np.isclose(a,b))  # True，默认相对容差 1e-8
 
 NumPy 提供了大量统计函数，可以计算整个数组或沿指定轴（`axis` 参数）的统计量。
 
+---
+
 ### 5.1.1 基本统计函数
 
 ```python
@@ -929,6 +987,8 @@ print(np.minimum(arr, 5))      # 逐元素比较取小
 print(np.maximum(arr, 5))      # 逐元素比较取大
 ```
 
+---
+
 ### 5.1.2 沿轴统计（axis 参数）
 
 `axis=0` 表示沿着行方向（跨行），结果形状为 `(列数,)`；`axis=1` 沿着列方向（跨列），结果形状为 `(行数,)`。
@@ -950,6 +1010,8 @@ col_sums = np.sum(arr, axis=0, keepdims=True)   # shape (1,3)
 row_means = np.mean(arr, axis=1, keepdims=True) # shape (2,1)
 ```
 
+---
+
 ### 5.1.3 累计运算
 
 ```python
@@ -963,6 +1025,8 @@ print(np.cumsum(arr, axis=1))    # 沿列累加: [[1,3,6],[4,9,15]]
 # 累计积
 print(np.cumprod(arr, axis=1))   # [[1,2,6],[4,20,120]]
 ```
+
+---
 
 ### 5.1.4 极值索引（argmin / argmax）
 
@@ -981,6 +1045,8 @@ print(np.argmin(arr, axis=0))   # [1,0,1] 每列最小值所在行
 print(np.argmax(arr, axis=1))   # [2,1]   每行最大值所在列
 ```
 
+---
+
 ### 5.1.5 百分位数与分位数
 
 ```python
@@ -996,6 +1062,8 @@ print(np.percentile(arr, [25, 50, 75]))   # [3. 5. 7.]
 print(np.quantile(arr, 0.5))      # 5.0
 ```
 
+---
+
 ### 5.1.6 加权平均
 
 NumPy 没有直接的加权平均函数，但可以用 `np.average`。
@@ -1005,6 +1073,8 @@ arr = np.array([1,2,3,4])
 weights = np.array([0.1, 0.2, 0.3, 0.4])
 print(np.average(arr, weights=weights))   # 加权平均
 ```
+
+---
 
 ### 5.1.7 其他统计函数
 
@@ -1032,6 +1102,8 @@ counts = np.bincount(arr)   # [2,2,1,1] 索引0出现2次，1出现2次...
 
 NumPy 的线性代数模块包含矩阵分解、求逆、行列式、特征值等函数。
 
+---
+
 ### 5.2.1 矩阵乘法
 
 ```python
@@ -1044,6 +1116,8 @@ C2 = A.dot(B)
 C3 = A @ B            # Python 3.5+ 推荐
 print(C3)  # [[19,22],[43,50]]
 ```
+
+---
 
 ### 5.2.2 向量点积与外积
 
@@ -1062,6 +1136,8 @@ print(np.outer(a, b))
 #  [12,15,18]]
 ```
 
+---
+
 ### 5.2.3 矩阵逆与伪逆
 
 ```python
@@ -1076,6 +1152,8 @@ print(A @ A_inv)        # 接近单位阵
 A_pinv = pinv(A)
 ```
 
+---
+
 ### 5.2.4 行列式
 
 ```python
@@ -1083,6 +1161,8 @@ from numpy.linalg import det
 A = np.array([[1,2],[3,4]])
 print(det(A))   # -2.0
 ```
+
+---
 
 ### 5.2.5 线性方程组求解
 
@@ -1097,6 +1177,8 @@ x = solve(A, b)     # 返回解向量
 print(x)            # [2., 3.]  即 x=2, y=3
 ```
 
+---
+
 ### 5.2.6 特征值与特征向量
 
 ```python
@@ -1107,6 +1189,8 @@ eigvals, eigvecs = eig(A)
 print("特征值:", eigvals)       # [-0.37228132  5.37228132]
 print("特征向量:", eigvecs)     # 列向量对应特征值
 ```
+
+---
 
 ### 5.2.7 矩阵范数
 
@@ -1119,6 +1203,8 @@ print(norm(A, ord=1))      # 1-范数 (最大列和)
 print(norm(A, ord=2))      # 2-范数 (最大奇异值)
 print(norm(A, ord=np.inf)) # 无穷范数 (最大行和)
 ```
+
+---
 
 ### 5.2.8 其他线性代数函数
 
@@ -1149,6 +1235,8 @@ NumPy 有两个随机数接口：
 
 - **旧版** (`np.random.*`)：仍可用，但推荐使用新版 `Generator` (NumPy 1.17+)。
 - **新版** (`np.random.default_rng`)：更灵活、更快的随机数生成器。
+
+---
 
 ### 5.3.1 新版随机数生成器（推荐）
 
@@ -1186,6 +1274,8 @@ rng.beta(a=2, b=5, size=10)           # Beta 分布
 rng.gamma(shape=2, scale=1, size=10)  # Gamma 分布
 ```
 
+---
+
 ### 5.3.2 旧版随机数接口（仍常见，但功能有限）
 
 ```python
@@ -1215,6 +1305,8 @@ np.random.shuffle(arr)
 - 新版使用 `rng = np.random.default_rng(seed)`，每个生成器独立，线程安全。
 - 新版函数名略有不同（如 `integers` 代替 `randint`， `random` 代替 `rand`）。
 - 新版性能更好，随机质量更高。
+
+---
 
 ### 5.3.3 可复现性的设置
 
@@ -1279,6 +1371,8 @@ samples = rng.poisson(lam=3, size=1000)
 
 将多个数组沿指定轴合并成一个新数组。注意：除拼接轴外，其他轴的形状必须相同。
 
+---
+
 ### 6.1.1 `np.concatenate` – 通用拼接
 
 ```python
@@ -1300,6 +1394,8 @@ d = np.concatenate((a, b), axis=1)
 #  [3,4,7,8]]
 ```
 
+---
+
 ### 6.1.2 `np.vstack` – 垂直堆叠（axis=0）
 
 ```python
@@ -1314,6 +1410,8 @@ a2 = np.array([[1,2],[3,4]])
 b2 = np.array([[5,6]])
 c2 = np.vstack((a2, b2))       # (3,2)
 ```
+
+---
 
 ### 6.1.3 `np.hstack` – 水平堆叠（axis=1）
 
@@ -1330,6 +1428,8 @@ c2 = np.hstack((a2, b2))       # shape (2,3)
 #  [3,4,6]]
 ```
 
+---
+
 ### 6.1.4 `np.dstack` – 深度堆叠（沿第三轴）
 
 将二维数组沿第三轴（深度方向）堆叠，常用于图像通道合并。
@@ -1340,6 +1440,8 @@ b = np.array([[5,6],[7,8]])
 c = np.dstack((a, b))          # shape (2,2,2)
 # 每个位置 (i,j) 包含 [a[i,j], b[i,j]]
 ```
+
+---
 
 ### 6.1.5 `np.column_stack` / `np.row_stack`
 
@@ -1363,6 +1465,8 @@ c = np.column_stack((a, b))    # shape (3,2)
 
 将数组分割成多个子数组，返回列表。
 
+---
+
 ### 6.2.1 `np.split` – 沿指定轴分割
 
 ```python
@@ -1382,6 +1486,8 @@ parts = np.split(arr, [1,2], axis=0)  # 索引1和2处切割
 parts = np.split(arr, [1,3], axis=1)  # 第1列后、第3列后切割
 ```
 
+---
+
 ### 6.2.2 `np.vsplit` – 垂直分割（axis=0）
 
 等同于 `np.split(..., axis=0)`。
@@ -1391,6 +1497,8 @@ arr = np.arange(12).reshape(3,4)
 top, middle, bottom = np.vsplit(arr, 3)   # 每个 shape (1,4)
 ```
 
+---
+
 ### 6.2.3 `np.hsplit` – 水平分割（axis=1）
 
 ```python
@@ -1398,6 +1506,8 @@ arr = np.arange(12).reshape(3,4)
 left, right = np.hsplit(arr, 2)   # 每个 shape (3,2)
 # 或者指定索引: np.hsplit(arr, [1,3])
 ```
+
+---
 
 ### 6.2.4 `np.array_split` – 允许不等分
 
@@ -1413,6 +1523,8 @@ parts = np.array_split(arr, 3)   # 分成3块，长度可能为 [4,3,3]
 ## 6.3 添加与删除元素
 
 注意：这些函数通常**返回新数组**，原数组不变（除非使用 `resize` 等原地方法）。
+
+---
 
 ### 6.3.1 `np.append` – 将值附加到数组末尾（先展平）
 
@@ -1430,6 +1542,8 @@ new2d = np.append(arr2d, [[5,6]], axis=0)  # 增加一行
 #  [3,4],
 #  [5,6]]
 ```
+
+---
 
 ### 6.3.2 `np.insert` – 沿指定轴插入值
 
@@ -1450,6 +1564,8 @@ new2d = np.insert(arr2d, 0, [5,6], axis=0)
 #  [3,4]]
 ```
 
+---
+
 ### 6.3.3 `np.delete` – 删除子数组
 
 ```python
@@ -1461,6 +1577,8 @@ arr2d = np.array([[1,2,3],[4,5,6],[7,8,9]])
 new2d = np.delete(arr2d, 1, axis=0)  # 删除第1行 -> 剩下两行
 new2d_col = np.delete(arr2d, 1, axis=1)  # 删除第1列
 ```
+
+---
 
 ### 6.3.4 `np.unique` – 去重并返回唯一值
 
@@ -1502,6 +1620,8 @@ col_rep = np.repeat(arr2d, 2, axis=1)
 #  [3,3,4,4]]
 ```
 
+---
+
 ### 6.4.2 `np.tile` – 沿各个方向平铺数组
 
 将数组像砖块一样铺开。
@@ -1521,6 +1641,8 @@ arr1d = np.array([1,2,3])
 tiled = np.tile(arr1d, 2)          # [1,2,3,1,2,3]
 ```
 
+---
+
 ### 6.4.3 区别总结
 
 - `repeat`：重复元素，适合放大内部的粒度。
@@ -1531,6 +1653,8 @@ tiled = np.tile(arr1d, 2)          # [1,2,3,1,2,3]
 ## 6.5 视图（View）与副本（Copy）
 
 理解视图与副本对于内存和性能至关重要。
+
+---
 
 ### 6.5.1 基本概念
 
@@ -1554,12 +1678,16 @@ print(arr[0])            # 仍是原值，未改变
 fancy = arr[[1,2,3]]     # 新数组，不共享数据
 ```
 
+---
+
 ### 6.5.2 检查是否共享内存
 
 ```python
 print(np.may_share_memory(arr, view))     # True
 print(np.may_share_memory(arr, copy_arr)) # False
 ```
+
+---
 
 ### 6.5.3 `np.view` – 显式创建视图（改变 dtype 或形状）
 
@@ -1574,6 +1702,8 @@ print(view_int16)
 reshaped_view = arr.reshape(2,2)  # 视图，共享数据
 ```
 
+---
+
 ### 6.5.4 `np.copy` 与 `np.copyto`
 
 ```python
@@ -1585,11 +1715,15 @@ target = np.empty_like(arr)
 np.copyto(target, arr)
 ```
 
+---
+
 ### 6.5.5 确保副本的常用方法
 
 - 使用 `.copy()` 方法。
 - 使用 `np.array(arr, copy=True)`。
 - 使用花式索引（如 `arr[[0,1]]`）会自动返回副本。
+
+---
 
 ### 6.5.6 内存布局与视图
 
@@ -1623,6 +1757,8 @@ padded = np.pad(arr, pad_width=((1,2), (0,1)), mode='edge')
 # mode 可选：'constant'(常数), 'edge'(边缘复制), 'reflect'(反射), 'symmetric'(对称), 'wrap'(循环) 等
 ```
 
+---
+
 ### 6.6.2 `np.clip` – 将值限制在范围内
 
 已在第四部分提到，补充参数示例：
@@ -1640,6 +1776,8 @@ np.clip(arr, 3, None)     # [3,5,10,20] 无上限
 ## 7.1 结构化数组（Structured Arrays）
 
 结构化数组允许在一个数组中存储**异构数据**（例如：姓名、年龄、成绩），类似于表格或数据库记录。每个元素可以包含多个字段（field），每个字段有独立的名称和数据类型。
+
+---
 
 ### 7.1.1 定义结构化数组的 dtype
 
@@ -1660,6 +1798,8 @@ dt = np.dtype({'names': ['name', 'age', 'weight'],
 # 方式3：逗号分隔字符串（简单类型）
 dt = np.dtype('U10, i4, f8')
 ```
+
+---
 
 ### 7.1.2 创建结构化数组
 
@@ -1683,6 +1823,8 @@ arr2['age'] = ages
 arr2['weight'] = weights
 ```
 
+---
+
 ### 7.1.3 访问字段
 
 ```python
@@ -1698,6 +1840,8 @@ arr['age'][1] = 31
 print(arr[1])           # ('Bob', 31, 70.2)
 ```
 
+---
+
 ### 7.1.4 同时访问记录和字段
 
 ```python
@@ -1710,6 +1854,8 @@ print(record['age'])    # 25
 arr['weight'][:2]       # [55.5 70.2]
 ```
 
+----
+
 ### 7.1.5 嵌套 dtype（字段包含子结构）
 
 ```python
@@ -1720,6 +1866,8 @@ arr = np.array([('Alice', (25, 'NYC')), ('Bob', (30, 'LA'))], dtype=dt)
 print(arr['info']['age'])   # [25 30]
 print(arr[0]['info']['city']) # 'NYC'
 ```
+
+---
 
 ### 7.1.6 结构化数组的排序、筛选
 
@@ -1735,6 +1883,8 @@ print(arr[mask])   # 返回符合条件的记录
 arr_sorted = np.sort(arr, order=['age', 'name'])
 ```
 
+---
+
 ### 7.1.7 结构化数组与 pandas 的对比
 
 - 结构化数组内存效率高，适合数值计算密集的场景。
@@ -1746,6 +1896,8 @@ arr_sorted = np.sort(arr, order=['age', 'name'])
 ## 7.2 内存布局（Memory Layout）
 
 NumPy 数组在内存中是连续的（默认），但连续顺序可以是 **C 顺序（行优先）** 或 **F 顺序（列优先，Fortran 风格）**。
+
+---
 
 ### 7.2.1 查看内存布局
 
@@ -1762,12 +1914,16 @@ c_arr = np.array([[1,2],[3,4]], order='C')   # 默认
 f_arr = np.array([[1,2],[3,4]], order='F')
 ```
 
+---
+
 ### 7.2.2 转换内存顺序
 
 ```python
 arr_f = np.asfortranarray(arr)   # 转换为 F 连续（如有必要）
 arr_c = np.ascontiguousarray(arr_f)  # 转回 C 连续
 ```
+
+---
 
 ### 7.2.3 为什么内存顺序重要？
 
@@ -1783,6 +1939,8 @@ arr = np.random.rand(1000, 1000)
 %timeit arr.sum(axis=0)
 ```
 
+---
+
 ### 7.2.4 转置与内存顺序
 
 转置一个 C 连续数组会得到一个 F 连续的视图（不复制数据），反之亦然。
@@ -1793,6 +1951,8 @@ arr_T = arr.T                      # F 连续（视图）
 print(arr_T.flags['C_CONTIGUOUS']) # False
 print(arr_T.flags['F_CONTIGUOUS']) # True
 ```
+
+---
 
 ### 7.2.5 非连续数组（例如切片）
 
@@ -1812,6 +1972,8 @@ sub_cont = np.ascontiguousarray(sub)
 
 以下技巧可以帮助你写出更高效的 NumPy 代码。
 
+---
+
 ### 7.3.1 使用向量化操作代替循环
 
 ```python
@@ -1825,6 +1987,8 @@ for x in arr:
 result = arr ** 2
 ```
 
+---
+
 ### 7.3.2 利用 ufunc 的 `out` 参数避免临时数组
 
 ```python
@@ -1837,12 +2001,16 @@ np.add(a, b, out=result)
 # 而不是 result = a + b
 ```
 
+---
+
 ### 7.3.3 合理选择数据类型（dtype）以节省内存
 
 ```python
 # 如果数值范围小，用 float32 或 int16 替代 float64/int64
 arr = np.array([1,2,3], dtype=np.int16)   # 原 int64
 ```
+
+---
 
 ### 7.3.4 使用视图而非副本（谨慎操作）
 
@@ -1851,6 +2019,8 @@ arr = np.array([1,2,3], dtype=np.int16)   # 原 int64
 view = arr[1:10000]
 # 若要修改而不影响原数组，才使用 copy
 ```
+
+---
 
 ### 7.3.5 合并操作减少遍历次数
 
@@ -1862,6 +2032,8 @@ arr[arr <= 0] = 0
 # 好（使用 where 一次性）
 arr = np.where(arr > 0, 1, 0)
 ```
+
+---
 
 ### 7.3.6 使用 `np.einsum` 进行复杂张量运算
 
@@ -1877,6 +2049,8 @@ C = np.einsum('ij,jk->ik', A, B)
 trace = np.einsum('ii->', A)
 ```
 
+---
+
 ### 7.3.7 使用 `numexpr` 或 Numba 加速极为耗时的操作
 
 `numexpr` 可以在大型数组上加速多核计算；Numba 可以将 Python 函数编译为机器码。
@@ -1888,6 +2062,8 @@ a = np.random.rand(1000000)
 b = np.random.rand(1000000)
 c = ne.evaluate("a**2 + b**2")
 ```
+
+---
 
 ### 7.3.8 注意缓存与局部性
 
@@ -1905,9 +2081,13 @@ for i in range(1000):
         arr[j, i] += 1
 ```
 
+---
+
 ### 7.3.9 使用 `np.bool` 数组而非整数 0/1 进行掩码操作
 
 布尔数组在内存和速度上都有优势。
+
+---
 
 ### 7.3.10 大型数组的内存映射 (memmap)
 
@@ -1937,9 +2117,13 @@ print(interface['shape'])
 print(interface['typestr'])
 ```
 
+---
+
 ### 7.4.2 共享内存的跨进程使用
 
 使用 `multiprocessing.shared_memory`（Python 3.8+）或 `shm` 模块。
+
+---
 
 ### 7.4.3 对齐要求与填充
 

@@ -38,6 +38,8 @@ plt.plot(x, y)
 plt.show()
 ```
 
+---
+
 ## 2 两种绘图风格
 
 ### 2.1 MATLAB 风格（状态机接口）
@@ -56,6 +58,8 @@ plt.grid(True)
 plt.show()
 ```
 
+---
+
 ### 2.2 面向对象风格（推荐）
 
 - 显式创建 `Figure`（画布）和 `Axes`（坐标轴/子图）对象。
@@ -73,6 +77,8 @@ plt.show()
 ```
 
 > **建议**：日常使用两种都可以，编写可重用代码建议面向对象风格。
+
+---
 
 ## 3 图形的组成要素
 
@@ -98,6 +104,8 @@ ax.legend(['Line'], loc='best')
 ax.grid(True)
 plt.show()
 ```
+
+---
 
 ## 4 基本绘图函数
 
@@ -129,6 +137,8 @@ plt.show()
 
 示例：`'ro--'` 红色圆圈虚线；`'gs-'` 绿色方块实线。
 
+---
+
 ### 4.2 常用参数
 
 ```python
@@ -144,6 +154,8 @@ plt.plot(x, y,
          label='曲线')          # 图例标签
 ```
 
+---
+
 ### 4.3 其他基本绘图函数
 
 | 函数                          | 说明     |
@@ -156,9 +168,13 @@ plt.plot(x, y,
 | `plt.stem(x, y)`              | 茎叶图   |
 | `plt.fill_between(x, y1, y2)` | 填充区域 |
 
+---
+
 ## 5 子图（Subplots）
 
 一个 Figure 中包含多个子图（Axes）。
+
+---
 
 ### 5.1 `plt.subplot()` – 网格子图（MATLAB风格）
 
@@ -180,6 +196,8 @@ plt.tight_layout()  # 自动调整间距
 plt.show()
 ```
 
+---
+
 ### 5.2 `plt.subplots()` – 批量创建（面向对象）
 
 ```python
@@ -198,6 +216,8 @@ plt.tight_layout()
 plt.show()
 ```
 
+---
+
 ### 5.3 灵活布局 – `add_subplot()` / `add_axes()`
 
 ```python
@@ -206,6 +226,8 @@ ax1 = fig.add_subplot(2, 1, 1)          # 上半个
 ax2 = fig.add_subplot(2, 2, 3)          # 左下
 ax3 = fig.add_subplot(2, 2, 4)          # 右下
 ```
+
+---
 
 ## 6 图形样式与美化
 
@@ -222,6 +244,8 @@ with plt.style.context('dark_background'):
     plt.plot(x, y)
 ```
 
+---
+
 ### 6.2 全局参数配置（rcParams）
 
 ```python
@@ -230,6 +254,8 @@ plt.rcParams['axes.unicode_minus'] = False        # 正常显示负号
 plt.rcParams['figure.figsize'] = (10, 6)          # 默认图形尺寸
 plt.rcParams['lines.linewidth'] = 2               # 默认线宽
 ```
+
+---
 
 ### 6.3 常用美化函数
 
@@ -243,6 +269,8 @@ ax.legend(loc='upper left', fontsize=12)   # 图例位置及大小
 ax.grid(True, linestyle='--', alpha=0.7)   # 网格线样式
 ```
 
+---
+
 ## 7 保存图形
 
 ```python
@@ -252,6 +280,8 @@ plt.savefig('myplot.png', dpi=300, bbox_inches='tight')
 
 # 在 plt.show() 之前调用，否则可能保存空白图
 ```
+
+---
 
 ## 8 小结
 
@@ -282,6 +312,8 @@ plt.savefig('myplot.png', dpi=300, bbox_inches='tight')
 
 散点图用于展示两个连续变量之间的关系，观察是否存在相关性、聚类、离群点等。
 
+---
+
 ### 1.1 基本散点图
 
 ```python
@@ -300,6 +332,8 @@ plt.title('散点图示例')
 plt.grid(True, alpha=0.3)
 plt.show()
 ```
+
+---
 
 ### 1.2 散点图常用参数
 
@@ -329,6 +363,8 @@ plt.title('散点图：大小和颜色编码')
 plt.show()
 ```
 
+---
+
 ### 1.3 散点图进阶：分组着色
 
 ```python
@@ -353,6 +389,8 @@ plt.show()
 
 柱状图用于比较不同类别之间的数值。
 
+---
+
 ### 2.1 垂直柱状图
 
 ```python
@@ -374,6 +412,8 @@ plt.show()
 - `tick_label`：自定义刻度标签
 - `log`：是否对数坐标
 
+---
+
 ### 2.2 水平柱状图（barh）
 
 ```python
@@ -383,6 +423,8 @@ plt.ylabel('类别')
 plt.title('水平柱状图')
 plt.show()
 ```
+
+---
 
 ### 2.3 分组柱状图
 
@@ -403,6 +445,8 @@ ax.legend()
 plt.show()
 ```
 
+---
+
 ### 2.4 堆叠柱状图
 
 ```python
@@ -415,6 +459,8 @@ plt.legend()
 plt.title('堆叠柱状图')
 plt.show()
 ```
+
+---
 
 ### 2.5 带误差棒的柱状图
 
@@ -432,6 +478,8 @@ plt.show()
 ## 3 直方图（Histogram）
 
 直方图展示数据分布，将数据分成多个区间（bins），统计每个区间的频数。
+
+---
 
 ### 3.1 基本直方图
 
@@ -454,6 +502,8 @@ plt.show()
 - `orientation`：`'vertical'` 或 `'horizontal'`
 - `range`：指定数据范围
 
+---
+
 ### 3.2 多组直方图叠加
 
 ```python
@@ -466,6 +516,8 @@ plt.legend()
 plt.title('多组直方图叠加')
 plt.show()
 ```
+
+---
 
 ### 3.3 累计直方图
 
@@ -480,6 +532,8 @@ plt.show()
 ## 4 饼图（Pie Chart）
 
 饼图用于展示各部分占总体的比例，适合类别较少（<7）的情况。
+
+---
 
 ### 4.1 基本饼图
 
@@ -522,6 +576,8 @@ plt.show()
 
 箱线图展示数据分布的五个关键统计量：最小值、第一四分位数（Q1）、中位数、第三四分位数（Q3）、最大值，以及离群点。
 
+---
+
 ### 5.1 基本箱线图
 
 ```python
@@ -533,6 +589,8 @@ plt.ylabel('数值')
 plt.grid(axis='y', alpha=0.3)
 plt.show()
 ```
+
+---
 
 ### 5.2 箱线图参数详解
 
@@ -550,6 +608,8 @@ plt.boxplot(data,
             flierprops={'marker': 'o', 'markersize': 4, 'markerfacecolor': 'red'})
 ```
 
+---
+
 ### 5.3 水平箱线图
 
 ```python
@@ -558,6 +618,8 @@ plt.xlabel('数值')
 plt.title('水平箱线图')
 plt.show()
 ```
+
+---
 
 ### 5.4 多子图箱线图对比
 
@@ -576,6 +638,8 @@ plt.show()
 
 热力图用颜色表示二维数据的大小，常用于相关性矩阵、混淆矩阵等。
 
+---
+
 ### 6.1 使用 `imshow` 绘制热力图
 
 ```python
@@ -589,6 +653,8 @@ plt.title('热力图')
 plt.show()
 ```
 
+---
+
 ### 6.2 使用 `matshow`
 
 ```python
@@ -596,6 +662,8 @@ plt.matshow(data, cmap='coolwarm', fignum=0)
 plt.colorbar()
 plt.show()
 ```
+
+---
 
 ### 6.3 结合文本标注
 
@@ -678,6 +746,8 @@ plt.show()
 
 使用 `mpl_toolkits.mplot3d` 工具包绘制三维图形。
 
+---
+
 ### 1.1 导入与项目准备
 
 ```python
@@ -688,6 +758,8 @@ from mpl_toolkits.mplot3d import Axes3D  # 注册3D投影
 fig = plt.figure()
 ax = fig.add_subplot(111, projection='3d')  # 或者 projection='3d'
 ```
+
+---
 
 ### 1.2 3D 散点图
 
@@ -707,6 +779,8 @@ plt.colorbar(sc, ax=ax, label='Z值')
 plt.title('3D散点图')
 plt.show()
 ```
+
+---
 
 ### 1.3 3D 曲面图（Surface Plot）
 
@@ -736,6 +810,8 @@ plt.show()
 - `linewidth`：网格线宽度
 - `rstride`, `cstride`：行/列采样步长（控制网格密度）
 
+---
+
 ### 1.4 3D 线图（Wireframe / Line）
 
 ```python
@@ -751,6 +827,8 @@ ax.plot(x_line, y_line, z_line, 'r-', linewidth=2, label='螺旋线')
 ax.legend()
 ```
 
+---
+
 ### 1.5 3D 等高线图（Contour）
 
 ```python
@@ -759,6 +837,8 @@ ax = fig.add_subplot(111, projection='3d')
 ax.contour(X, Y, Z, levels=20, cmap='plasma', zdir='z', offset=-2)  # 投影到底面
 ax.contour(X, Y, Z, levels=20, cmap='plasma')  # 3D等高线
 ```
+
+---
 
 ### 1.6 3D 条形图（Bar3D）
 
@@ -784,6 +864,8 @@ plt.show()
 
 使用 `matplotlib.animation` 模块创建动态图。
 
+---
+
 ### 2.1 基础动画（FuncAnimation）
 
 ```python
@@ -802,6 +884,8 @@ ani = animation.FuncAnimation(fig, animate, frames=100, interval=50, blit=True)
 plt.show()
 ```
 
+---
+
 ### 2.2 保存动画
 
 ```python
@@ -809,6 +893,8 @@ plt.show()
 ani.save('sine_wave.gif', writer='pillow', fps=20)
 # ani.save('animation.mp4', writer='ffmpeg')
 ```
+
+---
 
 ### 2.3 动画示例：散点图动态更新
 
@@ -831,6 +917,8 @@ def animate(i):
 ani = animation.FuncAnimation(fig, animate, frames=50, init_func=init, interval=200, blit=True)
 plt.show()
 ```
+
+---
 
 ### 2.4 使用 `ArtistAnimation`
 
@@ -867,6 +955,8 @@ plt.title('双Y轴示例')
 plt.show()
 ```
 
+---
+
 ### 3.2 共享轴（sharex / sharey）
 
 ```python
@@ -876,6 +966,8 @@ ax2.plot([1,2,3], [6,5,4])
 ax2.set_xlabel('共用X轴')
 plt.show()
 ```
+
+---
 
 ### 3.3 对数坐标（Log Scale）
 
@@ -890,6 +982,8 @@ plt.grid(True, which='both', linestyle='--')
 plt.title('对数坐标图')
 plt.show()
 ```
+
+---
 
 ### 3.4 自定义刻度格式
 
@@ -906,6 +1000,8 @@ ax.yaxis.set_major_locator(MultipleLocator(1e6))
 plt.show()
 ```
 
+---
+
 ### 3.5 文本标注与箭头
 
 ```python
@@ -919,6 +1015,8 @@ plt.show()
 - `annotate` 参数：`xy` 被标注点，`xytext` 文本位置，`arrowprops` 箭头属性
 - `text` 简单文本
 
+---
+
 ### 3.6 颜色映射（Colormap）
 
 ```python
@@ -928,6 +1026,8 @@ cmap = plt.cm.viridis   # 内置 colormap
 # 获取颜色列表
 colors = [cmap(i) for i in np.linspace(0, 1, 10)]
 ```
+
+---
 
 ### 3.7 填充区域（fill / fill_between）
 
@@ -969,6 +1069,8 @@ plt.tight_layout()
 plt.show()
 ```
 
+---
+
 ### 4.2 控制行列跨度
 
 ```python
@@ -980,12 +1082,16 @@ ax2 = fig.add_subplot(gs[0, 1])
 ax3 = fig.add_subplot(gs[1, :])  # 整个第二行
 ```
 
+---
+
 ### 4.3 子图之间间距调整
 
 ```python
 fig.subplots_adjust(left=0.1, bottom=0.1, right=0.9, top=0.9, wspace=0.2, hspace=0.3)
 # 或使用 plt.tight_layout(pad=1.08, h_pad=None, w_pad=None)
 ```
+
+---
 
 ### 4.4 `subplot2grid` 方式
 
@@ -1009,6 +1115,8 @@ plt.savefig('figure.png', dpi=300, bbox_inches='tight', pad_inches=0.1, transpar
 # bbox_inches='tight' 自动裁切空白边缘
 ```
 
+---
+
 ### 5.2 交互模式（Interactive Mode）
 
 ```python
@@ -1020,6 +1128,8 @@ for i in range(10):
 plt.ioff()         # 关闭交互模式
 plt.show()
 ```
+
+---
 
 ### 5.3 常用后端设置
 
@@ -1048,6 +1158,8 @@ matplotlib.font_manager.fontManager.addfont('/path/to/simhei.ttf')
 plt.rcParams['font.family'] = 'SimHei'
 ```
 
+---
+
 ### 6.2 消除图形周围的空白
 
 ```python
@@ -1055,12 +1167,16 @@ plt.subplots_adjust(left=0.05, right=0.95, top=0.95, bottom=0.05)
 # 或在保存时使用 bbox_inches='tight'
 ```
 
+---
+
 ### 6.3 在 Jupyter Notebook 中内嵌图形
 
 ```python
 %matplotlib inline   # 静态图
 %matplotlib notebook # 交互图（缩放、平移）
 ```
+
+---
 
 ### 6.4 颜色循环控制
 

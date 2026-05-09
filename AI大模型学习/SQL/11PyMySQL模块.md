@@ -56,6 +56,8 @@ print(pymysql.__version__)   # 输出版本号，例如 1.0.2
 | `charset`    | 字符集，推荐 `'utf8mb4'`（支持 emoji） | `'utf8mb4'`         |
 | `autocommit` | 是否自动提交（默认 False）             | `True` / `False`    |
 
+---
+
 ### 3.2 基本流程代码框架
 
 ```python
@@ -109,6 +111,8 @@ finally:
 | `cursor.fetchall()`      | 获取结果集中剩余的所有行，返回元组列表              |
 | `cursor.fetchmany(size)` | 获取指定数量的行，默认 size=1                       |
 
+---
+
 ### 4.2 完整查询示例
 
 ```python
@@ -151,6 +155,8 @@ cursor.close()
 conn.close()
 ```
 
+---
+
 ### 4.3 使用字典游标（结果返回字典，更易读）
 
 ```python
@@ -172,12 +178,16 @@ for row in cursor.fetchall():
   - `InnoDB`：支持事务、行级锁 → 需要手动 `commit()`
   - `MyISAM`：不支持事务 → 即使不 commit 也会生效（但无法回滚）
 
+---
+
 ### 5.2 提交与回滚
 
 ```python
 conn.commit()   # 提交事务，数据永久生效
 conn.rollback() # 回滚事务，撤销自上次提交以来的所有更改
 ```
+
+---
 
 ### 5.3 插入数据（INSERT）
 
@@ -209,6 +219,8 @@ finally:
     conn.close()
 ```
 
+---
+
 ### 5.4 批量插入（executemany）
 
 ```python
@@ -223,6 +235,8 @@ cursor.executemany(sql, data_list)
 conn.commit()
 ```
 
+---
+
 ### 5.5 获取刚插入的自增ID
 
 ```python
@@ -232,6 +246,8 @@ new_id = cursor.lastrowid
 print(f"新记录的ID为：{new_id}")
 ```
 
+---
+
 ### 5.6 更新数据（UPDATE）
 
 ```python
@@ -240,6 +256,8 @@ params = (9999, '机械键盘')
 cursor.execute(sql, params)
 conn.commit()
 ```
+
+---
 
 ### 5.7 删除数据（DELETE）
 
@@ -264,6 +282,8 @@ except Exception as e:
 
 攻击者通过在输入中插入特殊字符（如 `' or 1=1 --`），改变原有 SQL 语句的逻辑，从而绕过验证或窃取数据。
 
+---
+
 ### 6.2 错误写法（存在注入漏洞）
 
 ```python
@@ -278,6 +298,8 @@ cursor.execute(sql)
 - 密码输入：`' or 1=1 or '`  
   实际执行 SQL：`SELECT * FROM user WHERE user='admin' AND pwd='' or 1=1 or ''`  
   条件恒为真，绕过登录。
+
+---
 
 ### 6.3 正确写法（参数化查询）
 
@@ -349,11 +371,15 @@ with pymysql.connect(host='localhost', user='root', password='root', database='t
 # 连接自动关闭（注意：with 不会自动 commit，仍需手动 conn.commit()）
 ```
 
+---
+
 ### 8.2 设置自动提交
 
 ```python
 conn = pymysql.connect(..., autocommit=True)   # 每条 SQL 自动提交
 ```
+
+---
 
 ### 8.3 连接池（提升性能）
 
@@ -364,6 +390,8 @@ from dbutils.pooled_db import PooledDB
 pool = PooledDB(pymysql, 5, host='localhost', user='root', password='root', database='test')
 conn = pool.connection()
 ```
+
+---
 
 ### 8.4 异常处理规范
 
@@ -382,6 +410,8 @@ finally:
     if conn:
         conn.close()
 ```
+
+---
 
 ### 8.5 密码等敏感信息不要硬编码
 

@@ -15,6 +15,8 @@
     - 知道 Pandas 的核心数据结构：Series 与 DataFrame
     - 理解 Pandas 在数据处理和分析中的优势
 
+---
+
 ## 1 Pandas 介绍
 
 **Pandas** 是一个基于 NumPy 构建的开源 Python 数据分析库，提供了**高效、灵活且表达性强的数据结构**，专门用于**数据清洗、转换、分析和可视化**。
@@ -22,6 +24,8 @@
 - Pandas 的名字源自 **Panel Data**（面板数据）。
 - 核心数据结构：**Series**（一维带标签数组）和 **DataFrame**（二维带标签表格）。
 - 相比于 NumPy 的 ndarray，Pandas 支持**异构数据**（不同列可以是不同数据类型）、**缺失值处理**、**标签索引**、**分组聚合**、**时间序列**等高级功能。
+
+---
 
 ## 2 Pandas 与 NumPy 的对比
 
@@ -33,6 +37,8 @@
 | 分组聚合   | 需要手动实现          | 强大的 groupby 功能               |
 | 数据对齐   | 需要形状相同          | 自动按标签对齐                    |
 | 适用场景   | 数值计算、线性代数    | 数据清洗、分析、探索性数据分析    |
+
+---
 
 ## 3 Pandas 核心数据结构
 
@@ -69,6 +75,8 @@ s3 = pd.Series({'语文': 85, '数学': 92, '英语': 88})
 print(s3)
 ```
 
+---
+
 ### 3.2 DataFrame（二维表格）
 
 - 类似于 Excel 表格或 SQL 表。
@@ -98,6 +106,8 @@ print(df)
 # s3  王五  21  78
 ```
 
+---
+
 ## 4 Pandas 的优势
 
 ### 4.1 数据对齐（自动按标签匹配）
@@ -115,9 +125,13 @@ print(s1 + s2)
 # dtype: float64
 ```
 
+---
+
 ### 4.2 缺失值处理
 
 内置 `NaN`（Not a Number）表示缺失数据，并提供 `dropna()`、`fillna()`、`isna()` 等方法。
+
+---
 
 ### 4.3 强大的 I/O 支持
 
@@ -128,15 +142,21 @@ df = pd.read_csv('data.csv')      # 读取 CSV
 df.to_excel('data.xlsx')          # 写入 Excel
 ```
 
+---
+
 ### 4.4 分组聚合（类似 SQL 的 GROUP BY）
 
 ```python
 df.groupby('班级')['成绩'].mean()
 ```
 
+---
+
 ### 4.5 时间序列处理
 
 支持日期范围生成、重采样、滑动窗口等高级时间序列操作。
+
+---
 
 ## 5 小结
 
@@ -189,6 +209,8 @@ arr = np.array([1, 3, 5, 7])
 s5 = pd.Series(arr, index=['p', 'q', 'r', 's'])
 ```
 
+---
+
 ### 1.2 Series 的属性
 
 | 属性           | 说明                     |
@@ -217,6 +239,8 @@ print(s)
 # c    3
 # Name: 分数, dtype: int64
 ```
+
+---
 
 ### 1.3 Series 的常用方法
 
@@ -279,6 +303,8 @@ df4 = pd.DataFrame(data)
 # df = pd.read_csv('file.csv')
 ```
 
+---
+
 ### 2.2 DataFrame 的属性
 
 | 属性         | 说明                        |
@@ -301,6 +327,8 @@ print(df.dtypes)       # A int64, B int64
 print(df.values)       # [[1 4],[2 5],[3 6]]
 print(df.T)            # 转置
 ```
+
+---
 
 ### 2.3 DataFrame 的常用方法
 
@@ -346,6 +374,8 @@ df.姓名             # 仅当列名是合法 Python 标识符时可用
 df[['姓名', '成绩']]
 ```
 
+---
+
 ### 3.2 选择行
 
 ```python
@@ -358,6 +388,8 @@ df.iloc[行位置]       # 示例：df.iloc[0] 第一行
 # 切片（左闭右闭 vs 左闭右开）
 df[0:2]               # 选择第0行和第1行（左闭右开）
 ```
+
+---
 
 ### 3.3 loc 和 iloc 详解
 
@@ -395,6 +427,8 @@ mask = df['A'] > 5
 print(df.loc[mask])                 # 只显示 A > 5 的行
 ```
 
+---
+
 ### 3.4 条件筛选（布尔索引）
 
 ```python
@@ -417,6 +451,8 @@ result = df.query('成绩 > 80 and 年龄 < 24')
 result = df[df['姓名'].isin(['张三','王五'])]
 ```
 
+---
+
 ### 3.5 使用 at / iat 快速访问单个值
 
 - `at`：基于标签，比 loc 更快（仅取单个值）
@@ -431,6 +467,8 @@ value = df.iat[1, 1]
 df.at['r2', 'B'] = 100
 ```
 
+---
+
 ### 3.6 设置新列
 
 ```python
@@ -444,6 +482,8 @@ df['等级'] = df['成绩'].apply(lambda x: '优秀' if x >= 90 else '良好' if
 df['是否及格'] = np.where(df['成绩'] >= 60, '是', '否')
 ```
 
+---
+
 ### 3.7 删除行/列
 
 ```python
@@ -455,6 +495,8 @@ df_drop = df.drop([0, 2], axis=0)   # 删除索引0和2的行
 # 原地删除（修改原 DataFrame）
 df.drop('某列名', axis=1, inplace=True)
 ```
+
+---
 
 ### 3.8 常用索引技巧总结
 
@@ -510,6 +552,8 @@ df.drop('某列名', axis=1, inplace=True)
 
 Pandas 支持读取和写入多种数据格式，最常用的是 CSV、Excel、JSON、SQL 等。
 
+---
+
 ### 1.1 CSV 文件
 
 CSV（Comma-Separated Values）是最通用的表格数据格式。
@@ -545,6 +589,8 @@ df.to_csv('output.csv',
           columns=['col1','col2'])   # 只写入指定列
 ```
 
+---
+
 ### 1.2 Excel 文件
 
 需要安装 `openpyxl`（.xlsx）或 `xlrd`（旧版 .xls）。
@@ -566,6 +612,8 @@ with pd.ExcelWriter('output.xlsx', engine='openpyxl') as writer:
     df2.to_excel(writer, sheet_name='Sheet2', index=False)
 ```
 
+---
+
 ### 1.3 JSON 文件
 
 ```python
@@ -581,6 +629,8 @@ df.to_json('output.json', orient='records', indent=2)
 #   'index'   : {index: {col: val}}
 #   'columns' : {col: {index: val}}
 ```
+
+---
 
 ### 1.4 SQL 数据库
 
@@ -605,6 +655,8 @@ df.to_sql('table_name', engine,
           index=False)
 ```
 
+---
+
 ### 1.5 其他常用格式
 
 | 格式          | 读取方法                 | 写入方法               | 说明                  |
@@ -620,6 +672,8 @@ df.to_sql('table_name', engine,
 ## 2 缺失值处理
 
 现实数据中常存在缺失值，Pandas 中使用 `NaN`（Not a Number）或 `None` 表示。
+
+---
 
 ### 2.1 识别缺失值
 
@@ -656,6 +710,8 @@ df.isna().sum().sum()   # 4
 df.isna().mean()        # 每列缺失比例
 ```
 
+---
+
 ### 2.2 删除缺失值
 
 ```python
@@ -674,6 +730,8 @@ df_dropped = df.dropna(axis=1)
 # 原地修改
 df.dropna(inplace=True)
 ```
+
+---
 
 ### 2.3 填充缺失值
 
@@ -701,6 +759,8 @@ df.fillna({'A': 0, 'B': df['B'].mean(), 'C': 'unknown'}, inplace=True)
 # 限制填充数量（limit=1 表示最多连续填充1个缺失）
 df.fillna(method='ffill', limit=1)
 ```
+
+---
 
 ### 2.4 缺失值处理的最佳实践
 
@@ -744,6 +804,8 @@ df_unique = df.drop_duplicates(keep='last')
 df.drop_duplicates(subset=['A'], keep='first')
 ```
 
+---
+
 ### 3.2 数据类型转换
 
 ```python
@@ -767,6 +829,8 @@ df = df.convert_dtypes()
 # 自定义转换函数
 df['new_col'] = df['old_col'].apply(lambda x: x*2)
 ```
+
+---
 
 ### 3.3 字符串处理（vectorized string methods）
 
@@ -808,6 +872,8 @@ df['name'] = df['name'].str.fillna('')
 df['is_digit'] = df['phone'].str.isdigit()
 ```
 
+---
+
 ### 3.4 重命名列名
 
 ```python
@@ -826,6 +892,8 @@ df_add_prefix = df.add_prefix('col_')
 df_add_suffix = df.add_suffix('_suffix')
 ```
 
+---
+
 ### 3.5 值替换与映射
 
 ```python
@@ -842,6 +910,8 @@ df['marital_status'] = df['status_code'].map(status_map)
 # 使用 apply 进行任意函数映射
 df['age_group'] = df['age'].apply(lambda x: 'Young' if x < 30 else 'Old')
 ```
+
+---
 
 ### 3.6 异常值处理
 
@@ -866,6 +936,8 @@ from scipy import stats
 z_scores = np.abs(stats.zscore(df['value']))
 df_no_outliers = df[z_scores < 3]
 ```
+
+---
 
 ### 3.7 数据清洗常用函数汇总
 
@@ -1000,6 +1072,8 @@ result = pd.concat([df1, df2], keys=['first', 'second'])
 #       d    6  8
 ```
 
+---
+
 ### 1.2 `pd.merge()` – 类似 SQL 的表连接
 
 根据一个或多个公共列（key）将两个 DataFrame 合并。
@@ -1062,6 +1136,8 @@ result = pd.merge(left4, right4, on='id', suffixes=('_left', '_right'))
 | `right` | 保留右表所有键            |
 | `outer` | 保留所有键，无匹配填充NaN |
 
+---
+
 ### 1.3 `df.join()` – 基于索引的连接
 
 `join` 是基于**索引**进行连接的简便方法，默认左连接。
@@ -1083,6 +1159,8 @@ result = df_left.join(df_right, how='inner')
 df_right2 = pd.DataFrame({'key': ['a','b'], 'C': [5,6]})
 result = df_left.join(df_right2.set_index('key'), on=None)  # 需要先设置索引
 ```
+
+---
 
 ### 1.4 合并方法对比
 
@@ -1141,6 +1219,8 @@ result = df.groupby('部门').agg(
 )
 ```
 
+---
+
 ### 2.2 使用字典对不同列应用不同聚合函数
 
 ```python
@@ -1150,6 +1230,8 @@ result = df.groupby('部门').agg({
 })
 ```
 
+---
+
 ### 2.3 遍历分组
 
 ```python
@@ -1158,6 +1240,8 @@ for name, group in df.groupby('部门'):
     print(group)
     print("---")
 ```
+
+---
 
 ### 2.4 分组后转换（transform）
 
@@ -1171,6 +1255,8 @@ df['工资离差'] = df.groupby('部门')['工资'].transform(lambda x: x - x.me
 df['工资_filled'] = df.groupby('部门')['工资'].transform(lambda x: x.fillna(x.mean()))
 ```
 
+---
+
 ### 2.5 分组后过滤（filter）
 
 根据组的属性筛选组，返回满足条件的**所有行**。
@@ -1179,6 +1265,8 @@ df['工资_filled'] = df.groupby('部门')['工资'].transform(lambda x: x.filln
 # 只保留平均工资大于 6500 的部门
 result = df.groupby('部门').filter(lambda x: x['工资'].mean() > 6500)
 ```
+
+---
 
 ### 2.6 分组后应用自定义函数（apply）
 
@@ -1196,6 +1284,8 @@ def top_salary(group):
 result = df.groupby('部门').apply(top_salary)
 ```
 
+---
+
 ### 2.7 分组聚合常用函数
 
 | 函数                 | 说明              |
@@ -1209,6 +1299,8 @@ result = df.groupby('部门').apply(top_salary)
 | `first()` / `last()` | 第一个/最后一个值 |
 | `nunique()`          | 去重后计数        |
 | `quantile()`         | 分位数            |
+
+---
 
 ### 2.8 透视表（pivot_table）
 
@@ -1266,6 +1358,8 @@ df['quarter'] = df['date'].dt.quarter
 df['week_of_year'] = df['date'].dt.isocalendar().week
 ```
 
+---
+
 ### 3.2 生成日期范围
 
 ```python
@@ -1281,6 +1375,8 @@ dates_monthly = pd.date_range('2023-01-01', periods=12, freq='M')
 dates = pd.date_range('2024-01-01', periods=10, freq='D')
 ```
 
+---
+
 ### 3.3 将日期设为索引
 
 ```python
@@ -1292,6 +1388,8 @@ df['2024']                    # 选择2024全年
 df['2024-01']                 # 选择2024年1月
 df['2024-01-01':'2024-01-05'] # 切片
 ```
+
+---
 
 ### 3.4 重采样（resample）
 
@@ -1337,6 +1435,8 @@ ts_daily_interp = ts_monthly_mean.resample('D').interpolate(method='linear')
 | `'A'`            | 年末           |
 | `'BM'`           | 业务月结束     |
 
+---
+
 ### 3.5 滑动窗口（rolling）
 
 计算滚动统计量，常用于平滑时间序列。
@@ -1360,6 +1460,8 @@ rolling_center = ts.rolling(window=7, center=True).mean()
 ewm_mean = ts.ewm(span=7, adjust=False).mean()   # 指数加权移动平均
 ```
 
+---
+
 ### 3.6 位移与差分
 
 ```python
@@ -1374,6 +1476,8 @@ ts_diff2 = ts.diff(2)       # 二阶差分（间隔2）
 # 百分比变化
 ts_pct_change = ts.pct_change(1)
 ```
+
+---
 
 ### 3.7 时区处理
 
@@ -1455,6 +1559,8 @@ plt.show()
 
 Pandas 的 `.plot()` 方法是对 Matplotlib 的封装，可以快速绘制常用图表。
 
+---
+
 ### 1.1 基础设置
 
 ```python
@@ -1480,6 +1586,8 @@ df['销售额'].plot()          # 折线图
 plt.title('每日销售额趋势')
 plt.show()
 ```
+
+---
 
 ### 1.2 常用图表类型
 
@@ -1518,6 +1626,8 @@ df.plot(kind='scatter', x='销售额', y='利润', alpha=0.5)
 plt.title('销售额与利润关系')
 ```
 
+---
+
 ### 1.3 多子图与布局
 
 ```python
@@ -1533,6 +1643,8 @@ df['利润'].hist(ax=axes[1,0], bins=20)
 df.boxplot(ax=axes[1,1])
 plt.tight_layout()
 ```
+
+---
 
 ### 1.4 自定义样式
 
@@ -1554,6 +1666,8 @@ df['销售额'].plot(
 )
 plt.legend(['销售额'])
 ```
+
+---
 
 ### 1.5 其他可视化注意点
 
@@ -1583,6 +1697,8 @@ df['sum'] = df['col1'] + df['col2']
 df['sum'] = df.apply(lambda row: row['col1'] + row['col2'], axis=1)
 ```
 
+---
+
 ### 2.2 数据类型优化（内存节省）
 
 ```python
@@ -1605,6 +1721,8 @@ df['col'] = pd.to_numeric(df['col'], errors='coerce')
 df = df.convert_dtypes()
 ```
 
+---
+
 ### 2.3 使用 `eval()` 和 `query()` 加速表达式
 
 适用于大 DataFrame（> 10万行）时的复杂表达式运算。
@@ -1620,6 +1738,8 @@ df['result'] = df.eval('(a + b) / (c * d)')
 result = df.query('age > 30 and salary < 5000')
 # 等价于 df[(df['age'] > 30) & (df['salary'] < 5000)]
 ```
+
+---
 
 ### 2.4 分块读取大文件
 
@@ -1637,6 +1757,8 @@ df_result = pd.concat(chunks)
 df = pd.read_csv('large_file.csv', usecols=['col1', 'col2', 'col3'])
 ```
 
+---
+
 ### 2.5 `inplace` 参数的慎用
 
 ```python
@@ -1647,6 +1769,8 @@ df = df.dropna()          # 推荐
 
 # 原因：inplace 操作无法链式调用，且内部仍需复制
 ```
+
+---
 
 ### 2.6 其他性能建议
 
@@ -1684,6 +1808,8 @@ df['city'] = df['city'].cat.add_categories(['成都'])
 df['city'] = df['city'].cat.remove_unused_categories()
 ```
 
+---
+
 ### 3.2 管道（Pipe）
 
 管道允许将多个函数串联起来，提高代码可读性。
@@ -1712,6 +1838,8 @@ result = (df.pipe(clean_data)
             .pipe(aggregate))
 ```
 
+---
+
 ### 3.3 窗口函数扩展（Window）
 
 除了 `.rolling()`，还有 `.expanding()`、`.ewm()`
@@ -1724,6 +1852,8 @@ df['cummax'] = df['value'].expanding().max()
 # 指数加权移动平均（更重视近期数据）
 df['ewm_07'] = df['value'].ewm(span=7, adjust=False).mean()
 ```
+
+---
 
 ### 3.4 内存优化技巧
 
@@ -1752,6 +1882,8 @@ for col in df.select_dtypes(include=['object']).columns:
         df[col] = df[col].astype('category')
 ```
 
+---
+
 ### 3.5 样式化输出（Styling）
 
 ```python
@@ -1771,6 +1903,8 @@ df.style.apply(highlight_high, subset=['销售额'])
 df.style.to_excel('styled.xlsx', engine='openpyxl')
 ```
 
+---
+
 ### 3.6 与其它库的集成
 
 ```python
@@ -1786,6 +1920,8 @@ scaled = scaler.fit_transform(df[['col1','col2']])
 import seaborn as sns
 sns.heatmap(df.corr(), annot=True)
 ```
+
+---
 
 ### 3.7 数据采样与打乱
 

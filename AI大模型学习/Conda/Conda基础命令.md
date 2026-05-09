@@ -11,6 +11,8 @@
 
 以下是您提供的 Conda 命令说明的 Markdown 表格形式，按三个类别分别整理。
 
+---
+
 # 1. 环境管理
 
 | 命令                                     | 说明                                      |
@@ -24,6 +26,8 @@
 | `conda env create -f environment.yml`  | 根据 environment.yml 文件创建一个一模一样的新环境       |
 | `conda env update -f environment.yml`  | 根据 environment.yml 文件更新当前环境             |
 
+---
+
 # 2. 包管理
 
 | 命令                                          | 说明                        |
@@ -34,6 +38,8 @@
 | `conda update numpy`                        | 更新 numpy 包                |
 | `conda update --all`                        | 更新当前环境中的所有包               |
 | `conda remove numpy`                        | 从当前环境中移除 numpy 包          |
+
+---
 
 # 3. 配置与清理
 

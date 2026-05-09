@@ -4,5 +4,6 @@
   "propertiesInDocument": "visible",
   "foldHeading": true,
   "showLineNumber": false,
-  "rightToLeft": false
+  "rightToLeft": false,
+  "strictLineBreaks": false
 }

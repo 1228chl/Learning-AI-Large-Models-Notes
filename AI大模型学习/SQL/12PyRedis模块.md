@@ -49,6 +49,8 @@ print(redis.__version__)   # 例如 4.5.0
 | `socket_connect_timeout` | 连接建立超时                                     | `None`        |
 | `max_connections`        | 连接池最大连接数                                 | `None`        |
 
+---
+
 ### 2.2 基本连接示例
 
 ```python
@@ -72,6 +74,8 @@ except redis.ConnectionError as e:
 ```
 
 > **说明**：`decode_responses=True` 会让所有命令返回字符串，而不是 `b'value'` 形式的字节串，非常方便。
+
+---
 
 ### 2.3 连接池方式（推荐生产环境）
 
@@ -133,6 +137,8 @@ r.decr('counter')          # 自减1
 print(r.get('counter'))    # 5
 ```
 
+---
+
 ### 3.2 哈希（Hash）
 
 Hash 适合存储对象，一个 key 对应多个 field-value 对。
@@ -188,6 +194,8 @@ r.hdel('user:1001', 'age')
 print(r.hgetall('user:1001'))  # {'name': '李四'}
 ```
 
+---
+
 ### 3.3 列表（List）
 
 Redis 列表是双向链表，支持从两端推入/弹出。
@@ -235,6 +243,8 @@ print(f"右侧弹出: {right_task}")  # task5
 # 剩余列表
 print(r.lrange('tasks', 0, -1))  # ['task2', 'task3', 'task4']
 ```
+
+---
 
 ### 3.4 集合（Set）
 
@@ -291,6 +301,8 @@ print("并集:", union)  # {'a', 'b', 'c', 'd'}
 diff = r.sdiff('set1', 'set2')
 print("差集(set1 - set2):", diff)  # {'a'}
 ```
+
+---
 
 ### 3.5 有序集合（Sorted Set）
 
@@ -512,6 +524,8 @@ pool = redis.ConnectionPool(
 r = redis.Redis(connection_pool=pool)
 ```
 
+---
+
 ### 6.2 管道（Pipeline）
 
 管道可以将多个命令打包一次性发送给 Redis，减少网络往返，提高批量操作性能。
@@ -532,6 +546,8 @@ with r.pipeline() as pipe:
     pipe.execute()
 ```
 
+---
+
 ### 6.3 发布订阅（Pub/Sub）
 
 ```python
@@ -545,6 +561,8 @@ for message in pubsub.listen():
 # 发布者
 r.publish('news', 'Hello Redis!')
 ```
+
+---
 
 ### 6.4 Lua 脚本
 
@@ -567,6 +585,8 @@ result = r.eval(script, 1, 'counter', 10)
 print(result)  # 10（若之前无值则设为10）
 ```
 
+---
+
 ### 6.5 异常处理
 
 ```python
@@ -580,6 +600,8 @@ except redis.TimeoutError as e:
 except redis.ResponseError as e:
     print("命令执行错误:", e)
 ```
+
+---
 
 ### 6.6 常见生产配置建议
 

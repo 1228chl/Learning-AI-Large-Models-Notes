@@ -31,6 +31,8 @@
 - 使用纯文本配置文件
 - 尽量不产生交互界面（命令行为主）
 
+---
+
 ## 2 终端与 Shell
 
 - **终端（Terminal）**：用户与操作系统交互的界面。
@@ -43,6 +45,8 @@ echo $SHELL
 # 查看所有 Shell 类型
 cat /etc/shells
 ```
+
+---
 
 ## 3 命令基本格式
 
@@ -59,6 +63,8 @@ command --help
 man command           # 查看手册（按 q 退出）
 ```
 
+---
+
 ## 4 文件与目录操作命令
 
 ### 4.1 查看目录内容：`ls`
@@ -74,6 +80,8 @@ ls -ltr           # 按时间逆序
 ls -l /home       # 列出指定目录
 ```
 
+---
+
 ### 4.2 切换目录：`cd`
 
 ```bash
@@ -84,11 +92,15 @@ cd ~              # 用户家目录
 cd -              # 上次所在目录
 ```
 
+---
+
 ### 4.3 显示当前目录：`pwd`
 
 ```bash
 pwd               # 打印当前工作目录的绝对路径
 ```
+
+---
 
 ### 4.4 创建目录：`mkdir`
 
@@ -97,6 +109,8 @@ mkdir dirname                 # 创建单级目录
 mkdir -p parent/child/grand   # 递归创建多级目录
 mkdir dir1 dir2 dir3          # 同时创建多个目录
 ```
+
+---
 
 ### 4.5 删除文件或目录：`rm`
 
@@ -108,6 +122,8 @@ rm -f file.txt                # 强制删除（不提示）
 rm -rf dirname                # 递归强制删除（危险操作！）
 ```
 
+---
+
 ### 4.6 复制文件或目录：`cp`
 
 ```bash
@@ -117,6 +133,8 @@ cp -r sourcedir destdir       # 递归复制目录
 cp -a source dest             # 保持原属性（权限、时间等）复制
 ```
 
+---
+
 ### 4.7 移动或重命名：`mv`
 
 ```bash
@@ -125,12 +143,16 @@ mv file.txt /home/user/       # 移动文件到目录
 mv dir1 dir2                  # 如果 dir2 不存在则重命名，存在则移动 dir1 到 dir2 内
 ```
 
+---
+
 ### 4.8 创建空文件或更新时间戳：`touch`
 
 ```bash
 touch newfile.txt             # 若文件不存在则创建空文件，若存在则更新修改时间
 touch file1 file2             # 同时创建多个
 ```
+
+---
 
 ## 5 文件内容查看命令
 
@@ -141,12 +163,16 @@ cat file.txt                  # 显示全部内容
 cat file1 file2 > combined.txt # 合并文件
 ```
 
+---
+
 ### 5.2 分页查看：`less` / `more`
 
 ```bash
 less longfile.txt             # 分页查看（按空格下一页，b上一页，q退出）
 more longfile.txt             # 类似但功能较少
 ```
+
+---
 
 ### 5.3 查看头部/尾部：`head` / `tail`
 
@@ -155,6 +181,8 @@ head -n 20 file.txt           # 显示前20行，默认10行
 tail -n 10 file.txt           # 显示后10行
 tail -f logfile.log           # 实时跟踪文件新增内容（常用于日志）
 ```
+
+---
 
 ## 6 通配符（Wildcards）
 
@@ -172,6 +200,8 @@ ls file?.log                  # 匹配 file1.log, fileA.log 等
 ls [a-d]*.py                  # 以 a/b/c/d 开头的 .py 文件
 ```
 
+---
+
 ## 7 文件权限与链接
 
 ### 7.1 查看权限
@@ -185,6 +215,8 @@ ls [a-d]*.py                  # 以 a/b/c/d 开头的 .py 文件
 - 第一个字符：`-` 普通文件，`d` 目录，`l` 符号链接
 - 后面9个字符：每3个一组，分别对应**所有者(u)**、**所属组(g)**、**其他用户(o)** 的权限
   - `r` 读（4），`w` 写（2），`x` 执行（1），`-` 无权限
+
+---
 
 ### 7.2 修改权限：`chmod`
 
@@ -202,6 +234,8 @@ chmod 644 file.txt            # 所有者 rw-，组 r--，其他 r--
 
 常用数字：`7=rwx`, `6=rw-`, `5=r-x`, `4=r--`, `0=---`
 
+---
+
 ### 7.3 修改所有者：`chown` / `chgrp`
 
 ```bash
@@ -209,6 +243,8 @@ sudo chown user file.txt      # 修改文件所有者为 user
 sudo chown user:group file.txt # 同时修改所有者和组
 sudo chgrp group file.txt     # 仅修改所属组
 ```
+
+---
 
 ### 7.4 硬链接与软链接
 
@@ -219,6 +255,8 @@ sudo chgrp group file.txt     # 仅修改所属组
 ln source.txt hardlink.txt    # 创建硬链接
 ln -s source.txt softlink.txt # 创建软链接
 ```
+
+---
 
 ## 8 常用快捷键（bash）
 
@@ -234,6 +272,8 @@ ln -s source.txt softlink.txt # 创建软链接
 | `Tab`      | 自动补全命令或路径     |
 | `↑ / ↓`    | 浏览历史命令           |
 | `Ctrl + R` | 反向搜索历史命令       |
+
+---
 
 ## 9 小结
 
@@ -280,6 +320,8 @@ last                        # 登录历史
 lastlog                     # 每个用户最近登录
 ```
 
+---
+
 #### 1.1.2 添加/删除/修改用户
 
 ```bash
@@ -301,6 +343,8 @@ sudo usermod -d /home/newhome -m username  # 修改家目录并移动内容
 sudo usermod -s /bin/zsh username        # 修改登录 Shell
 ```
 
+---
+
 #### 1.1.3 用户组管理
 
 ```bash
@@ -320,6 +364,8 @@ sudo gpasswd -d username groupname      # 从组中移除用户
 # 查看用户所属组
 groups username
 ```
+
+---
 
 ### 1.2 特殊权限与文件属性
 
@@ -345,6 +391,8 @@ chmod o+t dir
 chmod 4755 file    # SUID+755
 ```
 
+---
+
 #### 1.2.2 查看文件扩展属性
 
 ```bash
@@ -352,6 +400,8 @@ lsattr file          # 查看扩展属性
 chattr +i file       # 设置不可变（即使 root 也不能修改）
 chattr -i file       # 移除不可变
 ```
+
+---
 
 ### 1.3 sudo 权限配置
 
@@ -393,6 +443,8 @@ ps aux | grep process_name
 pstree -p                 # 显示 PID
 ```
 
+---
+
 ### 2.2 终止进程
 
 ```bash
@@ -417,6 +469,8 @@ top -p PID                # 在 top 中按 k，输入 PID
 | 9    | SIGKILL | 强制终止     |
 | 15   | SIGTERM | 正常终止     |
 
+---
+
 ### 2.3 后台运行与作业控制
 
 ```bash
@@ -438,6 +492,8 @@ bg %job_id
 nohup command &
 # 输出默认写入 nohup.out
 ```
+
+---
 
 ### 2.4 系统负载与资源监控
 
@@ -470,6 +526,8 @@ lsof -i :80               # 查看使用 80 端口的进程
 | Fedora / CentOS 8+ | rpm/dnf    | `dnf`        | `rpm -ivh`  |
 | Arch Linux         | pacman     | `pacman -S`  | `pacman -U` |
 | openSUSE           | rpm/zypper | `zypper`     | `rpm -ivh`  |
+
+---
 
 ### 3.1 Debian/Ubuntu (apt)
 
@@ -504,6 +562,8 @@ apt list --installed
 apt source package_name
 ```
 
+---
+
 ### 3.2 Red Hat 系 (yum / dnf)
 
 ```bash
@@ -528,6 +588,8 @@ yum provides /path/to/file
 sudo yum clean all
 ```
 
+---
+
 ### 3.3 源码编译安装
 
 ```bash
@@ -550,6 +612,8 @@ sudo make uninstall
 ```
 
 **常见依赖**：编译环境需要 `build-essential`（Debian）或 `Development Tools`（Red Hat）。
+
+---
 
 ### 3.4 使用 snap / flatpak
 
@@ -585,6 +649,8 @@ netstat -tulpn               # 显示监听端口
 ss -tulpn                    # 更快的 netstat 替代
 ```
 
+---
+
 ### 4.2 测试网络连通性
 
 ```bash
@@ -600,6 +666,8 @@ telnet host port             # 连接指定端口（Ctrl+] 退出）
 nc -zv host port             # netcat 扫描端口
 ```
 
+---
+
 ### 4.3 DNS 解析
 
 ```bash
@@ -610,6 +678,8 @@ dig google.com               # 更详细信息
 # 查看 DNS 配置
 cat /etc/resolv.conf
 ```
+
+---
 
 ### 4.4 网络服务管理（systemd）
 
@@ -628,6 +698,8 @@ sudo systemctl enable service_name
 sudo systemctl disable service_name
 ```
 
+---
+
 ### 4.5 防火墙管理
 
 ```bash
@@ -645,6 +717,8 @@ sudo ufw status
 sudo ufw allow 22/tcp
 sudo ufw enable
 ```
+
+---
 
 ### 4.6 常用网络诊断组合
 
@@ -713,6 +787,8 @@ echo "Hello, World!"
 - 赋予执行权限：`chmod +x script.sh`
 - 执行：`./script.sh` 或 `bash script.sh`
 
+---
+
 ### 1.2 变量
 
 ```bash
@@ -743,6 +819,8 @@ unset age
 | `$?`    | 上一条命令的退出状态（0成功） |
 | `$$`    | 当前 Shell 进程 ID            |
 
+---
+
 ### 1.3 输入与输出
 
 ```bash
@@ -754,6 +832,8 @@ printf "格式化输出: %s %d\n" "score" 100
 read -p "请输入姓名: " username
 echo "你好, $username"
 ```
+
+---
 
 ### 1.4 条件判断
 
@@ -794,6 +874,8 @@ fi
 ! [ condition ]                    # 非
 ```
 
+---
+
 ### 1.5 循环结构
 
 ```bash
@@ -829,6 +911,8 @@ until [ $count -gt 5 ]; do
 done
 ```
 
+---
+
 ### 1.6 case 多分支
 
 ```bash
@@ -849,6 +933,8 @@ case $1 in
 esac
 ```
 
+---
+
 ### 1.7 函数
 
 ```bash
@@ -865,6 +951,8 @@ say_hello "Alice"
 result=$(say_hello "Bob")
 echo $result
 ```
+
+---
 
 ### 1.8 常用技巧
 
@@ -895,6 +983,8 @@ set -e
 
 正则表达式是用于匹配文本模式的字符串，常与 grep、sed、awk 等工具结合使用。
 
+---
+
 ### 2.1 基本正则表达式（BRE）元字符
 
 | 元字符 | 含义                       |
@@ -909,6 +999,8 @@ set -e
 | `\<`   | 词首（某些工具支持）       |
 | `\>`   | 词尾                       |
 
+---
+
 ### 2.2 扩展正则表达式（ERE）
 
 增加以下元字符（`grep -E` 或 `egrep`）：
@@ -922,6 +1014,8 @@ set -e
 | `{n,m}` | n 到 m 次                  |
 | `\|`    | 或（逻辑 OR）              |
 | `()`    | 分组                       |
+
+---
 
 ### 2.3 常用正则示例
 
@@ -959,6 +1053,8 @@ grep -o "[0-9]\{3\}" file    # 只输出匹配部分
 ps aux | grep "python"
 ```
 
+---
+
 ### 3.2 sed – 流编辑器（非交互式）
 
 sed 用于文本替换、删除、插入、打印等。
@@ -992,6 +1088,8 @@ sed '2a\New line' file.txt         # 在第2行后追加
 # 多个编辑（-e）
 sed -e 's/foo/bar/' -e 's/baz/qux/' file.txt
 ```
+
+---
 
 ### 3.3 awk – 文本处理编程语言
 
@@ -1050,6 +1148,8 @@ crontab -l
 crontab -r
 ```
 
+---
+
 ### 4.2 Crontab 时间格式
 
 ```
@@ -1068,6 +1168,8 @@ crontab -r
 - `,` ：列举多个值，如 `1,3,5`
 - `-` ：范围，如 `1-5`
 - `/` ：步长，如 `*/10` 每10分钟
+
+---
 
 ### 4.3 常用示例
 
@@ -1091,11 +1193,15 @@ crontab -r
 @reboot /path/to/script
 ```
 
+---
+
 ### 4.4 系统级 cron
 
 - `/etc/crontab`：系统 crontab 文件（需指定用户）
 - `/etc/cron.d/`：存放额外 crontab 配置文件
 - `/etc/cron.hourly/`、`/etc/cron.daily/`、`/etc/cron.weekly/`、`/etc/cron.monthly/`：放置脚本，由 `run-parts` 调用
+
+---
 
 ### 4.5 日志与调试
 
@@ -1127,6 +1233,8 @@ systemctl status crond       # CentOS
 | `/var/log/cron`     | cron 任务日志              |
 | `/var/log/nginx/`   | Web 服务器日志             |
 
+---
+
 ### 5.2 查看日志
 
 ```bash
@@ -1143,6 +1251,8 @@ grep "error" /var/log/syslog
 dmesg | less
 journalctl -xe              # systemd 日志（推荐）
 ```
+
+---
 
 ### 5.3 日志轮转（logrotate）
 
@@ -1174,6 +1284,8 @@ logrotate -f /etc/logrotate.conf
     endscript
 }
 ```
+
+---
 
 ### 5.4 systemd 日志（journalctl）
 
