@@ -89,7 +89,8 @@
       }
     ],
     "direction": "horizontal",
-    "width": 300
+    "width": 300,
+    "collapsed": true
   },
   "right": {
     "id": "f07a0c5b7e11463b",
@@ -205,7 +206,7 @@
       "templater-obsidian:Templater": false
     }
   },
-  "active": "96016ab1746aabdd",
+  "active": "a73ebf785a6e6ac6",
   "lastOpenFiles": [
     "AI大模型学习/Python/03闭包和装饰器.md",
     "AI大模型学习/Python/01面向对象基础.md",
