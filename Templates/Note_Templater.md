@@ -6,8 +6,6 @@ let child = await tp.system.prompt("下一级", "");
 
 let tag = await tp.system.prompt("标签", "");
 
-let ref = await tp.system.prompt("引用", "");
-
 %>
 
 **上一级：** [[<% parent %>]]
@@ -16,9 +14,6 @@ let ref = await tp.system.prompt("引用", "");
 
 **标签：** #<% tag %>
 
-**引用：** <% ref %>
-
 ---
 
 <% tp.file.cursor() %>
-
