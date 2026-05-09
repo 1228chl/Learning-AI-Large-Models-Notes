@@ -1,6 +1,14 @@
-## 一、Pandas 框架概述
+**上一级：** [[13NumPy（AI大全版）]]
 
-### 1.1 什么是 Pandas？
+**下一级：**  [[14Pandas（AI大全版）]]
+
+**标签：** #Pandas #基础 
+
+---
+
+# 一、Pandas 框架概述
+
+## 1.1 什么是 Pandas？
 
 - **定义**：Pandas 是 Python 的一个第三方库，专为**结构化数据**处理而设计，提供高效、灵活的数据清洗、处理和分析工具。
 - **核心优势**：
@@ -11,7 +19,7 @@
 
 ---
 
-### 1.2 适用场景
+## 1.2 适用场景
 
 - 单机数据量较大，Excel 无法流畅处理时。
 - 数据清洗、特征工程、探索性数据分析（EDA）。
@@ -19,7 +27,7 @@
 
 ---
 
-### 1.3 安装与环境
+## 1.3 安装与环境
 
 ```Bash
 pip install pandas
@@ -31,9 +39,9 @@ pip install -i https://pypi.tuna.tsinghua.edu.cn/simple pandas
 
 ---
 
-## 二、Pandas 核心数据结构与数据类型
+# 二、Pandas 核心数据结构与数据类型
 
-### 2.1 数据结构层级
+## 2.1 数据结构层级
 
 Pandas 主要包含两种数据结构：**Series** 和 **DataFrame**。
 
@@ -50,9 +58,9 @@ DataFrame
 
 ---
 
-### 2.2 Series 对象
+## 2.2 Series 对象
 
-#### 2.2.1 创建 Series
+### 2.2.1 创建 Series
 
 ```Python
 import pandas as pd
@@ -73,7 +81,7 @@ s4 = pd.Series(np.arange(5))
 
 ---
 
-#### 2.2.2 Series 属性与索引
+### 2.2.2 Series 属性与索引
 
 ```Python
 s = pd.Series([10, 20, 30], index=['x', 'y', 'z'])
@@ -84,9 +92,9 @@ print(s['y'])       # 20
 
 ---
 
-### 2.3 DataFrame 对象
+## 2.3 DataFrame 对象
 
-#### 2.3.1 创建 DataFrame
+### 2.3.1 创建 DataFrame
 
 **方式一：字典 + 列表**
 
@@ -121,7 +129,7 @@ df = pd.DataFrame(score, columns=subjects, index=students)
 
 ---
 
-#### 2.3.2 DataFrame 常用属性
+### 2.3.2 DataFrame 常用属性
 
 | 属性        | 说明          | 示例                     |
 | --------- | ----------- | ---------------------- |
@@ -134,7 +142,7 @@ df = pd.DataFrame(score, columns=subjects, index=students)
 
 ---
 
-#### 2.3.3 DataFrame 常用方法
+### 2.3.3 DataFrame 常用方法
 
 | 方法           | 说明               |
 | ------------ | ---------------- |
@@ -145,7 +153,7 @@ df = pd.DataFrame(score, columns=subjects, index=students)
 
 ---
 
-### 2.4 索引的设置与修改
+## 2.4 索引的设置与修改
 
 **修改行索引**（必须整体赋值）：
 
@@ -168,7 +176,7 @@ df.set_index('列名', drop=True)   # drop=True 删除该列
 
 ---
 
-### 2.5 Pandas 数据类型速查表
+## 2.5 Pandas 数据类型速查表
 
 | Pandas 类型    | 说明   | Python 对应类型          |
 | ------------ | ---- | -------------------- |
@@ -184,9 +192,9 @@ df.set_index('列名', drop=True)   # drop=True 删除该列
 
 ---
 
-## 三、Pandas 基本数据操作
+# 三、Pandas 基本数据操作
 
-### 3.1 索引取值（三种方式）
+## 3.1 索引取值（三种方式）
 
 **直接索引**（先列后行）：
 
@@ -210,7 +218,7 @@ df.iloc[:3, :5]              # 前3行，前5列
 
 ---
 
-### 3.2 赋值操作
+## 3.2 赋值操作
 
 ```Python
 df['新列'] = 值                  # 新增或修改整列
@@ -219,7 +227,7 @@ df.列名 = 值                     # 等价形式（列名不能有空格）
 
 ---
 
-### 3.3 排序
+## 3.3 排序
 
 **按值排序**：
 
@@ -243,9 +251,9 @@ series.sort_index()
 
 ---
 
-## 四、DataFrame 运算
+# 四、DataFrame 运算
 
-### 4.1 算术运算
+## 4.1 算术运算
 
 ```Python
 df['列名'].add(10)    # 每个元素 +10
@@ -255,7 +263,7 @@ df['列名'].sub(5)     # 每个元素 -5
 
 ---
 
-### 4.2 逻辑筛选
+## 4.2 逻辑筛选
 
 **使用逻辑运算符**：
 
@@ -279,9 +287,9 @@ df.query("open > 23 and open < 24")
 df[df['open'].isin([23.53, 23.85])]
 ```
 
-### 4.3 统计运算
+## 4.3 统计运算
 
-#### 常用统计函数
+### 常用统计函数
 
 | 函数         | 说明      |
 | ---------- | ------- |
@@ -302,7 +310,7 @@ df.max(axis=0)          # 每列最大值
 df.mean(axis=1)         # 每行平均值
 ```
 
-#### 累计统计函数
+### 累计统计函数
 
 | 函数          | 作用       |
 | ----------- | -------- |
@@ -319,7 +327,7 @@ df['p_change'].cumsum()    # 按时间累积收益率
 
 ---
 
-### 4.4 自定义运算 `apply()`
+## 4.4 自定义运算 `apply()`
 
 ```Python
 # 对每列应用 lambda 函数
@@ -331,9 +339,9 @@ df.apply(lambda row: row['close'] - row['open'], axis=1)
 
 ---
 
-## 五、文件读取与存储
+# 五、文件读取与存储
 
-### 5.1 CSV 文件
+## 5.1 CSV 文件
 
 **读取**：
 
@@ -349,7 +357,7 @@ df.to_csv('out.csv', index=False, columns=['col1'], mode='w')
 
 ---
 
-### 5.2 JSON 文件
+## 5.2 JSON 文件
 
 **读取**（常见格式 records）：
 
@@ -368,7 +376,7 @@ df.to_json('out.json', orient='records', lines=True)
 
 ---
 
-### 5.3 MySQL 数据库
+## 5.3 MySQL 数据库
 
 > 需要安装 pymysql 和 sqlalchemy。
 
@@ -387,9 +395,9 @@ df = pd.read_sql('SELECT * FROM table_name', engine)
 
 ---
 
-## 六、高级处理 – 缺失值处理
+# 六、高级处理 – 缺失值处理
 
-### 6.1 缺失值检测
+## 6.1 缺失值检测
 
 ```Python
 pd.isnull(df)          # 返回布尔 DataFrame
@@ -402,7 +410,7 @@ np.all(pd.notnull(df)) # 只有全部非空返回 True
 
 ---
 
-### 6.2 缺失值处理方式
+## 6.2 缺失值处理方式
 
 **方式一：删除缺失值**
 
@@ -432,9 +440,9 @@ df.replace('?', np.nan, inplace=True)
 
 ---
 
-## 七、高级处理 – 数据合并
+# 七、高级处理 – 数据合并
 
-### 7.1 `concat` – 沿轴拼接
+## 7.1 `concat` – 沿轴拼接
 
 ```Python
 pd.concat([df1, df2], axis=0)   # 垂直拼接（行增加）
@@ -443,7 +451,7 @@ pd.concat([df1, df2], axis=1)   # 水平拼接（列增加）
 
 ---
 
-### 7.2 `merge` – 数据库风格连接
+## 7.2 `merge` – 数据库风格连接
 
 ```Python
 pd.merge(left, right, how='inner', on='key')
@@ -463,9 +471,9 @@ pd.merge(left, right, left_on='左键', right_on='右键')
 
 ---
 
-## 八、高级处理 – 数据分组聚合
+# 八、高级处理 – 数据分组聚合
 
-### 8.1 `groupby` 基本用法
+## 8.1 `groupby` 基本用法
 
 ```Python
 # 单列分组
@@ -481,7 +489,7 @@ grouped.get_group(('Female', '线上'))  # 获取特定组
 
 ---
 
-### 8.2 分组聚合 – `agg()`
+## 8.2 分组聚合 – `agg()`
 
 ```Python
 df.groupby(['city', 'channel']).agg({
@@ -493,7 +501,7 @@ df.groupby(['city', 'channel']).agg({
 
 ---
 
-### 8.3 分组过滤 – `filter()`
+## 8.3 分组过滤 – `filter()`
 
 ```Python
 # 保留每组 revenue 平均值大于 200 的行
@@ -504,9 +512,9 @@ df.groupby('city').filter(lambda x: x['revenue'].mean() > 200)
 
 ---
 
-## 九、高级处理 – 交叉表与透视表
+# 九、高级处理 – 交叉表与透视表
 
-### 9.1 交叉表 `crosstab`
+## 9.1 交叉表 `crosstab`
 
 - **作用**：统计两列数据的频数分布（类似 Excel 数据透视表的计数）。
 
@@ -516,7 +524,7 @@ pd.crosstab(df['性别'], df['购买'])
 
 ---
 
-### 9.2 透视表 `pivot_table`
+## 9.2 透视表 `pivot_table`
 
 - **作用**：对某一列进行聚合，以另一列作为行索引，第三列作为列索引。
 
@@ -546,9 +554,9 @@ df.pivot_table(index='性别', columns='购买', values='金额', aggfunc='mean'
 
 ---
 
-## 十、总结与学习建议
+# 十、总结与学习建议
 
-### 10.1 核心知识点回顾
+## 10.1 核心知识点回顾
 
 | 模块    | 关键点                                               |
 | ----- | ------------------------------------------------- |
@@ -562,7 +570,7 @@ df.pivot_table(index='性别', columns='购买', values='金额', aggfunc='mean'
 
 ---
 
-### 10.2 学习建议
+## 10.2 学习建议
 
 1. **多实践**：找一份真实数据（如 Kaggle 上的 Titanic、房价数据）从头到尾做一次数据清洗和分析。
 2. **对比 SQL**：将 groupby、merge 和 SQL 语句对应理解。

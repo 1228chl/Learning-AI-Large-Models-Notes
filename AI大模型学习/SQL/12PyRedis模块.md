@@ -1,13 +1,12 @@
 **上一级：** [[11PyMySQL模块]] 
 
-**下一级：**  [[]]
-
 **标签：** #sql #基础 
 
 ---
-## 详细笔记：Python操作Redis（redis-py）
 
-### 一、redis-py 模块安装
+# 详细笔记：Python操作Redis（redis-py）
+
+## 一、redis-py 模块安装
 
 `redis-py` 是 Redis 官方推荐的 Python 客户端库，完全支持 Redis 的命令。
 
@@ -35,9 +34,9 @@ print(redis.__version__)   # 例如 4.5.0
 
 ---
 
-### 二、连接 Redis 数据库
+## 二、连接 Redis 数据库
 
-#### 2.1 连接参数详解
+### 2.1 连接参数详解
 
 | 参数                     | 说明                                             | 默认值        |
 | ------------------------ | ------------------------------------------------ | ------------- |
@@ -50,7 +49,7 @@ print(redis.__version__)   # 例如 4.5.0
 | `socket_connect_timeout` | 连接建立超时                                     | `None`        |
 | `max_connections`        | 连接池最大连接数                                 | `None`        |
 
-#### 2.2 基本连接示例
+### 2.2 基本连接示例
 
 ```python
 import redis
@@ -74,7 +73,7 @@ except redis.ConnectionError as e:
 
 > **说明**：`decode_responses=True` 会让所有命令返回字符串，而不是 `b'value'` 形式的字节串，非常方便。
 
-#### 2.3 连接池方式（推荐生产环境）
+### 2.3 连接池方式（推荐生产环境）
 
 ```python
 pool = redis.ConnectionPool(
@@ -89,9 +88,9 @@ r = redis.Redis(connection_pool=pool)
 
 ---
 
-### 三、数据类型操作（详细代码示例）
+## 三、数据类型操作（详细代码示例）
 
-#### 3.1 字符串（String）
+### 3.1 字符串（String）
 
 Redis 字符串是最基础的类型，可以存储文本、数字、JSON 等。
 
@@ -134,7 +133,7 @@ r.decr('counter')          # 自减1
 print(r.get('counter'))    # 5
 ```
 
-#### 3.2 哈希（Hash）
+### 3.2 哈希（Hash）
 
 Hash 适合存储对象，一个 key 对应多个 field-value 对。
 
@@ -189,7 +188,7 @@ r.hdel('user:1001', 'age')
 print(r.hgetall('user:1001'))  # {'name': '李四'}
 ```
 
-#### 3.3 列表（List）
+### 3.3 列表（List）
 
 Redis 列表是双向链表，支持从两端推入/弹出。
 
@@ -237,7 +236,7 @@ print(f"右侧弹出: {right_task}")  # task5
 print(r.lrange('tasks', 0, -1))  # ['task2', 'task3', 'task4']
 ```
 
-#### 3.4 集合（Set）
+### 3.4 集合（Set）
 
 无序、唯一元素的集合，支持交集、并集、差集运算。
 
@@ -293,7 +292,7 @@ diff = r.sdiff('set1', 'set2')
 print("差集(set1 - set2):", diff)  # {'a'}
 ```
 
-#### 3.5 有序集合（Sorted Set）
+### 3.5 有序集合（Sorted Set）
 
 每个元素关联一个分数（score），按分数排序。
 
@@ -346,7 +345,7 @@ print("高分玩家:", high_scores)
 
 ---
 
-### 四、键操作与过期时间
+## 四、键操作与过期时间
 
 | 方法                         | 说明                                     |
 | ---------------------------- | ---------------------------------------- |
@@ -401,7 +400,7 @@ for key in r.scan_iter(match='user:*', count=100):
 
 ---
 
-### 五、实战案例：简单的缓存系统
+## 五、实战案例：简单的缓存系统
 
 下面封装一个通用的缓存类，支持任意 Python 对象（通过 JSON 序列化），并提供自动过期功能。
 
@@ -494,9 +493,9 @@ if __name__ == "__main__":
 
 ---
 
-### 六、扩展知识
+## 六、扩展知识
 
-#### 6.1 连接池（Connection Pool）
+### 6.1 连接池（Connection Pool）
 
 生产环境强烈建议使用连接池，避免频繁创建和销毁连接。
 
@@ -513,7 +512,7 @@ pool = redis.ConnectionPool(
 r = redis.Redis(connection_pool=pool)
 ```
 
-#### 6.2 管道（Pipeline）
+### 6.2 管道（Pipeline）
 
 管道可以将多个命令打包一次性发送给 Redis，减少网络往返，提高批量操作性能。
 
@@ -533,7 +532,7 @@ with r.pipeline() as pipe:
     pipe.execute()
 ```
 
-#### 6.3 发布订阅（Pub/Sub）
+### 6.3 发布订阅（Pub/Sub）
 
 ```python
 # 订阅者
@@ -547,7 +546,7 @@ for message in pubsub.listen():
 r.publish('news', 'Hello Redis!')
 ```
 
-#### 6.4 Lua 脚本
+### 6.4 Lua 脚本
 
 Redis 支持 Lua 脚本，可实现原子性的复杂操作。
 
@@ -568,7 +567,7 @@ result = r.eval(script, 1, 'counter', 10)
 print(result)  # 10（若之前无值则设为10）
 ```
 
-#### 6.5 异常处理
+### 6.5 异常处理
 
 ```python
 try:
@@ -582,7 +581,7 @@ except redis.ResponseError as e:
     print("命令执行错误:", e)
 ```
 
-#### 6.6 常见生产配置建议
+### 6.6 常见生产配置建议
 
 - 设置 `socket_keepalive=True` 保持长连接。
 - 使用 `retry` 机制（如 `tenacity` 库）处理瞬时故障。
@@ -591,7 +590,7 @@ except redis.ResponseError as e:
 
 ---
 
-## 总结
+# 总结
 
 | 数据类型   | 常用场景                       | 核心命令                              |
 | ---------- | ------------------------------ | ------------------------------------- |
