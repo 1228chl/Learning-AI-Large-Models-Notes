@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "AI大模型学习/Python/03闭包和装饰器.md",
+                "file": "AI大模型学习/Python/python_进阶.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "03闭包和装饰器"
+              "title": "python_进阶"
             }
           },
           {
@@ -31,7 +31,8 @@
               "title": "关系图谱"
             }
           }
-        ]
+        ],
+        "currentTab": 1
       }
     ],
     "direction": "vertical"
@@ -63,7 +64,7 @@
             "state": {
               "type": "search",
               "state": {
-                "query": "",
+                "query": "tag:#基础",
                 "matchingCase": false,
                 "explainSearch": false,
                 "collapseAll": false,
@@ -206,23 +207,23 @@
       "templater-obsidian:Templater": false
     }
   },
-  "active": "a73ebf785a6e6ac6",
+  "active": "e83158f79f242826",
   "lastOpenFiles": [
+    "AI大模型学习/Python/09正则表达式.md",
+    "AI大模型学习/Python/01面向对象基础.md",
+    "AI大模型学习/Python/python_进阶.md",
+    "AI大模型学习/Python/08迭代器&生成器&协程.md",
+    "AI大模型学习/Python/07线程.md",
+    "AI大模型学习/Python/06进程.md",
+    "AI大模型学习/Python/05深浅拷贝.md",
     "AI大模型学习/Python/04网络编程.md",
     "AI大模型学习/Python/03闭包和装饰器.md",
     "AI大模型学习/Python/02面向对象高级.md",
-    "AI大模型学习/Python/01面向对象基础.md",
     "Templates/Note_Templater.md",
     "AI大模型学习/未命名.md",
     "AI大模型学习/数据分析/13-1NumPy模块（课堂版）.md",
     "Templates",
     "新建文件夹",
-    "AI大模型学习/Python/python_进阶.md",
-    "AI大模型学习/Python/09正则表达式.md",
-    "AI大模型学习/Python/08迭代器&生成器&协程.md",
-    "AI大模型学习/Python/07线程.md",
-    "AI大模型学习/Python/06进程.md",
-    "AI大模型学习/Python/05深浅拷贝.md",
     "AI大模型学习/Linux/16Linux命令.md",
     "AI大模型学习/Linux/16-1Linux命令（课堂版）.md",
     "AI大模型学习/Conda/Conda基础命令.md",
