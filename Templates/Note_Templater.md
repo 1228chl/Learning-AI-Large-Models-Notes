@@ -20,16 +20,5 @@ let ref = await tp.system.prompt("引用", "");
 
 ---
 
-# <% tp.file.title %>
-
 <% tp.file.cursor() %>
 
----
-
-**上一级：** [[<% parent %>]]
-
-**下一级：** [[<% child %>]]
-
-**标签：** #<% tag %>
-
-**引用：** <% ref %>
