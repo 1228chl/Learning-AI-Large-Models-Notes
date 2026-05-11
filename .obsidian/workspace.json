@@ -13,6 +13,20 @@
             "state": {
               "type": "markdown",
               "state": {
+                "file": "AI大模型学习/机器学习/机器学习概论.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "机器学习概论"
+            }
+          },
+          {
+            "id": "96016ab1746aabdd",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
                 "file": "AI大模型学习/智能体开发/提示词工程/提示词工程.md",
                 "mode": "source",
                 "source": false
@@ -20,19 +34,8 @@
               "icon": "lucide-file",
               "title": "提示词工程"
             }
-          },
-          {
-            "id": "96016ab1746aabdd",
-            "type": "leaf",
-            "state": {
-              "type": "graph",
-              "state": {},
-              "icon": "lucide-git-fork",
-              "title": "关系图谱"
-            }
           }
-        ],
-        "currentTab": 1
+        ]
       }
     ],
     "direction": "vertical"
@@ -64,7 +67,7 @@
             "state": {
               "type": "search",
               "state": {
-                "query": "tag:#conda",
+                "query": "tag:#null",
                 "matchingCase": false,
                 "explainSearch": false,
                 "collapseAll": false,
@@ -89,7 +92,8 @@
       }
     ],
     "direction": "horizontal",
-    "width": 300
+    "width": 300,
+    "collapsed": true
   },
   "right": {
     "id": "f07a0c5b7e11463b",
@@ -207,9 +211,11 @@
       "templater-obsidian:Templater": false
     }
   },
-  "active": "96016ab1746aabdd",
+  "active": "ce350781caf40b13",
   "lastOpenFiles": [
     "AI大模型学习/智能体开发/提示词工程/提示词工程.md",
+    "AI大模型学习/机器学习/机器学习概论.md",
+    "AI大模型学习/机器学习",
     "AI大模型学习/SQL/12PyRedis模块.md",
     "未命名.canvas",
     "AI大模型学习/SQL/11PyMySQL模块.md",
@@ -243,7 +249,6 @@
     "新建文件夹",
     "LICENSE",
     "AI大模型学习/智能体开发/提示词工程",
-    "AI大模型学习/Conda",
-    "AI大模型学习/Linux"
+    "AI大模型学习/Conda"
   ]
 }
