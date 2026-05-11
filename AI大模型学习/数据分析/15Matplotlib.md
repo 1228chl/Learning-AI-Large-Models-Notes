@@ -1,4 +1,4 @@
-**上一级：** [[14Pandas（AI大全版）]]
+**上一级：** [14Pandas（AI大全版）](14Pandas（AI大全版）.md)
 
 **标签：** #Pandas #基础 
 

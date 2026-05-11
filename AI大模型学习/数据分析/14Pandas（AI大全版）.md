@@ -1,6 +1,6 @@
-**上一级：** [[14-1Pandas模块（课堂版）]]
+**上一级：** [14-1Pandas模块（课堂版）](14-1Pandas模块（课堂版）.md)
 
-**下一级：**  [[15Matplotlib]]
+**下一级：**  [15Matplotlib](15Matplotlib.md)
 
 **标签：** #Pandas #基础 
 

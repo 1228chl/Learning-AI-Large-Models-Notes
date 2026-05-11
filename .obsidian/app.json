@@ -5,5 +5,9 @@
   "foldHeading": true,
   "showLineNumber": false,
   "rightToLeft": false,
-  "strictLineBreaks": false
+  "strictLineBreaks": false,
+  "useMarkdownLinks": true,
+  "newLinkFormat": "shortest",
+  "alwaysUpdateLinks": true,
+  "attachmentFolderPath": "Assets"
 }
