@@ -7,7 +7,7 @@
   "rightToLeft": false,
   "strictLineBreaks": false,
   "useMarkdownLinks": true,
-  "newLinkFormat": "shortest",
+  "newLinkFormat": "relative",
   "alwaysUpdateLinks": true,
   "attachmentFolderPath": "Assets"
 }
