@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "AI大模型学习/机器学习/监督学习.md",
+                "file": "AI大模型学习/机器学习/机器学习概论.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "监督学习"
+              "title": "机器学习概论"
             }
           },
           {
@@ -63,7 +63,7 @@
             "state": {
               "type": "search",
               "state": {
-                "query": "tag:#null",
+                "query": "",
                 "matchingCase": false,
                 "explainSearch": false,
                 "collapseAll": false,
@@ -88,8 +88,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 300,
-    "collapsed": true
+    "width": 300
   },
   "right": {
     "id": "f07a0c5b7e11463b",
@@ -209,15 +208,17 @@
   },
   "active": "ce350781caf40b13",
   "lastOpenFiles": [
-    "AI大模型学习/机器学习/监督学习.md",
-    "Templates/Note_Templater.md",
-    "AI大模型学习/机器学习/机器学习概论.md",
     "AI大模型学习/智能体开发/提示词工程/提示词工程.md",
-    "AI大模型学习/机器学习",
-    "AI大模型学习/SQL/12PyRedis模块.md",
-    "未命名.canvas",
-    "AI大模型学习/SQL/11PyMySQL模块.md",
     "AI大模型学习/SQL/10MySQL数据库.md",
+    "AI大模型学习/SQL/11PyMySQL模块.md",
+    "AI大模型学习/SQL/12PyRedis模块.md",
+    "AI大模型学习/机器学习/机器学习概论.md",
+    "AI大模型学习/机器学习/监督学习.md",
+    "AI大模型学习/数据分析/13-1NumPy模块（课堂版）.md",
+    "Assets/Image",
+    "Templates/Note_Templater.md",
+    "AI大模型学习/机器学习",
+    "未命名.canvas",
     "AI大模型学习/Python/python_进阶.md",
     "AI大模型学习/Python/09正则表达式.md",
     "AI大模型学习/Python/08迭代器&生成器&协程.md",
@@ -236,7 +237,6 @@
     "AI大模型学习/数学/统计学基础.md",
     "AI大模型学习/数学/多维向量距离计算基础.md",
     "AI大模型学习/数据分析/15Matplotlib.md",
-    "AI大模型学习/数据分析/14Pandas（AI大全版）.md",
     "Assets",
     "AI大模型学习/数学",
     "AI大模型学习/智能体开发/Coze开发",
@@ -244,7 +244,6 @@
     "Templates",
     "新建文件夹",
     "LICENSE",
-    "AI大模型学习/智能体开发/提示词工程",
-    "AI大模型学习/Conda"
+    "AI大模型学习/智能体开发/提示词工程"
   ]
 }

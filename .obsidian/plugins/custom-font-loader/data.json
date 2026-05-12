@@ -1,6 +1,6 @@
 {
   "font_folder": ".obsidian/fonts/",
-  "font": "LXGWWenKai-Light.ttf",
+  "font": "LXGWNeoZhiSongPlus.ttf",
   "force_mode": true,
   "custom_css_mode": false,
   "custom_css": "/* Example CSS for your font: lxgwwenkai-medium */\n\n/* Apply to all text */\n:root * {\n\t--font-default: 'lxgwwenkai-medium';\n\t--default-font: 'lxgwwenkai-medium';\n\t--font-family-editor: 'lxgwwenkai-medium';\n\t--font-interface-override: 'lxgwwenkai-medium';\n\t--font-text-override: 'lxgwwenkai-medium';\n}\n\n/* Example: Apply to custom CSS class */\n.custom-font * {\n\tfont-family: 'lxgwwenkai-medium' !important;\n}\n\n/* Example: Apply to specific elements only */\n.custom-font h1, .custom-font h2, .custom-font h3 {\n\tfont-family: 'lxgwwenkai-medium' !important;\n}"

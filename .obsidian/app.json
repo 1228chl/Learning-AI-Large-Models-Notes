@@ -9,5 +9,6 @@
   "useMarkdownLinks": true,
   "newLinkFormat": "relative",
   "alwaysUpdateLinks": true,
-  "attachmentFolderPath": "Assets"
+  "attachmentFolderPath": "Assets",
+  "livePreview": true
 }
