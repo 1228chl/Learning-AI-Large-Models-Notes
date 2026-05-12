@@ -15,7 +15,8 @@
               "state": {
                 "file": "AI大模型学习/机器学习/机器学习概论.md",
                 "mode": "source",
-                "source": false
+                "source": false,
+                "backlinks": false
               },
               "icon": "lucide-file",
               "title": "机器学习概论"
