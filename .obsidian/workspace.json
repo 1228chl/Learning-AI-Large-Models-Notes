@@ -13,13 +13,13 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "AI大模型学习/机器学习/监督学习.md",
+                "file": "AI大模型学习/机器学习/机器学习概论.md",
                 "mode": "source",
                 "source": false,
                 "backlinks": false
               },
               "icon": "lucide-file",
-              "title": "监督学习"
+              "title": "机器学习概论"
             }
           },
           {
@@ -209,12 +209,12 @@
   },
   "active": "ce350781caf40b13",
   "lastOpenFiles": [
+    "AI大模型学习/机器学习/监督学习.md",
     "AI大模型学习/机器学习/机器学习概论.md",
     "AI大模型学习/智能体开发/提示词工程/提示词工程.md",
     "AI大模型学习/SQL/10MySQL数据库.md",
     "AI大模型学习/SQL/11PyMySQL模块.md",
     "AI大模型学习/SQL/12PyRedis模块.md",
-    "AI大模型学习/机器学习/监督学习.md",
     "AI大模型学习/数据分析/13-1NumPy模块（课堂版）.md",
     "Assets/Image",
     "Templates/Note_Templater.md",
