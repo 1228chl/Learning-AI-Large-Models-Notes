@@ -10,5 +10,6 @@
   "newLinkFormat": "relative",
   "alwaysUpdateLinks": true,
   "attachmentFolderPath": "Assets",
-  "livePreview": true
+  "livePreview": true,
+  "spellcheck": false
 }
