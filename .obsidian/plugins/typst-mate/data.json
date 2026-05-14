@@ -1,0 +1,217 @@
+{
+  "concealMathSymbols": true,
+  "enableConcealMathSymbolRevealDelay": true,
+  "mathSymbolRevealDelay": 1000,
+  "complementSymbolWithUnicode": false,
+  "disableBracketHighlight": false,
+  "useObsidianTheme": false,
+  "enableInlinePreview": true,
+  "revertTabToDefault": false,
+  "jumpOutsideBracket": true,
+  "preferInlineExitForSingleLineDisplayMath": true,
+  "moveToEndOfMathBlockBeforeExiting": false,
+  "disableMacro": false,
+  "enableBackgroundRendering": true,
+  "patchPDFExport": false,
+  "autoBaseColor": true,
+  "baseColor": "#000000",
+  "offset": 0,
+  "fitToNoteWidthProfile": "Live",
+  "fitToNoteWidthProfiles": [
+    {
+      "name": "A3",
+      "width": "700pt"
+    },
+    {
+      "name": "A4",
+      "width": "500pt"
+    },
+    {
+      "name": "A5",
+      "width": "350pt"
+    },
+    {
+      "name": "Legal",
+      "width": "516pt"
+    },
+    {
+      "name": "Letter",
+      "width": "516pt"
+    },
+    {
+      "name": "Tabloid",
+      "width": "690pt"
+    }
+  ],
+  "skipPreparationWaiting": false,
+  "disablePackageCache": false,
+  "preamble": "#set page(margin: 0pt, width: auto, height: auto)\n#show raw: set text(size: 1.25em)\n#set text(size: fontsize)\n#import \"@preview/mannot:0.3.1\": *\n#import \"@preview/quick-maths:0.2.1\": shorthands\n#show: shorthands.with(\n  ($+-$, sym.plus.minus),\n  ($|-$, math.tack),\n)",
+  "openTypstToolsOnStartup": true,
+  "enableMathjaxFallback": false,
+  "applyProcessorToMathJax": false,
+  "importPath": ".typst",
+  "enableDebugger": false,
+  "processor": {
+    "inline": {
+      "processors": [
+        {
+          "id": "ce",
+          "renderingEngine": "typst-svg",
+          "format": "#import \"@preview/typsium:0.3.1\": ce\n#show math.equation: set text(font: (\"New Computer Modern Math\", \"Noto Serif CJK SC\"))\n#ce[{CODE}]",
+          "styling": "inline",
+          "noPreamble": false,
+          "fitToNoteWidth": false,
+          "syntaxMode": 0
+        },
+        {
+          "id": "tex",
+          "renderingEngine": "mathjax",
+          "format": "",
+          "styling": "inline",
+          "noPreamble": false,
+          "fitToNoteWidth": false
+        },
+        {
+          "id": "display",
+          "renderingEngine": "typst-svg",
+          "format": "#set page(margin: (x: 0pt, y: 0.3125em))\n#math.equation($ {CODE} $, block: false)",
+          "styling": "inline",
+          "noPreamble": false,
+          "fitToNoteWidth": false,
+          "syntaxMode": 1,
+          "useReplaceAll": false
+        },
+        {
+          "id": "",
+          "renderingEngine": "typst-svg",
+          "format": "#set page(margin: (x: 0pt, y: 0.3125em))\n${CODE}$",
+          "styling": "inline",
+          "noPreamble": false,
+          "fitToNoteWidth": false,
+          "syntaxMode": 1,
+          "useReplaceAll": false
+        }
+      ]
+    },
+    "display": {
+      "processors": [
+        {
+          "id": "block",
+          "renderingEngine": "typst-svg",
+          "format": "$ {CODE} $",
+          "styling": "block",
+          "noPreamble": false,
+          "fitToNoteWidth": false,
+          "syntaxMode": 1,
+          "useReplaceAll": false
+        },
+        {
+          "id": "",
+          "renderingEngine": "typst-svg",
+          "format": "$ {CODE} $",
+          "styling": "block-center",
+          "noPreamble": false,
+          "fitToNoteWidth": false,
+          "syntaxMode": 1,
+          "useReplaceAll": false
+        }
+      ]
+    },
+    "codeblock": {
+      "processors": [
+        {
+          "id": "typst",
+          "renderingEngine": "typst-svg",
+          "format": "{CODE}",
+          "styling": "block-center",
+          "noPreamble": false,
+          "fitToNoteWidth": true,
+          "syntaxMode": 0,
+          "useReplaceAll": false
+        },
+        {
+          "id": "fletcher",
+          "renderingEngine": "typst-svg",
+          "format": "#import \"@preview/fletcher:0.5.8\" as fletcher: diagram, node, edge\n{CODE}",
+          "styling": "block-center",
+          "noPreamble": false,
+          "fitToNoteWidth": false,
+          "syntaxMode": 0,
+          "useReplaceAll": false
+        },
+        {
+          "id": "lovelace",
+          "renderingEngine": "typst-svg",
+          "format": "#import \"@preview/lovelace:0.3.0\": *\n#pseudocode-list[\n{CODE}\n]",
+          "styling": "block",
+          "noPreamble": false,
+          "fitToNoteWidth": false,
+          "syntaxMode": 0,
+          "useReplaceAll": false
+        },
+        {
+          "id": "lilaq",
+          "renderingEngine": "typst-svg",
+          "format": "#import \"@preview/lilaq:0.5.0\" as lq\n{CODE}",
+          "styling": "block-center",
+          "noPreamble": false,
+          "fitToNoteWidth": false,
+          "syntaxMode": 0,
+          "useReplaceAll": false
+        }
+      ]
+    },
+    "excalidraw": {
+      "processors": [
+        {
+          "id": "default",
+          "renderingEngine": "typst-svg",
+          "format": "#set page(margin: 0.25em)\n${CODE}$",
+          "styling": "default",
+          "noPreamble": false,
+          "syntaxMode": 1,
+          "useReplaceAll": false
+        }
+      ]
+    }
+  },
+  "snippets": [
+    {
+      "category": "Matrix",
+      "name": "mat",
+      "description": "e.g. mat(3,3)@",
+      "kind": "display",
+      "id": "",
+      "content": "const parts = input.split(\",\").map(s => s.trim());\n\nconst [x, y] = parts.map(Number)\n\nconst rowText = `${(\"#CURSOR, \".repeat(x)).slice(0, -2)} ;\\n`;\nconst contentText = `  ${rowText}`.repeat(y);\n\nreturn `mat(\\n${contentText})`;",
+      "script": true
+    },
+    {
+      "category": "Matrix",
+      "name": "matInline",
+      "description": "e.g. mat(3,3)@",
+      "kind": "inline",
+      "id": "",
+      "content": "const parts = input.split(\",\").map(s => s.trim());\n\nconst [x, y] = parts.map(Number)\n\nconst rowText = `${(\"#CURSOR, \".repeat(x)).slice(0, -2)} ;`;\nconst contentText = `${rowText}`.repeat(y);\n\nreturn `mat(${contentText})`;",
+      "script": true
+    },
+    {
+      "category": "Cases",
+      "name": "cases",
+      "description": "",
+      "kind": "display",
+      "id": "",
+      "content": "cases(#CURSOR \"if\" #CURSOR, #CURSOR \"else\")",
+      "script": false
+    },
+    {
+      "category": "Cases",
+      "name": "casesn",
+      "description": "e.g. casesn(3)@",
+      "kind": "display",
+      "id": "",
+      "content": "const n = Number(input);\nreturn `cases(\\n${(`  #CURSOR \"if\" #CURSOR,\\n`).repeat(n-1)}  #CURSOR \"else\"\\n)`",
+      "script": true
+    }
+  ],
+  "crashCount": 0
+}

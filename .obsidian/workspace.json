@@ -225,13 +225,16 @@
   },
   "active": "ce350781caf40b13",
   "lastOpenFiles": [
-    "AI大模型学习/机器学习/KNN/03KNN算法简介.md",
     "AI大模型学习/机器学习/KNN/04KNN算法API详解.md",
     "AI大模型学习/机器学习/KNN/05距离度量.md",
-    "AI大模型学习/机器学习/基础",
-    "AI大模型学习/机器学习/KNN",
+    "AI大模型学习/机器学习/KNN/03KNN算法简介.md",
     "AI大模型学习/机器学习/基础/02机器学习基础.md",
     "AI大模型学习/机器学习/基础/01机器学习概论.md",
+    "Assets/mathlive-fix-main.js",
+    "Assets/nathlive-fix-main.js",
+    "Assets/main.js",
+    "AI大模型学习/机器学习/基础",
+    "AI大模型学习/机器学习/KNN",
     "AI大模型学习/机器学习/基础/监督学习.md",
     "未命名.md",
     "AI大模型学习/智能体开发/提示词工程/提示词工程.md",
@@ -255,12 +258,8 @@
     "AI大模型学习/Python/01面向对象基础.md",
     "AI大模型学习/Linux/16Linux命令.md",
     "AI大模型学习/Linux/16-1Linux命令（课堂版）.md",
-    "AI大模型学习/Conda/Conda基础命令.md",
     "Assets",
     "AI大模型学习/数学",
-    "AI大模型学习/智能体开发/Coze开发",
-    "AI大模型学习/智能体开发",
-    "Templates",
-    "新建文件夹"
+    "AI大模型学习/智能体开发/Coze开发"
   ]
 }

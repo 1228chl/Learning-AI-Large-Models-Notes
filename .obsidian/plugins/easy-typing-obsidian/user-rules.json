@@ -1,6 +1,6 @@
 [
   {
-    "trigger": "** ",
+    "trigger": "**  ",
     "replacement": "**$0**",
     "priority": 100,
     "enabled": true,

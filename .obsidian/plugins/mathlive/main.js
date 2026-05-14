@@ -45584,6 +45584,12 @@ class MathLiveModal extends obsidian__WEBPACK_IMPORTED_MODULE_0__.Modal {
             return;
         }
         this.editor.replaceRange(this.renderedResult, this.replaceFrom, this.replaceTo);
+
+        // 将光标移动到插入内容的末尾
+        const fromOffset = this.editor.posToOffset(this.replaceFrom);
+        const newOffset = fromOffset + this.renderedResult.length;
+        const newPos = this.editor.offsetToPos(newOffset);
+        this.editor.setCursor(newPos);
     }
 }
 
