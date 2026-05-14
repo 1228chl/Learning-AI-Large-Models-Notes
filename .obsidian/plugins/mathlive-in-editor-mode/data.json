@@ -1,0 +1,17 @@
+{
+  "display": true,
+  "blockDisplay": false,
+  "hideMathJaxBlock": false,
+  "blockMenuIcon": false,
+  "blockKeyboardIcon": true,
+  "inlineDisplay": false,
+  "hideMathJaxInline": false,
+  "inlineMenuIcon": false,
+  "inlineKeyboardIcon": true,
+  "macros": "",
+  "inlineShortcuts": "",
+  "keybindings": "",
+  "immediateUpdate": true,
+  "mathVirtualKeyboardMode": "auto",
+  "arrowKeyNavigation": true
+}

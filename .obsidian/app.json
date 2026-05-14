@@ -1,6 +1,6 @@
 {
   "promptDelete": true,
-  "autoPairMarkdown": true,
+  "autoPairMarkdown": false,
   "propertiesInDocument": "visible",
   "foldHeading": true,
   "showLineNumber": false,
@@ -11,5 +11,6 @@
   "alwaysUpdateLinks": true,
   "attachmentFolderPath": "Assets",
   "livePreview": true,
-  "spellcheck": false
+  "spellcheck": false,
+  "showInlineTitle": true
 }

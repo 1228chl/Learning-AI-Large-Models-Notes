@@ -1,0 +1,451 @@
+:root {
+  --selection-background-color: rgba(0,0,0,0.5);
+  --selection-color: rgb(73, 201, 206);
+  --highlight-text: rgb(73, 201, 206);
+  --contains-highlight-background-color: rgba(0,0,0,0.5);;
+}
+
+.mathlive-modal-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: start;
+  gap: 1.5rem;
+  padding: 1rem 0 0 0;
+}
+
+.mathlive-modal-root .modal {
+  width: 90vw;
+  max-width: 800px;
+  border-radius: var(--radius-l, 12px);
+  padding: 1.5rem;
+}
+
+.mathlive-modal-content math-field {
+  font-size: 1.5rem;
+  width: 100%;
+  min-height: 100px;
+  padding: 1rem;
+  overflow: hidden;
+  border-radius: var(--radius-m, 8px);
+  border: 1px solid var(--background-modifier-border);
+  background: var(--background-primary);
+  box-shadow: inset 0 0 0 1px transparent, 0 4px 12px rgba(0, 0, 0, 0.05);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  outline: none;
+}
+
+.mathlive-modal-content math-field:focus-within {
+  border-color: var(--interactive-accent);
+  box-shadow: inset 0 0 0 1px var(--interactive-accent), 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.mathlive-action-btn {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  width: 100%;
+  height: 100%;
+  min-height: 3.5rem;
+  padding: 0.75rem 1.25rem;
+  border-radius: var(--radius-m, 8px);
+  border: 1px solid var(--background-modifier-border);
+  background-color: var(--background-secondary);
+  color: var(--text-normal);
+  cursor: pointer;
+  text-align: left;
+  transition: all 0.2s ease;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02);
+}
+
+.mathlive-action-btn:hover {
+  background-color: var(--background-modifier-hover);
+  border-color: var(--background-modifier-border-hover);
+}
+
+.mathlive-action-btn:active {
+  opacity: 0.9;
+}
+
+.mathlive-action-btn.submit {
+  background-color: var(--interactive-accent) !important;
+  color: var(--text-on-accent);
+  border-color: transparent;
+}
+
+.mathlive-action-btn.submit:hover {
+  background-color: var(--interactive-accent-hover) !important;
+}
+
+.mathlive-action-btn.submit .mathlive-btn-hint,
+.mathlive-action-btn.submit .mathlive-btn-desc {
+  color: var(--text-on-accent);
+  opacity: 0.85;
+}
+
+.mathlive-btn-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: inherit;
+  margin-top: 0.125rem;
+}
+
+.mathlive-btn-icon svg {
+  width: 1.5rem;
+  height: 1.5rem;
+}
+
+.mathlive-btn-text-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  flex: 1;
+  min-width: 0;
+}
+
+math-field::part(content) {
+  --_text-highlight-background-color: #1e1e1e;
+  --_contains-highlight-background-color: #1e1e1e;
+}
+
+.obsidian-mathlive-codemirror-wrapper {
+  position: relative;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.25rem;
+}
+
+.obsidian-mathlive-widget-menu {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.35rem;
+  width: 100%;
+  min-width: 100%;
+  box-sizing: border-box;
+  padding: 0.12rem 0.16rem;
+  border-radius: var(--radius-s, 4px);
+  border: 1px solid var(--background-modifier-border);
+  background: var(--background-secondary);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06);
+}
+
+.obsidian-mathlive-widget-menu-group {
+  display: flex;
+  align-items: center;
+  gap: 0.15rem;
+}
+
+.obsidian-mathlive-widget-menu-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.55rem;
+  height: 1.55rem;
+  padding: 0;
+  border-radius: var(--radius-s, 4px);
+  border: 0;
+  background: transparent;
+  color: var(--text-muted);
+  cursor: pointer;
+}
+
+.obsidian-mathlive-widget-menu-button:hover {
+  background: var(--background-modifier-hover);
+  color: var(--text-normal);
+}
+
+.obsidian-mathlive-widget-menu-button svg {
+  width: 0.85rem;
+  height: 0.85rem;
+}
+
+.obsidian-mathlive-widget-account-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 1.55rem;
+  padding: 0 0.45rem;
+  border-radius: var(--radius-s, 4px);
+  border: 1px solid var(--background-modifier-border);
+  background: var(--background-primary-alt, var(--background-primary));
+  color: var(--interactive-accent);
+  font-size: 0.72rem;
+  font-weight: 600;
+  line-height: 1;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.obsidian-mathlive-widget-account-link:hover {
+  border-color: var(--interactive-accent);
+  background: var(--background-modifier-hover);
+  color: var(--interactive-accent-hover);
+}
+
+.obsidian-mathlive-widget-overflow-menu {
+  margin-left: auto;
+}
+
+.obsidian-mathlive-widget-overflow-menu .obsidian-mathlive-widget-menu-button {
+  width: 1.3rem;
+  height: 1.3rem;
+}
+
+.obsidian-mathlive-widget-overflow-menu .obsidian-mathlive-widget-menu-button svg {
+  width: 0.72rem;
+  height: 0.72rem;
+}
+
+/* Live Preview: keep MathLive above any residual preview layers; isolate stacking from mjx siblings. */
+body.mathlive-inline-widgets-active .markdown-source-view.mod-cm6 .obsidian-mathlive-codemirror-wrapper {
+  z-index: 50;
+  isolation: isolate;
+}
+
+body.mathlive-inline-widgets-active .markdown-source-view.mod-cm6 .obsidian-mathlive-codemirror-wrapper.inline {
+  z-index: 50;
+}
+
+/* Belt-and-suspenders: never let inline MathJax steal pointer events while widgets are enabled. */
+body.mathlive-inline-widgets-active .markdown-source-view.mod-cm6 .cm-editor span.math mjx-container {
+  pointer-events: none !important;
+}
+
+body.mathlive-block-widgets-active .markdown-source-view.mod-cm6 .cm-editor div.math mjx-container,
+body.mathlive-block-widgets-active .markdown-source-view.mod-cm6 .cm-editor .math-block mjx-container {
+  pointer-events: none !important;
+}
+
+body.mathlive-block-widgets-active .markdown-source-view.mod-cm6 .obsidian-mathlive-codemirror-wrapper:not(.inline) {
+  z-index: 50;
+  isolation: isolate;
+}
+
+.obsidian-mathlive-codemirror-wrapper math-field {
+  display: block;
+  min-width: 10rem;
+  width: 100%;
+  border-radius: var(--radius-m, 8px);
+  border: 1px solid var(--background-modifier-border);
+  background: var(--background-primary);
+  transition: all 0.2s ease;
+}
+
+.obsidian-mathlive-codemirror-wrapper.inline {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: auto;
+  max-width: 100%;
+  margin: 0 0.35rem 0 0;
+  vertical-align: middle;
+}
+
+.obsidian-mathlive-codemirror-wrapper.inline math-field {
+  min-width: 8rem;
+  width: auto;
+  max-width: 100%;
+  overflow: auto;
+  display: inline-block;
+}
+
+.obsidian-mathlive-codemirror-wrapper.hidden {
+  display: none !important;
+}
+
+.obsidian-mathlive-codemirror-wrapper.hidden math-field {
+  display: none;
+  margin: 0;
+}
+
+.mathlive-modal-header {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  margin-bottom: 0.5rem;
+  border-bottom: 1px solid var(--background-modifier-border);
+  padding-bottom: 0.75rem;
+}
+
+.mathlive-modal-title {
+  margin: 0;
+  font-size: var(--h3-size, 1.125em);
+  font-weight: 600;
+  color: var(--text-normal);
+}
+
+.mathlive-modal-menu {
+  position: relative;
+  margin-left: auto;
+}
+
+.mathlive-modal-menu-trigger {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  padding: 0;
+  border-radius: var(--radius-s, 4px);
+  border: 1px solid var(--background-modifier-border);
+  background: var(--background-secondary);
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.mathlive-modal-menu-trigger:hover {
+  background-color: var(--background-modifier-hover);
+  color: var(--text-normal);
+}
+
+.mathlive-modal-menu-dropdown {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 4px);
+  min-width: 12rem;
+  padding: 0.35rem 0;
+  z-index: 50;
+  border-radius: var(--radius-m, 8px);
+  border: 1px solid var(--background-modifier-border);
+  background: var(--background-primary);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+}
+
+.mathlive-modal-menu-dropdown--hidden {
+  display: none;
+}
+
+.mathlive-modal-menu-item {
+  display: block;
+  padding: 0.5rem 0.85rem;
+  font-size: 0.9rem;
+  color: var(--text-normal);
+  text-decoration: none;
+}
+
+.mathlive-modal-menu-item:hover {
+  background: var(--background-modifier-hover);
+}
+
+.mathlive-button-row {
+  width: 100%;
+  flex: 1 1 250px;
+  min-width: 0;
+}
+
+.mathlive-btn-title {
+  display: block;
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+.mathlive-btn-hint {
+  display: block;
+  font-size: 0.75rem;
+  font-weight: 500;
+  opacity: 0.75;
+  margin-top: 0.15rem;
+}
+
+.mathlive-btn-desc {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: normal;
+  font-size: 0.8rem;
+  font-weight: 400;
+  color: var(--text-muted);
+  margin-top: 0.35rem;
+  line-height: 1.35;
+}
+
+.badge {
+  background-color: var(--background-secondary);
+  color: var(--text-muted);
+  padding: 4px 8px;
+  text-align: center;
+  border-radius: var(--radius-s, 4px);
+  border: 1px solid var(--background-modifier-border);
+  font-size: 0.8rem;
+  text-decoration: none;
+  transition: all 0.1s ease;
+}
+
+.badge:hover {
+  color: var(--text-normal);
+  background-color: var(--background-modifier-hover);
+}
+
+.badge:active {
+  opacity: 0.8;
+}
+
+
+.mathlive-modal-root {
+  flex-direction: column;
+  align-items: center;
+  justify-content: end;
+}
+
+.mathlive-modal-root > .modal-bg {
+  opacity: 0 !important;
+}
+
+.virt-keyboard {
+  overflow: overlay;
+}
+
+.virt-keyboard > div {
+  height: 40vh;
+  width: 100vw;
+}
+
+body.mathlive-hide-mathjax-block .cm-editor div.math mjx-container,
+body.mathlive-hide-rendered-block .cm-editor div.math mjx-container,
+body.mathlive-hide-rendered-block .cm-editor div.callout .math-block mjx-container {
+  display: none !important;
+}
+
+body.mathlive-hide-mathjax-inline .cm-editor div.callout .math-block mjx-container,
+body.mathlive-hide-rendered-inline .cm-editor div.callout .math-block mjx-container,
+body.mathlive-hide-rendered-block .cm-editor div.callout .math-block mjx-container {
+  display: block !important;
+}
+
+body.mathlive-hide-mathjax-inline .cm-editor span.math mjx-container,
+body.mathlive-hide-rendered-inline .cm-editor span.math mjx-container,
+body.mathlive-editing-inline .cm-editor span.math mjx-container,
+body.mathlive-hide-rendered-inline .cm-editor div.callout .math-inline mjx-container {
+  display: none !important;
+}
+
+body.mathlive-hide-mathjax-inline .cm-editor div.callout .math-inline mjx-container {
+  display: inline !important;
+}
+
+body.mathlive-editing-block .cm-editor div.math mjx-container,
+body.mathlive-editing-block .cm-editor div.callout .math-block mjx-container {
+  display: none !important;
+}
+
+body.mathlive-editing-inline .cm-editor div.callout .math-inline mjx-container {
+  display: none !important;
+}
+
+.mathlive-modal-actions {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  width: 100%;
+  margin-top: 0.5rem;
+}

@@ -1,7 +1,12 @@
 {
   "cssTheme": "Minimal",
-  "theme": "obsidian",
-  "baseFontSize": 18,
+  "theme": "moonstone",
+  "baseFontSize": 20,
   "accentColor": "#8a5cf5",
-  "nativeMenus": false
+  "nativeMenus": false,
+  "showRibbon": true,
+  "showViewHeader": true,
+  "enabledCssSnippets": [
+    "mathlive-light-fix"
+  ]
 }

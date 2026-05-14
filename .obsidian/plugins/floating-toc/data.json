@@ -13,5 +13,5 @@
   "barStyle": "enable-edge-style",
   "enableBarHeadingText": false,
   "enableContentOffset": false,
-  "enableDragReorder": false
+  "enableDragReorder": true
 }

@@ -1,0 +1,11 @@
+{
+  "apiKey": null,
+  "useLocalInference": false,
+  "enableInlineEditorMode": true,
+  "enableInlineMathWidgets": false,
+  "enableBlockMathWidgets": false,
+  "hideRenderedInlineMath": false,
+  "hideRenderedBlockMath": false,
+  "immediateInlineUpdate": true,
+  "arrowKeyNavigation": true
+}

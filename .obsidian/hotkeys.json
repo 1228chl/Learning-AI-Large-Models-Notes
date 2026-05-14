@@ -57,5 +57,59 @@
   "workspace:goto-tab-7": [],
   "workspace:goto-tab-8": [],
   "workspace:goto-last-tab": [],
-  "editor:delete-paragraph": []
+  "editor:delete-paragraph": [],
+  "file-explorer:new-file-in-new-pane": [],
+  "editor:open-link-in-new-leaf": [],
+  "easy-typing-obsidian:easy-typing-toggle-comment": [],
+  "workspace:next-tab": [
+    {
+      "modifiers": [
+        "Ctrl"
+      ],
+      "key": "PageDown"
+    }
+  ],
+  "easy-typing-obsidian:easy-typing-delete-blank-line": [],
+  "easy-typing-obsidian:easy-typing-goto-new-line-after-cur-line": [
+    {
+      "modifiers": [
+        "Shift"
+      ],
+      "key": "Enter"
+    }
+  ],
+  "mathlive:open-modal-inline": [
+    {
+      "modifiers": [
+        "Mod"
+      ],
+      "key": "M"
+    }
+  ],
+  "mathlive:open-modal": [
+    {
+      "modifiers": [
+        "Mod",
+        "Shift"
+      ],
+      "key": "M"
+    }
+  ],
+  "mathlive-in-editor-mode:toggle-mathfield": [
+    {
+      "modifiers": [
+        "Mod"
+      ],
+      "key": "M"
+    }
+  ],
+  "editor:insert-table": [
+    {
+      "modifiers": [
+        "Mod"
+      ],
+      "key": "T"
+    }
+  ],
+  "workspace:new-tab": []
 }

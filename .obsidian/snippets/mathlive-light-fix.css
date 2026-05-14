@@ -1,0 +1,11 @@
+/* 修复 MathLive 在亮色主题下的半透明遮罩问题 */
+.theme-light {
+  --selection-background-color: #cce5ff !important;      /* 选中背景：浅蓝色 */
+  --contains-highlight-background-color: #e0e0e0 !important; /* 高亮区域背景：浅灰色 */
+}
+
+/* 可选：增强 math-field 内部的文字对比度 */
+.theme-light math-field::part(content) {
+  --_text-highlight-background-color: #f0f0f0 !important;
+  --_contains-highlight-background-color: #e0e0e0 !important;
+}
