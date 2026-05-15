@@ -30,5 +30,7 @@
   "attachmentsFolderName": "attachment",
   "integrateAttachmentsOnMobile": true,
   "lastPromptedAt": 0,
-  "lastPromptedRepo": ""
+  "lastPromptedRepo": "",
+  "autoDeleteEnabled": true,
+  "confirmBeforeDelete": true
 }

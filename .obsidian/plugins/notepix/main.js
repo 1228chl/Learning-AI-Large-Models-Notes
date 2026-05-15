@@ -637,7 +637,7 @@ var MyPlugin = class extends import_obsidian.Plugin {
 
                 menu.addItem((item) => {
                     item
-                        .setTitle("🗑️ Delete image from GitHub")
+                        .setTitle("删除GitHub与本地图片")
                         .setIcon("trash")
                         .onClick(async () => {
                             const target = links[0];
@@ -915,7 +915,7 @@ var MyPlugin = class extends import_obsidian.Plugin {
 
         try {
             // 1. 获取文件的 SHA
-            const getUrl = `https://api.github.com/${owner}/${repo}/contents/${fullPath}?ref=${branch}`;
+            const getUrl = `https://api.github.com/repos/${owner}/${repo}/contents/${fullPath}?ref=${branch}`;
             const getResp = await fetch(getUrl, {
                 headers: { "Authorization": `token ${token}` }
             });
@@ -931,7 +931,7 @@ var MyPlugin = class extends import_obsidian.Plugin {
             const sha = fileInfo.sha;
 
             // 2. 执行删除
-            const deleteUrl = `https://api.github.com/${owner}/${repo}/contents/${fullPath}`;
+            const deleteUrl = `https://api.github.com/repos/${owner}/${repo}/contents/${fullPath}`;
             const deleteResp = await fetch(deleteUrl, {
                 method: "DELETE",
                 headers: {

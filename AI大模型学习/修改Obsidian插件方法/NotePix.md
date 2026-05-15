@@ -37,5 +37,3 @@ if (!backupExists) {
 ```
 
 这个笔记是防止更新后，代码被清理，到时候可以恢复。
-![](https://raw.githubusercontent.com/1228chl/Learning-AI-Large-Models-Notes/master/Assets/Image/20260515T130941441Z.png)
-
