@@ -104,7 +104,8 @@
       }
     ],
     "direction": "horizontal",
-    "width": 300
+    "width": 300,
+    "collapsed": true
   },
   "right": {
     "id": "f07a0c5b7e11463b",
@@ -222,7 +223,7 @@
       "templater-obsidian:Templater": false
     }
   },
-  "active": "ce350781caf40b13",
+  "active": "a73ebf785a6e6ac6",
   "lastOpenFiles": [
     "AI大模型学习/机器学习/KNN/04KNN算法API详解.md",
     "AI大模型学习/机器学习/KNN/05距离度量.md",
