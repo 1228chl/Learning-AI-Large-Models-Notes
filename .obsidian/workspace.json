@@ -11,15 +11,12 @@
             "id": "d6a075f6e4b52bf3",
             "type": "leaf",
             "state": {
-              "type": "markdown",
+              "type": "image",
               "state": {
-                "file": "AI大模型学习/机器学习/KNN/05距离度量.md",
-                "mode": "source",
-                "source": false,
-                "backlinks": false
+                "file": "Assets/NotePix-Uploads/05距离度量-1.png"
               },
-              "icon": "lucide-file",
-              "title": "05距离度量"
+              "icon": "lucide-image",
+              "title": "05距离度量-1"
             }
           },
           {
@@ -104,8 +101,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 300,
-    "collapsed": true
+    "width": 300
   },
   "right": {
     "id": "f07a0c5b7e11463b",
@@ -183,13 +179,13 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "AI大模型学习/机器学习/KNN/05距离度量.md",
+                "file": "Assets/NotePix-Uploads/05距离度量-1.png",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "05距离度量 的大纲"
+              "title": "05距离度量-1 的大纲"
             }
           },
           {
@@ -223,12 +219,13 @@
       "templater-obsidian:Templater": false
     }
   },
-  "active": "d6a075f6e4b52bf3",
+  "active": "a73ebf785a6e6ac6",
   "lastOpenFiles": [
-    "AI大模型学习/机器学习/KNN/03KNN算法简介.md",
-    "Assets/Image/20260515T100049089Z.png",
+    "Assets/Image/20260515T102114318Z.png",
     "AI大模型学习/机器学习/KNN/05距离度量.md",
     "Assets/NotePix-Uploads/05距离度量-1.png",
+    "AI大模型学习/机器学习/KNN/03KNN算法简介.md",
+    "Assets/Image/20260515T100049089Z.png",
     "Assets/NotePix-Uploads",
     "Assets/NotePix-Local",
     "AI大模型学习/机器学习/KNN/04KNN算法API详解.md",

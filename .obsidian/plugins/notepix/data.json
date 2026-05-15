@@ -19,7 +19,7 @@
     "Learning-AI-Large-Models-Notes/setting",
     "Learning-AI-Large-Models-Notes/settings"
   ],
-  "uploadOnPaste": "ask",
+  "uploadOnPaste": "always",
   "localImageFolder": "Assets/NotePix-Local",
   "uploadImageFolder": "Assets/NotePix-Uploads",
   "autoUpload": true,
