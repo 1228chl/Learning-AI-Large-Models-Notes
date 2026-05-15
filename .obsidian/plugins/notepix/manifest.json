@@ -1,0 +1,11 @@
+{
+	"id": "notepix",
+	"name": "NotePix",
+	"version": "1.4.3",
+	"minAppVersion": "0.15.0",
+	"description": "Automatically uploads images to your public or private GitHub repository, replacing local links with the corresponding remote URLs",
+	"author": "AyushParkara",
+	"authorUrl": "https://github.com/AyushParkara",
+	"fundingUrl": "https://www.paypal.com/paypalme/AyushParkara",
+	"isDesktopOnly": false
+}
