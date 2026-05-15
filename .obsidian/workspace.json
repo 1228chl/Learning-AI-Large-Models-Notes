@@ -104,8 +104,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 300,
-    "collapsed": true
+    "width": 300
   },
   "right": {
     "id": "f07a0c5b7e11463b",
@@ -225,9 +224,13 @@
   },
   "active": "d6a075f6e4b52bf3",
   "lastOpenFiles": [
-    "Assets/NotePix-Uploads/05距离度量-2.png",
+    "Assets/Image/20260515T114206973Z.png",
+    "Assets/Image/20260515T114109288Z.png",
+    "Assets/NotePix-Uploads/20260515T114206973Z.png",
+    "Assets/Image/20260515T113755529Z.png",
+    "Assets/NotePix-Uploads/20260515T114527915Z.png",
     "AI大模型学习/修改Obsidian插件方法/NotePix.md",
-    "Assets/NotePix-Uploads/05距离度量-1.png",
+    "Assets/NotePix-Uploads/20260515T114109288Z.png",
     "AI大模型学习/修改Obsidian插件方法",
     "Assets/Image/20260515T102114318Z.png",
     "AI大模型学习/机器学习/KNN/05距离度量.md",
