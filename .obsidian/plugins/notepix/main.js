@@ -1076,6 +1076,24 @@ var MyPlugin = class extends import_obsidian.Plugin {
                     new import_obsidian.Notice(`Could not find the placeholder link for ${file.name}. Local reference left untouched.`);
                 }
             }
+            // 上传成功后，将本地暂存文件重命名为与云端一致的时间戳文件名
+            if (!this.settings.deleteLocal) {
+                // 确保文件仍然存在且未被删除
+                const fileExists = await this.app.vault.adapter.exists(file.path);
+                if (fileExists) {
+                    // 获取文件所在文件夹路径
+                    const parentPath = file.parent ? file.parent.path : '';
+                    const newLocalPath = parentPath ? `${parentPath}/${newFileName}` : newFileName;
+                    // 检查新路径是否已存在
+                    const alreadyExists = await this.app.vault.adapter.exists(newLocalPath);
+                    if (!alreadyExists) {
+                        await this.app.vault.rename(file, newLocalPath);
+                        new import_obsidian.Notice(`本地暂存文件已重命名为 ${newFileName}`);
+                    } else {
+                        new import_obsidian.Notice(`重命名失败：${newLocalPath} 已存在`);
+                    }
+                }
+            }
 
             new import_obsidian.Notice(`${newFileName} uploaded successfully!`);
             if (this.settings.deleteLocal && !isPaste && replacedLink) {
