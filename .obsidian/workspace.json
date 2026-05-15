@@ -13,13 +13,13 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "AI大模型学习/机器学习/KNN/05距离度量.md",
+                "file": "AI大模型学习/修改Obsidian插件方法/NotePix.md",
                 "mode": "source",
                 "source": false,
                 "backlinks": false
               },
               "icon": "lucide-file",
-              "title": "05距离度量"
+              "title": "NotePix"
             }
           },
           {
@@ -222,23 +222,24 @@
       "templater-obsidian:Templater": false
     }
   },
-  "active": "a73ebf785a6e6ac6",
+  "active": "d6a075f6e4b52bf3",
   "lastOpenFiles": [
+    "Assets/NotePix-Uploads/NotePix-1.png",
+    "Assets/Image/20260515T120612154Z.png",
+    "Assets/Image-Backup",
+    "Assets/NotePix-Uploads/Snipaste_2026-05-3315_20-05-42.png",
+    "Assets/NotePix-Uploads/20260515T120612154Z.png",
+    "AI大模型学习/机器学习/KNN/05距离度量.md",
     "Assets/Image/20260515T115229608Z.png",
     "Assets/NotePix-Uploads/20260515T115229608Z.png",
     "Assets/NotePix-Uploads/20260515T114109288Z.png",
-    "AI大模型学习/机器学习/KNN/05距离度量.md",
     "Assets/Image/20260515T102114318Z.png",
     "Assets/Image/20260515T114206973Z.png",
     "Assets/Image/20260515T114109288Z.png",
     "Assets/Image/20260515T113755529Z.png",
-    "Assets/Image/20260515T114527915Z.png",
-    "Assets/NotePix-Uploads/20260515T114206973Z.png",
-    "Assets/NotePix-Uploads/20260515T114527915Z.png",
     "AI大模型学习/修改Obsidian插件方法/NotePix.md",
     "AI大模型学习/修改Obsidian插件方法",
     "AI大模型学习/机器学习/KNN/03KNN算法简介.md",
-    "Assets/Image/20260515T100049089Z.png",
     "Assets/NotePix-Uploads",
     "Assets/NotePix-Local",
     "AI大模型学习/机器学习/KNN/04KNN算法API详解.md",
@@ -258,7 +259,6 @@
     "AI大模型学习/数据分析/13-1NumPy模块（课堂版）.md",
     "Assets/Image",
     "Templates/Note_Templater.md",
-    "AI大模型学习/机器学习",
     "未命名.canvas",
     "AI大模型学习/Python/python_进阶.md",
     "AI大模型学习/Python/09正则表达式.md",

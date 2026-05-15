@@ -5,7 +5,7 @@
   "plainToken": "",
   "branchName": "master",
   "folderPath": "Assets/Image/",
-  "deleteLocal": false,
+  "deleteLocal": true,
   "useEncryption": true,
   "repoVisibility": "auto",
   "repoHistory": [
