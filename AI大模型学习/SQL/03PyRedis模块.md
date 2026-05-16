@@ -1,4 +1,4 @@
-**上一级：** [11PyMySQL模块](11PyMySQL模块.md)
+**上一级：** [02PyMySQL模块](02PyMySQL模块.md)
 
 **标签：** #sql #基础 
 

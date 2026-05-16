@@ -1,4 +1,4 @@
-**下一级：**  [13NumPy（AI大全版）](13NumPy（AI大全版）.md)
+**下一级：**  [02NumPy（AI大全版）](02NumPy（AI大全版）.md)
 
 **标签：** #NumPy #基础
 
