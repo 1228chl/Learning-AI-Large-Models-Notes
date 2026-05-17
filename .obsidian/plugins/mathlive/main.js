@@ -45362,7 +45362,8 @@ class MathLiveModal extends obsidian__WEBPACK_IMPORTED_MODULE_0__.Modal {
         this.renderedResult = resultRenderTemplate(initialLatex);
         this.mfe = (0,_mathlive_shared__WEBPACK_IMPORTED_MODULE_2__.createMathfield)({
             initialValue: initialLatex,
-            inline: this.inline,
+            // inline: this.inline,
+            inline: false,
             id: "mathlive-modal-field",
             onInput: (value) => {
                 this.renderedResult = resultRenderTemplate(value);
