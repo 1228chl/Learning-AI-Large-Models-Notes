@@ -13,13 +13,13 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "AI大模型学习/Agent/Coze开发/03Coze细节（课堂版）.md",
+                "file": "AI大模型学习/修改Obsidian插件方法/NotePix.md",
                 "mode": "source",
                 "source": false,
                 "backlinks": false
               },
               "icon": "lucide-file",
-              "title": "03Coze细节（课堂版）"
+              "title": "NotePix"
             }
           },
           {
@@ -99,8 +99,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 300,
-    "collapsed": true
+    "width": 300
   },
   "right": {
     "id": "f07a0c5b7e11463b",
@@ -218,20 +217,24 @@
       "templater-obsidian:Templater": false
     }
   },
-  "active": "d6a075f6e4b52bf3",
+  "active": "e83158f79f242826",
   "lastOpenFiles": [
-    "AI大模型学习/Agent/Coze开发/02Coze进阶.md",
+    "Assets/mathlive-fix-main.js",
+    "Assets/main.js",
+    "Assets/notepix-fix-main.js",
+    "Assets/main - 修改后的main（每次修改后都要更新）.js",
     "AI大模型学习/Agent/Coze开发/03Coze细节（课堂版）.md",
-    "Assets/Image-Backup/20260517T115418969Z.png",
-    "Assets/NotePix-Uploads/03Coze细节（课堂版）-1.png",
-    "Assets/Image-Backup/20260517T115409684Z.png",
-    "Assets/Image-Backup/20260517T115226475Z.png",
-    "Assets/Image-Backup/20260517T115215030Z.png",
-    "Assets/Image-Backup/20260517T115155704Z.png",
-    "Assets/Image-Backup/20260517T115142846Z.png",
-    "Assets/Image-Backup/20260517T115130120Z.png",
-    "Assets/Image-Backup/20260517T113340669Z.png",
-    "Assets/Image-Backup/20260517T111350487Z.png",
+    "Assets/Image/20260517T115418969Z.png",
+    "Assets/Image/20260517T115409684Z.png",
+    "Assets/Image/20260517T115226475Z.png",
+    "Assets/Image/20260517T115215030Z.png",
+    "Assets/Image/20260517T115155704Z.png",
+    "Assets/Image/20260517T115142846Z.png",
+    "Assets/Image/20260517T115130120Z.png",
+    "Assets/Image/20260517T113340669Z.png",
+    "Assets/Image/20260517T113215806Z.png",
+    "Assets/Image/20260517T113207295Z.png",
+    "AI大模型学习/Agent/Coze开发/02Coze进阶.md",
     "AI大模型学习/Agent/Coze开发/01Coze基础入门.md",
     "Assets/Image-Backup",
     "Templates/Note_Templater.md",
@@ -261,10 +264,7 @@
     "AI大模型学习/修改Obsidian插件方法",
     "Assets/NotePix-Uploads",
     "Assets/NotePix-Local",
-    "Assets/mathlive-fix-main.js",
     "Assets/nathlive-fix-main.js",
-    "Assets/main.js",
-    "AI大模型学习/ML/基础",
     "未命名.canvas"
   ]
 }
