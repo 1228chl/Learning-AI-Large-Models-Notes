@@ -85,7 +85,7 @@ score = np.array([
 | `shape`    | 维度元组    | `(3, 5)`         |
 | `ndim`     | 维度数     | `2`              |
 | `size`     | 元素总数    | `15`             |
-| `itemsize` | 每个元素字节数 | `8`（默认 float64）  |
+| `itemsize` | 每个元素字节数 | `8`（默认 float 64）  |
 | `dtype`    | 元素类型    | `dtype('int64')` |
 
 ---
@@ -168,7 +168,7 @@ np.random.randn(3,2)        # 均值0，方差1
 np.random.normal(loc=5, scale=2, size=100)  # 均值5，标准差2
 ```
 
-> **拓展**：正态分布参数 `loc`（均值）决定中心位置，`scale`（标准差）决定“胖瘦”——`scale` 越大数据越分散。
+> **拓展**：正态分布参数 `loc`（均值）决定中心位置，`scale`（标准差）决定“胖瘦”—— `scale` 越大数据越分散。
 
 ---
 

@@ -275,13 +275,13 @@ df[df['open'] > 23]
 df[(df['open'] > 23) & (df['open'] < 24)]
 ```
 
-**使用查询函数** **`query()`**：
+**使用查询函数** ** `query()` **：
 
 ```Python
 df.query("open > 23 and open < 24")
 ```
 
-**使用** **`isin()`**：
+**使用** ** `isin()` **：
 
 ```Python
 df[df['open'].isin([23.53, 23.85])]

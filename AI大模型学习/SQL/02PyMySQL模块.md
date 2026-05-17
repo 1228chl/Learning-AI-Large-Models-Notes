@@ -6,7 +6,7 @@
 
 ---
 
-# 详细笔记：Python操作MySQL（PyMySQL）
+# 详细笔记：Python 操作 MySQL（PyMySQL）
 
 ## 一、PyMySQL 简介
 
@@ -237,7 +237,7 @@ conn.commit()
 
 ---
 
-### 5.5 获取刚插入的自增ID
+### 5.5 获取刚插入的自增 ID
 
 ```python
 cursor.execute(sql, params)
@@ -276,9 +276,9 @@ except Exception as e:
 
 ---
 
-## 六、SQL注入问题与防范
+## 六、SQL 注入问题与防范
 
-### 6.1 什么是SQL注入
+### 6.1 什么是 SQL 注入
 
 攻击者通过在输入中插入特殊字符（如 `' or 1=1 --`），改变原有 SQL 语句的逻辑，从而绕过验证或窃取数据。
 
@@ -436,7 +436,7 @@ PASSWORD = os.getenv("MYSQL_PASSWORD")
 
 **关键记忆点：**
 
-- 六步法：导包 → 连库 → 建游标 → 执行SQL → 关游标 → 关连接
+- 六步法：导包 → 连库 → 建游标 → 执行 SQL → 关游标 → 关连接
 - 增删改必须 `commit()`
 - 永远使用参数化查询防注入
 - InnoDB 支持事务，MyISAM 不支持

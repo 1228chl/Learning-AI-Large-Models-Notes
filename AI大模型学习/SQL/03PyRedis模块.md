@@ -4,7 +4,7 @@
 
 ---
 
-# 详细笔记：Python操作Redis（redis-py）
+# 详细笔记：Python 操作 Redis（redis-py）
 
 ## 一、redis-py 模块安装
 
@@ -44,7 +44,7 @@ print(redis.__version__)   # 例如 4.5.0
 | `port`                   | Redis 服务端口                                   | `6379`        |
 | `db`                     | 数据库编号（0~15）                               | `0`           |
 | `password`               | 密码（如果设置了 requirepass）                   | `None`        |
-| `decode_responses`       | 是否自动将返回的字节解码为字符串（推荐设为True） | `False`       |
+| `decode_responses`       | 是否自动将返回的字节解码为字符串（推荐设为 True） | `False`       |
 | `socket_timeout`         | 连接超时时间（秒）                               | `None`        |
 | `socket_connect_timeout` | 连接建立超时                                     | `None`        |
 | `max_connections`        | 连接池最大连接数                                 | `None`        |
@@ -147,7 +147,7 @@ Hash 适合存储对象，一个 key 对应多个 field-value 对。
 | ----------------------------- | ------------------------------- |
 | `hset(name, key, value)`      | 设置单个字段                    |
 | `hget(name, key)`             | 获取单个字段                    |
-| `hmset(name, mapping)`        | 批量设置（**4.0以上可用hset**） |
+| `hmset(name, mapping)`        | 批量设置（**4.0 以上可用 hset**） |
 | `hmget(name, keys)`           | 批量获取                        |
 | `hgetall(name)`               | 获取所有字段和值（返回字典）    |
 | `hkeys(name)` / `hvals(name)` | 获取所有字段名 / 所有值         |
@@ -315,7 +315,7 @@ print("差集(set1 - set2):", diff)  # {'a'}
 | `zrevrange(key, start, stop, withscores=False)`  | 按分数降序获取                 |
 | `zscore(key, member)`                            | 获取元素的分数                 |
 | `zincrby(key, amount, member)`                   | 增加元素的分数                 |
-| `zrank(key, member)` / `zrevrank(key, member)`   | 获取升序/降序排名（从0开始）   |
+| `zrank(key, member)` / `zrevrank(key, member)`   | 获取升序/降序排名（从 0 开始）   |
 | `zrangebyscore(key, min, max, withscores=False)` | 按分数范围获取元素             |
 | `zrem(key, *members)`                            | 删除一个或多个元素             |
 
@@ -361,10 +361,10 @@ print("高分玩家:", high_scores)
 
 | 方法                         | 说明                                     |
 | ---------------------------- | ---------------------------------------- |
-| `exists(key)`                | 返回键是否存在（1存在，0不存在）         |
+| `exists(key)`                | 返回键是否存在（1 存在，0 不存在）         |
 | `expire(key, seconds)`       | 设置过期时间（秒）                       |
 | `pexpire(key, milliseconds)` | 设置过期时间（毫秒）                     |
-| `ttl(key)`                   | 返回剩余生存时间（秒），-1表示永不过期   |
+| `ttl(key)`                   | 返回剩余生存时间（秒），-1 表示永不过期   |
 | `pttl(key)`                  | 返回剩余生存时间（毫秒）                 |
 | `persist(key)`               | 移除过期时间，使键永久存在               |
 | `keys(pattern)`              | 查找匹配模式的键（生产环境慎用，会阻塞） |

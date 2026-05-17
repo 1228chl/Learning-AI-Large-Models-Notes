@@ -6,7 +6,7 @@
 
 ---
 
-# 一、Pandas优势
+# 一、Pandas 优势
 
 ## 学习目标
 
@@ -135,7 +135,7 @@ print(s1 + s2)
 
 ### 4.3 强大的 I/O 支持
 
-可以轻松读取/写入多种格式：CSV、Excel、SQL、JSON、Parquet、HDF5 等。
+可以轻松读取/写入多种格式：CSV、Excel、SQL、JSON、Parquet、HDF 5 等。
 
 ```python
 df = pd.read_csv('data.csv')      # 读取 CSV
@@ -396,7 +396,7 @@ df[0:2]               # 选择第0行和第1行（左闭右开）
 | 方法        | 说明                       | 示例                                  |
 | ----------- | -------------------------- | ------------------------------------- |
 | `df.loc[]`  | **标签索引**，包含结束位置 | `df.loc['a':'c']` 包含 'c' 行         |
-| `df.iloc[]` | **位置索引**，不含结束位置 | `df.iloc[0:3]` 取 0,1,2 行，不含第3行 |
+| `df.iloc[]` | **位置索引**，不含结束位置 | `df.iloc[0:3]` 取 0,1,2 行，不含第 3 行 |
 
 ```python
 # 准备数据
@@ -503,12 +503,12 @@ df.drop('某列名', axis=1, inplace=True)
 | 操作                   | 代码示例                           |
 | ---------------------- | ---------------------------------- |
 | 选择单列               | `df['列名']`                       |
-| 选择多列               | `df[['列1','列2']]`                |
+| 选择多列               | `df [['列1','列2']] `                |
 | 按标签选择行           | `df.loc['行标签']`                 |
 | 按位置选择行           | `df.iloc[0]`                       |
 | 按标签切片（含结束）   | `df.loc['a':'c']`                  |
 | 按位置切片（不含结束） | `df.iloc[0:3]`                     |
-| 按标签选择行列子集     | `df.loc['a':'c', ['列1','列2']]`   |
+| 按标签选择行列子集     | `df.loc['a':'c', ['列 1','列 2']]`   |
 | 按位置选择行列子集     | `df.iloc[0:3, 0:2]`                |
 | 条件筛选               | `df[df['列名'] > 阈值]`            |
 | 复合条件               | `df[(df['A']>1) & (df['B']<5)]`    |
@@ -528,7 +528,7 @@ df.drop('某列名', axis=1, inplace=True)
   - 属性：`.shape`, `.columns`, `.index`, `.dtypes`, `.values`
   - 方法：`.info()`, `.describe()`, `.dropna()`, `.fillna()`, `.sort_values()`
 - **索引与选择**：
-  - `df[列名]` 选列，`df[['列1','列2']]` 选多列
+  - `df[列名]` 选列，`df [['列1','列2']] ` 选多列
   - `df.loc[行标签, 列标签]` 标签索引 —— 包含结束
   - `df.iloc[行位置, 列位置]` 位置索引 —— 不含结束
   - 布尔索引：`df[df['列'] > 值]`
@@ -634,7 +634,7 @@ df.to_json('output.json', orient='records', indent=2)
 
 ### 1.4 SQL 数据库
 
-需要 SQLAlchemy 和相应的数据库驱动（如 `sqlite3`、`pymysql`、`psycopg2`）。
+需要 SQLAlchemy 和相应的数据库驱动（如 `sqlite 3`、`pymysql`、`psycopg 2`）。
 
 ```python
 from sqlalchemy import create_engine
@@ -663,7 +663,7 @@ df.to_sql('table_name', engine,
 | ------------- | ------------------------ | ---------------------- | --------------------- |
 | **HTML**      | `pd.read_html(url)`      | `df.to_html()`         | 读取网页中的表格      |
 | **Parquet**   | `pd.read_parquet(path)`  | `df.to_parquet(path)`  | 列式存储，高效        |
-| **HDF5**      | `pd.read_hdf(path, key)` | `df.to_hdf(path, key)` | 适合大型数据集        |
+| **HDF 5**      | `pd.read_hdf(path, key)` | `df.to_hdf(path, key)` | 适合大型数据集        |
 | **Pickle**    | `pd.read_pickle(path)`   | `df.to_pickle(path)`   | Python 序列化格式     |
 | **Clipboard** | `pd.read_clipboard()`    | `df.to_clipboard()`    | 从系统剪贴板读取/写入 |
 
@@ -1030,7 +1030,7 @@ df.to_csv('cleaned_data.csv', index=False)
 
 ### 1.1 `pd.concat()` – 沿轴拼接
 
-沿行（轴0）或列（轴1）将多个 DataFrame 拼接在一起。
+沿行（轴 0）或列（轴 1）将多个 DataFrame 拼接在一起。
 
 ```python
 import pandas as pd
@@ -1134,7 +1134,7 @@ result = pd.merge(left4, right4, on='id', suffixes=('_left', '_right'))
 | `inner` | 只保留两边都存在的键      |
 | `left`  | 保留左表所有键            |
 | `right` | 保留右表所有键            |
-| `outer` | 保留所有键，无匹配填充NaN |
+| `outer` | 保留所有键，无匹配填充 NaN |
 
 ---
 
@@ -1293,7 +1293,7 @@ result = df.groupby('部门').apply(top_salary)
 | `mean()`             | 均值              |
 | `sum()`              | 求和              |
 | `count()`            | 非空值个数        |
-| `size()`             | 总行数（含NaN）   |
+| `size()`             | 总行数（含 NaN）   |
 | `min()` / `max()`    | 最小值/最大值     |
 | `std()` / `var()`    | 标准差/方差       |
 | `first()` / `last()` | 第一个/最后一个值 |
@@ -1725,7 +1725,7 @@ df = df.convert_dtypes()
 
 ### 2.3 使用 `eval()` 和 `query()` 加速表达式
 
-适用于大 DataFrame（> 10万行）时的复杂表达式运算。
+适用于大 DataFrame（> 10 万行）时的复杂表达式运算。
 
 ```python
 # 传统方式（产生中间临时数组）
@@ -1978,7 +1978,7 @@ result.to_parquet('sales_agg.parquet')   # 更高效的保存格式
   - 可结合 Matplotlib 自定义：`plt.title()`、`plt.xlabels()` 等
 - **性能优化**：
   - 向量化演算取代循环
-  - 数据类型精简（`int16`、`float32`、`category`）
+  - 数据类型精简（`int 16`、`float 32`、`category`）
   - `eval()`/`query()` 加速复杂表达式
   - 大文件分块读取、只读取需要的列
 - **高级应用**：
