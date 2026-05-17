@@ -631,7 +631,7 @@ var MyPlugin = class extends import_obsidian.Plugin {
 
                 menu.addItem((item) => {
                     item
-                        .setTitle("从本地和GitHub删除图片")
+                        .setTitle("删除此图片（从GitHub和本地备份）")
                         .setIcon("trash")
                         .onClick(async () => {
                             const target = links[0];
@@ -656,8 +656,8 @@ var MyPlugin = class extends import_obsidian.Plugin {
                 });
             })
         );
-                // 全局右键菜单：在图片上右键时增加“删除图片”选项
-        this.registerDomEvent(document, 'contextmenu', async (event) => {
+        // 全局右键菜单：在图片上右键时增加“删除图片”选项（使用捕获阶段，确保优先处理）
+        const globalContextMenuHandler = async (event) => {
             const target = event.target;
             if (!(target instanceof HTMLImageElement)) return;
 
@@ -667,42 +667,51 @@ var MyPlugin = class extends import_obsidian.Plugin {
             const remotePath = this.getRemotePathFromImageSrc(src);
             if (!remotePath) return;
 
-            // 阻止浏览器默认菜单，显示自定义菜单
+            // 阻止所有后续的右键事件（包括浏览器默认菜单和 Obsidian 的其他监听器）
             event.preventDefault();
-            const menu = new import_obsidian.Menu();
-            menu.addItem((item) => {
-                item.setTitle("删除此图片（从GitHub和本地备份）")
-                    .setIcon("trash")
-                    .onClick(async () => {
-                        // 确认弹窗（如果设置中开启）
-                        if (this.settings.confirmBeforeDelete) {
-                            const confirmModal = new ConfirmationModal(
-                                this.app,
-                                "确认删除",
-                                `确定要删除 ${remotePath} 吗？\n此操作不可撤销。`
-                            );
-                            const confirmed = await confirmModal.open();
-                            if (!confirmed) return;
-                        }
-                        // 删除 GitHub 文件和本地备份
-                        const success = await this.deleteFileFromGitHub(remotePath);
-                        if (success) {
-                            // 从当前笔记中移除图片链接
-                            await this.removeImageLinkFromCurrentNote(remotePath);
-                            new import_obsidian.Notice("图片已删除");
-                        }
-                    });
-            });
-            menu.addSeparator();
-            menu.addItem((item) => {
-                item.setTitle("复制图片地址")
-                    .setIcon("copy")
-                    .onClick(() => {
-                        navigator.clipboard.writeText(src);
-                        new import_obsidian.Notice("图片地址已复制");
-                    });
-            });
-            menu.showAtMouseEvent(event);
+            event.stopPropagation();
+            event.stopImmediatePropagation();
+
+            // 延迟一小段时间再显示自定义菜单，确保默认行为被完全抑制
+            setTimeout(() => {
+                const menu = new import_obsidian.Menu();
+                menu.addItem((item) => {
+                    item.setTitle("删除此图片（从GitHub和本地备份）")
+                        .setIcon("trash")
+                        .onClick(async () => {
+                            if (this.settings.confirmBeforeDelete) {
+                                const confirmModal = new ConfirmationModal(
+                                    this.app,
+                                    "确认删除",
+                                    `确定要删除 ${remotePath} 吗？\n此操作不可撤销。`
+                                );
+                                const confirmed = await confirmModal.open();
+                                if (!confirmed) return;
+                            }
+                            const success = await this.deleteFileFromGitHub(remotePath);
+                            if (success) {
+                                await this.removeImageLinkFromCurrentNote(remotePath);
+                                new import_obsidian.Notice("图片已删除");
+                            }
+                        });
+                });
+                menu.addSeparator();
+                menu.addItem((item) => {
+                    item.setTitle("复制图片地址")
+                        .setIcon("copy")
+                        .onClick(() => {
+                            navigator.clipboard.writeText(src);
+                            new import_obsidian.Notice("图片地址已复制");
+                        });
+                });
+                menu.showAtMouseEvent(event);
+            }, 10);
+        };
+
+        // 在捕获阶段注册（第三个参数为 true），确保最先执行
+        window.addEventListener('contextmenu', globalContextMenuHandler, true);
+        this.register(() => {
+            window.removeEventListener('contextmenu', globalContextMenuHandler, true);
         });
     }
 
@@ -1046,6 +1055,7 @@ var MyPlugin = class extends import_obsidian.Plugin {
             if (file && file instanceof import_obsidian.TFile) {
                 await this.app.vault.delete(file);
                 console.log(`Deleted local backup: ${backupPath}`);
+                new import_obsidian.Notice(`已删除本地备份: ${fileName}`);
                 return true;
             } else {
                 // 备份文件不存在，静默跳过

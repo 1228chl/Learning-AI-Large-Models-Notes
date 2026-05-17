@@ -297,10 +297,220 @@
 
 ---
 
-# 常见问题排查
+## 常见问题排查
 
 - **自动删除不触发**：确保设置开关已打开，并且你**保存了文件**（`modify` 事件在保存时触发）。如果只是删除链接但不保存，不会触发。
 - **GitHub 404**：说明文件路径不正确或文件不存在。检查 `remotePath` 输出（可以在 `deleteFileFromGitHub` 中加 `console.log` 查看）。
 - **Token 未解锁（加密模式）**：首次使用时需要先解锁 token（例如手动上传一张图片触发密码输入）。也可以在设置中临时切换到明文模式测试。
 
 如果仍有问题，请提供控制台错误信息，我会帮你进一步排查。
+
+---
+
+好的，你已经在 `main.js` 中实现了**编辑器内的右键删除**（针对文本链接），现在需要增加**全局右键菜单**，让用户在**阅读视图或实时预览中直接右键点击图片**时，也能删除图片及其链接。
+
+下面给出具体的修改步骤，你只需要在现有 `onload` 方法末尾添加一段全局监听代码，并补充两个辅助方法即可。
+
+---
+
+# 📌 步骤一：添加 `getRemotePathFromImageSrc` 方法
+
+在 `MyPlugin` 类中（例如放在 `extractNotepixImageLinks` 方法附近），添加一个从图片 `src` 提取 `remotePath` 的方法：
+
+```javascript
+    // 从图片的 src 中提取 remotePath（相对于 GitHub 仓库的路径）
+    getRemotePathFromImageSrc(src) {
+        if (!src) return null;
+        // 匹配私有协议：obsidian://notepix/v2/owner/repo/branch/...
+        const privateMatch = src.match(/obsidian:\/\/notepix\/v2\/[^\/]+\/[^\/]+\/[^\/]+\/(.+)$/);
+        if (privateMatch) {
+            return decodeURIComponent(privateMatch[1]);
+        }
+        // 匹配公共 raw 链接：https://raw.githubusercontent.com/.../...
+        const publicMatch = src.match(/https?:\/\/raw\.githubusercontent\.com\/[^\/]+\/[^\/]+\/[^\/]+\/(.+)$/);
+        if (publicMatch) {
+            return decodeURIComponent(publicMatch[1]);
+        }
+        return null;
+    }
+```
+
+---
+
+# 📌 步骤二：添加 `removeImageLinkFromCurrentNote` 方法
+
+该方法负责从当前活动笔记的编辑器中删除指定的图片链接（如果存在）。放在 `getRemotePathFromImageSrc` 方法附近：
+
+```javascript
+    // 从当前打开的笔记中删除指定 remotePath 的图片链接（Markdown 格式）
+    async removeImageLinkFromCurrentNote(remotePath) {
+        const activeView = this.app.workspace.getActiveViewOfType(import_obsidian.MarkdownView);
+        if (!activeView) return false;
+        const editor = activeView.editor;
+        const content = editor.getValue();
+        // 转义 remotePath 中的正则特殊字符
+        const escapedPath = remotePath.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        // 匹配 Markdown 图片链接（私有或公共）
+        const regex = new RegExp(`!\\[[^\\]]*\\]\\([^)]*${escapedPath}[^)]*\\)`, 'g');
+        const newContent = content.replace(regex, '');
+        if (newContent !== content) {
+            const cursor = editor.getCursor();
+            editor.setValue(newContent);
+            editor.setCursor(cursor); // 尽量保持光标位置
+            return true;
+        }
+        return false;
+    }
+```
+
+---
+
+# 📌 步骤三：在 `onload` 末尾添加全局右键菜单监听
+
+找到 `onload` 方法中已有的 `this.registerEvent(this.app.workspace.on("editor-menu", ...))` 下方（或整个 `onload` 方法的末尾），添加以下代码：
+
+```javascript
+        // 全局右键菜单：在图片上右键时增加“删除图片”选项
+        this.registerDomEvent(document, 'contextmenu', async (event) => {
+            const target = event.target;
+            if (!(target instanceof HTMLImageElement)) return;
+
+            const src = target.getAttribute('src');
+            if (!src) return;
+
+            const remotePath = this.getRemotePathFromImageSrc(src);
+            if (!remotePath) return;
+
+            // 阻止浏览器默认菜单，显示自定义菜单
+            event.preventDefault();
+            const menu = new import_obsidian.Menu();
+            menu.addItem((item) => {
+                item.setTitle("🗑️ 删除此图片（从GitHub和本地备份）")
+                    .setIcon("trash")
+                    .onClick(async () => {
+                        // 确认弹窗（如果设置中开启）
+                        if (this.settings.confirmBeforeDelete) {
+                            const confirmModal = new ConfirmationModal(
+                                this.app,
+                                "确认删除",
+                                `确定要删除 ${remotePath} 吗？\n此操作不可撤销。`
+                            );
+                            const confirmed = await confirmModal.open();
+                            if (!confirmed) return;
+                        }
+                        // 删除 GitHub 文件和本地备份
+                        const success = await this.deleteFileFromGitHub(remotePath);
+                        if (success) {
+                            // 从当前笔记中移除图片链接
+                            await this.removeImageLinkFromCurrentNote(remotePath);
+                            new import_obsidian.Notice("图片已删除");
+                        }
+                    });
+            });
+            menu.addSeparator();
+            menu.addItem((item) => {
+                item.setTitle("复制图片地址")
+                    .setIcon("copy")
+                    .onClick(() => {
+                        navigator.clipboard.writeText(src);
+                        new import_obsidian.Notice("图片地址已复制");
+                    });
+            });
+            menu.showAtMouseEvent(event);
+        });
+```
+
+---
+
+# 📌 验证与测试
+
+1. 将以上三段代码按顺序插入到 `main.js` 的合适位置（建议统一放在 `extractNotepixImageLinks` 方法附近）。
+2. 保存文件，重新加载 Obsidian 插件（`Ctrl+P` → `Reload`）。
+3. 打开一篇包含 Notepix 图片的笔记，切换到**阅读视图**或**实时预览**。
+4. 右键点击图片，应该出现自定义菜单，包含“删除此图片”和“复制图片地址”。
+5. 点击删除，确认后图片应该从 GitHub、本地备份和笔记中一并消失。
+
+---
+
+# ⚠️ 注意事项
+
+- 全局监听 `document` 的 `contextmenu` 会影响所有页面，但只对 `img` 元素且 `src` 为 Notepix 链接时才会添加菜单，不影响其他右键行为。
+- 如果当前笔记不是编辑模式（例如阅读视图），`removeImageLinkFromCurrentNote` 方法会因为无法获取 `MarkdownView` 而失败，但用户仍可手动删除链接。你可以改进为即使没有编辑器也弹出提示（例如“请切换到编辑模式手动删除链接”），但这不是必须的。
+- 已有的编辑器内右键删除功能（针对链接文本）仍然保留，两者互不干扰。
+
+如果你在插入代码后遇到任何报错（比如 `ConfirmationModal` 未定义），请确认你的 `main.js` 中已经存在 `ConfirmationModal` 类（你的文件中已有）。如果仍有问题，请提供控制台错误信息，我会帮你调整。
+
+---
+
+你的右键菜单被原本的浏览器或 Obsidian 默认菜单遮盖，是因为默认菜单在你自定义菜单之后显示（或者同时显示）。我们可以通过**提前拦截事件并阻止传播**来解决，同时调整菜单位置。
+
+以下是修改后的全局右键监听代码（替换步骤三中的代码），它能确保自定义菜单独占显示：
+
+```javascript
+// 全局右键菜单：在图片上右键时增加“删除图片”选项（使用捕获阶段，确保优先处理）
+const globalContextMenuHandler = async (event) => {
+    const target = event.target;
+    if (!(target instanceof HTMLImageElement)) return;
+
+    const src = target.getAttribute('src');
+    if (!src) return;
+
+    const remotePath = this.getRemotePathFromImageSrc(src);
+    if (!remotePath) return;
+
+    // 阻止所有后续的右键事件（包括浏览器默认菜单和 Obsidian 的其他监听器）
+    event.preventDefault();
+    event.stopPropagation();
+    event.stopImmediatePropagation();
+
+    // 延迟一小段时间再显示自定义菜单，确保默认行为被完全抑制
+    setTimeout(() => {
+        const menu = new import_obsidian.Menu();
+        menu.addItem((item) => {
+            item.setTitle("🗑️ 删除此图片（从GitHub和本地备份）")
+                .setIcon("trash")
+                .onClick(async () => {
+                    if (this.settings.confirmBeforeDelete) {
+                        const confirmModal = new ConfirmationModal(
+                            this.app,
+                            "确认删除",
+                            `确定要删除 ${remotePath} 吗？\n此操作不可撤销。`
+                        );
+                        const confirmed = await confirmModal.open();
+                        if (!confirmed) return;
+                    }
+                    const success = await this.deleteFileFromGitHub(remotePath);
+                    if (success) {
+                        await this.removeImageLinkFromCurrentNote(remotePath);
+                        new import_obsidian.Notice("图片已删除");
+                    }
+                });
+        });
+        menu.addSeparator();
+        menu.addItem((item) => {
+            item.setTitle("复制图片地址")
+                .setIcon("copy")
+                .onClick(() => {
+                    navigator.clipboard.writeText(src);
+                    new import_obsidian.Notice("图片地址已复制");
+                });
+        });
+        menu.showAtMouseEvent(event);
+    }, 10);
+};
+
+// 在捕获阶段注册（第三个参数为 true），确保最先执行
+window.addEventListener('contextmenu', globalContextMenuHandler, true);
+this.register(() => {
+    window.removeEventListener('contextmenu', globalContextMenuHandler, true);
+});
+```
+
+**关键改动说明：**
+
+1. 使用 `window.addEventListener` 直接注册，并设置捕获阶段 `true`，确保我们的监听器在 Obsidian 默认监听器之前执行。
+2. 添加 `event.stopImmediatePropagation()` 阻止同一元素上的其他监听器。
+3. 延迟 `10ms` 显示菜单，避免与默认菜单的渲染冲突。
+4. 在插件卸载时自动移除监听器（通过 `this.register`）。
+
+这样自定义菜单将独占显示，不会被遮盖。如果你仍然遇到问题，请检查是否有浏览器扩展干扰。
