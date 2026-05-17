@@ -648,9 +648,9 @@ var MyPlugin = class extends import_obsidian.Plugin {
                             if (ok) {
                                 const newLine = line.replace(target.fullMatch, "").trim();
                                 editor.setLine(cursor.line, newLine);
-                                new import_obsidian.Notice("Image link removed from note.");
+                                new import_obsidian.Notice("图片链接已从笔记中移除");
                             } else {
-                                new import_obsidian.Notice("Failed to delete from GitHub, link kept.");
+                                new import_obsidian.Notice("无法从 GitHub 删除，链接已保留。.");
                             }
                         });
                 });
@@ -1001,9 +1001,9 @@ var MyPlugin = class extends import_obsidian.Plugin {
             });
             if (!getResp.ok) {
                 if (getResp.status === 404) {
-                    new import_obsidian.Notice(`File not found: ${fullPath}`);
+                    new import_obsidian.Notice(`文件未找到: ${fullPath}`);
                 } else {
-                    new import_obsidian.Notice(`Failed to get file info: ${getResp.statusText}`);
+                    new import_obsidian.Notice(`获取文件信息失败: ${getResp.statusText}`);
                 }
                 return false;
             }
@@ -1025,17 +1025,17 @@ var MyPlugin = class extends import_obsidian.Plugin {
                 })
             });
             if (deleteResp.ok) {
-                new import_obsidian.Notice(`Deleted from GitHub: ${fullPath}`);
+                new import_obsidian.Notice(`已从 GitHub 删除: ${fullPath}`);
                 await this.deleteLocalBackupImage(remotePath);   // <-- 新增这一行
                 return true;
             } else {
                 const error = await deleteResp.json();
-                new import_obsidian.Notice(`Delete failed: ${error.message}`);
+                new import_obsidian.Notice(`删除失败: ${error.message}`);
                 return false;
             }
         } catch (err) {
             console.error("GitHub delete error:", err);
-            new import_obsidian.Notice(`Delete failed: ${err.message}`);
+            new import_obsidian.Notice(`删除失败: ${err.message}`);
             return false;
         }
     }

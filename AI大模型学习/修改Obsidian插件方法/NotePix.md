@@ -17,7 +17,9 @@
 
 ---
 
-# 第一步：添加配置项
+# 添加手动删除
+
+## 第一步：添加配置项
 
 **搜索**：`DEFAULT_SETTINGS = {`
 
@@ -39,13 +41,13 @@
 
 ---
 
-# 第二步：在 `MyPlugin` 类中添加三个核心方法
+## 第二步：在 `MyPlugin` 类中添加三个核心方法
 
 **搜索**：`MyPlugin = class extends import_obsidian.Plugin {`
 
 在这个类内部，任意位置（建议放在 `getDecryptedToken` 方法之后）添加以下三个方法：
 
-## 2.1 提取图片链接的方法
+### 2.1 提取图片链接的方法
 
 ```javascript
     extractNotepixImageLinks(content) {
@@ -66,7 +68,7 @@
     }
 ```
 
-## 2.2 找出被删除链接的方法
+### 2.2 找出被删除链接的方法
 
 ```javascript
     findDeletedImageLinks(oldContent, newContent) {
@@ -78,7 +80,7 @@
     }
 ```
 
-## 2.3 从 GitHub 删除文件的方法
+### 2.3 从 GitHub 删除文件的方法
 
 ```javascript
     async deleteFileFromGitHub(remotePath) {
@@ -141,9 +143,9 @@
 
 ---
 
-# 第三步：在构造函数中添加 `fileContentCache`
+## 第三步：在构造函数中添加 `fileContentCache`
 
-**搜索**：`constructor() {`
+### **搜索**：`constructor() {`
 
 在构造函数中找到所有 `this.xxx = ...` 的末尾，添加：
 
@@ -155,11 +157,11 @@
 
 ---
 
-# 第四步：修改 `onload` 方法
+## 第四步：修改 `onload` 方法
 
-**搜索**：`async onload() {`
+### **搜索**：`async onload() {`
 
-## 4.1 在 `await this.loadSettings();` 之后添加缓存初始化
+### 4.1 在 `await this.loadSettings();` 之后添加缓存初始化
 
 ```javascript
         // 初始化文件内容缓存
@@ -170,9 +172,9 @@
         }
 ```
 
-## 4.2 在 `onload` 方法末尾（最后一个 `this.registerEvent` 之后，`}` 之前）添加两个事件监听
+### 4.2 在 `onload` 方法末尾（最后一个 `this.registerEvent` 之后，`}` 之前）添加两个事件监听
 
-**自动删除监听（监听文件保存）**：
+### **自动删除监听（监听文件保存）**：
 
 ```javascript
         // 自动删除：监听文件修改（保存时触发）
@@ -212,7 +214,7 @@
         );
 ```
 
-**右键菜单手动删除监听**：
+### **右键菜单手动删除监听**：
 
 ```javascript
         // 右键菜单手动删除
@@ -254,7 +256,7 @@
 
 ---
 
-# 第五步：在设置面板中添加两个开关
+## 第五步：在设置面板中添加两个开关
 
 **搜索**：`GitHubUploaderSettingTab = class extends import_obsidian.PluginSettingTab {`
 
@@ -286,7 +288,7 @@
 
 ---
 
-# 第六步：保存并测试
+## 第六步：保存并测试
 
 1. 将修改后的 `main.js` 保存到 Obsidian 插件目录（例如 `.obsidian/plugins/NotePix/`）。
 2. 重启 Obsidian（或重新加载插件：`Ctrl+P` → “Reload app without saving”）。
@@ -307,13 +309,15 @@
 
 ---
 
+# 添加右键图片也有删除选项
+
 好的，你已经在 `main.js` 中实现了**编辑器内的右键删除**（针对文本链接），现在需要增加**全局右键菜单**，让用户在**阅读视图或实时预览中直接右键点击图片**时，也能删除图片及其链接。
 
 下面给出具体的修改步骤，你只需要在现有 `onload` 方法末尾添加一段全局监听代码，并补充两个辅助方法即可。
 
 ---
 
-# 📌 步骤一：添加 `getRemotePathFromImageSrc` 方法
+## 📌 步骤一：添加 `getRemotePathFromImageSrc` 方法
 
 在 `MyPlugin` 类中（例如放在 `extractNotepixImageLinks` 方法附近），添加一个从图片 `src` 提取 `remotePath` 的方法：
 
@@ -337,7 +341,7 @@
 
 ---
 
-# 📌 步骤二：添加 `removeImageLinkFromCurrentNote` 方法
+## 📌 步骤二：添加 `removeImageLinkFromCurrentNote` 方法
 
 该方法负责从当前活动笔记的编辑器中删除指定的图片链接（如果存在）。放在 `getRemotePathFromImageSrc` 方法附近：
 
@@ -365,7 +369,7 @@
 
 ---
 
-# 📌 步骤三：在 `onload` 末尾添加全局右键菜单监听
+## 📌 步骤三：在 `onload` 末尾添加全局右键菜单监听
 
 找到 `onload` 方法中已有的 `this.registerEvent(this.app.workspace.on("editor-menu", ...))` 下方（或整个 `onload` 方法的末尾），添加以下代码：
 
@@ -422,7 +426,7 @@
 
 ---
 
-# 📌 验证与测试
+## 📌 验证与测试
 
 1. 将以上三段代码按顺序插入到 `main.js` 的合适位置（建议统一放在 `extractNotepixImageLinks` 方法附近）。
 2. 保存文件，重新加载 Obsidian 插件（`Ctrl+P` → `Reload`）。
@@ -432,7 +436,7 @@
 
 ---
 
-# ⚠️ 注意事项
+## ⚠️ 注意事项
 
 - 全局监听 `document` 的 `contextmenu` 会影响所有页面，但只对 `img` 元素且 `src` 为 Notepix 链接时才会添加菜单，不影响其他右键行为。
 - 如果当前笔记不是编辑模式（例如阅读视图），`removeImageLinkFromCurrentNote` 方法会因为无法获取 `MarkdownView` 而失败，但用户仍可手动删除链接。你可以改进为即使没有编辑器也弹出提示（例如“请切换到编辑模式手动删除链接”），但这不是必须的。
@@ -514,3 +518,66 @@ this.register(() => {
 4. 在插件卸载时自动移除监听器（通过 `this.register`）。
 
 这样自定义菜单将独占显示，不会被遮盖。如果你仍然遇到问题，请检查是否有浏览器扩展干扰。
+
+---
+
+### 添加删除备份有提示
+
+```js
+// 删除本地备份目录中的对应文件
+
+    async deleteLocalBackupImage(remotePath) {
+
+        if (!remotePath) return false;
+
+        // 从 remotePath 中提取文件名（例如 assets/20260515T130941441Z.png -> 20260515T130941441Z.png）
+
+        const parts = remotePath.split('/');
+
+        const fileName = parts[parts.length - 1];
+
+        if (!fileName) return false;
+
+  
+
+        const backupFolder = "Assets/Image-Backup";
+
+        const backupPath = `${backupFolder}/${fileName}`;
+
+  
+
+        try {
+
+            const file = this.app.vault.getAbstractFileByPath(backupPath);
+
+            if (file && file instanceof import_obsidian.TFile) {
+
+                await this.app.vault.delete(file);
+
+                console.log(`Deleted local backup: ${backupPath}`);
+
+                new import_obsidian.Notice(`已删除本地备份: ${fileName}`);
+
+                return true;
+
+            } else {
+
+                // 备份文件不存在，静默跳过
+
+                console.log(`Local backup not found: ${backupPath}`);
+
+                return false;
+
+            }
+
+        } catch (err) {
+
+            console.error(`Failed to delete local backup ${backupPath}:`, err);
+
+            return false;
+
+        }
+
+    }
+```
+
