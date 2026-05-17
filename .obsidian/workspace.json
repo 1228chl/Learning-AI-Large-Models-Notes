@@ -222,8 +222,9 @@
       "templater-obsidian:Templater": false
     }
   },
-  "active": "d6a075f6e4b52bf3",
+  "active": "a73ebf785a6e6ac6",
   "lastOpenFiles": [
+    "LICENSE",
     "AI大模型学习/Agent/提示词工程/提示词工程.md",
     "AI大模型学习/Conda/Conda基础命令.md",
     "AI大模型学习/DataAnalysis/05Matplotlib.md",
@@ -249,7 +250,6 @@
     "AI大模型学习/Python/01面向对象基础.md",
     "AI大模型学习/SQL/03PyRedis模块.md",
     "AI大模型学习/SQL/02PyMySQL模块.md",
-    "AI大模型学习/SQL/01MySQL数据库.md",
     "AI大模型学习/Agent/Dify",
     "Assets/Image-Backup/20260515T134328987Z.png",
     "Assets/NotePix-Uploads/NotePix-1.png",
