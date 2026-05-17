@@ -217,8 +217,14 @@
       "templater-obsidian:Templater": false
     }
   },
-  "active": "e83158f79f242826",
+  "active": "d6a075f6e4b52bf3",
   "lastOpenFiles": [
+    "Assets/Image-Backup/20260517T111350487Z.png",
+    "Assets/Image-Backup/20260517T115418969Z.png",
+    "AI大模型学习/修改Obsidian插件方法/NotePix.md",
+    "Assets/Image-Backup/20260517T122804929Z.png",
+    "Assets/NotePix-Uploads/NotePix-1.png",
+    "Assets/Image-Backup/20260517T121024373Z.png",
     "Assets/mathlive-fix-main.js",
     "Assets/main.js",
     "Assets/notepix-fix-main.js",
@@ -230,10 +236,6 @@
     "Assets/Image/20260517T115215030Z.png",
     "Assets/Image/20260517T115155704Z.png",
     "Assets/Image/20260517T115142846Z.png",
-    "Assets/Image/20260517T115130120Z.png",
-    "Assets/Image/20260517T113340669Z.png",
-    "Assets/Image/20260517T113215806Z.png",
-    "Assets/Image/20260517T113207295Z.png",
     "AI大模型学习/Agent/Coze开发/02Coze进阶.md",
     "AI大模型学习/Agent/Coze开发/01Coze基础入门.md",
     "Assets/Image-Backup",
@@ -242,7 +244,6 @@
     "AI大模型学习/Agent/Coze开发/02.md",
     "AI大模型学习/Agent/Coze开发/03.md",
     "AI大模型学习/修改Obsidian插件方法/MathLive.md",
-    "AI大模型学习/修改Obsidian插件方法/NotePix.md",
     "LICENSE",
     "AI大模型学习/Agent/提示词工程/提示词工程.md",
     "AI大模型学习/Conda/Conda基础命令.md",
@@ -264,7 +265,6 @@
     "AI大模型学习/修改Obsidian插件方法",
     "Assets/NotePix-Uploads",
     "Assets/NotePix-Local",
-    "Assets/nathlive-fix-main.js",
     "未命名.canvas"
   ]
 }
