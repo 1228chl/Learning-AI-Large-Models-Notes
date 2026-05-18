@@ -13,13 +13,13 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "AI大模型学习/Agent/Dify/04Dify.md",
+                "file": "AI大模型学习/Agent/Dify/05Rag和知识库的三种索引方式（重点扩展）.md",
                 "mode": "source",
                 "source": false,
                 "backlinks": false
               },
               "icon": "lucide-file",
-              "title": "04Dify"
+              "title": "05Rag和知识库的三种索引方式（重点扩展）"
             }
           },
           {
@@ -36,10 +36,15 @@
             "id": "b306d106dc276d92",
             "type": "leaf",
             "state": {
-              "type": "empty",
-              "state": {},
+              "type": "markdown",
+              "state": {
+                "file": "AI大模型学习/Agent/Dify/04Dify.md",
+                "mode": "source",
+                "source": false,
+                "backlinks": false
+              },
               "icon": "lucide-file",
-              "title": "新标签页"
+              "title": "04Dify"
             }
           }
         ]
@@ -220,18 +225,18 @@
   },
   "active": "d6a075f6e4b52bf3",
   "lastOpenFiles": [
-    "Assets/Image-Backup/20260518T021552171Z.png",
-    "Assets/NotePix-Uploads/04Dify-1.png",
-    "Assets/Image-Backup/20260518T021530727Z.png",
-    "Assets/Image-Backup/20260518T021446748Z.png",
-    "Assets/Image-Backup/20260518T021436554Z.png",
-    "Assets/Image-Backup/20260518T021423381Z.png",
-    "Assets/Image-Backup/20260518T021410438Z.png",
-    "Assets/Image-Backup/20260518T021356416Z.png",
-    "Assets/Image-Backup/20260518T021339784Z.png",
-    "Assets/Image-Backup/20260518T021317118Z.png",
-    "Assets/Image-Backup/20260518T021257107Z.png",
     "AI大模型学习/Agent/Dify/04Dify.md",
+    "Assets/Image-Backup/20260518T022910748Z.png",
+    "Assets/NotePix-Uploads/04Dify-1.png",
+    "AI大模型学习/Agent/Dify/05Rag和知识库的三种索引方式（重点扩展）.md",
+    "Assets/Image-Backup/20260518T022531899Z.png",
+    "Assets/Image-Backup/20260518T022525293Z.png",
+    "Assets/Image-Backup/20260518T022508296Z.png",
+    "Assets/Image-Backup/20260518T022501036Z.png",
+    "Assets/Image-Backup/20260518T022435168Z.png",
+    "Assets/Image-Backup/20260518T022400560Z.png",
+    "Assets/Image-Backup/20260518T022353311Z.png",
+    "Assets/Image/20260518T021552171Z.png",
     "AI大模型学习/Agent/Coze开发/03Coze细节（课堂版）.md",
     "AI大模型学习/修改Obsidian插件方法/NotePix.md",
     "AI大模型学习/Agent/Coze开发/01Coze基础入门.md",
@@ -261,7 +266,6 @@
     "AI大模型学习/Math/统计学基础.md",
     "AI大模型学习/Math/多维向量距离计算基础.md",
     "AI大模型学习/Python/10python_进阶.md",
-    "AI大模型学习/Python/09正则表达式.md",
     "AI大模型学习/Agent/Dify",
     "AI大模型学习/修改Obsidian插件方法",
     "Assets/NotePix-Uploads",

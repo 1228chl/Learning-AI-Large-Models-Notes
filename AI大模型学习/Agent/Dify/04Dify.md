@@ -1,6 +1,6 @@
 **上一级：** [03Coze细节（课堂版）](../Coze开发/03Coze细节（课堂版）.md)
 
-**下一级：** [[]]
+**下一级：** [05Rag和知识库的三种索引方式（重点扩展）](05Rag和知识库的三种索引方式（重点扩展）.md)
 
 **标签：** #Dify #Agent #基础
 
@@ -90,9 +90,11 @@ docker compose up -d
 
 进入 Dify 后台，首先配置模型提供商。  
 ![](https://raw.githubusercontent.com/1228chl/Learning-AI-Large-Models-Notes/master/Assets/Image/20260518T020343806Z.png)
+
 若未显示待配置列表，请**刷新页面**。
 
 ![](https://raw.githubusercontent.com/1228chl/Learning-AI-Large-Models-Notes/master/Assets/Image/20260518T020352618Z.png)
+
 可以配置**默认模型**：  
 
 - 系统推理模型：`qwen3.6-flash-2026-04-16 (Qwen3.6) CHAT`  
@@ -106,7 +108,9 @@ docker compose up -d
 ### 2.2 创建空白应用
 
 ![](https://raw.githubusercontent.com/1228chl/Learning-AI-Large-Models-Notes/master/Assets/Image/20260518T020413383Z.png)
+
 ![](https://raw.githubusercontent.com/1228chl/Learning-AI-Large-Models-Notes/master/Assets/Image/20260518T020420068Z.png)
+
 ![](https://raw.githubusercontent.com/1228chl/Learning-AI-Large-Models-Notes/master/Assets/Image/20260518T020427242Z.png)
 
 ---
@@ -130,6 +134,7 @@ docker compose up -d
 
 微调前后，**相同的用户输入**，模型输出词的概率分布会发生变化。  
 ![](https://raw.githubusercontent.com/1228chl/Learning-AI-Large-Models-Notes/master/Assets/Image/20260518T020444285Z.png)
+
 ![](https://raw.githubusercontent.com/1228chl/Learning-AI-Large-Models-Notes/master/Assets/Image/20260518T020556874Z.png)
 
 ### 4.2 微调语料的基本形式
@@ -159,7 +164,9 @@ docker compose up -d
 
 全文检索的核心是 **倒排索引** 和 **BM 25 排序**。  
 `[此处插入图片：image16，全文检索示意图]`
+
 ![](https://raw.githubusercontent.com/1228chl/Learning-AI-Large-Models-Notes/master/Assets/Image/20260518T020618157Z.png)
+
 #### 5.1.1 中文分词（jieba）
 
 ```python
@@ -197,8 +204,6 @@ def build_inverted_index(documents):
     return inverted_index
 ```
 
-`[此处插入图片：image17，倒排索引构建示意图]`
-
 #### 5.1.3 TF‑IDF 详解
 
 - **TF（词频）**：`TF(词,文档) = (词在文档中出现的次数) / (文档总词数)`
@@ -227,7 +232,13 @@ $$
 **BM 25 的优势**：通过分母中的抑制项，避免高频词和长文档得分过高，排序更合理。
 
 `[此处插入图片：image18，BM25 公式图示]`  
+![](https://raw.githubusercontent.com/1228chl/Learning-AI-Large-Models-Notes/master/Assets/Image/20260518T022353311Z.png)
+
 `[此处插入图片：image19，BM25 与 TF‑IDF 对比]`
+
+![](https://raw.githubusercontent.com/1228chl/Learning-AI-Large-Models-Notes/master/Assets/Image/20260518T022400560Z.png)
+
+![](https://raw.githubusercontent.com/1228chl/Learning-AI-Large-Models-Notes/master/Assets/Image/20260518T022910748Z.png)
 
 ---
 
@@ -243,7 +254,11 @@ $$
   - > 0.8：语义几乎相同
 
 `[此处插入图片：image20，向量空间示意]`  
+![](https://raw.githubusercontent.com/1228chl/Learning-AI-Large-Models-Notes/master/Assets/Image/20260518T022501036Z.png)
+
 `[此处插入图片：image21，二维向量示例（喜欢/睡觉维度）]`
+
+![](https://raw.githubusercontent.com/1228chl/Learning-AI-Large-Models-Notes/master/Assets/Image/20260518T022508296Z.png)
 
 > 语义检索能捕捉同义词、隐含意图，但无法精确匹配关键词。
 
@@ -260,6 +275,8 @@ $$
 
 `[此处插入图片：image22，混合检索流程图]`
 
+![](https://raw.githubusercontent.com/1228chl/Learning-AI-Large-Models-Notes/master/Assets/Image/20260518T022525293Z.png)
+
 **优点**：结合精确匹配与意图理解，兼顾召回率与准确率。
 
 ---
@@ -272,7 +289,7 @@ $$
 **知识库** = RAG 中的离线向量库。
 
 `[此处插入图片：image23，RAG 离线/在线架构]`
-
+![](https://raw.githubusercontent.com/1228chl/Learning-AI-Large-Models-Notes/master/Assets/Image/20260518T022531899Z.png)
 ---
 
 ## 第六部分：Dify 知识库构建
@@ -287,7 +304,9 @@ $$
    - 流程：问题匹配子块 → 关联父块 → 合并去重
 
 `[此处插入图片：image24，父子块切分示意图]`
+
 ![](https://raw.githubusercontent.com/1228chl/Learning-AI-Large-Models-Notes/master/Assets/Image/20260518T021257107Z.png)
+
 ### 6.2 索引方式
 
 - **高质量索引**：使用 Embedding 模型对每个块生成向量
@@ -319,7 +338,9 @@ Dify 内置三种检索类型：
 - 可为不同类型文档选择对应的解析器
 
 `[此处插入图片：image25，DeepDoc 处理示例]`
+
 ![](https://raw.githubusercontent.com/1228chl/Learning-AI-Large-Models-Notes/master/Assets/Image/20260518T021317118Z.png)
+
 ### 7.2 构建知识库的参数设置
 
 1. 设置 PDF 文档解析器及切分方法  
