@@ -10,7 +10,7 @@
     "isTypewriterScrollEnabled": true,
     "isOnlyMaintainTypewriterOffsetWhenReachedEnabled": false,
     "isTypewriterOnlyUseCommandsEnabled": false,
-    "typewriterOffset": 0.6
+    "typewriterOffset": 0.4
   },
   "keepLinesAboveAndBelow": {
     "isKeepLinesAboveAndBelowEnabled": false,
@@ -31,7 +31,7 @@
     "isPauseDimUnfocusedWhileSelectingEnabled": true
   },
   "currentLine": {
-    "isHighlightCurrentLineEnabled": false,
+    "isHighlightCurrentLineEnabled": true,
     "isFadeLinesEnabled": false,
     "fadeLinesIntensity": 0.5,
     "isHighlightCurrentLineOnlyInFocusedEditorEnabled": true,
