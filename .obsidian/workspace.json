@@ -38,13 +38,13 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "AI-Large-Modlels-Notes/ML/基础/02机器学习基础.md",
+                "file": "AI-Large-Modlels-Notes/ML/线性回归/01线性回归.md",
                 "mode": "source",
                 "source": false,
                 "backlinks": false
               },
               "icon": "lucide-file",
-              "title": "02机器学习基础"
+              "title": "01线性回归"
             }
           }
         ]
@@ -225,9 +225,9 @@
   },
   "active": "d6a075f6e4b52bf3",
   "lastOpenFiles": [
+    "AI-Large-Modlels-Notes/ML/线性回归/01线性回归.md",
     "AI-Large-Modlels-Notes/ML/基础/02机器学习基础.md",
     "AI-Large-Modlels-Notes/ML/线性回归/02线性回归(改进版).md",
-    "AI-Large-Modlels-Notes/ML/线性回归/01线性回归.md",
     "AI-Large-Modlels-Notes/ML/基础/01机器学习概论.md",
     "AI-Large-Modlels-Notes/ML/KNN/01KNN算法简介.md",
     "AI-Large-Modlels-Notes/ML/KNN/02KNN算法API详解.md",
