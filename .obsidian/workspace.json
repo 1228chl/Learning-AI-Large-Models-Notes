@@ -13,13 +13,13 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "AI-Large-Modlels-Notes/ML/线性回归/02线性回归(改进版).md",
+                "file": "AI-Large-Modlels-Notes/ML/KNN/07KNN完整版.md",
                 "mode": "source",
                 "source": false,
                 "backlinks": false
               },
               "icon": "lucide-file",
-              "title": "02线性回归(改进版)"
+              "title": "07KNN完整版"
             }
           },
           {
@@ -38,13 +38,13 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "AI-Large-Modlels-Notes/ML/线性回归/01线性回归.md",
+                "file": "AI-Large-Modlels-Notes/ML/线性回归/02线性回归(改进版).md",
                 "mode": "source",
                 "source": false,
                 "backlinks": false
               },
               "icon": "lucide-file",
-              "title": "01线性回归"
+              "title": "02线性回归(改进版)"
             }
           }
         ]
@@ -104,8 +104,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 300,
-    "collapsed": true
+    "width": 300
   },
   "right": {
     "id": "f07a0c5b7e11463b",
@@ -121,7 +120,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "AI大模型学习/Python/03闭包和装饰器.md",
+                "file": "AI-Large-Modlels-Notes/ML/KNN/07KNN完整版.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -131,7 +130,7 @@
                 "unlinkedCollapsed": true
               },
               "icon": "links-coming-in",
-              "title": "03闭包和装饰器 的反向链接列表"
+              "title": "07KNN完整版 的反向链接列表"
             }
           },
           {
@@ -223,10 +222,11 @@
       "templater-obsidian:Templater": false
     }
   },
-  "active": "d6a075f6e4b52bf3",
+  "active": "a73ebf785a6e6ac6",
   "lastOpenFiles": [
-    "AI-Large-Modlels-Notes/ML/线性回归/01线性回归.md",
     "AI-Large-Modlels-Notes/ML/线性回归/02线性回归(改进版).md",
+    "AI-Large-Modlels-Notes/ML/线性回归/01线性回归.md",
+    "AI-Large-Modlels-Notes/ML/KNN/07KNN完整版.md",
     "AI-Large-Modlels-Notes/ML/KNN/06超参数选择方法.md",
     "AI-Large-Modlels-Notes/ML/KNN/05模型拟合.md",
     "AI-Large-Modlels-Notes/ML/KNN/04特征预处理.md",
@@ -267,7 +267,6 @@
     "AI大模型学习/Agent/Coze开发/03.md",
     "AI-Large-Modlels-Notes/修改Obsidian插件方法/MathLive.md",
     "LICENSE",
-    "AI-Large-Modlels-Notes/Agent/提示词工程/提示词工程.md",
     "AI-Large-Modlels-Notes/Agent/Dify",
     "AI-Large-Modlels-Notes/修改Obsidian插件方法",
     "Assets/NotePix-Uploads",
