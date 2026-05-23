@@ -46,7 +46,7 @@
   d = \sqrt{\sum_{k=1}^{n} (x_{1 k} - x_{2 k})^2}
  $$
 
-其中，$x_{1 k}$和$x_{2 k}$分别表示两个样本在第$k$个特征上的取值。
+其中， $x_{1 k}$ 和 $x_{2 k}$ 分别表示两个样本在第 $k$ 个特征上的取值。
 
 ---
 
@@ -1727,7 +1727,7 @@ D. 0.75
 2. **混淆矩阵**是计算所有指标的基础，提供了四类样本的数量分布。
 3. **精确率**侧重于“预测的准确性”，**召回率**侧重于“找全正例”。
 4. **F 1-score** 综合了两者，是类别不平衡问题中最常用的单一指标。
-5. Scikit-learn 提供了一键计算这些指标的函数：`confusion_matrix`、`precision_score`、`recall_score`、`f1_score`、`classification_report`。
+5. Scikit-learn 提供了一键计算这些指标的函数：`confusion_matrix`、`precision_score`、`recall_score`、`f 1_score`、`classification_report`。
 
 ---
 
@@ -1757,7 +1757,7 @@ D. 0.75
 | 特征预处理 | `StandardScaler` | 标准化（推荐）；`MinMaxScaler` 归一化（对异常值敏感） |
 | 数据划分 | `train_test_split` | `test_size`、`random_state` |
 | 交叉验证+网格搜索 | `GridSearchCV` | `estimator`、`param_grid`、`cv`、`scoring` |
-| 分类评估 | `confusion_matrix`、`precision_score`、`recall_score`、`f1_score`、`classification_report` | `pos_label` 指定正例类别 |
+| 分类评估 | `confusion_matrix`、`precision_score`、`recall_score`、`f 1_score`、`classification_report` | `pos_label` 指定正例类别 |
 
 ---
 
