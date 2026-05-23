@@ -38,13 +38,13 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "AI-Large-Modlels-Notes/ML/监督学习/集成学习/01集成学习完整版.md",
+                "file": "AI-Large-Modlels-Notes/ML/无监督学习/聚类算法/K-means算法.md",
                 "mode": "source",
                 "source": false,
                 "backlinks": false
               },
               "icon": "lucide-file",
-              "title": "01集成学习完整版"
+              "title": "K-means算法"
             }
           }
         ],
@@ -223,8 +223,9 @@
       "templater-obsidian:Templater": false
     }
   },
-  "active": "b306d106dc276d92",
+  "active": "a73ebf785a6e6ac6",
   "lastOpenFiles": [
+    "AI-Large-Modlels-Notes/ML/监督学习/集成学习/01集成学习完整版.md",
     "AI-Large-Modlels-Notes/ML/监督学习/决策树/01决策树完整版.md",
     "AI-Large-Modlels-Notes/ML/监督学习/线性回归/01线性回归.md",
     "AI-Large-Modlels-Notes/ML/监督学习/线性回归/02线性回归(改进版).md",
@@ -236,7 +237,6 @@
     "AI-Large-Modlels-Notes/ML/监督学习/KNN/06超参数选择方法.md",
     "AI-Large-Modlels-Notes/ML/监督学习/KNN/07KNN完整版.md",
     "AI-Large-Modlels-Notes/ML/无监督学习/聚类算法/K-means算法.md",
-    "AI-Large-Modlels-Notes/ML/监督学习/集成学习/01集成学习完整版.md",
     "AI-Large-Modlels-Notes/ML/无监督学习/聚类算法",
     "AI-Large-Modlels-Notes/ML/无监督学习",
     "AI-Large-Modlels-Notes/ML/监督学习",
