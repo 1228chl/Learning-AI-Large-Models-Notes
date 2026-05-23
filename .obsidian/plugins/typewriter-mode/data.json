@@ -51,8 +51,17 @@
     "writingFocusFontSize": 0
   },
   "restoreCursorPosition": {
-    "isRestoreCursorPositionEnabled": false,
-    "cursorPositions": {}
+    "isRestoreCursorPositionEnabled": true,
+    "cursorPositions": {
+      "AI-Large-Modlels-Notes/ML/监督学习/集成学习/01集成学习完整版.md": {
+        "anchor": 1148,
+        "head": 1148
+      },
+      "AI-Large-Modlels-Notes/ML/监督学习/决策树/01决策树完整版.md": {
+        "anchor": 948,
+        "head": 948
+      }
+    }
   },
   "hemingwayMode": {
     "isHemingwayModeEnabled": false,
