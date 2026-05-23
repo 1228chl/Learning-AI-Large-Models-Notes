@@ -13,13 +13,13 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "AI-Large-Modlels-Notes/ML/KNN/07KNN完整版.md",
+                "file": "AI-Large-Modlels-Notes/ML/线性回归/02线性回归(改进版).md",
                 "mode": "source",
                 "source": false,
                 "backlinks": false
               },
               "icon": "lucide-file",
-              "title": "07KNN完整版"
+              "title": "02线性回归(改进版)"
             }
           },
           {
@@ -104,7 +104,8 @@
       }
     ],
     "direction": "horizontal",
-    "width": 300
+    "width": 300,
+    "collapsed": true
   },
   "right": {
     "id": "f07a0c5b7e11463b",
@@ -120,7 +121,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "AI-Large-Modlels-Notes/ML/KNN/07KNN完整版.md",
+                "file": "AI-Large-Modlels-Notes/ML/线性回归/02线性回归(改进版).md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -130,7 +131,7 @@
                 "unlinkedCollapsed": true
               },
               "icon": "links-coming-in",
-              "title": "07KNN完整版 的反向链接列表"
+              "title": "02线性回归(改进版) 的反向链接列表"
             }
           },
           {
@@ -222,11 +223,11 @@
       "templater-obsidian:Templater": false
     }
   },
-  "active": "a73ebf785a6e6ac6",
+  "active": "d6a075f6e4b52bf3",
   "lastOpenFiles": [
+    "AI-Large-Modlels-Notes/ML/KNN/07KNN完整版.md",
     "AI-Large-Modlels-Notes/ML/线性回归/02线性回归(改进版).md",
     "AI-Large-Modlels-Notes/ML/线性回归/01线性回归.md",
-    "AI-Large-Modlels-Notes/ML/KNN/07KNN完整版.md",
     "AI-Large-Modlels-Notes/ML/KNN/06超参数选择方法.md",
     "AI-Large-Modlels-Notes/ML/KNN/05模型拟合.md",
     "AI-Large-Modlels-Notes/ML/KNN/04特征预处理.md",
