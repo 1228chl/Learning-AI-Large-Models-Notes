@@ -295,7 +295,7 @@ KNeighborsRegressor(n_neighbors=5, weights='uniform', algorithm='auto', leaf_siz
 | ------------- | -------------- |
 | `fit(X, y)`   | 训练模型           |
 | `predict(X)`  | 预测新样本的目标值（连续值） |
-| `score(X, y)` | 返回决定系数$R^2$|
+| `score(X, y)` | 返回决定系数 $R^2$ |
 
 ---
 
