@@ -340,4 +340,3 @@ knn_custom = KNeighborsClassifier(metric=my_distance)
 但注意：自定义距离会导致 `algorithm='auto'` 回退为 `'brute'`，性能下降。
 
 ---
-

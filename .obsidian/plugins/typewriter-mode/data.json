@@ -54,12 +54,52 @@
     "isRestoreCursorPositionEnabled": true,
     "cursorPositions": {
       "AI-Large-Modlels-Notes/ML/监督学习/集成学习/01集成学习完整版.md": {
-        "anchor": 1148,
-        "head": 1148
+        "anchor": 307,
+        "head": 307
       },
       "AI-Large-Modlels-Notes/ML/监督学习/决策树/01决策树完整版.md": {
-        "anchor": 948,
-        "head": 948
+        "anchor": 26339,
+        "head": 26339
+      },
+      "AI-Large-Modlels-Notes/ML/无监督学习/聚类算法/K-means算法.md": {
+        "anchor": 5410,
+        "head": 5410
+      },
+      "AI-Large-Modlels-Notes/ML/监督学习/线性回归/01线性回归.md": {
+        "anchor": 202,
+        "head": 202
+      },
+      "AI-Large-Modlels-Notes/ML/监督学习/线性回归/02线性回归(改进版).md": {
+        "anchor": 112,
+        "head": 112
+      },
+      "AI-Large-Modlels-Notes/ML/监督学习/KNN/01KNN算法简介.md": {
+        "anchor": 139,
+        "head": 139
+      },
+      "AI-Large-Modlels-Notes/ML/监督学习/KNN/02KNN算法API详解.md": {
+        "anchor": 35,
+        "head": 35
+      },
+      "AI-Large-Modlels-Notes/ML/监督学习/KNN/03距离度量.md": {
+        "anchor": 41,
+        "head": 41
+      },
+      "AI-Large-Modlels-Notes/ML/监督学习/KNN/04特征预处理.md": {
+        "anchor": 20,
+        "head": 20
+      },
+      "AI-Large-Modlels-Notes/ML/监督学习/KNN/05模型拟合.md": {
+        "anchor": 31,
+        "head": 31
+      },
+      "AI-Large-Modlels-Notes/ML/监督学习/KNN/06超参数选择方法.md": {
+        "anchor": 0,
+        "head": 0
+      },
+      "AI-Large-Modlels-Notes/ML/监督学习/KNN/07KNN完整版.md": {
+        "anchor": 35,
+        "head": 35
       }
     }
   },
