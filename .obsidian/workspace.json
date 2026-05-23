@@ -47,8 +47,7 @@
               "title": "07KNN完整版"
             }
           }
-        ],
-        "currentTab": 2
+        ]
       }
     ],
     "direction": "vertical"
@@ -224,8 +223,9 @@
       "templater-obsidian:Templater": false
     }
   },
-  "active": "b306d106dc276d92",
+  "active": "d6a075f6e4b52bf3",
   "lastOpenFiles": [
+    "AI-Large-Modlels-Notes/ML/KNN/07KNN完整版.md",
     "AI-Large-Modlels-Notes/ML/KNN/06超参数选择方法.md",
     "AI-Large-Modlels-Notes/ML/KNN/05模型拟合.md",
     "AI-Large-Modlels-Notes/ML/KNN/04特征预处理.md",
@@ -236,7 +236,6 @@
     "AI-Large-Modlels-Notes/ML/基础/01机器学习概论.md",
     "AI-Large-Modlels-Notes/ML/线性回归/01线性回归.md",
     "AI-Large-Modlels-Notes/ML/线性回归/02线性回归(改进版).md",
-    "AI-Large-Modlels-Notes/ML/KNN/07KNN完整版.md",
     "AI-Large-Modlels-Notes/Conda/Conda基础命令.md",
     "AI-Large-Modlels-Notes/ML/线性回归",
     "AI-Large-Modlels-Notes/ML/基础/监督学习.md",
