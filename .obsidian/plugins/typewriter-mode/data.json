@@ -70,8 +70,8 @@
         "head": 202
       },
       "AI-Large-Modlels-Notes/ML/监督学习/线性回归/02线性回归(改进版).md": {
-        "anchor": 112,
-        "head": 112
+        "anchor": 37243,
+        "head": 37243
       },
       "AI-Large-Modlels-Notes/ML/监督学习/KNN/01KNN算法简介.md": {
         "anchor": 139,
@@ -86,8 +86,8 @@
         "head": 41
       },
       "AI-Large-Modlels-Notes/ML/监督学习/KNN/04特征预处理.md": {
-        "anchor": 20,
-        "head": 20
+        "anchor": 3103,
+        "head": 3103
       },
       "AI-Large-Modlels-Notes/ML/监督学习/KNN/05模型拟合.md": {
         "anchor": 31,
@@ -98,8 +98,16 @@
         "head": 0
       },
       "AI-Large-Modlels-Notes/ML/监督学习/KNN/07KNN完整版.md": {
-        "anchor": 35,
-        "head": 35
+        "anchor": 31838,
+        "head": 31838
+      },
+      "AI-Large-Modlels-Notes/ML/基础/01机器学习概论.md": {
+        "anchor": 381,
+        "head": 381
+      },
+      "AI-Large-Modlels-Notes/ML/基础/02机器学习基础.md": {
+        "anchor": 2808,
+        "head": 2808
       }
     }
   },
