@@ -47,7 +47,8 @@
               "title": "K-means算法"
             }
           }
-        ]
+        ],
+        "currentTab": 2
       }
     ],
     "direction": "vertical"
@@ -222,8 +223,10 @@
       "obsidian-excalidraw-plugin:新建绘图文件": false
     }
   },
-  "active": "578d1628917aa920",
+  "active": "e83158f79f242826",
   "lastOpenFiles": [
+    "AI-Large-Modlels-Notes/DL",
+    "AI-Large-Modlels-Notes/ML/监督学习/决策树/01决策树完整版.md",
     "AI-Large-Modlels-Notes/ML/无监督学习/聚类算法/K-means算法.md",
     "AI-Large-Modlels-Notes/ML/监督学习/线性回归/02线性回归(改进版).md",
     "AI-Large-Modlels-Notes/ML/监督学习/线性回归/01线性回归.md",
@@ -234,7 +237,6 @@
     "AI-Large-Modlels-Notes/ML/监督学习/KNN/05模型拟合.md",
     "AI-Large-Modlels-Notes/ML/监督学习/KNN/06超参数选择方法.md",
     "AI-Large-Modlels-Notes/ML/监督学习/KNN/07KNN完整版.md",
-    "AI-Large-Modlels-Notes/ML/监督学习/决策树/01决策树完整版.md",
     "AI-Large-Modlels-Notes/ML/监督学习/集成学习/01随机森林完整版.md",
     "AI-Large-Modlels-Notes/ML/监督学习/KNN/Drawing 2026-05-25 20.22.06.excalidraw.md",
     "未命名.base",
@@ -268,7 +270,6 @@
     "AI-Large-Modlels-Notes/Agent/Coze/01Coze基础入门.md",
     "AI-Large-Modlels-Notes/Linux/02Linux命令.md",
     "AI-Large-Modlels-Notes/Linux/01Linux命令（课堂版）.md",
-    "AI-Large-Modlels-Notes/Agent/Coze/02Coze进阶.md",
     "Assets/mathlive-fix-main.js",
     "未命名.canvas"
   ]
