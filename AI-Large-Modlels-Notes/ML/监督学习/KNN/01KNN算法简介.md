@@ -235,9 +235,13 @@
 
 **两个 n 维向量**：
 
-$$a = (x_11,x_12,...,x_n)$$
+$$
+a = (x_11,x_12,...,x_n)
+$$
 
-$$b = (x_21,x_22,...,x_{2n})$$
+$$
+b = (x_21,x_22,...,x_{2n})
+$$
 
 ---
 
@@ -247,7 +251,9 @@ $$b = (x_21,x_22,...,x_{2n})$$
 
 **公式**：
 
-$$d=\sqrt{\left(x_{11}-x_{21}\right)^2+\left(x_{12}-x_{22_{}}\right)^2+\cdots+\left(x_{1n}-x_{2n}\right)^2}$$
+$$
+d=\sqrt{\left(x_{11}-x_{21}\right)^2+\left(x_{12}-x_{22_{}}\right)^2+\cdots+\left(x_{1n}-x_{2n}\right)^2}
+$$
 
 **特点**：
 
@@ -265,7 +271,9 @@ $$d=\sqrt{\left(x_{11}-x_{21}\right)^2+\left(x_{12}-x_{22_{}}\right)^2+\cdots+\l
 
 **公式**：
 
-$$d=\left|x_{11}-x_{21}\right|+\left|x_{12}-x_{22}\right|+\cdots+\left|x_{1n}-x_{2n}\right|$$
+$$
+d=\left|x_{11}-x_{21}\right|+\left|x_{12}-x_{22}\right|+\cdots+\left|x_{1n}-x_{2n}\right|
+$$
 
 **特点**：
 
@@ -283,7 +291,9 @@ $$d=\left|x_{11}-x_{21}\right|+\left|x_{12}-x_{22}\right|+\cdots+\left|x_{1n}-x_
 
 **公式**：
 
-$$d=\max\left(\left|x_{11}-x_{21}\right|,\left|x_{12}-x_{22}\right|,\ldots,\left|x_{1n}-x_{2n}\right|\right)$$
+$$
+d=\max\left(\left|x_{11}-x_{21}\right|,\left|x_{12}-x_{22}\right|,\ldots,\left|x_{1n}-x_{2n}\right|\right)
+$$
 
 **特点**：
 
@@ -300,7 +310,9 @@ $$d=\max\left(\left|x_{11}-x_{21}\right|,\left|x_{12}-x_{22}\right|,\ldots,\left
 
 **公式**：
 
-$$d=\left(\sum_{i=1}^{n}\left\vert x_{1i}-x_{2i}\right\vert^{p}\right)^{\frac{1}{p}}$$
+$$
+d=\left(\sum_{i=1}^{n}\left\vert x_{1i}-x_{2i}\right\vert^{p}\right)^{\frac{1}{p}}
+$$
 
 **参数 p 的含义**：
 
