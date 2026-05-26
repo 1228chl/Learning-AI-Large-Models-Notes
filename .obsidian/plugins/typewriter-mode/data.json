@@ -58,12 +58,12 @@
         "head": 307
       },
       "AI-Large-Modlels-Notes/ML/监督学习/决策树/01决策树完整版.md": {
-        "anchor": 26339,
-        "head": 26339
+        "anchor": 5903,
+        "head": 5903
       },
       "AI-Large-Modlels-Notes/ML/无监督学习/聚类算法/K-means算法.md": {
-        "anchor": 10987,
-        "head": 10987
+        "anchor": 366,
+        "head": 366
       },
       "AI-Large-Modlels-Notes/ML/监督学习/线性回归/01线性回归.md": {
         "anchor": 202,
@@ -98,8 +98,8 @@
         "head": 0
       },
       "AI-Large-Modlels-Notes/ML/监督学习/KNN/07KNN完整版.md": {
-        "anchor": 31838,
-        "head": 31838
+        "anchor": 9132,
+        "head": 9132
       },
       "AI-Large-Modlels-Notes/ML/基础/01机器学习概论.md": {
         "anchor": 381,
@@ -108,6 +108,10 @@
       "AI-Large-Modlels-Notes/ML/基础/02机器学习基础.md": {
         "anchor": 2808,
         "head": 2808
+      },
+      "AI-Large-Modlels-Notes/ML/监督学习/集成学习/01随机森林完整版.md": {
+        "anchor": 7666,
+        "head": 7666
       }
     }
   },

@@ -2,7 +2,6 @@
   "obsidian-git",
   "editing-toolbar",
   "custom-font-loader",
-  "obsidian-excalidraw-plugin",
   "obsidian-linter",
   "floating-toc",
   "obsidian-minimal-settings",
@@ -10,5 +9,6 @@
   "easy-typing-obsidian",
   "mathlive",
   "notepix",
-  "typewriter-mode"
+  "typewriter-mode",
+  "obsidian-excalidraw-plugin"
 ]

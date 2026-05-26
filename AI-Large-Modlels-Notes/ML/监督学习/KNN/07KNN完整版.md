@@ -445,7 +445,7 @@ KNN 是一种**懒惰学习（Lazy Learning）**算法，也称为**基于实例
 
 ### 2.1 原理
 
-归一化是将原始数据线性变换到某个指定区间（通常是 **[0, 1]** 或 **[-1, 1]**）的方法。最常用的是**Min-Max 归一化**。
+归一化是将原始数据线性变换到某个指定区间（通常是 **[0, 1]** 或 **[-1, 1]**）的方法。最常用的是** Min-Max 归一化**。
 
 **计算公式**：
 
@@ -577,7 +577,7 @@ minmax_scaler_demo()
 
 ### 3.1 原理
 
-标准化是将原始数据转换为**均值为 0，标准差为 1**的标准正态分布数据。它不要求数据有固定的上下界，而是通过减去均值、除以标准差来实现。
+标准化是将原始数据转换为**均值为 0，标准差为 1** 的标准正态分布数据。它不要求数据有固定的上下界，而是通过减去均值、除以标准差来实现。
 
 **计算公式**：
 
@@ -625,7 +625,7 @@ $$
 
 - 均值 $\mu = (90+60+75)/3 = 75$
 - 方差 $\sigma^2 = [(90-75)^2 + (60-75)^2 + (75-75)^2] / 3 = (225 + 225 + 0) / 3 = 150$
-- 标准差$\sigma = \sqrt{150} \approx 12.247$
+- 标准差 $\sigma = \sqrt{150} \approx 12.247$
 
 标准化后：
 
@@ -1056,15 +1056,15 @@ from sklearn.model_selection import GridSearchCV
 GridSearchCV(estimator, param_grid, cv=None, scoring=None, n_jobs=None, verbose=0, ...)
 ```
 
-| 参数 | 类型 | 默认值 | 说明 |
-|------|------|--------|------|
-| `estimator` | estimator object | 必填 | 要调参的模型实例（如 KNeighborsClassifier()） |
-| `param_grid` | dict 或 list of dict | 必填 | 超参数网格。键为参数名，值为候选列表。 |
-| `cv` | int, cross-validation generator | None | 交叉验证折数（如 5）或自定义交叉验证器 |
-| `scoring` | str, callable | None | 评估指标。如 'accuracy'、'f 1'、'roc_auc' 等 |
-| `n_jobs` | int | None | 并行任务数。 -1 表示使用所有 CPU 核心 |
-| `verbose` | int | 0 | 控制输出详细程度。越大信息越多 |
-| `return_train_score` | bool | False | 是否返回训练集得分（可用于检查过拟合） |
+| 参数                   | 类型                              | 默认值   | 说明                                  |
+| -------------------- | ------------------------------- | ----- | ----------------------------------- |
+| `estimator`          | estimator object                | 必填    | 要调参的模型实例（如 KNeighborsClassifier()）  |
+| `param_grid`         | dict 或 list of dict             | 必填    | 超参数网格。键为参数名，值为候选列表。                 |
+| `cv`                 | int, cross-validation generator | None  | 交叉验证折数（如 5）或自定义交叉验证器                |
+| `scoring`            | str, callable                   | None  | 评估指标。如 'accuracy'、'f 1'、'roc_auc' 等 |
+| `n_jobs`             | int                             | None  | 并行任务数。 -1 表示使用所有 CPU 核心             |
+| `verbose`            | int                             | 0     | 控制输出详细程度。越大信息越多                     |
+| `return_train_score` | bool                            | False | 是否返回训练集得分（可用于检查过拟合）                 |
 
 **主要属性（fit 后可用）**：
 
@@ -1364,10 +1364,10 @@ $$
 
 混淆矩阵是一个 **2×2 的表格**，用于展示分类模型的预测结果与真实标签的对比情况。它以真实类别为行、预测类别为列，将样本分为四类：
 
-| 真实 \ 预测 | 正例（Positive） | 反例（Negative） |
-|-------------|------------------|------------------|
-| **正例（Positive）** | **TP**（真正例） | **FN**（伪反例/假负例） |
-| **反例（Negative）** | **FP**（伪正例/假正例） | **TN**（真反例） |
+| 真实 \ 预测          | 正例（Positive）    | 反例（Negative）    |
+| ---------------- | --------------- | --------------- |
+| **正例（Positive）** | **TP**（真正例）     | **FN**（伪反例/假负例） |
+| **反例（Negative）** | **FP**（伪正例/假正例） | **TN**（真反例）     |
 
 **术语解释**：
 
@@ -1728,7 +1728,7 @@ D. 0.75
 2. **混淆矩阵**是计算所有指标的基础，提供了四类样本的数量分布。
 3. **精确率**侧重于“预测的准确性”，**召回率**侧重于“找全正例”。
 4. **F 1-score** 综合了两者，是类别不平衡问题中最常用的单一指标。
-5. Scikit-learn 提供了一键计算这些指标的函数：`confusion_matrix`、`precision_score`、`recall_score`、`f 1_score`、`classification_report`。
+5. Scikit-learn 提供了一键计算这些指标的函数：`confusion_matrix`、`precision_score`、`recall_score`、`f 1 _score`、`classification_report`。
 
 ---
 
@@ -1758,7 +1758,7 @@ D. 0.75
 | 特征预处理 | `StandardScaler` | 标准化（推荐）；`MinMaxScaler` 归一化（对异常值敏感） |
 | 数据划分 | `train_test_split` | `test_size`、`random_state` |
 | 交叉验证+网格搜索 | `GridSearchCV` | `estimator`、`param_grid`、`cv`、`scoring` |
-| 分类评估 | `confusion_matrix`、`precision_score`、`recall_score`、`f 1_score`、`classification_report` | `pos_label` 指定正例类别 |
+| 分类评估 | `confusion_matrix`、`precision_score`、`recall_score`、`f 1 _score`、`classification_report` | `pos_label` 指定正例类别 |
 
 ---
 
