@@ -13,13 +13,13 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "AI-Large-Modlels-Notes/ML/无监督学习/聚类算法/K-means算法.md",
+                "file": "AI-Large-Modlels-Notes/DL/01深度学习概述.md",
                 "mode": "source",
                 "source": false,
                 "backlinks": false
               },
               "icon": "lucide-file",
-              "title": "K-means算法"
+              "title": "01深度学习概述"
             }
           },
           {
@@ -104,7 +104,8 @@
       }
     ],
     "direction": "horizontal",
-    "width": 300
+    "width": 300,
+    "collapsed": true
   },
   "right": {
     "id": "f07a0c5b7e11463b",
@@ -222,15 +223,16 @@
       "obsidian-excalidraw-plugin:新建绘图文件": false
     }
   },
-  "active": "e83158f79f242826",
+  "active": "578d1628917aa920",
   "lastOpenFiles": [
+    "AI-Large-Modlels-Notes/ML/监督学习/线性回归/02线性回归(改进版).md",
+    "AI-Large-Modlels-Notes/DL/01深度学习概述.md",
+    "AI-Large-Modlels-Notes/ML/无监督学习/聚类算法/K-means算法.md",
     "AI-Large-Modlels-Notes/ML/监督学习/集成学习/01随机森林完整版.md",
     "AI-Large-Modlels-Notes/ML/监督学习/决策树/01决策树完整版.md",
     "AI-Large-Modlels-Notes/ML/监督学习/KNN/07KNN完整版.md",
     "Assets/NotePix-Uploads/07KNN完整版-1.png",
     "Assets/NotePix-Uploads",
-    "AI-Large-Modlels-Notes/ML/监督学习/线性回归/02线性回归(改进版).md",
-    "AI-Large-Modlels-Notes/ML/无监督学习/聚类算法/K-means算法.md",
     "AI-Large-Modlels-Notes/ML/基础/02机器学习基础.md",
     "AI-Large-Modlels-Notes/ML/基础/01机器学习概论.md",
     "AI-Large-Modlels-Notes/DL",

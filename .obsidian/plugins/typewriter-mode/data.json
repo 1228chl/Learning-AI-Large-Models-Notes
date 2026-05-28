@@ -62,8 +62,8 @@
         "head": 13556
       },
       "AI-Large-Modlels-Notes/ML/无监督学习/聚类算法/K-means算法.md": {
-        "anchor": 367,
-        "head": 367
+        "anchor": 9599,
+        "head": 9599
       },
       "AI-Large-Modlels-Notes/ML/监督学习/线性回归/01线性回归.md": {
         "anchor": 640,
@@ -112,6 +112,14 @@
       "AI-Large-Modlels-Notes/ML/监督学习/集成学习/01随机森林完整版.md": {
         "anchor": 8696,
         "head": 8696
+      },
+      "AI-Large-Modlels-Notes/DL/深度学习概述.md": {
+        "anchor": 32,
+        "head": 32
+      },
+      "AI-Large-Modlels-Notes/DL/01深度学习概述.md": {
+        "anchor": 4613,
+        "head": 4613
       }
     }
   },
