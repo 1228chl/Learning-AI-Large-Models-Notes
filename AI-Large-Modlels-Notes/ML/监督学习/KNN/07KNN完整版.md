@@ -539,7 +539,7 @@ minmax_scaler_demo()
 
 **输出示例**：
 
-```
+```python
 原始数据:
 [[90  2 10 40]
  [60  4 15 45]
@@ -683,7 +683,7 @@ standard_scaler_demo()
 
 **输出示例**：
 
-```
+```python
 原始数据:
 [90, 2, 10, 40]
 [60, 4, 15, 45]
@@ -869,7 +869,7 @@ iris_knn_classification()
 
 **预期输出**（实际数值可能因随机种子略有差异）：
 
-```
+```python
 训练集样本数: 105
 测试集样本数: 45
 
@@ -958,7 +958,7 @@ weighted avg       0.96      0.96      0.96        45
 
 **图示思想**：
 
-```
+```python
 数据集划分为 K 份（例如 K=5）：
 [1] [2] [3] [4] [5]
 
@@ -1056,13 +1056,13 @@ GridSearchCV(estimator, param_grid, cv=None, scoring=None, n_jobs=None, verbose=
 
 **主要属性（fit 后可用）**：
 
-| 属性 | 说明 |
-|------|------|
-| `best_params_` | 最佳参数组合（字典） |
-| `best_score_` | 最佳参数下的交叉验证平均得分 |
-| `best_estimator_` | 使用最佳参数训练的模型对象 |
-| `cv_results_` | 所有参数组合的详细结果（可转为 DataFrame 分析） |
-| `best_index_` | 最佳参数在 `cv_results_` 中的索引 |
+| 属性                | 说明                            |
+| ----------------- | ----------------------------- |
+| `best_params_`    | 最佳参数组合（字典）                    |
+| `best_score_`     | 最佳参数下的交叉验证平均得分                |
+| `best_estimator_` | 使用最佳参数训练的模型对象                 |
+| `cv_results_`     | 所有参数组合的详细结果（可转为 DataFrame 分析） |
+| `best_index_`     | 最佳参数在 `cv_results_` 中的索引      |
 
 **主要方法**：
 
@@ -1179,7 +1179,7 @@ iris_grid_search_demo()
 
 ### 3.2 输出示例及解读
 
-```
+```python
 训练集样本数: 120
 测试集样本数: 30
 Fitting 5 folds for each of 6*2*2 = 24 candidates, totalling 120 fits
@@ -1591,7 +1591,7 @@ print(classification_report(y_true_multi, y_pred_multi,
 
 输出示例：
 
-```
+```python
               precision    recall  f1-score   support
       setosa       1.00      1.00      1.00         2
   versicolor       0.50      0.50      0.50         2

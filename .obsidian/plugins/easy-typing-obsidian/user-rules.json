@@ -3,7 +3,7 @@
     "trigger": "**  ",
     "replacement": "**$0**",
     "priority": 100,
-    "enabled": true,
+    "enabled": false,
     "id": "user-1778659495862-u8nj"
   }
 ]
