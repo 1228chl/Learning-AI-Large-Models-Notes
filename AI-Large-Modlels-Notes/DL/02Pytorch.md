@@ -179,7 +179,7 @@ t7 = torch.DoubleTensor([1, 2, 3]) # dtype=torch.float64
 
 #### 2.2 创建线性序列张量
 
- `torch.arange(start=0, end, step=1)` ：生成左闭右开区间 `[start, end)` 的等差数列，**不包含 `end` **。
+ `torch.arange(start=0, end, step=1)` ：生成左闭右开区间 `[start, end)` 的等差数列，**不包含** `end` 。
 
 ```python
 # 从 1 到 9，步长为 2
@@ -190,7 +190,7 @@ print(t1)  # tensor([1, 3, 5, 7, 9])
 t2 = torch.arange(5)  # tensor([0, 1, 2, 3, 4])
 ```
 
- `torch.linspace(start, end, steps)` ：生成区间 `[start, end]` 内的等间隔 `steps` 个数，**包含 `end` **。
+ `torch.linspace(start, end, steps)` ：生成区间 `[start, end]` 内的等间隔 `steps` 个数，**包含** `end` 。
 
 ```python
 # 从 1 到 10，共 5 个数

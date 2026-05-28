@@ -38,13 +38,13 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "AI-Large-Modlels-Notes/ML/监督学习/线性回归/02线性回归(改进版).md",
+                "file": "AI-Large-Modlels-Notes/Conda/Conda基础命令.md",
                 "mode": "source",
                 "source": false,
                 "backlinks": false
               },
               "icon": "lucide-file",
-              "title": "02线性回归(改进版)"
+              "title": "Conda基础命令"
             }
           }
         ]
@@ -225,6 +225,7 @@
   },
   "active": "578d1628917aa920",
   "lastOpenFiles": [
+    "AI-Large-Modlels-Notes/Conda/Conda基础命令.md",
     "AI-Large-Modlels-Notes/ML/监督学习/线性回归/02线性回归(改进版).md",
     "AI-Large-Modlels-Notes/DL/02Pytorch.md",
     "AI-Large-Modlels-Notes/DL/01深度学习概述.md",
@@ -254,7 +255,6 @@
     "AI-Large-Modlels-Notes/ML/监督学习",
     "AI-Large-Modlels-Notes/ML/监督学习/集成学习",
     "AI-Large-Modlels-Notes/ML/监督学习/决策树",
-    "AI-Large-Modlels-Notes/Conda/Conda基础命令.md",
     "AI-Large-Modlels-Notes/ML/基础/监督学习.md",
     "AI-Large-Modlels-Notes/Agent/Dify/05Rag和知识库的三种索引方式（重点扩展）.md",
     "AI-Large-Modlels-Notes/Agent/Dify/04Dify.md",
