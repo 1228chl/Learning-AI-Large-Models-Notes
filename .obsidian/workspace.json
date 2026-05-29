@@ -13,13 +13,13 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "AI-Large-Modlels-Notes/DL/02Pytorch.md",
+                "file": "AI-Large-Modlels-Notes/DL/基础/03Pytorch自动微分.md",
                 "mode": "source",
                 "source": false,
                 "backlinks": false
               },
               "icon": "lucide-file",
-              "title": "02Pytorch"
+              "title": "03Pytorch自动微分"
             }
           },
           {
@@ -38,13 +38,13 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "AI-Large-Modlels-Notes/Markdown语法.md",
+                "file": "AI-Large-Modlels-Notes/DL/ANN/ANN（神经网络）完整版.md",
                 "mode": "source",
                 "source": false,
                 "backlinks": false
               },
               "icon": "lucide-file",
-              "title": "Markdown语法"
+              "title": "ANN（神经网络）完整版"
             }
           }
         ],
@@ -224,15 +224,18 @@
       "obsidian-excalidraw-plugin:新建绘图文件": false
     }
   },
-  "active": "a73ebf785a6e6ac6",
+  "active": "f432670bd6181883",
   "lastOpenFiles": [
-    "AI-Large-Modlels-Notes/DL/02Pytorch.md",
-    "AI-Large-Modlels-Notes/Markdown语法.md",
-    "AI-Large-Modlels-Notes/DL/03Pytorch自动微分.md",
-    "AI-Large-Modlels-Notes/Math/未命名.md",
-    "AI-Large-Modlels-Notes/DL/pytorch练习题目.md",
-    "AI-Large-Modlels-Notes/DL/01深度学习概述.md",
     "AI-Large-Modlels-Notes/ML/监督学习/线性回归/02线性回归(改进版).md",
+    "AI-Large-Modlels-Notes/DL/ANN/ANN（神经网络）完整版.md",
+    "AI-Large-Modlels-Notes/DL/基础",
+    "AI-Large-Modlels-Notes/DL/ANN",
+    "AI-Large-Modlels-Notes/Markdown语法.md",
+    "AI-Large-Modlels-Notes/DL/基础/03Pytorch自动微分.md",
+    "AI-Large-Modlels-Notes/DL/基础/02Pytorch.md",
+    "AI-Large-Modlels-Notes/Math/未命名.md",
+    "AI-Large-Modlels-Notes/DL/基础/pytorch练习题目.md",
+    "AI-Large-Modlels-Notes/DL/基础/01深度学习概述.md",
     "AI-Large-Modlels-Notes/Conda/Conda基础命令.md",
     "AI-Large-Modlels-Notes/ML/无监督学习/聚类算法/K-means算法.md",
     "AI-Large-Modlels-Notes/ML/监督学习/集成学习/01随机森林完整版.md",
@@ -258,11 +261,8 @@
     "AI-Large-Modlels-Notes/ML/无监督学习/聚类算法",
     "AI-Large-Modlels-Notes/ML/无监督学习",
     "AI-Large-Modlels-Notes/ML/监督学习",
-    "AI-Large-Modlels-Notes/ML/监督学习/集成学习",
-    "AI-Large-Modlels-Notes/ML/监督学习/决策树",
     "AI-Large-Modlels-Notes/ML/基础/监督学习.md",
     "AI-Large-Modlels-Notes/Agent/Dify/05Rag和知识库的三种索引方式（重点扩展）.md",
-    "AI-Large-Modlels-Notes/Agent/Dify/04Dify.md",
     "Assets/Image/20260518T022910748Z.png",
     "Assets/Image/20260518T022531899Z.png",
     "Assets/Image/20260518T022525293Z.png",

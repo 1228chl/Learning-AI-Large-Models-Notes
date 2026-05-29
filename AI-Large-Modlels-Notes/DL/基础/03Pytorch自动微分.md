@@ -1,4 +1,4 @@
-**上一级：** [02Pytorch](02Pytorch.md)
+**上一级：** [02Pytorch](基础/02Pytorch.md)
 
 **下一级：** [[]]
 
