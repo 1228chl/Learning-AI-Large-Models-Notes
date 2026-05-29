@@ -122,12 +122,16 @@
         "head": 46410
       },
       "AI-Large-Modlels-Notes/DL/02Pytorch.md": {
-        "anchor": 12327,
-        "head": 12327
+        "anchor": 3171,
+        "head": 3171
       },
       "AI-Large-Modlels-Notes/DL/pytorch练习题目.md": {
-        "anchor": 409,
-        "head": 409
+        "anchor": 2572,
+        "head": 2572
+      },
+      "AI-Large-Modlels-Notes/DL/03Pytorch自动微分.md": {
+        "anchor": 51,
+        "head": 51
       }
     }
   },

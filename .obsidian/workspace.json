@@ -13,13 +13,13 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "AI-Large-Modlels-Notes/DL/pytorch练习题目.md",
+                "file": "AI-Large-Modlels-Notes/DL/02Pytorch.md",
                 "mode": "source",
                 "source": false,
                 "backlinks": false
               },
               "icon": "lucide-file",
-              "title": "pytorch练习题目"
+              "title": "02Pytorch"
             }
           },
           {
@@ -38,13 +38,13 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "AI-Large-Modlels-Notes/DL/02Pytorch.md",
+                "file": "AI-Large-Modlels-Notes/DL/03Pytorch自动微分.md",
                 "mode": "source",
                 "source": false,
                 "backlinks": false
               },
               "icon": "lucide-file",
-              "title": "02Pytorch"
+              "title": "03Pytorch自动微分"
             }
           }
         ]
@@ -225,11 +225,12 @@
   },
   "active": "578d1628917aa920",
   "lastOpenFiles": [
+    "AI-Large-Modlels-Notes/DL/03Pytorch自动微分.md",
     "AI-Large-Modlels-Notes/DL/02Pytorch.md",
     "AI-Large-Modlels-Notes/DL/pytorch练习题目.md",
+    "AI-Large-Modlels-Notes/DL/01深度学习概述.md",
     "AI-Large-Modlels-Notes/ML/监督学习/线性回归/02线性回归(改进版).md",
     "AI-Large-Modlels-Notes/Conda/Conda基础命令.md",
-    "AI-Large-Modlels-Notes/DL/01深度学习概述.md",
     "AI-Large-Modlels-Notes/ML/无监督学习/聚类算法/K-means算法.md",
     "AI-Large-Modlels-Notes/ML/监督学习/集成学习/01随机森林完整版.md",
     "AI-Large-Modlels-Notes/ML/监督学习/决策树/01决策树完整版.md",
@@ -270,7 +271,6 @@
     "Assets/NotePix-Uploads/04Dify-1.png",
     "AI-Large-Modlels-Notes/Agent/Coze/03Coze细节（课堂版）.md",
     "AI-Large-Modlels-Notes/修改Obsidian插件方法/NotePix.md",
-    "AI-Large-Modlels-Notes/Agent/Coze/01Coze基础入门.md",
     "未命名.canvas"
   ]
 }
