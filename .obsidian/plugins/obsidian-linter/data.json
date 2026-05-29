@@ -274,7 +274,7 @@
   "lintOnSave": true,
   "recordLintOnSaveLogs": false,
   "displayChanged": true,
-  "suppressMessageWhenNoChange": false,
+  "suppressMessageWhenNoChange": true,
   "lintOnFileChange": true,
   "displayLintOnFileChangeNotice": true,
   "settingsConvertedToConfigKeyValues": true,
