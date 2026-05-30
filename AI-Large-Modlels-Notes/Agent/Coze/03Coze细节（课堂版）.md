@@ -25,7 +25,6 @@ Agent = LLM + 记忆 + 规划 + 工具
 
 [图片 1]
 
-![752](https://raw.githubusercontent.com/1228chl/Learning-AI-Large-Models-Notes/tree/master/Assets/Image/AI-Large-Modlels-Notes/Agent/Coze/03Coze细节（课堂版）/03Coze细节（课堂版）-1.1.1-1.png)
 
 ---
 
