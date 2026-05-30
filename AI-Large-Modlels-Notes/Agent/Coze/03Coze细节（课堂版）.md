@@ -24,7 +24,8 @@ Agent = LLM + 记忆 + 规划 + 工具
 - **工具**：调用外部 API、插件、工作流等执行具体动作
 
 [图片 1]
-![](https://cdn.jsdelivr.net/gh/1228chl/Learning-AI-Large-Models-Notes@master/Assets/Image/AI-Large-Modlels-Notes/Agent/Coze/03Coze细节（课堂版）/03Coze细节（课堂版）-1.1.1-1.png)
+
+![752](https://raw.githubusercontent.com/1228chl/Learning-AI-Large-Models-Notes/tree/master/Assets/Image/AI-Large-Modlels-Notes/Agent/Coze/03Coze细节（课堂版）/03Coze细节（课堂版）-1.1.1-1.png)
 
 ---
 
