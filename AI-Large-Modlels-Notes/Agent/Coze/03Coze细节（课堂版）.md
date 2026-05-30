@@ -24,7 +24,7 @@ Agent = LLM + 记忆 + 规划 + 工具
 - **工具**：调用外部 API、插件、工作流等执行具体动作
 
 [图片 1]
-
+![](https://cdn.jsdelivr.net/gh/1228chl/Learning-AI-Large-Models-Notes@master/Assets/Image/AI-Large-Modlels-Notes/Agent/Coze/03Coze细节（课堂版）/1.1.1-1.png)
 
 ---
 
@@ -77,7 +77,7 @@ Agent = LLM + 记忆 + 规划 + 工具
 示例：TopP=0.6 时，只保留概率最高的词直到累计概率达到 60%。
 
 [图片二]
-
+![](https://cdn.jsdelivr.net/gh/1228chl/Learning-AI-Large-Models-Notes@master/Assets/Image/AI-Large-Modlels-Notes/Agent/Coze/03Coze细节（课堂版）/1.1.3.2-1.png)
 
 ---
 
@@ -88,7 +88,7 @@ Agent = LLM + 记忆 + 规划 + 工具
 示例：TopK=5，只保留概率排名前5的词。
 
 [图片 3]
-
+![](https://cdn.jsdelivr.net/gh/1228chl/Learning-AI-Large-Models-Notes@master/Assets/Image/AI-Large-Modlels-Notes/Agent/Coze/03Coze细节（课堂版）/1.1.3.3-1.png)
 
 **实用建议**：
 
@@ -106,6 +106,7 @@ Agent = LLM + 记忆 + 规划 + 工具
 **实操方法**：可以直接新建工作流，将已有的工作流 JSON 代码粘贴进去即可复现。
 
 ![](https://raw.githubusercontent.com/1228chl/Learning-AI-Large-Models-Notes/master/Assets/Image/20260517T111723144Z.png)
+
 
 **重要提示**：
 

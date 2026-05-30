@@ -1,8 +1,21 @@
+// ============================================================
+// NotePix - Obsidian GitHub 图片上传插件
+// 功能：自动上传图片到 GitHub，支持私有/公开仓库、CDN加速、标题层级命名、计数器、整理序号等
+// 作者：Ayush Parkara (原版) / 1228chl (修改维护)
+// 版本：1.4.6
+// 许可证：MIT
+// ============================================================
+
 var import_obsidian = require("obsidian");
 
-//中文注释全部都有了
-// ========== 辅助函数 ==========
-// 拼接仓库路径（移动端安全）
+// ---------- 辅助函数 ----------
+
+/**
+ * 拼接 GitHub 仓库中的路径（移动端安全）
+ * @param {string} folderPath 文件夹路径（可为空）
+ * @param {string} fileName 文件名
+ * @returns {string} 标准化后的路径
+ */
 function joinRepoPath(folderPath, fileName) {
     const raw = (folderPath || "").replace(/\\/g, "/").trim();
     const folder = raw.replace(/^\/+|\/+$/g, "");
@@ -14,7 +27,11 @@ function joinRepoPath(folderPath, fileName) {
     }
 }
 
-// 将二进制数据转为 Base64（避免二次方级字符串拼接）
+/**
+ * 将 ArrayBuffer 转为 Base64 字符串（避免大量字符串拼接）
+ * @param {ArrayBuffer} buffer 二进制数据
+ * @returns {string} Base64 字符串
+ */
 function arrayBufferToBase64(buffer) {
     const bytes = new Uint8Array(buffer);
     const chunkSize = 32768;
@@ -26,27 +43,33 @@ function arrayBufferToBase64(buffer) {
     return btoa(chunks.join(""));
 }
 
-// 转义正则表达式特殊字符
+/**
+ * 转义正则表达式中的特殊字符
+ * @param {string} value 原始字符串
+ * @returns {string} 转义后的字符串
+ */
 function escapeRegex(value) {
     return String(value || "").replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 }
 
-// 平台检测（移动端）
+/**
+ * 检测当前是否为移动端（iOS/Android）
+ */
 const isMobile = !!(import_obsidian.Platform && import_obsidian.Platform.isMobile);
 
-// ========== 加密模块（AES-GCM） ==========
-const PBKDF2_ITERATIONS = 1e5;
-const ALGORITHM = "AES-GCM";
+// ---------- 加密模块（AES-GCM） ----------
+const PBKDF2_ITERATIONS = 1e5;      // 迭代次数，安全且性能可接受
+const ALGORITHM = "AES-GCM";        // 加密算法
 
+/**
+ * 根据密码和盐派生密钥（PBKDF2 + SHA-256）
+ * @param {string} password 主密码
+ * @param {Uint8Array} salt 随机盐
+ * @returns {Promise<CryptoKey>} 用于加密/解密的密钥
+ */
 async function getKey(password, salt) {
     const passwordBuffer = new TextEncoder().encode(password);
-    const baseKey = await crypto.subtle.importKey(
-        "raw",
-        passwordBuffer,
-        { name: "PBKDF2" },
-        false,
-        ["deriveKey"]
-    );
+    const baseKey = await crypto.subtle.importKey("raw", passwordBuffer, { name: "PBKDF2" }, false, ["deriveKey"]);
     return crypto.subtle.deriveKey(
         {
             name: "PBKDF2",
@@ -61,76 +84,85 @@ async function getKey(password, salt) {
     );
 }
 
+/**
+ * 加密明文（使用随机盐和随机IV，输出格式：盐Base64:IVBase64:密文Base64）
+ * @param {string} plaintext 明文（如GitHub Token）
+ * @param {string} password 主密码
+ * @returns {Promise<string>} 加密后的字符串
+ */
 async function encrypt(plaintext, password) {
     const salt = crypto.getRandomValues(new Uint8Array(16));
     const key = await getKey(password, salt);
     const iv = crypto.getRandomValues(new Uint8Array(12));
     const encodedPlaintext = new TextEncoder().encode(plaintext);
-    const encryptedContent = await crypto.subtle.encrypt(
-        { name: ALGORITHM, iv },
-        key,
-        encodedPlaintext
-    );
+    const encryptedContent = await crypto.subtle.encrypt({ name: ALGORITHM, iv }, key, encodedPlaintext);
     const saltB64 = btoa(String.fromCharCode(...new Uint8Array(salt)));
     const ivB64 = btoa(String.fromCharCode(...new Uint8Array(iv)));
     const encryptedB64 = btoa(String.fromCharCode(...new Uint8Array(encryptedContent)));
     return `${saltB64}:${ivB64}:${encryptedB64}`;
 }
 
+/**
+ * 解密密文
+ * @param {string} encryptedString 加密字符串（格式：盐:IV:密文）
+ * @param {string} password 主密码
+ * @returns {Promise<string>} 解密后的明文
+ */
 async function decrypt(encryptedString, password) {
     const [saltB64, ivB64, encryptedB64] = encryptedString.split(":");
-    if (!saltB64 || !ivB64 || !encryptedB64) {
-        throw new Error("无效的加密数据格式。");
-    }
+    if (!saltB64 || !ivB64 || !encryptedB64) throw new Error("无效的加密数据格式。");
     const salt = Uint8Array.from(atob(saltB64), c => c.charCodeAt(0));
     const iv = Uint8Array.from(atob(ivB64), c => c.charCodeAt(0));
     const encryptedContent = Uint8Array.from(atob(encryptedB64), c => c.charCodeAt(0));
     const key = await getKey(password, salt);
-    const decryptedContent = await crypto.subtle.decrypt(
-        { name: ALGORITHM, iv },
-        key,
-        encryptedContent
-    );
+    const decryptedContent = await crypto.subtle.decrypt({ name: ALGORITHM, iv }, key, encryptedContent);
     return new TextDecoder().decode(decryptedContent);
 }
 
-// ========== 默认设置 ==========
+// ---------- 默认设置 ----------
 const DEFAULT_SETTINGS = {
-    // GitHub 账户
-    githubUser: "",
-    repoName: "",
-    encryptedToken: "",
-    plainToken: "",
-    branchName: "main",
+    // GitHub 账户信息
+    githubUser: "",                 // GitHub 用户名
+    repoName: "",                   // 仓库名
+    encryptedToken: "",             // 加密后的 GitHub Token
+    plainToken: "",                 // 明文 Token（未加密时使用）
+    branchName: "main",             // 分支名
+
     // 存储策略
-    imageStorageStrategy: 'global',      // 'global' 全局文件夹, 'byNotePath' 按笔记路径
-    folderPath: "assets/",               // 全局模式下的仓库内路径
+    imageStorageStrategy: 'global', // 'global' 全局文件夹, 'byNotePath' 按笔记路径
+    folderPath: "assets/",          // 全局模式下的仓库内文件夹
     byNotePathBaseFolder: "Assets/Image", // 按笔记路径模式的基础目录
+
     // 上传行为
-    deleteLocal: false,
-    useEncryption: true,
-    repoVisibility: 'auto',               // 'auto', 'public', 'private'
-    repoHistory: [],
-    uploadOnPaste: 'always',              // 'always', 'ask'
-    autoUpload: true,
+    deleteLocal: false,             // 上传后是否删除本地原图
+    useEncryption: true,            // 是否加密存储 Token
+    repoVisibility: 'auto',         // 'auto', 'public', 'private' 仓库可见性模式
+    repoHistory: [],                // 使用过的仓库名历史记录
+    uploadOnPaste: 'always',        // 'always' 总是上传, 'ask' 每次询问
+    autoUpload: true,               // 是否自动上传监控文件夹内的图片
+
     // 本地文件夹管理
-    localImageFolder: 'notepix-local',
-    uploadImageFolder: 'notepix-uploads',
-    extraWatchedFolders: '',
-    extraWatchedList: [],
-    localOnlyFolders: '',
-    localOnlyList: [],
+    localImageFolder: 'notepix-local',      // 不上传时的本地保存文件夹
+    uploadImageFolder: 'notepix-uploads',   // 上传临时文件夹
+    extraWatchedFolders: '',                // 额外监控文件夹（逗号分隔，旧格式）
+    extraWatchedList: [],                   // 额外监控文件夹列表（结构化）
+    localOnlyFolders: '',                   // 仅本地文件夹（逗号分隔，旧格式）
+    localOnlyList: [],                      // 仅本地文件夹列表（结构化）
+
     // 移动端集成
-    attachmentsFolderName: 'attachment',
-    integrateAttachmentsOnMobile: true,
+    attachmentsFolderName: 'attachment',    // 移动端附件文件夹名
+    integrateAttachmentsOnMobile: true,     // 是否在移动端集成附件文件夹
+
     // 提示抑制
-    lastPromptedAt: 0,
-    lastPromptedRepo: '',
-    autoDeleteEnabled: false,
-    confirmBeforeDelete: true,
+    lastPromptedAt: 0,              // 上次提示仓库不匹配的时间
+    lastPromptedRepo: '',           // 上次提示的仓库名
+    autoDeleteEnabled: false,       // 自动删除（暂未使用）
+    confirmBeforeDelete: true,      // 删除前确认
+
     // 图片计数器持久化
-    imageCounters: {},    // { "笔记路径|标题层级路径": 当前序号 }
-    imageUrlType: 'raw',   // 'raw' 或 'jsdelivr'，用于公开仓库的链接格式
+    imageCounters: {},              // { "笔记路径|标题层级路径": 当前序号 }
+    imageUrlType: 'raw',            // 'raw' 或 'jsdelivr'，公开仓库链接格式
+    maxHeadingDepth: 6,             // 文件名中最大标题深度（1-6）
 };
 
 // ========== 主插件类 ==========
@@ -139,57 +171,77 @@ var MyPlugin = class extends import_obsidian.Plugin {
         super(...arguments);
         // 解密后的 Token（内存缓存）
         this.decryptedToken = null;
+        // 是否正在弹出密码输入框（防止重复弹窗）
         this.isPromptingForPassword = false;
-        // 移动端附件文件夹
+        // 移动端附件文件夹路径
         this.mobileAttachmentFolder = '';
-        // 用户已批准的上传（避免重复弹窗）
+        // 用户已批准的上传（避免重复弹窗） Map<路径, timeoutId>
         this.userApprovedUploads = new Map();
-        // 待替换的占位符链接
+        // 待替换的占位符链接 Map<路径, {placeholderText, sourcePath, timeoutId}>
         this.pendingLinkReplacements = new Map();
+        // 最近输入过的占位符（用于移动端追踪） Map<文件名, {placeholder, ts}>
         this.recentPlaceholdersByName = new Map();
         // 仓库隐私检测缓存
         this.repoPrivacyCache = null;
+        // 文件打开时的防抖计时器
         this._fileOpenDebounceTimer = null;
+        // 是否已显示过不匹配提示（避免重复）
         this._mismatchNoticeShown = false;
+        // 最近一次渲染 Token 不可用提示的时间
         this._lastRenderTokenNoticeAt = 0;
-        // 图片获取失败记录
+        // 图片获取失败记录 Map<cacheKey, timestamp>
         this.failedImageFetches = new Map();
-        // 遗留链接迁移
+        // 遗留链接迁移队列 Map<笔记路径, Map<oldUrl, newUrl>>
         this.pendingLegacyMigrations = new Map();
+        // 遗留链接迁移计时器 Map<笔记路径, timer>
         this.pendingLegacyMigrationTimers = new Map();
+        // 用户仓库列表缓存
         this.repoListCache = null;
+        // 遗留链接解析出的仓库名缓存 Map<legacyKey, resolvedRepo>
         this.legacyResolvedRepoByKey = new Map();
+        // 遗留链接未解析状态的冷却时间 Map<legacyKey, untilTimestamp>
         this.legacyUnresolvedUntil = new Map();
-        // 文件内容缓存（自动删除功能暂未启用，保留）
-        this.fileContentCache = new Map();
-        // 图片计数器（跨会话）
+        // 图片计数器（内存 Map）
         this.imageCounterMap = new Map();
-        // 私有图片 Blob URL 缓存
+        // 是否正在处理图片操作
+        this.isHandlingAction = false;
+        // 私有图片 Blob URL 缓存 Map<cacheKey, blobUrl>
         this.imageCache = new Map();
     }
 
     // ========== 工具方法 ==========
+
+    /**
+     * 获取仓库中所有文件夹路径（用于设置中的文件夹选择）
+     * @returns {string[]} 文件夹路径列表
+     */
     getVaultFolderPaths() {
         const res = [];
-        const root = this.app.vault.getRoot();
         const walk = (folder) => {
             const p = (folder.path || "").replace(/^\/+|\/+$/g, "");
             res.push(p);
-            const children = folder.children || [];
-            for (const child of children) {
-                if (child instanceof import_obsidian.TFolder) {
-                    walk(child);
-                }
+            for (const child of folder.children) {
+                if (child instanceof import_obsidian.TFolder) walk(child);
             }
         };
-        walk(root);
+        walk(this.app.vault.getRoot());
         return res;
     }
 
+    /**
+     * 规范化 vault 内路径（统一正斜杠，去除首尾斜杠）
+     * @param {string} path 原始路径
+     * @returns {string}
+     */
     normalizeVaultPath(path) {
         return (path || '').replace(/\\\\/g, "/").replace(/^\/+|\/+$/g, "");
     }
 
+    /**
+     * 获取旧格式链接的候选仓库名（用于兼容旧版 NotePix）
+     * @param {string} primaryRepo 主仓库名
+     * @returns {string[]}
+     */
     getLegacyRepoCandidates(primaryRepo) {
         const normalizedPrimary = (primaryRepo || '').trim();
         const history = Array.isArray(this.settings.repoHistory) ? this.settings.repoHistory : [];
@@ -209,30 +261,32 @@ var MyPlugin = class extends import_obsidian.Plugin {
         return Array.from(set.values());
     }
 
+    /**
+     * 清空仓库列表缓存
+     */
     clearRepoListCache() {
         this.repoListCache = null;
-        if (this.legacyResolvedRepoByKey) this.legacyResolvedRepoByKey.clear();
-        if (this.legacyUnresolvedUntil) this.legacyUnresolvedUntil.clear();
+        this.legacyResolvedRepoByKey?.clear();
+        this.legacyUnresolvedUntil?.clear();
     }
 
+    /**
+     * 获取当前配置的 GitHub 用户下的所有仓库名（用于旧链接修复）
+     * @param {string} token GitHub Token
+     * @returns {Promise<string[]>}
+     */
     async getConfiguredUserRepoList(token) {
         const configuredUser = (this.settings.githubUser || '').trim();
         if (!configuredUser || !token) return [];
-        if (this.repoListCache &&
-            this.repoListCache.user === configuredUser &&
-            (Date.now() - this.repoListCache.timestamp) < 10 * 60 * 1000) {
+        if (this.repoListCache && this.repoListCache.user === configuredUser && (Date.now() - this.repoListCache.timestamp) < 10 * 60 * 1000) {
             return this.repoListCache.repos || [];
         }
         try {
             const collected = [];
             const userLower = configuredUser.toLowerCase();
             for (let page = 1; page <= 10; page++) {
-                const url = `https://api.github.com/user/repos?per_page=100&page=${page}&sort=updated&direction=desc&type=all&affiliation=owner,collaborator,organization_member`;
-                const response = await fetch(url, {
-                    headers: {
-                        "Authorization": `token ${token}`,
-                        "Accept": "application/vnd.github.v3+json"
-                    }
+                const response = await fetch(`https://api.github.com/user/repos?per_page=100&page=${page}&sort=updated&direction=desc&type=all&affiliation=owner,collaborator,organization_member`, {
+                    headers: { "Authorization": `token ${token}`, "Accept": "application/vnd.github.v3+json" }
                 });
                 if (!response.ok) break;
                 const arr = await response.json();
@@ -253,7 +307,14 @@ var MyPlugin = class extends import_obsidian.Plugin {
         }
     }
 
-    // 遗留链接迁移（队列）
+    // ========== 遗留链接迁移（队列） ==========
+
+    /**
+     * 将旧格式图片链接加入迁移队列（用于自动升级到 v2 格式）
+     * @param {string} sourcePath 笔记路径
+     * @param {string} oldUrl 旧 URL
+     * @param {string} newUrl 新 URL
+     */
     queueLegacyLinkMigration(sourcePath, oldUrl, newUrl) {
         const path = (sourcePath || '').trim();
         if (!path || !oldUrl || !newUrl || oldUrl === newUrl) return;
@@ -269,6 +330,10 @@ var MyPlugin = class extends import_obsidian.Plugin {
         this.pendingLegacyMigrationTimers.set(path, timer);
     }
 
+    /**
+     * 执行遗留链接迁移（批量替换）
+     * @param {string} sourcePath 笔记路径
+     */
     async applyLegacyLinkMigrations(sourcePath) {
         const path = (sourcePath || '').trim();
         if (!path) return;
@@ -297,7 +362,7 @@ var MyPlugin = class extends import_obsidian.Plugin {
                 const latest = this.app.vault.getAbstractFileByPath(path);
                 const latestMtime = (latest instanceof import_obsidian.TFile) ? (latest.stat?.mtime || 0) : 0;
                 if (startMtime && latestMtime && latestMtime !== startMtime) {
-                    // 文件已更改，重新排队
+                    // 文件已被修改，重新入队
                     let map = this.pendingLegacyMigrations.get(path);
                     if (!map) {
                         map = new Map();
@@ -318,16 +383,26 @@ var MyPlugin = class extends import_obsidian.Plugin {
         }
     }
 
-    // 用户批准上传（避免重复弹窗）
+    // ========== 用户批准上传（避免重复弹窗） ==========
+
+    /**
+     * 标记文件已由用户确认（用于避免文件创建事件重复处理）
+     * @param {string} path 文件路径
+     */
     markFileAsUserApproved(path) {
         const norm = this.normalizeVaultPath(path);
         if (!norm) return;
         const existing = this.userApprovedUploads.get(norm);
         if (existing) clearTimeout(existing);
-        const timeoutId = setTimeout(() => this.userApprovedUploads.delete(norm), 6e4);
+        const timeoutId = setTimeout(() => this.userApprovedUploads.delete(norm), 6e4); // 60秒后自动清除
         this.userApprovedUploads.set(norm, timeoutId);
     }
 
+    /**
+     * 消费标记（如果文件已被批准，返回 true 并清除标记）
+     * @param {string} path 文件路径
+     * @returns {boolean}
+     */
     consumeUserApprovedUpload(path) {
         const norm = this.normalizeVaultPath(path);
         if (!norm) return false;
@@ -338,7 +413,10 @@ var MyPlugin = class extends import_obsidian.Plugin {
         return true;
     }
 
-    // 获取主本地文件夹路径
+    /**
+     * 获取主本地文件夹路径（第一个本地专用文件夹或默认）
+     * @returns {string}
+     */
     getPrimaryLocalFolderPath() {
         const fromList = (Array.isArray(this.settings.localOnlyList) && this.settings.localOnlyList.length > 0)
             ? (this.settings.localOnlyList[0]?.path || this.settings.localOnlyList[0] || '')
@@ -347,6 +425,10 @@ var MyPlugin = class extends import_obsidian.Plugin {
         return cleaned || 'notepix-local';
     }
 
+    /**
+     * 确保文件夹存在，若不存在则创建
+     * @param {string} folderPath 文件夹路径
+     */
     async ensureFolderExists(folderPath) {
         if (!folderPath) return;
         try {
@@ -354,7 +436,11 @@ var MyPlugin = class extends import_obsidian.Plugin {
         } catch (_) { }
     }
 
-    // 将文件移至本地专用文件夹（拒绝上传时）
+    /**
+     * 将文件移至本地专用文件夹（拒绝上传时调用）
+     * @param {TFile} file 文件对象
+     * @returns {Promise<{newPath: string, originalPath: string, originalName: string} | null>}
+     */
     async moveFileToLocalOnly(file) {
         if (!file) return null;
         const originalPath = file.path;
@@ -377,7 +463,57 @@ var MyPlugin = class extends import_obsidian.Plugin {
         return { newPath: targetPath, originalPath, originalName };
     }
 
-    // ========== 移动端占位符追踪 ==========
+    // ========== Token 获取与解密 ==========
+
+    /**
+     * 解密 Token（弹出密码框）
+     * @returns {Promise<string|null>}
+     */
+    async getDecryptedToken() {
+        if (this.decryptedToken) return this.decryptedToken;
+        if (this.isPromptingForPassword) return null;
+        if (this.settings.useEncryption && this.settings.encryptedToken) {
+            this.isPromptingForPassword = true;
+            try {
+                const password = await new PasswordPrompt(this.app).open();
+                const token = await decrypt(this.settings.encryptedToken, password);
+                this.decryptedToken = token;
+                return token;
+            } catch (e) {
+                const msg = String(e?.message || "");
+                if (msg !== "未提供密码") {
+                    new import_obsidian.Notice("解密失败。密码错误。", 5e3);
+                }
+                return null;
+            } finally {
+                this.isPromptingForPassword = false;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * 获取当前可用的 GitHub Token（优先使用解密后的，否则根据加密设置尝试获取）
+     * @returns {Promise<string|null>}
+     */
+    async getToken() {
+        if (this.decryptedToken) return this.decryptedToken;
+        if (this.settings.useEncryption) {
+            if (!this.settings.encryptedToken) {
+                new import_obsidian.Notice("未找到加密的 Token，请在设置中保存加密 Token。");
+                return null;
+            }
+            return await this.getDecryptedToken();
+        }
+        if (this.settings.plainToken && this.settings.plainToken.trim().length > 0) return this.settings.plainToken.trim();
+        new import_obsidian.Notice("未找到 Token，请在 NotePix 设置中提供 GitHub Token。");
+        return null;
+    }
+
+        // ---------- 移动端占位符追踪 ----------
+    /**
+     * 在移动端追踪编辑器中输入的图片占位符（[[xxx.png]] 或 ![](xxx)），用于后续替换
+     */
     registerMobileEditorPlaceholderTracking() {
         if (!isMobile) return;
         const attachHandler = (leaf) => {
@@ -423,7 +559,13 @@ var MyPlugin = class extends import_obsidian.Plugin {
         if (activeLeaf) attachHandler(activeLeaf);
     }
 
-    // 记录待替换的占位符
+    // ---------- 记录/消费占位符 ----------
+    /**
+     * 记录待替换的占位符（用于上传后替换链接）
+     * @param {string} path 文件路径或文件名
+     * @param {string} placeholderText 占位符文本（如 ![[xxx.png]]）
+     * @param {string} sourcePath 来源笔记路径
+     */
     recordPendingLinkPlaceholder(path, placeholderText, sourcePath = "") {
         const norm = this.normalizeVaultPath(path);
         if (!norm || !placeholderText) return;
@@ -434,6 +576,11 @@ var MyPlugin = class extends import_obsidian.Plugin {
         this.pendingLinkReplacements.set(norm, { placeholderText, sourcePath: sourcePathNorm, timeoutId });
     }
 
+    /**
+     * 查看待替换的占位符（不消费）
+     * @param {string} pathOrKey 路径或文件名
+     * @returns {object|null}
+     */
     peekPendingLinkPlaceholder(pathOrKey) {
         const norm = this.normalizeVaultPath(pathOrKey);
         const key = norm || pathOrKey;
@@ -443,6 +590,11 @@ var MyPlugin = class extends import_obsidian.Plugin {
         return { key, placeholderText: entry.placeholderText || null, sourcePath: entry.sourcePath || "" };
     }
 
+    /**
+     * 消费待替换的占位符（取出后删除）
+     * @param {string} pathOrKey 路径或文件名
+     * @returns {object|null}
+     */
     consumePendingLinkPlaceholder(pathOrKey) {
         const norm = this.normalizeVaultPath(pathOrKey);
         const key = norm || pathOrKey;
@@ -454,12 +606,23 @@ var MyPlugin = class extends import_obsidian.Plugin {
         return { key, placeholderText: entry.placeholderText || null, sourcePath: entry.sourcePath || "" };
     }
 
+    /**
+     * 弹窗询问是否上传图片
+     * @param {import('obsidian').TFile} file
+     * @returns {Promise<boolean>}
+     */
     async promptUploadConfirmation(file) {
         const modal = new ConfirmationModal(this.app, "上传图片？", `是否将 ${file.name} 上传到 GitHub？`);
         return await modal.open();
     }
 
-    // ========== 核心：生成远程路径（按笔记路径或全局） ==========
+    // ---------- 核心：生成远程路径（按笔记路径或全局） ----------
+    /**
+     * 生成图片在 GitHub 仓库中的存储路径（不含分支）
+     * @param {string} noteFilePath 笔记路径（可选，用于按笔记路径模式）
+     * @param {string} imageFileName 图片文件名
+     * @returns {string}
+     */
     generateImageRemotePath(noteFilePath, imageFileName) {
         if (this.settings.imageStorageStrategy !== 'byNotePath') {
             // 全局模式
@@ -491,25 +654,35 @@ var MyPlugin = class extends import_obsidian.Plugin {
         return joinRepoPath(subfolder, imageFileName);
     }
 
-    // ========== 核心：基于标题层级生成文件名 ==========
+    // ---------- 计数器 ----------
+    /**
+     * 获取下一个图片序号（基于笔记路径和标题层级路径），并自动保存
+     * @param {string} notePath 笔记路径
+     * @param {string} headingPath 标题层级路径（如 "1.1.3"）
+     * @returns {Promise<number>}
+     */
     async getNextImageCounter(notePath, headingPath) {
         const key = `${notePath}|${headingPath}`;
-        // 优先从内存 Map 读取
         let current = this.imageCounterMap.get(key) || 0;
-        // 再从持久化设置中读取（确保同步）
         if (this.settings.imageCounters && this.settings.imageCounters[key] !== undefined) {
             current = this.settings.imageCounters[key];
         }
         const next = current + 1;
-        // 同时更新内存和设置
         this.imageCounterMap.set(key, next);
         if (!this.settings.imageCounters) this.settings.imageCounters = {};
         this.settings.imageCounters[key] = next;
-        // 同步保存，避免并发覆盖
         await this.saveSettings();
         return next;
     }
 
+    // ---------- 核心：基于标题层级生成文件名 ----------
+    /**
+     * 根据光标所在位置，生成基于标题树状编号的文件名，如 "1.1.3-1.png"
+     * @param {import('obsidian').Editor} editor
+     * @param {string} noteBasename 笔记名称（不含扩展名）
+     * @param {string} extension 图片扩展名
+     * @returns {Promise<string>}
+     */
     async generateFileNameFromHeading(editor, noteBasename, extension) {
         if (!editor) {
             const timestamp = new Date().toISOString().replace(/[-:.]/g, "");
@@ -532,12 +705,11 @@ var MyPlugin = class extends import_obsidian.Plugin {
         const cursor = editor.getCursor();
         const cursorLine = cursor.line;
 
-        // 找到光标所在的标题（最后一个行号 ≤ 光标行号的标题）
+        // 1. 找到光标所在的标题（最后一个行号 ≤ 光标行号的标题）
         let currentHeading = null;
         for (let i = headings.length - 1; i >= 0; i--) {
             const heading = headings[i];
-            const headingLine = heading.position.start.line;
-            if (headingLine <= cursorLine) {
+            if (heading.position.start.line <= cursorLine) {
                 currentHeading = heading;
                 break;
             }
@@ -549,59 +721,56 @@ var MyPlugin = class extends import_obsidian.Plugin {
             return `root-${counter}.${extension}`;
         }
 
-        // ---------- 核心：为每个标题分配正确的大纲编号 ----------
-        // 使用堆栈方式，每个标题存储其编号数组
-        const counters = [];          // 存储当前层级的计数器值
-        let targetPath = null;
+        // 2. 为每个标题计算绝对编号（Word 风格多级列表）
+        const counters = [];          // 存储每层的当前计数（从1开始）
+        const headingToPath = new Map();
 
-        for (let i = 0; i < headings.length; i++) {
-            const h = headings[i];
+        for (const h of headings) {
             const level = h.level;
-
-            // 调整计数器长度：如果当前级别小于等于当前深度，则截断到 level-1
-            if (counters.length >= level) {
-                counters.length = level - 1;
-            }
-            // 确保长度至少为 level
+            // 确保 counters 长度至少为 level（不足补0）
             while (counters.length < level) {
                 counters.push(0);
             }
-            // 当前层级计数 +1
-            counters[level - 1]++;
-
-            // 生成路径字符串（点分隔，只包含已确定的层级）
-            const pathStr = counters.slice(0, level).join('.');
-
-            // 如果当前标题就是光标所在的标题，记录路径
-            if (h === currentHeading) {
-                targetPath = pathStr;
-                break;
+            // 如果当前标题级别小于已有深度，则丢弃更深层级的计数（重置）
+            if (counters.length > level) {
+                counters.length = level;
             }
+            // 当前层级计数加1
+            counters[level - 1]++;
+            // 生成绝对路径（只保留到当前层级）
+            const path = counters.slice(0, level).join('.');
+            headingToPath.set(h, path);
         }
 
+        let targetPath = headingToPath.get(currentHeading);
         if (!targetPath) {
-            // 未找到（理论上不会）
             const timestamp = new Date().toISOString().replace(/[-:.]/g, "");
             return `${timestamp}.${extension}`;
         }
 
-        // ---------- 可选：限制最大深度 ----------
-        const maxDepth = this.settings.maxHeadingDepth || 3;
+        // 3. 可选：限制最大深度（用户设置）
+        const maxDepth = this.settings.maxHeadingDepth || 6;
         const parts = targetPath.split('.');
         if (parts.length > maxDepth) {
             targetPath = parts.slice(0, maxDepth).join('.');
         }
 
-        // 获取该路径下的图片计数器
+        // 4. 获取该路径下的图片计数器（异步保存）
         const notePath = activeFile.path;
         const counter = await this.getNextImageCounter(notePath, targetPath);
 
-        // 生成最终文件名（格式：层级路径-计数器.扩展名）
-        const safeHierarchy = targetPath.replace(/[^0-9.]/g, '');
-        return `${safeHierarchy}-${counter}.${extension}`;
+        // 5. 生成最终文件名（格式：层级路径-计数器.扩展名）
+        const safePath = targetPath.replace(/[^0-9.]/g, '');
+        return `${safePath}-${counter}.${extension}`;
     }
 
-    // ========== 上传图片到 GitHub ==========
+    // ---------- 上传图片到 GitHub ----------
+    /**
+     * 处理图片上传（核心）
+     * @param {import('obsidian').TFile|File} file 文件对象（可以是 TFile 或剪贴板 File）
+     * @param {boolean} isPaste 是否为粘贴操作
+     * @param {string|null} sourceNotePath 来源笔记路径（可选）
+     */
     async handleImageUpload(file, isPaste = false, sourceNotePath = null) {
         if (!this.settings.githubUser || !this.settings.repoName) {
             new import_obsidian.Notice("请先配置 GitHub 用户名和仓库名。");
@@ -611,7 +780,16 @@ var MyPlugin = class extends import_obsidian.Plugin {
         if (!token) return;
         const uploadNotice = new import_obsidian.Notice(`正在上传 ${file.name} 到 GitHub...`, 0);
         try {
-            // 生成文件名（基于标题层级或时间戳）
+            // 获取扩展名：兼容 TFile 和剪贴板 File
+            let extension;
+            if (file.extension) {
+                extension = file.extension;
+            } else if (file.name) {
+                extension = file.name.split('.').pop() || 'png';
+            } else {
+                extension = 'png';
+            }
+
             let newFileName;
             const activeView = this.app.workspace.getActiveViewOfType(import_obsidian.MarkdownView);
             if (activeView && activeView.editor && (sourceNotePath || activeView.file?.path)) {
@@ -619,18 +797,19 @@ var MyPlugin = class extends import_obsidian.Plugin {
                 const noteFile = this.app.vault.getAbstractFileByPath(notePath);
                 const noteBasename = noteFile ? noteFile.basename : 'image';
                 try {
-                    newFileName = await this.generateFileNameFromHeading(activeView.editor, noteBasename, file.extension);
+                    newFileName = await this.generateFileNameFromHeading(activeView.editor, noteBasename, extension);
                 } catch (err) {
                     console.error("基于标题生成文件名失败，回退时间戳", err);
                     const timestamp = new Date().toISOString().replace(/[-:.]/g, "");
-                    newFileName = `${timestamp}.${file.extension}`;
+                    newFileName = `${timestamp}.${extension}`;
                 }
             } else {
                 const timestamp = new Date().toISOString().replace(/[-:.]/g, "");
-                newFileName = `${timestamp}.${file.extension}`;
+                newFileName = `${timestamp}.${extension}`;
             }
 
-            const fileData = await (isPaste ? file.readBinary() : this.app.vault.readBinary(file));
+            // 读取二进制数据：粘贴时 file 为 File 对象，使用 arrayBuffer；否则为 TFile，使用 vault.readBinary
+            const fileData = isPaste ? await file.arrayBuffer() : await this.app.vault.readBinary(file);
             let filePath;
             if (sourceNotePath) {
                 filePath = this.generateImageRemotePath(sourceNotePath, newFileName);
@@ -658,7 +837,16 @@ var MyPlugin = class extends import_obsidian.Plugin {
             uploadNotice.hide();
             if (!response.ok) throw new Error(`GitHub API 错误: ${(await response.json()).message}`);
 
+            // 根据仓库可见性和用户选择生成最终 URL
             let finalUrl;
+            const getPublicUrl = (path) => {
+                if (this.settings.imageUrlType === 'jsdelivr') {
+                    return `https://cdn.jsdelivr.net/gh/${this.settings.githubUser}/${this.settings.repoName}@${this.settings.branchName}/${path}`;
+                } else {
+                    return `https://raw.githubusercontent.com/${this.settings.githubUser}/${this.settings.repoName}/${this.settings.branchName}/${path}`;
+                }
+            };
+
             if (this.settings.repoVisibility === 'private') {
                 const encOwner = encodeURIComponent(this.settings.githubUser);
                 const encRepo = encodeURIComponent(this.settings.repoName);
@@ -676,13 +864,7 @@ var MyPlugin = class extends import_obsidian.Plugin {
                     finalUrl = `obsidian://notepix/v2/${encOwner}/${encRepo}/${encBranch}/${encPath}`;
                     new import_obsidian.Notice("检测到私有仓库，已创建私有图片链接。");
                 } else {
-                    //finalUrl = `https://raw.githubusercontent.com/${this.settings.githubUser}/${this.settings.repoName}/${this.settings.branchName}/${filePath}`;
-                    //finalUrl = `https://cdn.jsdelivr.net/gh/${this.settings.githubUser}/${this.settings.repoName}@${this.settings.branchName}/${filePath}`;
-                    if (this.settings.imageUrlType === 'jsdelivr') {
-                        finalUrl = `https://cdn.jsdelivr.net/gh/${this.settings.githubUser}/${this.settings.repoName}@${this.settings.branchName}/${filePath}`;
-                    } else {
-                        finalUrl = `https://raw.githubusercontent.com/${this.settings.githubUser}/${this.settings.repoName}/${this.settings.branchName}/${filePath}`;
-                    }
+                    finalUrl = getPublicUrl(filePath);
                     if (detectedPrivacy === 'unknown') new import_obsidian.Notice("无法检测仓库隐私，使用公共 URL 作为后备。");
                 }
             } else {
@@ -698,7 +880,7 @@ var MyPlugin = class extends import_obsidian.Plugin {
                     const encPath = filePath.split('/').map(encodeURIComponent).join('/');
                     finalUrl = `obsidian://notepix/v2/${encOwner}/${encRepo}/${encBranch}/${encPath}`;
                 } else {
-                    finalUrl = `https://raw.githubusercontent.com/${this.settings.githubUser}/${this.settings.repoName}/${this.settings.branchName}/${filePath}`;
+                    finalUrl = getPublicUrl(filePath);
                 }
             }
 
@@ -715,8 +897,6 @@ var MyPlugin = class extends import_obsidian.Plugin {
 
             new import_obsidian.Notice(`${newFileName} 上传成功！`);
 
-            // 已移除本地备份代码
-
             if (this.settings.deleteLocal && !isPaste && replacedLink) {
                 await this.app.vault.delete(file);
                 new import_obsidian.Notice(`本地文件 ${file.name} 已删除。`);
@@ -728,231 +908,97 @@ var MyPlugin = class extends import_obsidian.Plugin {
         }
     }
 
-    // ========== 替换编辑器中的链接 ==========
+        // ---------- 替换编辑器中的链接 ----------
+    /**
+     * 替换编辑器中的占位符链接为远程链接
+     * @param {string} fileName 原文件名
+     * @param {string} replacementTarget 目标链接（URL 或本地路径）
+     * @param {string} originalPath 原始文件路径（可选）
+     * @param {object} options 选项 { replacementType?: 'wiki'|'remote'|'raw', sourcePath?: string }
+     * @returns {Promise<boolean>}
+     */
     async replaceLinkInEditor(fileName, replacementTarget, originalPath = "", options = {}) {
         const replacementType = options?.replacementType || 'remote';
         const replacementText = replacementType === 'wiki'
             ? `![[${replacementTarget}]]`
             : (replacementType === 'raw' ? `${replacementTarget}` : `![](${replacementTarget})`);
+        const activeView = this.app.workspace.getActiveViewOfType(import_obsidian.MarkdownView);
+        if (!activeView) return false;
+        const editor = activeView.editor;
+        const content = editor.getValue();
+        // 匹配多种可能的占位符格式（包括 [[file]] 和 ![](file)）
+        const escapedFileName = fileName.replace(/[-\/\\^$*+?.()|[\]{}]/g, "\\$&");
+        const regex = new RegExp(`!\\[\\[.*?${escapedFileName}.*?\\]\\]|!\\[[^\\]]*\\]\\([^\\)]*${escapedFileName}[^\\)]*\\)`, 'i');
+        const match = content.match(regex);
+        if (!match) return false;
+        const newContent = content.replace(match[0], replacementText);
+        const cursor = editor.getCursor();
+        editor.setValue(newContent);
+        editor.setCursor(cursor);
+        return true;
+    }
 
-        return new Promise((resolve) => {
-            setTimeout(async () => {
-                const normalizedPath = this.normalizeVaultPath(originalPath);
-                const pendingByPath = this.peekPendingLinkPlaceholder(normalizedPath || fileName);
-                const pendingByName = this.peekPendingLinkPlaceholder(fileName);
-                const pendingEntry = pendingByPath || pendingByName;
-                const sourcePathHint = this.normalizeVaultPath(options?.sourcePath || pendingEntry?.sourcePath || "");
-
-                const buildReplacedContent = (content) => {
-                    if (!content) return { replaced: false, newContent: content };
-                    // 修复畸形的嵌套链接
-                    const malformedNestedLink = /!\[([^\]]*)\]\(\[obsidian:\/\/notepix\/[^\]]*\]\((obsidian:\/\/notepix\/v2\/[^)]+)\)\/([^)]+)\)/g;
-                    let normalizedContent = content.replace(malformedNestedLink, (_m, alt, base, tail) => {
-                        const cleanedBase = String(base || '').replace(/\/+$/, '');
-                        const cleanedTail = String(tail || '').replace(/^\/+/, '');
-                        return `![${alt || ''}](${cleanedBase}/${cleanedTail})`;
-                    });
-                    const escapedFileName = fileName.replace(/[-\/\\^$*+?.()|[\]{}]/g, "\\$&");
-                    const escapedPath = normalizedPath ? normalizedPath.replace(/[-\/\\^$*+?.()|[\]{}]/g, "\\$&") : null;
-
-                    const replaceLastRegexMatch = (source, regex, replacement) => {
-                        const flags = regex.flags.includes('g') ? regex.flags : `${regex.flags}g`;
-                        const globalRegex = new RegExp(regex.source, flags);
-                        let match, lastMatch = null;
-                        while ((match = globalRegex.exec(source)) !== null) {
-                            lastMatch = { index: match.index, text: match[0] };
-                            if (match[0].length === 0) globalRegex.lastIndex += 1;
-                        }
-                        if (!lastMatch) return { replaced: false, value: source };
-                        const before = source.slice(0, lastMatch.index);
-                        const after = source.slice(lastMatch.index + lastMatch.text.length);
-                        return { replaced: true, value: `${before}${replacement}${after}` };
-                    };
-
-                    const patterns = [];
-                    patterns.push(new RegExp(`!\\[\\[(?:[^\\]|]*?/)*${escapedFileName}(?:\\|[^\\]]*)?\\]\\]`));
-                    if (escapedPath) patterns.push(new RegExp(`!\\[\\[(?:[^\\]|]*?/)*${escapedPath}(?:\\|[^\\]]*)?\\]\\]`));
-                    patterns.push(new RegExp(`!\\[[^\\]]*\\]\\([^\\)]*${escapedFileName}[^\\)]*\\)`));
-                    patterns.push(new RegExp(`!\\[[^\\]]*\\]\\([^\\)]*${encodeURIComponent(fileName)}[^\\)]*\\)`));
-                    if (escapedPath) {
-                        patterns.push(new RegExp(`!\\[[^\\]]*\\]\\([^\\)]*${escapedPath}[^\\)]*\\)`));
-                        patterns.push(new RegExp(`!\\[[^\\]]*\\]\\([^\\)]*${encodeURIComponent(normalizedPath)}[^\\)]*\\)`));
-                    }
-
-                    let replaced = false;
-                    let newContent = normalizedContent;
-                    const fallbackPlaceholder = pendingEntry?.placeholderText || null;
-                    if (fallbackPlaceholder && newContent.includes(fallbackPlaceholder)) {
-                        const idx = newContent.lastIndexOf(fallbackPlaceholder);
-                        if (idx >= 0) {
-                            replaced = true;
-                            newContent = `${newContent.slice(0, idx)}${replacementText}${newContent.slice(idx + fallbackPlaceholder.length)}`;
-                        }
-                    }
-                    for (const regex of patterns) {
-                        if (replaced) break;
-                        const result = replaceLastRegexMatch(newContent, regex, replacementText);
-                        replaced = result.replaced;
-                        newContent = result.value;
-                    }
-                    if (!replaced && newContent !== content) replaced = true;
-                    return { replaced, newContent };
-                };
-
-                const activeView = this.app.workspace.getActiveViewOfType(import_obsidian.MarkdownView);
-                const activeFilePath = this.normalizeVaultPath(activeView?.file?.path || "");
-                const canUseActiveEditor = !!(activeView && activeView.editor && (!sourcePathHint || sourcePathHint === activeFilePath));
-
-                if (canUseActiveEditor) {
-                    const editor = activeView.editor;
-                    const doc = (typeof editor.getDoc === 'function') ? editor.getDoc() : null;
-                    let content = '';
-                    if (doc?.getValue) try { content = doc.getValue(); } catch (_) { content = ''; }
-                    if (!content && typeof editor.getValue === 'function') try { content = editor.getValue(); } catch (_) { content = ''; }
-                    const result = buildReplacedContent(content);
-                    if (result.replaced) {
-                        const cursor = (typeof editor.getCursor === 'function') ? editor.getCursor() : null;
-                        let wrote = false;
-                        if (doc?.setValue) try { doc.setValue(result.newContent); wrote = true; } catch (_) { wrote = false; }
-                        if (!wrote && typeof editor.setValue === 'function') try { editor.setValue(result.newContent); wrote = true; } catch (_) { wrote = false; }
-                        if (cursor && typeof editor.setCursor === 'function') try { editor.setCursor(cursor); } catch (_) { }
-                        if (wrote) {
-                            if (pendingByPath) this.consumePendingLinkPlaceholder(pendingByPath.key);
-                            if (pendingByName) this.consumePendingLinkPlaceholder(pendingByName.key);
-                            return resolve(true);
-                        }
-                    }
-                }
-
-                if (sourcePathHint) {
-                    try {
-                        const target = this.app.vault.getAbstractFileByPath(sourcePathHint);
-                        if (target instanceof import_obsidian.TFile && target.path.endsWith('.md')) {
-                            const startMtime = target.stat?.mtime || 0;
-                            const content = await this.app.vault.read(target);
-                            const result = buildReplacedContent(content);
-                            if (!result.replaced) return resolve(false);
-                            const latest = this.app.vault.getAbstractFileByPath(sourcePathHint);
-                            const latestMtime = (latest instanceof import_obsidian.TFile) ? (latest.stat?.mtime || 0) : 0;
-                            if (startMtime && latestMtime && latestMtime !== startMtime) return resolve(false);
-                            await this.app.vault.modify(target, result.newContent);
-                            if (pendingByPath) this.consumePendingLinkPlaceholder(pendingByPath.key);
-                            if (pendingByName) this.consumePendingLinkPlaceholder(pendingByName.key);
-                            return resolve(true);
-                        }
-                    } catch (_) { }
-                }
-                console.warn(`NotePix: 未找到 "${fileName}" 的链接，替换失败。`);
-                resolve(false);
-            }, 100);
-        });
+    // ---------- 粘贴处理 ----------
+    /**
+     * 处理粘贴事件（从剪贴板获取图片）
+     * @param {ClipboardEvent} evt
+     */
+    async handlePaste(evt) {
+        const files = evt.clipboardData?.files;
+        if (!files || files.length === 0) return;
+        const imageFile = Array.from(files).find(file => file.type.startsWith("image/"));
+        if (!imageFile) return;
+        if (this.settings.uploadOnPaste === 'always') {
+            evt.preventDefault();
+            await this.handleImageUpload(imageFile, true);
+            return;
+        }
+        if (this.settings.uploadOnPaste === 'ask') {
+            evt.preventDefault();
+            const modal = new ConfirmationModal(this.app, "上传图片？", "是否将此图片上传到 GitHub？");
+            const confirmed = await modal.open();
+            if (confirmed) await this.handleImageUpload(imageFile, true);
+            else await this.saveImageLocally(imageFile);
+        }
     }
 
     /**
-     * 将内容中的 jsDelivr 链接转换为 GitHub Raw 链接（或反向）
-     * @param {string} content 笔记内容
-     * @param {string} targetType 'raw' 或 'jsdelivr'
-     * @returns {string} 替换后的内容
+     * 将剪贴板图片保存到本地专用文件夹（不上传）
+     * @param {File} imageFile
      */
-    convertImageLinks(content, targetType) {
-        const user = this.settings.githubUser;
-        const repo = this.settings.repoName;
-        const branch = this.settings.branchName;
-        if (!user || !repo || !branch) {
-            new import_obsidian.Notice("请先配置 GitHub 用户名、仓库名和分支名。");
-            return content;
-        }
-
-        // 匹配 jsDelivr 链接: https://cdn.jsdelivr.net/gh/用户/仓库@分支/路径
-        const cdnRegex = new RegExp(
-            `https?://cdn\\.jsdelivr\\.net/gh/${escapeRegex(user)}/${escapeRegex(repo)}@${escapeRegex(branch)}/([^)\\s]+)`,
-            'g'
-        );
-        // 匹配 Raw 链接: https://raw.githubusercontent.com/用户/仓库/分支/路径
-        const rawRegex = new RegExp(
-            `https?://raw\\.githubusercontent\\.com/${escapeRegex(user)}/${escapeRegex(repo)}/${escapeRegex(branch)}/([^)\\s]+)`,
-            'g'
-        );
-
-        if (targetType === 'raw') {
-            // 将 CDN 链接转为 Raw
-            return content.replace(cdnRegex, (match, path) => {
-                return `https://raw.githubusercontent.com/${user}/${repo}/${branch}/${path}`;
-            });
-        } else if (targetType === 'jsdelivr') {
-            // 将 Raw 链接转为 CDN
-            return content.replace(rawRegex, (match, path) => {
-                return `https://cdn.jsdelivr.net/gh/${user}/${repo}@${branch}/${path}`;
-            });
-        }
-        return content;
-    }
-
-    /**
-     * 转换当前打开笔记中的图片链接格式
-     */
-    async convertCurrentNoteLinks() {
+    async saveImageLocally(imageFile) {
+        const arrayBuffer = await imageFile.arrayBuffer();
         const activeView = this.app.workspace.getActiveViewOfType(import_obsidian.MarkdownView);
         if (!activeView) {
-            new import_obsidian.Notice("没有打开的笔记。");
+            new import_obsidian.Notice("无法保存图片：没有活动的编辑器。");
             return;
         }
-        const file = activeView.file;
-        if (!file) return;
-
-        const targetType = this.settings.imageUrlType; // 'raw' 或 'jsdelivr'
-        const currentContent = await this.app.vault.read(file);
-        const newContent = this.convertImageLinks(currentContent, targetType);
-        
-        if (newContent === currentContent) {
-            new import_obsidian.Notice(`没有找到需要转换的链接（目标格式：${targetType === 'raw' ? 'GitHub Raw' : 'jsDelivr'}）。`);
-            return;
-        }
-
-        // 确认对话框
-        const confirmModal = new ConfirmationModal(this.app, "转换链接格式", `将把当前笔记中的所有图片链接转换为 ${targetType === 'raw' ? 'GitHub Raw' : 'jsDelivr CDN'} 格式。确定吗？`);
-        const confirmed = await confirmModal.open();
-        if (!confirmed) return;
-
-        await this.app.vault.modify(file, newContent);
-        new import_obsidian.Notice(`已转换当前笔记中的图片链接为 ${targetType === 'raw' ? 'GitHub Raw' : 'jsDelivr CDN'} 格式。`);
+        const localOnlyFirst = (Array.isArray(this.settings.localOnlyList) && this.settings.localOnlyList.length > 0)
+            ? (this.settings.localOnlyList[0]?.path || this.settings.localOnlyList[0] || '')
+            : (this.settings.localImageFolder || 'notepix-local');
+        const folderPath = (localOnlyFirst || 'notepix-local').replace(/\\\\/g, "/").replace(/^\/+|\/+$/g, "");
+        try { await this.app.vault.createFolder(folderPath); } catch (_) { }
+        const noteName = activeView.file ? activeView.file.basename : 'Untitled';
+        const extension = imageFile.name.split('.').pop() || 'png';
+        let i = 1, newFilePath;
+        do { newFilePath = `${folderPath}/${noteName}-${i}.${extension}`; i++; } while (await this.app.vault.adapter.exists(newFilePath));
+        const newFile = await this.app.vault.createBinary(newFilePath, arrayBuffer);
+        activeView.editor.replaceSelection(`![[${newFile.path}]]`);
     }
 
-    // 捕获文件占位符
-    captureFilePlaceholder(file) {
-        if (!file) return;
-        const normalizedPath = this.normalizeVaultPath(file.path);
-        if (!normalizedPath) return;
-        setTimeout(() => {
-            const activeView = this.app.workspace.getActiveViewOfType(import_obsidian.MarkdownView);
-            if (!activeView) return;
-            const editor = activeView.editor;
-            if (!editor) return;
-            let content = "";
-            if (typeof editor.getDoc === 'function') {
-                try { const doc = editor.getDoc(); content = doc?.getValue?.() || ""; } catch (_) { content = ""; }
-            }
-            if (!content && typeof editor.getValue === 'function') try { content = editor.getValue(); } catch (_) { content = ""; }
-            if (!content) return;
-            const escapedPath = normalizedPath.replace(/[-\/\\^$*+?.()|[\]{}]/g, "\\$&");
-            const regex = new RegExp(`!\\[\\[[^\\]]*${escapedPath}[^\\]]*\\]\\]`);
-            const match = content.match(regex);
-            const sourcePath = activeView.file?.path || "";
-            if (match && match[0]) {
-                this.recordPendingLinkPlaceholder(file.path, match[0], sourcePath);
-                return;
-            }
-            if (this.recentPlaceholdersByName && this.recentPlaceholdersByName.size > 0) {
-                const rec = this.recentPlaceholdersByName.get(file.name);
-                if (rec && rec.placeholder) {
-                    this.recordPendingLinkPlaceholder(file.path, rec.placeholder, sourcePath);
-                    this.recordPendingLinkPlaceholder(file.name, rec.placeholder, sourcePath);
-                    this.recentPlaceholdersByName.delete(file.name);
-                }
-            }
-        }, 200);
+    /**
+     * 上传粘贴的图片（已废弃，整合到 handleImageUpload，保留空方法避免报错）
+     * @deprecated
+     */
+    async uploadPastedImage(imageFile) {
+        // 已整合，直接调用 handleImageUpload
+        await this.handleImageUpload(imageFile, true);
     }
 
+    /**
+     * 处理用户拒绝上传后的操作（将文件移至本地专用文件夹）
+     * @param {import('obsidian').TFile} file
+     */
     async handleDeclinedUpload(file) {
         if (!file) {
             new import_obsidian.Notice("附件已保留在本地。");
@@ -976,122 +1022,481 @@ var MyPlugin = class extends import_obsidian.Plugin {
         }
     }
 
-    // ========== 粘贴处理 ==========
-    async handlePaste(evt) {
-        const files = evt.clipboardData?.files;
-        if (!files || files.length === 0) return;
-        const imageFile = Array.from(files).find(file => file.type.startsWith("image/"));
-        if (!imageFile) return;
-        if (this.settings.uploadOnPaste === 'always') {
-            evt.preventDefault();
-            await this.uploadPastedImage(imageFile);
-            return;
+    // ---------- 链接格式转换（批量/单张） ----------
+    /**
+     * 批量转换笔记中所有图片链接格式
+     * @param {string} content 笔记内容
+     * @param {string} targetType 'raw' 或 'jsdelivr'
+     * @returns {string}
+     */
+    convertImageLinks(content, targetType) {
+        const user = this.settings.githubUser;
+        const repo = this.settings.repoName;
+        const branch = this.settings.branchName;
+        if (!user || !repo || !branch) {
+            new import_obsidian.Notice("请先配置 GitHub 用户名、仓库名和分支名。");
+            return content;
         }
-        if (this.settings.uploadOnPaste === 'ask') {
-            evt.preventDefault();
-            const modal = new ConfirmationModal(this.app, "上传图片？", "是否将此图片上传到 GitHub？");
-            const confirmed = await modal.open();
-            if (confirmed) await this.uploadPastedImage(imageFile);
-            else await this.saveImageLocally(imageFile);
+        const cdnRegex = new RegExp(`https?://cdn\\.jsdelivr\\.net/gh/${escapeRegex(user)}/${escapeRegex(repo)}@${escapeRegex(branch)}/([^)\\s]+)`, 'g');
+        const rawRegex = new RegExp(`https?://raw\\.githubusercontent\\.com/${escapeRegex(user)}/${escapeRegex(repo)}/${escapeRegex(branch)}/([^)\\s]+)`, 'g');
+        if (targetType === 'raw') {
+            return content.replace(cdnRegex, (match, path) => `https://raw.githubusercontent.com/${user}/${repo}/${branch}/${path}`);
+        } else if (targetType === 'jsdelivr') {
+            return content.replace(rawRegex, (match, path) => `https://cdn.jsdelivr.net/gh/${user}/${repo}@${branch}/${path}`);
         }
+        return content;
     }
 
-    async uploadPastedImage(imageFile) {
-        const arrayBuffer = await imageFile.arrayBuffer();
+    /**
+     * 转换当前打开笔记中的所有图片链接（基于设置中的 imageUrlType）
+     */
+    async convertCurrentNoteLinks() {
         const activeView = this.app.workspace.getActiveViewOfType(import_obsidian.MarkdownView);
         if (!activeView) {
-            new import_obsidian.Notice("无法处理图片：没有活动的编辑器。");
+            new import_obsidian.Notice("没有打开的笔记。");
             return;
         }
-        const uploadFolder = (this.settings.uploadImageFolder || 'notepix-uploads').replace(/\\\\/g, "/").replace(/^\/+|\/+$/g, "");
-        try { if (uploadFolder) await this.app.vault.createFolder(uploadFolder); } catch { }
-        const noteName = activeView.file ? activeView.file.basename : 'Untitled';
-        const extension = imageFile.name.split('.').pop() || 'png';
-        let i = 1, newFilePath;
-        do {
-            newFilePath = uploadFolder ? `${uploadFolder}/${noteName}-${i}.${extension}` : `${noteName}-${i}.${extension}`;
-            i++;
-        } while (await this.app.vault.adapter.exists(newFilePath));
-        this.markFileAsUserApproved(newFilePath);
-        let newFile;
-        try {
-            newFile = await this.app.vault.createBinary(newFilePath, arrayBuffer);
-        } catch (e) {
-            this.consumeUserApprovedUpload(newFilePath);
-            throw e;
+        const file = activeView.file;
+        if (!file) return;
+        const targetType = this.settings.imageUrlType;
+        const currentContent = await this.app.vault.read(file);
+        const newContent = this.convertImageLinks(currentContent, targetType);
+        if (newContent === currentContent) {
+            new import_obsidian.Notice(`没有找到需要转换的链接（目标格式：${targetType === 'raw' ? 'GitHub Raw' : 'jsDelivr'}）。`);
+            return;
         }
-        if (newFile.path !== newFilePath) this.markFileAsUserApproved(newFile.path);
-        const placeholderText = `![[${newFile.name}]]`;
-        const sourcePath = activeView.file?.path || "";
-        this.recordPendingLinkPlaceholder(newFile.path, placeholderText, sourcePath);
-        this.recordPendingLinkPlaceholder(newFile.name, placeholderText, sourcePath);
-        activeView.editor.replaceSelection(placeholderText);
-        if (this.settings.autoUpload) await this.handleImageUpload(newFile, false, sourcePath);
+        const confirmModal = new ConfirmationModal(this.app, "转换链接格式", `将把当前笔记中的所有图片链接转换为 ${targetType === 'raw' ? 'GitHub Raw' : 'jsDelivr CDN'} 格式。确定吗？`);
+        const confirmed = await confirmModal.open();
+        if (!confirmed) return;
+        await this.app.vault.modify(file, newContent);
+        new import_obsidian.Notice(`已转换当前笔记中的图片链接为 ${targetType === 'raw' ? 'GitHub Raw' : 'jsDelivr CDN'} 格式。`);
     }
 
-    async saveImageLocally(imageFile) {
-        const arrayBuffer = await imageFile.arrayBuffer();
+    /**
+     * 从图片的完整 URL（或私有协议链接）中提取远程路径（相对于仓库根目录）
+     * 支持三种格式：
+     * 1. 私有链接：obsidian://notepix/v2/owner/repo/branch/path/to/image.png
+     * 2. GitHub Raw 公开链接：https://raw.githubusercontent.com/owner/repo/branch/path/to/image.png
+     * 3. jsDelivr CDN 公开链接：https://cdn.jsdelivr.net/gh/owner/repo@branch/path/to/image.png
+     *
+     * @param {string} src - 图片的 src 属性值（URL 或 obsidian 协议）
+     * @returns {string|null} 提取出的远程路径（例如 "assets/image-1.png"），若无法解析则返回 null
+     *
+     * @example
+     * getRemotePathFromImageSrc("obsidian://notepix/v2/me/myrepo/main/assets/1.png")
+     * // 返回 "assets/1.png"
+     *
+     * @example
+     * getRemotePathFromImageSrc("https://raw.githubusercontent.com/me/myrepo/main/assets/1.png")
+     * // 返回 "assets/1.png"
+     *
+     * @example
+     * getRemotePathFromImageSrc("https://cdn.jsdelivr.net/gh/me/myrepo@main/assets/1.png")
+     * // 返回 "assets/1.png"
+     */
+    getRemotePathFromImageSrc(src) {
+        if (!src) return null;
+        // 私有链接格式：obsidian://notepix/v2/用户/仓库/分支/路径
+        const privateMatch = src.match(/obsidian:\/\/notepix\/v2\/[^\/]+\/[^\/]+\/[^\/]+\/(.+)$/);
+        if (privateMatch) return decodeURIComponent(privateMatch[1]);
+        // GitHub Raw 公开链接格式：https://raw.githubusercontent.com/用户/仓库/分支/路径
+        const publicMatch = src.match(/https?:\/\/raw\.githubusercontent\.com\/[^\/]+\/[^\/]+\/[^\/]+\/(.+)$/);
+        if (publicMatch) return decodeURIComponent(publicMatch[1]);
+        // jsDelivr CDN 链接格式：https://cdn.jsdelivr.net/gh/用户/仓库@分支/路径
+        const cdnMatch = src.match(/https?:\/\/cdn\.jsdelivr\.net\/gh\/[^\/]+\/[^@]+@[^\/]+\/(.+)$/);
+        if (cdnMatch) return decodeURIComponent(cdnMatch[1]);
+        return null;
+    }
+
+        // ---------- URL 解析与构建 ----------
+    /**
+     * 解析图片URL，提取类型、用户、仓库、分支、路径
+     * @param {string} url
+     * @returns {object|null}
+     */
+    parseImageUrl(url) {
+        if (!url) return null;
+        if (url.startsWith('obsidian://notepix/')) return null;
+        // jsDelivr 链接: https://cdn.jsdelivr.net/gh/用户/仓库@分支/路径
+        const cdnMatch = url.match(/https?:\/\/cdn\.jsdelivr\.net\/gh\/([^\/]+)\/([^@]+)@([^\/]+)\/(.+)$/);
+        if (cdnMatch) {
+            return {
+                type: 'jsdelivr',
+                owner: decodeURIComponent(cdnMatch[1]),
+                repo: decodeURIComponent(cdnMatch[2]),
+                branch: decodeURIComponent(cdnMatch[3]),
+                path: decodeURIComponent(cdnMatch[4])
+            };
+        }
+        // GitHub Raw 链接: https://raw.githubusercontent.com/用户/仓库/分支/路径
+        const rawMatch = url.match(/https?:\/\/raw\.githubusercontent\.com\/([^\/]+)\/([^\/]+)\/([^\/]+)\/(.+)$/);
+        if (rawMatch) {
+            return {
+                type: 'raw',
+                owner: decodeURIComponent(rawMatch[1]),
+                repo: decodeURIComponent(rawMatch[2]),
+                branch: decodeURIComponent(rawMatch[3]),
+                path: decodeURIComponent(rawMatch[4])
+            };
+        }
+        return null;
+    }
+
+    /**
+     * 根据解析结果生成目标格式的URL
+     * @param {object} parsed parseImageUrl 返回值
+     * @param {string} targetType 'raw' 或 'jsdelivr'
+     * @returns {string}
+     */
+    buildImageUrl(parsed, targetType) {
+        const { owner, repo, branch, path } = parsed;
+        if (targetType === 'raw') {
+            return `https://raw.githubusercontent.com/${owner}/${repo}/${branch}/${path}`;
+        } else {
+            return `https://cdn.jsdelivr.net/gh/${owner}/${repo}@${branch}/${path}`;
+        }
+    }
+
+    /**
+     * 从完整图片语法中提取URL
+     * @param {string} fullMatch 如 "![](https://...)"
+     * @returns {string|null}
+     */
+    extractUrlFromFullMatch(fullMatch) {
+        const match = fullMatch.match(/!\[[^\]]*\]\(([^)]+)\)/);
+        return match ? match[1] : null;
+    }
+
+    // ---------- GitHub 文件操作辅助 ----------
+    /**
+     * 检查远程文件是否存在
+     * @param {string} remotePath 远程路径
+     * @param {string} token GitHub Token
+     * @returns {Promise<boolean>}
+     */
+    async fileExistsOnGitHub(remotePath, token) {
+        const owner = this.settings.githubUser;
+        const repo = this.settings.repoName;
+        const branch = this.settings.branchName;
+        const url = `https://api.github.com/repos/${owner}/${repo}/contents/${remotePath}?ref=${branch}`;
+        const response = await fetch(url, {
+            headers: { "Authorization": `token ${token}`, "Accept": "application/vnd.github.v3+json" }
+        });
+        return response.ok;
+    }
+
+    /**
+     * 从 GitHub 下载图片内容
+     * @param {object} parsed parseImageUrl 返回值
+     * @param {string} token GitHub Token
+     * @returns {Promise<ArrayBuffer|null>}
+     */
+    async downloadImageFromGitHub(parsed, token) {
+        const { owner, repo, branch, path } = parsed;
+        const url = `https://api.github.com/repos/${owner}/${repo}/contents/${encodeURIComponent(path)}?ref=${encodeURIComponent(branch)}`;
+        const response = await fetch(url, {
+            headers: { "Authorization": `token ${token}`, "Accept": "application/vnd.github.v3.raw" }
+        });
+        if (!response.ok) return null;
+        return await response.arrayBuffer();
+    }
+
+    /**
+     * 上传图片数据到 GitHub（不修改笔记）
+     * @param {ArrayBuffer} data 图片数据
+     * @param {string} remotePath 远程路径
+     * @param {string} token GitHub Token
+     * @returns {Promise<boolean>}
+     */
+    async uploadImageData(data, remotePath, token) {
+        const owner = this.settings.githubUser;
+        const repo = this.settings.repoName;
+        const branch = this.settings.branchName;
+        const base64 = arrayBufferToBase64(data);
+        const apiUrl = `https://api.github.com/repos/${owner}/${repo}/contents/${remotePath}`;
+        const response = await fetch(apiUrl, {
+            method: "PUT",
+            headers: { "Authorization": `token ${token}`, "Content-Type": "application/json" },
+            body: JSON.stringify({ message: `Reorder image to ${remotePath}`, content: base64, branch: branch })
+        });
+        return response.ok;
+    }
+
+    // ---------- 重新整理当前笔记图片序号（核心功能） ----------
+    /**
+     * 重新整理当前笔记中所有图片的序号，使每个标题层级下的图片序号从1开始连续。
+     * 安全策略：先上传新文件，成功后记录待删除旧文件，最后更新笔记并询问是否删除旧文件。
+     */
+    async reorderCurrentNoteImages() {
         const activeView = this.app.workspace.getActiveViewOfType(import_obsidian.MarkdownView);
         if (!activeView) {
-            new import_obsidian.Notice("无法保存图片：没有活动的编辑器。");
+            new import_obsidian.Notice("没有打开的笔记。");
             return;
         }
-        const localOnlyFirst = (Array.isArray(this.settings.localOnlyList) && this.settings.localOnlyList.length > 0)
-            ? (this.settings.localOnlyList[0]?.path || this.settings.localOnlyList[0] || '')
-            : (this.settings.localImageFolder || 'notepix-local');
-        const folderPath = (localOnlyFirst || 'notepix-local').replace(/\\\\/g, "/").replace(/^\/+|\/+$/g, "");
-        try { await this.app.vault.createFolder(folderPath); } catch (_) { }
-        const noteName = activeView.file ? activeView.file.basename : 'Untitled';
-        const extension = imageFile.name.split('.').pop() || 'png';
-        let i = 1, newFilePath;
-        do { newFilePath = `${folderPath}/${noteName}-${i}.${extension}`; i++; } while (await this.app.vault.adapter.exists(newFilePath));
-        const newFile = await this.app.vault.createBinary(newFilePath, arrayBuffer);
-        activeView.editor.replaceSelection(`![[${newFile.path}]]`);
-    }
+        const file = activeView.file;
+        if (!file) return;
+        const content = await this.app.vault.read(file);
+        const links = this.extractNotepixImageLinks(content);
+        if (links.length === 0) {
+            new import_obsidian.Notice("当前笔记中没有 NotePix 图片。");
+            return;
+        }
 
-    // ========== Token 获取与解密 ==========
-    async getDecryptedToken() {
-        if (this.decryptedToken) return this.decryptedToken;
-        if (this.isPromptingForPassword) return null;
-        if (this.settings.useEncryption && this.settings.encryptedToken) {
-            this.isPromptingForPassword = true;
-            try {
-                const password = await new PasswordPrompt(this.app).open();
-                const token = await decrypt(this.settings.encryptedToken, password);
-                this.decryptedToken = token;
-                return token;
-            } catch (e) {
-                const msg = String(e?.message || "");
-                if (msg === "未提供密码") {
-                    // 用户取消，不提示
-                } else if (e?.name === 'OperationError' || /decryption|operation/i.test(msg)) {
-                    new import_obsidian.Notice("解密失败。密码错误。", 5e3);
-                } else {
-                    new import_obsidian.Notice(`解密错误: ${msg || '未知错误'}`, 5e3);
+        // 解析每个链接，获取层级路径和当前序号
+        const imageInfos = [];
+        for (const link of links) {
+            const url = this.extractUrlFromFullMatch(link.fullMatch);
+            if (!url) continue;
+            const parsed = this.parseImageUrl(url);
+            if (!parsed) continue;
+            const filename = parsed.path.split('/').pop();
+            const match = filename.match(/^([\d\.]+)-(\d+)\.(\w+)$/);
+            if (!match) {
+                console.warn("无法解析文件名，跳过:", filename);
+                continue;
+            }
+            imageInfos.push({
+                fullMatch: link.fullMatch,
+                url: url,
+                parsed: parsed,
+                hierarchy: match[1],
+                oldNumber: parseInt(match[2], 10),
+                ext: match[3],
+                remotePath: link.remotePath
+            });
+        }
+        if (imageInfos.length === 0) {
+            new import_obsidian.Notice("未找到符合命名规范的图片。");
+            return;
+        }
+
+        // 按层级路径分组
+        const groups = new Map();
+        for (const info of imageInfos) {
+            if (!groups.has(info.hierarchy)) groups.set(info.hierarchy, []);
+            groups.get(info.hierarchy).push(info);
+        }
+
+        // 确认操作
+        const confirmModal = new ConfirmationModal(this.app, "重新整理图片序号",
+            `将重新整理当前笔记中所有图片的序号，使每个标题层级下的图片序号从1开始连续。\n这会导致图片被重新上传，笔记链接将被更新。确定继续吗？`);
+        const confirmed = await confirmModal.open();
+        if (!confirmed) return;
+
+        const token = await this.getToken();
+        if (!token) {
+            new import_obsidian.Notice("无法获取 GitHub Token。");
+            return;
+        }
+
+        let totalSuccess = 0;
+        let totalSkipped = 0;
+        const notice = new import_obsidian.Notice("正在整理图片序号...", 0);
+        const replacements = new Map();      // oldFullMatch -> newFullMatch
+        const newMaxMap = new Map();         // hierarchy -> newMaxNumber
+        const deletions = [];                // 待删除的旧文件远程路径
+
+        for (const [hierarchy, infos] of groups.entries()) {
+            infos.sort((a, b) => a.oldNumber - b.oldNumber);
+            for (let i = 0; i < infos.length; i++) {
+                const info = infos[i];
+                const newNumber = i + 1;
+                if (newNumber === info.oldNumber) {
+                    // 序号不变，但更新最大序号记录
+                    const curMax = newMaxMap.get(hierarchy) || 0;
+                    if (newNumber > curMax) newMaxMap.set(hierarchy, newNumber);
+                    continue;
                 }
-                return null;
-            } finally {
-                this.isPromptingForPassword = false;
+                notice.setMessage(`处理: ${hierarchy}-${info.oldNumber}.${info.ext} -> ${newNumber}`);
+                // 1. 下载原图
+                const imageData = await this.downloadImageFromGitHub(info.parsed, token);
+                if (!imageData) {
+                    console.error("下载失败:", info.url);
+                    totalSkipped++;
+                    continue;
+                }
+                // 2. 新文件名和远程路径
+                const newFilename = `${hierarchy}-${newNumber}.${info.ext}`;
+                const remoteDir = info.parsed.path.substring(0, info.parsed.path.lastIndexOf('/') + 1);
+                const newRemotePath = remoteDir + newFilename;
+                // 3. 检查是否已存在（避免覆盖）
+                if (await this.fileExistsOnGitHub(newRemotePath, token)) {
+                    console.warn("目标文件已存在，跳过:", newRemotePath);
+                    totalSkipped++;
+                    continue;
+                }
+                // 4. 上传新文件
+                const uploadOk = await this.uploadImageData(imageData, newRemotePath, token);
+                if (!uploadOk) {
+                    console.error("上传失败:", newRemotePath);
+                    totalSkipped++;
+                    continue;
+                }
+                // 5. 记录待删除的旧文件
+                deletions.push(info.remotePath);
+                // 6. 生成新链接
+                let newUrl;
+                if (info.parsed.type === 'raw') {
+                    newUrl = `https://raw.githubusercontent.com/${info.parsed.owner}/${info.parsed.repo}/${info.parsed.branch}/${newRemotePath}`;
+                } else {
+                    newUrl = `https://cdn.jsdelivr.net/gh/${info.parsed.owner}/${info.parsed.repo}@${info.parsed.branch}/${newRemotePath}`;
+                }
+                const newFullMatch = info.fullMatch.replace(info.url, newUrl);
+                replacements.set(info.fullMatch, newFullMatch);
+                totalSuccess++;
+                // 更新该层级的最大序号
+                const curMax = newMaxMap.get(hierarchy) || 0;
+                if (newNumber > curMax) newMaxMap.set(hierarchy, newNumber);
             }
         }
-        return null;
-    }
 
-    async getToken() {
-        if (this.decryptedToken) return this.decryptedToken;
-        if (this.settings.useEncryption) {
-            if (!this.settings.encryptedToken) {
-                new import_obsidian.Notice("未找到加密的 Token，请在设置中保存加密 Token。");
-                return null;
+        // 更新笔记内容
+        if (replacements.size > 0) {
+            let newContent = content;
+            for (const [oldMatch, newMatch] of replacements.entries()) {
+                newContent = newContent.replace(oldMatch, newMatch);
             }
-            return await this.getDecryptedToken();
+            await this.app.vault.modify(file, newContent);
         }
-        if (this.settings.plainToken && this.settings.plainToken.trim().length > 0) return this.settings.plainToken.trim();
-        new import_obsidian.Notice("未找到 Token，请在 NotePix 设置中提供 GitHub Token。");
-        return null;
+
+        // 删除旧文件（可选，询问用户）
+        if (deletions.length > 0) {
+            const confirmDelete = await new ConfirmationModal(this.app, "删除旧图片",
+                `新图片已上传并更新链接。是否删除 GitHub 上的 ${deletions.length} 个旧文件？`).open();
+            if (confirmDelete) {
+                let deleted = 0;
+                for (const oldPath of deletions) {
+                    const ok = await this.deleteFileFromGitHub(oldPath);
+                    if (ok) deleted++;
+                }
+                new import_obsidian.Notice(`已删除 ${deleted} 个旧文件。`);
+            } else {
+                new import_obsidian.Notice(`旧文件未删除，您可以稍后手动清理。`);
+            }
+        }
+
+        // 更新计数器中的最大序号
+        if (newMaxMap.size > 0) {
+            const notePath = file.path;
+            let countersUpdated = 0;
+            for (const [hierarchy, maxNum] of newMaxMap.entries()) {
+                const key = `${notePath}|${hierarchy}`;
+                if (!this.settings.imageCounters) this.settings.imageCounters = {};
+                if (maxNum > (this.settings.imageCounters[key] || 0)) {
+                    this.settings.imageCounters[key] = maxNum;
+                    this.imageCounterMap.set(key, maxNum);
+                    countersUpdated++;
+                }
+            }
+            if (countersUpdated > 0) await this.saveSettings();
+            new import_obsidian.Notice(`已更新 ${countersUpdated} 个层级的图片计数器。`);
+        }
+
+        notice.hide();
+        new import_obsidian.Notice(`序号整理完成！成功处理 ${totalSuccess} 个文件，跳过 ${totalSkipped} 个。`);
     }
 
-    // ========== 仓库隐私检测 ==========
+    // ---------- 提取笔记中的 NotePix 图片链接 ----------
+    /**
+     * 从笔记内容中提取所有 NotePix 图片链接（私有、公开raw、CDN）
+     * @param {string} content
+     * @returns {Array<{fullMatch:string, remotePath:string}>}
+     */
+    extractNotepixImageLinks(content) {
+        const links = [];
+        if (!content) return links;
+        // 私有链接
+        const privateRegex = /!\[[^\]]*\]\(obsidian:\/\/notepix\/v2\/[^\/]+\/[^\/]+\/[^\/]+\/([^)]+)\)/g;
+        let match;
+        while ((match = privateRegex.exec(content)) !== null) {
+            links.push({ fullMatch: match[0], remotePath: match[1] });
+        }
+        // 公开 Raw 链接
+        const publicRawRegex = /!\[[^\]]*\]\(https?:\/\/raw\.githubusercontent\.com\/[^\/]+\/[^\/]+\/[^\/]+\/([^)]+)\)/g;
+        while ((match = publicRawRegex.exec(content)) !== null) {
+            links.push({ fullMatch: match[0], remotePath: match[1] });
+        }
+        // CDN 链接
+        const cdnRegex = /!\[[^\]]*\]\(https?:\/\/cdn\.jsdelivr\.net\/gh\/[^\/]+\/[^@]+@[^\/]+\/([^)]+)\)/g;
+        while ((match = cdnRegex.exec(content)) !== null) {
+            links.push({ fullMatch: match[0], remotePath: match[1] });
+        }
+        return links;
+    }
+
+    // ---------- 删除 GitHub 上的图片 ----------
+    /**
+     * 从 GitHub 删除指定路径的图片（需要先获取文件SHA）
+     * @param {string} remotePath 远程路径（相对于仓库根目录）
+     * @returns {Promise<boolean>}
+     */
+    async deleteFileFromGitHub(remotePath) {
+        const token = await this.getToken();
+        if (!token) {
+            new import_obsidian.Notice("没有可用的 GitHub Token");
+            return false;
+        }
+        const owner = this.settings.githubUser;
+        const repo = this.settings.repoName;
+        const branch = this.settings.branchName;
+        const fullPath = remotePath;
+        try {
+            // 1. 获取文件信息（需要 SHA）
+            const getUrl = `https://api.github.com/repos/${owner}/${repo}/contents/${fullPath}?ref=${branch}`;
+            const getResp = await fetch(getUrl, {
+                headers: {
+                    "Authorization": `token ${token}`,
+                    "Accept": "application/vnd.github.v3+json"
+                }
+            });
+            if (!getResp.ok) {
+                if (getResp.status === 404) {
+                    new import_obsidian.Notice(`文件未找到: ${fullPath}`);
+                } else {
+                    new import_obsidian.Notice(`获取文件信息失败: ${getResp.statusText}`);
+                }
+                return false;
+            }
+            // 确保响应是 JSON（防止返回图片二进制数据）
+            const contentType = getResp.headers.get("content-type");
+            if (!contentType || !contentType.includes("application/json")) {
+                console.error("GitHub API 返回了非 JSON 数据", contentType);
+                new import_obsidian.Notice("获取文件信息失败：响应格式错误");
+                return false;
+            }
+            const fileInfo = await getResp.json();
+            const sha = fileInfo.sha;
+            // 2. 删除文件
+            const deleteUrl = `https://api.github.com/repos/${owner}/${repo}/contents/${fullPath}`;
+            const deleteResp = await fetch(deleteUrl, {
+                method: "DELETE",
+                headers: {
+                    "Authorization": `token ${token}`,
+                    "Content-Type": "application/json",
+                    "Accept": "application/vnd.github.v3+json"
+                },
+                body: JSON.stringify({
+                    message: `通过 NotePix 删除图片`,
+                    sha: sha,
+                    branch: branch
+                })
+            });
+            if (deleteResp.ok) {
+                new import_obsidian.Notice(`已从 GitHub 删除: ${fullPath}`);
+                return true;
+            } else {
+                const error = await deleteResp.json();
+                new import_obsidian.Notice(`删除失败: ${error.message}`);
+                return false;
+            }
+        } catch (err) {
+            console.error("GitHub 删除错误:", err);
+            new import_obsidian.Notice(`删除失败: ${err.message}`);
+            return false;
+        }
+    }
+
+        // ---------- 仓库隐私检测 ----------
     async getRepoPrivacy() {
         const user = (this.settings.githubUser || '').trim();
         const repo = (this.settings.repoName || '').trim();
@@ -1221,7 +1626,7 @@ var MyPlugin = class extends import_obsidian.Plugin {
         return choice;
     }
 
-    // ========== 图片后处理器（渲染） ==========
+    // ---------- 图片后处理器（渲染私有图片） ----------
     async postProcessImages(element, context) {
         this.isHandlingAction = true;
         try {
@@ -1471,7 +1876,7 @@ var MyPlugin = class extends import_obsidian.Plugin {
         }
     }
 
-    // ========== 删除图片（GitHub + 本地链接） ==========
+    // ---------- 从当前笔记中移除图片链接 ----------
     async removeImageLinkFromCurrentNote(remotePath) {
         const activeView = this.app.workspace.getActiveViewOfType(import_obsidian.MarkdownView);
         if (!activeView) return false;
@@ -1489,206 +1894,15 @@ var MyPlugin = class extends import_obsidian.Plugin {
         return false;
     }
 
-    /**
-     * 解析图片 URL，提取类型、用户、仓库、分支、路径
-     * @param {string} url 
-     * @returns {object|null} { type, owner, repo, branch, path }
-     */
-    parseImageUrl(url) {
-        if (!url) return null;
-        // 私有链接不处理
-        if (url.startsWith('obsidian://notepix/')) return null;
-        
-        // jsDelivr 链接: https://cdn.jsdelivr.net/gh/用户/仓库@分支/路径
-        const cdnMatch = url.match(/https?:\/\/cdn\.jsdelivr\.net\/gh\/([^\/]+)\/([^@]+)@([^\/]+)\/(.+)$/);
-        if (cdnMatch) {
-            return {
-                type: 'jsdelivr',
-                owner: decodeURIComponent(cdnMatch[1]),
-                repo: decodeURIComponent(cdnMatch[2]),
-                branch: decodeURIComponent(cdnMatch[3]),
-                path: decodeURIComponent(cdnMatch[4])
-            };
-        }
-        // GitHub Raw 链接: https://raw.githubusercontent.com/用户/仓库/分支/路径
-        const rawMatch = url.match(/https?:\/\/raw\.githubusercontent\.com\/([^\/]+)\/([^\/]+)\/([^\/]+)\/(.+)$/);
-        if (rawMatch) {
-            return {
-                type: 'raw',
-                owner: decodeURIComponent(rawMatch[1]),
-                repo: decodeURIComponent(rawMatch[2]),
-                branch: decodeURIComponent(rawMatch[3]),
-                path: decodeURIComponent(rawMatch[4])
-            };
-        }
-        return null;
-    }
-
-    /**
-     * 根据解析结果生成目标格式的 URL
-     * @param {object} parsed parseImageUrl 的返回值
-     * @param {string} targetType 'raw' 或 'jsdelivr'
-     * @returns {string}
-     */
-    buildImageUrl(parsed, targetType) {
-        const { owner, repo, branch, path } = parsed;
-        if (targetType === 'raw') {
-            return `https://raw.githubusercontent.com/${owner}/${repo}/${branch}/${path}`;
-        } else {
-            return `https://cdn.jsdelivr.net/gh/${owner}/${repo}@${branch}/${path}`;
-        }
-    }
-
-    /**
-     * 转换当前笔记中的单个图片链接
-     * @param {string} oldUrl 原始完整 URL
-     * @param {string} newUrl 新 URL
-     * @param {string} fullMatch 图片语法的完整匹配（如 ![](url)）
-     */
-    async convertSingleImageLink(oldUrl, newUrl, fullMatch) {
-        const activeView = this.app.workspace.getActiveViewOfType(import_obsidian.MarkdownView);
-        if (!activeView) {
-            new import_obsidian.Notice("没有打开的编辑器。");
-            return false;
-        }
-        const editor = activeView.editor;
-        const content = editor.getValue();
-        const escapedOldUrl = oldUrl.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-        const newFullMatch = fullMatch.replace(escapedOldUrl, newUrl);
-        if (content.includes(fullMatch)) {
-            const newContent = content.replace(fullMatch, newFullMatch);
-            editor.setValue(newContent);
-            return true;
-        }
-        return false;
-    }
-
-    getRemotePathFromImageSrc(src) {
-        if (!src) return null;
-        // 私有链接
-        const privateMatch = src.match(/obsidian:\/\/notepix\/v2\/[^\/]+\/[^\/]+\/[^\/]+\/(.+)$/);
-        if (privateMatch) return decodeURIComponent(privateMatch[1]);
-        // 公开 Raw 链接
-        const publicMatch = src.match(/https?:\/\/raw\.githubusercontent\.com\/[^\/]+\/[^\/]+\/[^\/]+\/(.+)$/);
-        if (publicMatch) return decodeURIComponent(publicMatch[1]);
-        // jsDelivr CDN 链接
-        const cdnMatch = src.match(/https?:\/\/cdn\.jsdelivr\.net\/gh\/[^\/]+\/[^@]+@[^\/]+\/(.+)$/);
-        if (cdnMatch) return decodeURIComponent(cdnMatch[1]);
-        return null;
-    }
-
-    extractNotepixImageLinks(content) {
-        const links = [];
-        if (!content) return links;
-        // 私有链接
-        const privateRegex = /!\[[^\]]*\]\(obsidian:\/\/notepix\/v2\/[^\/]+\/[^\/]+\/[^\/]+\/([^)]+)\)/g;
-        let match;
-        while ((match = privateRegex.exec(content)) !== null) {
-            links.push({ fullMatch: match[0], remotePath: match[1] });
-        }
-        // 公开 Raw 链接 (GitHub raw)
-        const publicRawRegex = /!\[[^\]]*\]\(https?:\/\/raw\.githubusercontent\.com\/[^\/]+\/[^\/]+\/[^\/]+\/([^)]+)\)/g;
-        while ((match = publicRawRegex.exec(content)) !== null) {
-            links.push({ fullMatch: match[0], remotePath: match[1] });
-        }
-        // 新增：jsDelivr CDN 链接
-        const cdnRegex = /!\[[^\]]*\]\(https?:\/\/cdn\.jsdelivr\.net\/gh\/[^\/]+\/[^@]+@[^\/]+\/([^)]+)\)/g;
-        while ((match = cdnRegex.exec(content)) !== null) {
-            links.push({ fullMatch: match[0], remotePath: match[1] });
-        }
-        return links;
-    }
-
-    findDeletedImageLinks(oldContent, newContent) {
-        const oldLinks = this.extractNotepixImageLinks(oldContent);
-        const newLinks = this.extractNotepixImageLinks(newContent);
-        return oldLinks.filter(oldLink => !newLinks.some(newLink => newLink.remotePath === oldLink.remotePath));
-    }
-
-    async deleteFileFromGitHub(remotePath) {
-        const token = await this.getToken();
-        if (!token) {
-            new import_obsidian.Notice("没有可用的 GitHub Token");
-            return false;
-        }
-        const owner = this.settings.githubUser;
-        const repo = this.settings.repoName;
-        const branch = this.settings.branchName;
-        const fullPath = remotePath;
-        try {
-            // 1. 获取文件信息（需要 JSON 响应）
-            const getUrl = `https://api.github.com/repos/${owner}/${repo}/contents/${fullPath}?ref=${branch}`;
-            const getResp = await fetch(getUrl, {
-                headers: {
-                    "Authorization": `token ${token}`,
-                    "Accept": "application/vnd.github.v3+json"
-                }
-            });
-            
-            if (!getResp.ok) {
-                if (getResp.status === 404) {
-                    new import_obsidian.Notice(`文件未找到: ${fullPath}`);
-                } else {
-                    new import_obsidian.Notice(`获取文件信息失败: ${getResp.statusText}`);
-                }
-                return false;
-            }
-            
-            // 确保响应是 JSON（防止返回图片二进制数据）
-            const contentType = getResp.headers.get("content-type");
-            if (!contentType || !contentType.includes("application/json")) {
-                console.error("GitHub API 返回了非 JSON 数据，可能路径错误或请求头缺失", contentType);
-                new import_obsidian.Notice("获取文件信息失败：响应格式错误");
-                return false;
-            }
-            
-            const fileInfo = await getResp.json();
-            const sha = fileInfo.sha;
-            
-            // 2. 删除文件
-            const deleteUrl = `https://api.github.com/repos/${owner}/${repo}/contents/${fullPath}`;
-            const deleteResp = await fetch(deleteUrl, {
-                method: "DELETE",
-                headers: {
-                    "Authorization": `token ${token}`,
-                    "Content-Type": "application/json",
-                    "Accept": "application/vnd.github.v3+json"
-                },
-                body: JSON.stringify({
-                    message: `通过 NotePix 删除图片`,
-                    sha: sha,
-                    branch: branch
-                })
-            });
-            
-            if (deleteResp.ok) {
-                new import_obsidian.Notice(`已从 GitHub 删除: ${fullPath}`);
-                return true;
-            } else {
-                const error = await deleteResp.json();
-                new import_obsidian.Notice(`删除失败: ${error.message}`);
-                return false;
-            }
-        } catch (err) {
-            console.error("GitHub 删除错误:", err);
-            new import_obsidian.Notice(`删除失败: ${err.message}`);
-            return false;
-        }
-    }
-
-    // ========== 生命周期 ==========
+    // ---------- 生命周期 ----------
     async onload() {
         await this.loadSettings();
-        // 初始化计数器映射
-        if (this.settings.imageCounters) {
-            this.imageCounterMap = new Map(Object.entries(this.settings.imageCounters));
+        // 确保计数器对象存在
+        if (!this.settings.imageCounters) {
+            this.settings.imageCounters = {};
+            await this.saveSettings();
         }
-        // 初始化文件内容缓存（自动删除功能暂未启用，保留）
-        const allFiles = this.app.vault.getMarkdownFiles();
-        for (const f of allFiles) {
-            const content = await this.app.vault.read(f);
-            this.fileContentCache.set(f.path, content);
-        }
+        this.imageCounterMap = new Map(Object.entries(this.settings.imageCounters));
 
         this.addSettingTab(new GitHubUploaderSettingTab(this.app, this));
         this.imageCache = new Map();
@@ -1708,7 +1922,7 @@ var MyPlugin = class extends import_obsidian.Plugin {
 
         this.registerMarkdownPostProcessor(this.postProcessImages.bind(this));
         this.registerEvent(this.app.workspace.on("editor-paste", this.handlePaste.bind(this)));
-        
+
         // 文件创建监听（自动上传）
         this.registerEvent(this.app.vault.on("create", async (file) => {
             if (!(file instanceof import_obsidian.TFile)) return;
@@ -1723,13 +1937,10 @@ var MyPlugin = class extends import_obsidian.Plugin {
                 .map(s => (s || '').trim()).filter(Boolean)
                 .map(s => s.replace(/\\\\/g, "/").replace(/^\/+|\/+$/g, ""));
             if (localOnly.some(ign => filePathNorm === ign || filePathNorm.startsWith(ign + "/"))) return;
-            
-            // 【修复1】检查是否已手动批准（粘贴/拖拽已处理）
+
+            // 检查是否已手动批准（粘贴/拖拽已处理）
             const alreadyConfirmed = this.consumeUserApprovedUpload(file.path);
-            if (alreadyConfirmed) {
-                // 已通过粘贴或拖拽手动上传，文件事件不再重复处理
-                return;
-            }
+            if (alreadyConfirmed) return;
 
             if (!this.settings.autoUpload) return;
 
@@ -1745,10 +1956,7 @@ var MyPlugin = class extends import_obsidian.Plugin {
             const inAttach = attachNorm && (filePathNorm === attachNorm || filePathNorm.startsWith(attachNorm + "/"));
             if (!(inUpload || inExtra || inAttach)) return;
 
-            this.captureFilePlaceholder(file);
-            
-            // 【修复2】询问模式下，不再依赖 alreadyConfirmed 来决定是否弹窗
-            const shouldPrompt = (this.settings.uploadOnPaste === 'ask');
+            // 获取来源笔记路径
             let sourceNotePath = null;
             const placeholderEntry = this.peekPendingLinkPlaceholder(file.path) || this.peekPendingLinkPlaceholder(file.name);
             if (placeholderEntry && placeholderEntry.sourcePath) sourceNotePath = placeholderEntry.sourcePath;
@@ -1757,12 +1965,6 @@ var MyPlugin = class extends import_obsidian.Plugin {
                 if (activeView && activeView.file) sourceNotePath = activeView.file.path;
             }
 
-            if (shouldPrompt) {
-                const confirmed = await this.promptUploadConfirmation(file);
-                if (confirmed) await this.handleImageUpload(file, false, sourceNotePath);
-                else await this.handleDeclinedUpload(file);
-                return;
-            }
             await this.handleImageUpload(file, false, sourceNotePath);
         }));
 
@@ -1773,24 +1975,20 @@ var MyPlugin = class extends import_obsidian.Plugin {
             this.checkRepoMismatchOnFileOpen(file);
         }));
 
-
-
-        // 编辑器右键菜单（手动删除图片链接 + 转换链接）
+        // 编辑器右键菜单（删除 + 转换）
         this.registerEvent(this.app.workspace.on("editor-menu", (menu, editor, view) => {
             const cursor = editor.getCursor();
             const line = editor.getLine(cursor.line);
             const links = this.extractNotepixImageLinks(line);
             if (links.length === 0) return;
-            
             const target = links[0];
             const fullMatch = target.fullMatch;
-            // 从 fullMatch 中提取 URL
             const urlMatch = fullMatch.match(/!\[[^\]]*\]\(([^)]+)\)/);
             if (!urlMatch) return;
             const oldUrl = urlMatch[1];
             const parsed = this.parseImageUrl(oldUrl);
             const canConvert = parsed && (parsed.type === 'raw' || parsed.type === 'jsdelivr');
-            
+
             // 删除选项
             menu.addItem((item) => {
                 item.setTitle("删除此图片（从 GitHub 和本地备份）").setIcon("trash").onClick(async () => {
@@ -1829,29 +2027,22 @@ var MyPlugin = class extends import_obsidian.Plugin {
             }
         }));
 
-        // 全局图片右键菜单（删除图片 + 转换链接）
-        
+        // 全局图片右键菜单（阅读视图）
         const globalContextMenuHandler = async (event) => {
             const target = event.target;
             if (!(target instanceof HTMLImageElement)) return;
             let src = target.getAttribute('src');
             if (!src) return;
-            // 处理可能被编码的 URL
             try { src = decodeURIComponent(src); } catch(e) {}
             const remotePath = this.getRemotePathFromImageSrc(src);
             if (!remotePath) return;
-            
             event.preventDefault();
             event.stopPropagation();
             event.stopImmediatePropagation();
-            
-            // 解析当前图片 URL，判断是否可转换
             const parsed = this.parseImageUrl(src);
             const canConvert = parsed && (parsed.type === 'raw' || parsed.type === 'jsdelivr');
-            
             setTimeout(() => {
                 const menu = new import_obsidian.Menu();
-                // 删除选项
                 menu.addItem((item) => {
                     item.setTitle("删除此图片（从 GitHub 和本地备份）").setIcon("trash").onClick(async () => {
                         if (this.settings.confirmBeforeDelete) {
@@ -1866,15 +2057,12 @@ var MyPlugin = class extends import_obsidian.Plugin {
                         }
                     });
                 });
-                // 转换链接选项（仅当可转换时显示）
                 if (canConvert) {
                     menu.addItem((item) => {
                         const targetType = parsed.type === 'raw' ? 'jsdelivr' : 'raw';
                         const targetName = targetType === 'raw' ? 'GitHub Raw' : 'jsDelivr CDN';
                         item.setTitle(`转换图片链接为 ${targetName}`).setIcon("switch").onClick(async () => {
                             const newUrl = this.buildImageUrl(parsed, targetType);
-                            // 获取图片所在的 Markdown 行（需要从当前视图中找到对应的图片语法）
-                            // 简单方法：通过 src 找到包含该 src 的图片语法行
                             const activeView = this.app.workspace.getActiveViewOfType(import_obsidian.MarkdownView);
                             if (!activeView) {
                                 new import_obsidian.Notice("没有打开的编辑器。");
@@ -1882,7 +2070,6 @@ var MyPlugin = class extends import_obsidian.Plugin {
                             }
                             const editor = activeView.editor;
                             const content = editor.getValue();
-                            // 匹配图片语法，支持 ![](url) 和 ![[...]] 两种，但这里只处理 ![](url)
                             const escapedSrc = src.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
                             const imgRegex = new RegExp(`!\\[[^\\]]*\\]\\(${escapedSrc}\\)`);
                             const match = content.match(imgRegex);
@@ -1914,6 +2101,18 @@ var MyPlugin = class extends import_obsidian.Plugin {
         };
         window.addEventListener('contextmenu', globalContextMenuHandler, true);
         this.register(() => window.removeEventListener('contextmenu', globalContextMenuHandler, true));
+
+        // 注册命令
+        this.addCommand({
+            id: "reorder-image-numbers",
+            name: "重新整理当前笔记的图片序号",
+            callback: () => this.reorderCurrentNoteImages()
+        });
+        this.addCommand({
+            id: "convert-note-links-format",
+            name: "转换当前笔记中的图片链接格式",
+            callback: () => this.convertCurrentNoteLinks()
+        });
     }
 
     onunload() {
@@ -1952,12 +2151,17 @@ var MyPlugin = class extends import_obsidian.Plugin {
 };
 
 // ========== 辅助弹窗类 ==========
+
+/**
+ * 密码输入弹窗（用于解密 Token）
+ */
 class PasswordPrompt extends import_obsidian.Modal {
     constructor(app) {
         super(app);
         this.password = "";
         this.submitted = false;
     }
+
     open() {
         return new Promise((resolve, reject) => {
             this.resolve = resolve;
@@ -1965,34 +2169,48 @@ class PasswordPrompt extends import_obsidian.Modal {
             super.open();
         });
     }
+
     onOpen() {
         const { contentEl } = this;
         contentEl.createEl("h2", { text: "输入主密码" });
-        new import_obsidian.Setting(contentEl).setName("密码").addText((text) => {
-            text.inputEl.type = "password";
-            text.onChange((value) => { this.password = value; });
-            text.inputEl.addEventListener("keydown", (event) => {
-                if (event.key === "Enter") { event.preventDefault(); this.submit(); }
+        new import_obsidian.Setting(contentEl)
+            .setName("密码")
+            .addText((text) => {
+                text.inputEl.type = "password";
+                text.onChange((value) => { this.password = value; });
+                text.inputEl.addEventListener("keydown", (event) => {
+                    if (event.key === "Enter") {
+                        event.preventDefault();
+                        this.submit();
+                    }
+                });
             });
-        });
-        new import_obsidian.Setting(contentEl).addButton(btn => btn.setButtonText("提交").setCta().onClick(() => this.submit()));
+        new import_obsidian.Setting(contentEl).addButton(btn =>
+            btn.setButtonText("提交").setCta().onClick(() => this.submit())
+        );
     }
+
     submit() {
         this.submitted = true;
         this.resolve(this.password);
         this.close();
     }
+
     onClose() {
         if (!this.submitted) this.reject(new Error("未提供密码"));
     }
 }
 
+/**
+ * 简单文件夹选择弹窗（按钮列表）
+ */
 class SimpleFolderPickerModal extends import_obsidian.Modal {
     constructor(app, folderPaths, onPick) {
         super(app);
         this.folderPaths = folderPaths;
         this.onPick = onPick;
     }
+
     onOpen() {
         const { contentEl } = this;
         contentEl.empty();
@@ -2002,28 +2220,50 @@ class SimpleFolderPickerModal extends import_obsidian.Modal {
             const btn = list.createEl('button', { text: label, cls: 'mod-cta' });
             btn.style.display = 'block';
             btn.style.marginBottom = '6px';
-            btn.onclick = () => { this.onPick?.(val); this.close(); };
+            btn.onclick = () => {
+                this.onPick?.(val);
+                this.close();
+            };
         };
         makeButton('/', '');
-        (this.folderPaths || []).filter(p => p.length > 0).sort((a, b) => a.localeCompare(b)).forEach(p => makeButton(`/${p}`, p));
+        (this.folderPaths || [])
+            .filter(p => p.length > 0)
+            .sort((a, b) => a.localeCompare(b))
+            .forEach(p => makeButton(`/${p}`, p));
     }
-    onClose() { this.contentEl.empty(); }
+
+    onClose() {
+        this.contentEl.empty();
+    }
 }
 
+/**
+ * 模糊搜索文件夹选择弹窗（推荐）
+ */
 class VaultFolderSuggestModal extends import_obsidian.FuzzySuggestModal {
     constructor(app, folderPaths, onPick) {
         super(app);
         this.folderPaths = (folderPaths || []).map(p => (p || '').replace(/\\\\/g, "/").replace(/^\/+|\/+$/g, ""));
         this.onPick = onPick;
     }
+
     getItems() {
         const uniq = new Set(['', ...this.folderPaths]);
         return Array.from(uniq.values());
     }
-    getItemText(item) { return item === '' ? '/' : `/${item}`; }
-    onChooseItem(item, evt) { this.onPick?.(item); }
+
+    getItemText(item) {
+        return item === '' ? '/' : `/${item}`;
+    }
+
+    onChooseItem(item, evt) {
+        this.onPick?.(item);
+    }
 }
 
+/**
+ * 确认弹窗（是/否）
+ */
 class ConfirmationModal extends import_obsidian.Modal {
     constructor(app, title, message) {
         super(app);
@@ -2031,25 +2271,51 @@ class ConfirmationModal extends import_obsidian.Modal {
         this.message = message;
         this.confirmed = false;
     }
-    open() { return new Promise((resolve) => { this.resolve = resolve; super.open(); }); }
+
+    open() {
+        return new Promise((resolve) => {
+            this.resolve = resolve;
+            super.open();
+        });
+    }
+
     onOpen() {
         const { contentEl } = this;
         contentEl.createEl("h2", { text: this.title });
         contentEl.createEl("p", { text: this.message });
         new import_obsidian.Setting(contentEl)
-            .addButton(btn => btn.setButtonText("是").setCta().onClick(() => { this.confirmed = true; this.close(); }))
-            .addButton(btn => btn.setButtonText("否").onClick(() => { this.confirmed = false; this.close(); }));
+            .addButton(btn => btn.setButtonText("是").setCta().onClick(() => {
+                this.confirmed = true;
+                this.close();
+            }))
+            .addButton(btn => btn.setButtonText("否").onClick(() => {
+                this.confirmed = false;
+                this.close();
+            }));
     }
-    onClose() { this.resolve(this.confirmed); }
+
+    onClose() {
+        this.resolve(this.confirmed);
+    }
 }
 
+/**
+ * 仓库隐私不匹配提示弹窗（三个选项）
+ */
 class RepoMismatchModal extends import_obsidian.Modal {
     constructor(app, repoKey) {
         super(app);
         this.repoKey = repoKey;
         this.choice = null;
     }
-    openAndWait() { return new Promise((resolve) => { this.resolve = resolve; super.open(); }); }
+
+    openAndWait() {
+        return new Promise((resolve) => {
+            this.resolve = resolve;
+            super.open();
+        });
+    }
+
     onOpen() {
         const { contentEl } = this;
         contentEl.createEl("h2", { text: "检测到仓库隐私不匹配" });
@@ -2060,6 +2326,7 @@ class RepoMismatchModal extends import_obsidian.Modal {
         buttonContainer.style.flexDirection = 'column';
         buttonContainer.style.gap = '8px';
         buttonContainer.style.marginTop = '12px';
+
         const makeBtn = (text, desc, choice, cta) => {
             const wrapper = buttonContainer.createDiv();
             const btn = wrapper.createEl('button', { text, cls: cta ? 'mod-cta' : '' });
@@ -2073,16 +2340,23 @@ class RepoMismatchModal extends import_obsidian.Modal {
                 descEl.style.marginTop = '2px';
                 descEl.style.marginLeft = '12px';
             }
-            btn.onclick = () => { this.choice = choice; this.close(); };
+            btn.onclick = () => {
+                this.choice = choice;
+                this.close();
+            };
         };
+
         makeBtn("使用自动模式", "自动检测仓库类型并适配。推荐。", "auto", true);
         makeBtn("切换到私有模式", "所有后续上传将使用私有图片格式。", "private", false);
         makeBtn("保持公开模式", "不更改。私有仓库的原始 URL 可能无法加载。", "public", false);
     }
-    onClose() { if (this.resolve) this.resolve(this.choice); }
+
+    onClose() {
+        if (this.resolve) this.resolve(this.choice);
+    }
 }
 
-// ========== 设置选项卡（全中文） ==========
+// ========== 设置选项卡（全中文，已添加 maxHeadingDepth 滑块） ==========
 class GitHubUploaderSettingTab extends import_obsidian.PluginSettingTab {
     constructor(app, plugin) {
         super(app, plugin);
@@ -2097,35 +2371,41 @@ class GitHubUploaderSettingTab extends import_obsidian.PluginSettingTab {
         const { containerEl } = this;
         containerEl.empty();
 
-        // GitHub 账户配置
-        new import_obsidian.Setting(containerEl).setName("GitHub 用户名").addText(text => text
-            .setPlaceholder("your-name")
-            .setValue(this.plugin.settings.githubUser)
-            .onChange(async (value) => {
-                this.plugin.settings.githubUser = value;
-                this.plugin.clearRepoPrivacyCache();
-                this.plugin.clearRepoListCache();
-                await this.plugin.saveSettings();
-            }));
+        // ----- GitHub 账户配置 -----
+        new import_obsidian.Setting(containerEl)
+            .setName("GitHub 用户名")
+            .addText(text => text
+                .setPlaceholder("your-name")
+                .setValue(this.plugin.settings.githubUser)
+                .onChange(async (value) => {
+                    this.plugin.settings.githubUser = value;
+                    this.plugin.clearRepoPrivacyCache();
+                    this.plugin.clearRepoListCache();
+                    await this.plugin.saveSettings();
+                }));
 
-        new import_obsidian.Setting(containerEl).setName("仓库名").addText(text => text
-            .setPlaceholder("obsidian-assets")
-            .setValue(this.plugin.settings.repoName)
-            .onChange(async (value) => {
-                const previousRepo = (this.plugin.settings.repoName || '').trim();
-                const nextRepo = (value || '').trim();
-                if (previousRepo && nextRepo && previousRepo !== nextRepo) {
-                    const history = Array.isArray(this.plugin.settings.repoHistory) ? [...this.plugin.settings.repoHistory] : [];
-                    const filtered = history.filter(r => String(r || '').trim() && String(r || '').trim() !== previousRepo && String(r || '').trim() !== nextRepo);
-                    this.plugin.settings.repoHistory = [previousRepo, ...filtered].slice(0, 10);
-                }
-                this.plugin.settings.repoName = value;
-                this.plugin.clearRepoPrivacyCache();
-                this.plugin.clearRepoListCache();
-                await this.plugin.saveSettings();
-            }));
+        new import_obsidian.Setting(containerEl)
+            .setName("仓库名")
+            .addText(text => text
+                .setPlaceholder("obsidian-assets")
+                .setValue(this.plugin.settings.repoName)
+                .onChange(async (value) => {
+                    const previousRepo = (this.plugin.settings.repoName || '').trim();
+                    const nextRepo = (value || '').trim();
+                    if (previousRepo && nextRepo && previousRepo !== nextRepo) {
+                        const history = Array.isArray(this.plugin.settings.repoHistory) ? [...this.plugin.settings.repoHistory] : [];
+                        const filtered = history.filter(r => String(r || '').trim() && String(r || '').trim() !== previousRepo && String(r || '').trim() !== nextRepo);
+                        this.plugin.settings.repoHistory = [previousRepo, ...filtered].slice(0, 10);
+                    }
+                    this.plugin.settings.repoName = value;
+                    this.plugin.clearRepoPrivacyCache();
+                    this.plugin.clearRepoListCache();
+                    await this.plugin.saveSettings();
+                }));
 
-        new import_obsidian.Setting(containerEl).setName("仓库可见性").setDesc("自动：检测仓库类型并适配。公开/私有：强制使用选定模式。")
+        new import_obsidian.Setting(containerEl)
+            .setName("仓库可见性")
+            .setDesc("自动：检测仓库类型并适配。公开/私有：强制使用选定模式。")
             .addDropdown(dropdown => dropdown
                 .addOption('auto', '自动（推荐）')
                 .addOption('public', '公开')
@@ -2138,15 +2418,17 @@ class GitHubUploaderSettingTab extends import_obsidian.PluginSettingTab {
                     await this.plugin.saveSettings();
                 }));
 
-        new import_obsidian.Setting(containerEl).setName("分支名").addText(text => text
-            .setPlaceholder("main")
-            .setValue(this.plugin.settings.branchName)
-            .onChange(async (value) => {
-                this.plugin.settings.branchName = value;
-                await this.plugin.saveSettings();
-            }));
+        new import_obsidian.Setting(containerEl)
+            .setName("分支名")
+            .addText(text => text
+                .setPlaceholder("main")
+                .setValue(this.plugin.settings.branchName)
+                .onChange(async (value) => {
+                    this.plugin.settings.branchName = value;
+                    await this.plugin.saveSettings();
+                }));
 
-        // 图片存储策略（新增）
+        // ----- 图片存储策略 -----
         new import_obsidian.Setting(containerEl)
             .setName("图片存储策略")
             .setDesc("全局：所有图片上传到下方文件夹。按笔记路径：图片将存储在匹配笔记位置的子文件夹中（例如 Assets/Image/DL/ANN/ 对应笔记 DL/ANN.md）。")
@@ -2158,39 +2440,6 @@ class GitHubUploaderSettingTab extends import_obsidian.PluginSettingTab {
                     this.plugin.settings.imageStorageStrategy = value;
                     await this.plugin.saveSettings();
                     this.display(); // 刷新界面
-                }));
-        
-        new import_obsidian.Setting(containerEl)
-            .setName("公开图片链接格式")
-            .setDesc("仅当仓库为公开时生效。jsDelivr CDN 在国内访问更快，但有24小时缓存；GitHub Raw 无缓存但速度较慢。")
-            .addDropdown(dropdown => dropdown
-                .addOption('raw', 'GitHub Raw (原始链接)')
-                .addOption('jsdelivr', 'jsDelivr CDN (加速推荐)')
-                .setValue(this.plugin.settings.imageUrlType || 'raw')
-                .onChange(async (value) => {
-                    this.plugin.settings.imageUrlType = value;
-                    await this.plugin.saveSettings();
-        }));
-
-        // 在 imageUrlType 下拉选项后面添加（注意：要在同一个 Setting 对象中或者新建一个 Setting）
-        new import_obsidian.Setting(containerEl)
-            .setName("转换当前笔记链接")
-            .setDesc("将当前打开笔记中的图片链接批量转换为上面选择的格式（jsDelivr ↔ GitHub Raw）。")
-            .addButton(btn => btn
-                .setButtonText("立即转换")
-                .setCta()
-                .onClick(async () => {
-                    await this.plugin.convertCurrentNoteLinks();
-                }));
-
-        new import_obsidian.Setting(containerEl)
-            .setName("自动上传监控图片")
-            .setDesc("当图片被放入监控文件夹（上传临时文件夹/额外监控文件夹/移动端附件文件夹）时，自动上传到 GitHub。关闭后图片将仅保存在本地。")
-            .addToggle(toggle => toggle
-                .setValue(this.plugin.settings.autoUpload)
-                .onChange(async (value) => {
-                    this.plugin.settings.autoUpload = value;
-                    await this.plugin.saveSettings();
                 }));
 
         if (this.plugin.settings.imageStorageStrategy === 'byNotePath') {
@@ -2205,23 +2454,79 @@ class GitHubUploaderSettingTab extends import_obsidian.PluginSettingTab {
                         await this.plugin.saveSettings();
                     }));
         } else {
-            new import_obsidian.Setting(containerEl).setName("仓库内文件夹路径").addText(text => text
-                .setPlaceholder("assets/")
-                .setValue(this.plugin.settings.folderPath)
-                .onChange(async (value) => {
-                    this.plugin.settings.folderPath = value.length > 0 && !value.endsWith("/") ? value + "/" : value;
-                    await this.plugin.saveSettings();
-                }));
+            new import_obsidian.Setting(containerEl)
+                .setName("仓库内文件夹路径")
+                .addText(text => text
+                    .setPlaceholder("assets/")
+                    .setValue(this.plugin.settings.folderPath)
+                    .onChange(async (value) => {
+                        this.plugin.settings.folderPath = value.length > 0 && !value.endsWith("/") ? value + "/" : value;
+                        await this.plugin.saveSettings();
+                    }));
         }
 
-        new import_obsidian.Setting(containerEl).setName("上传后删除本地文件").addToggle(toggle => toggle
-            .setValue(this.plugin.settings.deleteLocal)
-            .onChange(async (value) => {
-                this.plugin.settings.deleteLocal = value;
-                await this.plugin.saveSettings();
-            }));
+        // ----- 公开图片链接格式（新增 CDN 选项）-----
+        new import_obsidian.Setting(containerEl)
+            .setName("公开图片链接格式")
+            .setDesc("仅当仓库为公开时生效。jsDelivr CDN 在国内访问更快，但有24小时缓存；GitHub Raw 无缓存但速度较慢。")
+            .addDropdown(dropdown => dropdown
+                .addOption('raw', 'GitHub Raw (原始链接)')
+                .addOption('jsdelivr', 'jsDelivr CDN (加速推荐)')
+                .setValue(this.plugin.settings.imageUrlType || 'raw')
+                .onChange(async (value) => {
+                    this.plugin.settings.imageUrlType = value;
+                    await this.plugin.saveSettings();
+                }));
 
-        new import_obsidian.Setting(containerEl).setName("粘贴图片上传行为").setDesc("选择粘贴图片时是总是上传还是每次询问。")
+        // ----- 批量转换按钮 -----
+        new import_obsidian.Setting(containerEl)
+            .setName("转换当前笔记链接")
+            .setDesc("将当前打开笔记中的图片链接批量转换为上面选择的格式（jsDelivr ↔ GitHub Raw）。")
+            .addButton(btn => btn
+                .setButtonText("立即转换")
+                .setCta()
+                .onClick(async () => {
+                    await this.plugin.convertCurrentNoteLinks();
+                }));
+
+        // ----- 标题层级最大深度（新增）-----
+        new import_obsidian.Setting(containerEl)
+            .setName("标题层级最大深度")
+            .setDesc("生成文件名时最多使用几级标题序号（1-6）。超出部分将被截断，可避免文件名过长。")
+            .addSlider(slider => slider
+                .setLimits(1, 6, 1)
+                .setValue(this.plugin.settings.maxHeadingDepth || 6)
+                .setDynamicTooltip()
+                .onChange(async (value) => {
+                    this.plugin.settings.maxHeadingDepth = value;
+                    await this.plugin.saveSettings();
+                }));
+
+        // ----- 自动上传监控图片开关 -----
+        new import_obsidian.Setting(containerEl)
+            .setName("自动上传监控图片")
+            .setDesc("当图片被放入监控文件夹（上传临时文件夹/额外监控文件夹/移动端附件文件夹）时，自动上传到 GitHub。关闭后图片将仅保存在本地。")
+            .addToggle(toggle => toggle
+                .setValue(this.plugin.settings.autoUpload)
+                .onChange(async (value) => {
+                    this.plugin.settings.autoUpload = value;
+                    await this.plugin.saveSettings();
+                }));
+
+        // ----- 上传后删除本地文件 -----
+        new import_obsidian.Setting(containerEl)
+            .setName("上传后删除本地文件")
+            .addToggle(toggle => toggle
+                .setValue(this.plugin.settings.deleteLocal)
+                .onChange(async (value) => {
+                    this.plugin.settings.deleteLocal = value;
+                    await this.plugin.saveSettings();
+                }));
+
+        // ----- 粘贴图片上传行为 -----
+        new import_obsidian.Setting(containerEl)
+            .setName("粘贴图片上传行为")
+            .setDesc("选择粘贴图片时是总是上传还是每次询问。")
             .addDropdown(dropdown => dropdown
                 .addOption('always', '总是上传')
                 .addOption('ask', '每次询问')
@@ -2231,7 +2536,10 @@ class GitHubUploaderSettingTab extends import_obsidian.PluginSettingTab {
                     await this.plugin.saveSettings();
                 }));
 
-        const localPrimarySetting = new import_obsidian.Setting(containerEl).setName("本地图片文件夹").setDesc("当您选择不上传时，图片将保存到此主文件夹。")
+        // ----- 本地图片文件夹（主）-----
+        const localPrimarySetting = new import_obsidian.Setting(containerEl)
+            .setName("本地图片文件夹")
+            .setDesc("当您选择不上传时，图片将保存到此主文件夹。")
             .addText(text => text
                 .setPlaceholder("notepix-local")
                 .setValue(this.plugin.settings.localImageFolder)
@@ -2263,6 +2571,7 @@ class GitHubUploaderSettingTab extends import_obsidian.PluginSettingTab {
             });
         });
 
+        // ----- 其他本地专用文件夹（动态列表）-----
         const localOnlyAnchor = containerEl.createDiv({ cls: 'notepix-localonly-anchor' });
         const renderLocalOnlyRows = () => {
             const existing = localOnlyAnchor.querySelector('.notepix-localonly-folders');
@@ -2344,7 +2653,10 @@ class GitHubUploaderSettingTab extends import_obsidian.PluginSettingTab {
         };
         if ((this.plugin.settings.localOnlyFolders || '').trim().length > 0 || (this.plugin.settings.localOnlyList || []).length > 0) renderLocalOnlyRows();
 
-        const uploadSetting = new import_obsidian.Setting(containerEl).setName("上传图片的临时文件夹").setDesc("图片会先保存在此文件夹，然后自动上传。");
+        // ----- 上传图片的临时文件夹 -----
+        const uploadSetting = new import_obsidian.Setting(containerEl)
+            .setName("上传图片的临时文件夹")
+            .setDesc("图片会先保存在此文件夹，然后自动上传。");
         uploadSetting.addText(text => {
             text.setPlaceholder("notepix-uploads").setValue(this.plugin.settings.uploadImageFolder || 'notepix-uploads').onChange(async (value) => {
                 const val = (value || '').replace(/\\\\/g, "/").replace(/^\/+|\/+$/g, "").trim();
@@ -2388,11 +2700,15 @@ class GitHubUploaderSettingTab extends import_obsidian.PluginSettingTab {
             });
         });
 
+        // ----- 移动端附件集成（仅移动端显示）-----
         if (isMobile) {
-            new import_obsidian.Setting(containerEl).setName("移动端附件集成").setDesc("在移动端，通过附件按钮添加的文件会自动保存到 'attachment' 文件夹并上传。")
+            new import_obsidian.Setting(containerEl)
+                .setName("移动端附件集成")
+                .setDesc("在移动端，通过附件按钮添加的文件会自动保存到 'attachment' 文件夹并上传。")
                 .addText(t => { t.setValue(this.plugin.settings.attachmentsFolderName || 'attachment'); t.setDisabled(true); });
         }
 
+        // ----- 额外监控文件夹（动态列表）-----
         const extraAnchor = containerEl.createDiv({ cls: 'notepix-extra-anchor' });
         uploadSetting.addExtraButton(btn => {
             btn.setIcon?.("plus");
@@ -2496,8 +2812,11 @@ class GitHubUploaderSettingTab extends import_obsidian.PluginSettingTab {
             renderRows();
         }
 
+        // ----- 加密设置 -----
         new import_obsidian.Setting(containerEl).setName("加密").setHeading();
-        new import_obsidian.Setting(containerEl).setName("启用加密").setDesc("启用后，您的 GitHub Token 将被加密存储，并在首次使用时提示输入主密码。")
+        new import_obsidian.Setting(containerEl)
+            .setName("启用加密")
+            .setDesc("启用后，您的 GitHub Token 将被加密存储，并在首次使用时提示输入主密码。")
             .addToggle(toggle => toggle.setValue(this.plugin.settings.useEncryption).onChange(async (value) => {
                 if (this.plugin.settings.useEncryption && !value) {
                     const ok = await new ConfirmationModal(this.app, "禁用加密？", "您的 Token 将明文存储在本地。确定吗？").open();
@@ -2512,44 +2831,58 @@ class GitHubUploaderSettingTab extends import_obsidian.PluginSettingTab {
                 await this.plugin.saveSettings();
                 this.display();
             }));
+
         if (this.plugin.settings.useEncryption) {
-            new import_obsidian.Setting(containerEl).setName("主密码").setDesc("设置一个密码用于加密您的 Token。此密码不会被保存。").addText(text => {
-                text.inputEl.type = "password";
-                text.setPlaceholder("输入密码以设置/更改 Token");
-                text.onChange(value => { this.masterPassword = value; });
-            });
-            new import_obsidian.Setting(containerEl).setName("GitHub 个人访问令牌").setDesc("在此输入您的 PAT，保存时将加密。").addText(text => {
-                text.inputEl.type = "password";
-                text.setPlaceholder("ghp_... (粘贴新 Token)");
-                text.onChange(value => { this.githubToken = value; });
-            });
-            new import_obsidian.Setting(containerEl).addButton(btn => btn.setButtonText("保存加密 Token").setCta().onClick(async () => {
-                if (!this.masterPassword || !this.githubToken) { new import_obsidian.Notice("请同时提供主密码和 Token。"); return; }
-                try {
-                    const encrypted = await encrypt(this.githubToken, this.masterPassword);
-                    this.plugin.settings.encryptedToken = encrypted;
-                    this.plugin.settings.plainToken = "";
-                    this.plugin.clearRepoPrivacyCache();
-                    this.plugin.clearRepoListCache();
-                    await this.plugin.saveSettings();
-                    new import_obsidian.Notice("Token 已加密保存！");
-                } catch (e) { new import_obsidian.Notice(`加密失败: ${e.message}`); }
-            }));
-        } else {
-            new import_obsidian.Setting(containerEl).setName("GitHub 个人访问令牌（明文）").setDesc("明文存储，无密码提示。").addText(text => {
-                text.inputEl.type = "password";
-                text.setPlaceholder("ghp_... (粘贴 Token)");
-                text.setValue(this.plugin.settings.plainToken || "");
-                text.onChange(async (value) => {
-                    this.plugin.settings.plainToken = value;
-                    this.plugin.clearRepoPrivacyCache();
-                    this.plugin.clearRepoListCache();
-                    await this.plugin.saveSettings();
+            new import_obsidian.Setting(containerEl)
+                .setName("主密码")
+                .setDesc("设置一个密码用于加密您的 Token。此密码不会被保存。")
+                .addText(text => {
+                    text.inputEl.type = "password";
+                    text.setPlaceholder("输入密码以设置/更改 Token");
+                    text.onChange(value => { this.masterPassword = value; });
                 });
-            });
+            new import_obsidian.Setting(containerEl)
+                .setName("GitHub 个人访问令牌")
+                .setDesc("在此输入您的 PAT，保存时将加密。")
+                .addText(text => {
+                    text.inputEl.type = "password";
+                    text.setPlaceholder("ghp_... (粘贴新 Token)");
+                    text.onChange(value => { this.githubToken = value; });
+                });
+            new import_obsidian.Setting(containerEl)
+                .addButton(btn => btn.setButtonText("保存加密 Token").setCta().onClick(async () => {
+                    if (!this.masterPassword || !this.githubToken) { new import_obsidian.Notice("请同时提供主密码和 Token。"); return; }
+                    try {
+                        const encrypted = await encrypt(this.githubToken, this.masterPassword);
+                        this.plugin.settings.encryptedToken = encrypted;
+                        this.plugin.settings.plainToken = "";
+                        this.plugin.clearRepoPrivacyCache();
+                        this.plugin.clearRepoListCache();
+                        await this.plugin.saveSettings();
+                        new import_obsidian.Notice("Token 已加密保存！");
+                    } catch (e) { new import_obsidian.Notice(`加密失败: ${e.message}`); }
+                }));
+        } else {
+            new import_obsidian.Setting(containerEl)
+                .setName("GitHub 个人访问令牌（明文）")
+                .setDesc("明文存储，无密码提示。")
+                .addText(text => {
+                    text.inputEl.type = "password";
+                    text.setPlaceholder("ghp_... (粘贴 Token)");
+                    text.setValue(this.plugin.settings.plainToken || "");
+                    text.onChange(async (value) => {
+                        this.plugin.settings.plainToken = value;
+                        this.plugin.clearRepoPrivacyCache();
+                        this.plugin.clearRepoListCache();
+                        await this.plugin.saveSettings();
+                    });
+                });
         }
 
-        new import_obsidian.Setting(containerEl).setName("删除前确认").setDesc("删除 GitHub 上的图片前显示确认对话框。")
+        // ----- 删除前确认 -----
+        new import_obsidian.Setting(containerEl)
+            .setName("删除前确认")
+            .setDesc("删除 GitHub 上的图片前显示确认对话框。")
             .addToggle(toggle => toggle.setValue(this.plugin.settings.confirmBeforeDelete).onChange(async (value) => {
                 this.plugin.settings.confirmBeforeDelete = value;
                 await this.plugin.saveSettings();
@@ -2557,4 +2890,5 @@ class GitHubUploaderSettingTab extends import_obsidian.PluginSettingTab {
     }
 }
 
+// ---------- 导出插件 ----------
 module.exports = MyPlugin;

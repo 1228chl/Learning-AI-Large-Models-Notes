@@ -36,7 +36,10 @@
   "autoDeleteEnabled": true,
   "confirmBeforeDelete": true,
   "imageCounters": {
-
+    "AI-Large-Modlels-Notes/Agent/Coze/03Coze细节（课堂版）.md|1.1.1": 1,
+    "AI-Large-Modlels-Notes/Agent/Coze/03Coze细节（课堂版）.md|1.1.3.2": 1,
+    "AI-Large-Modlels-Notes/Agent/Coze/03Coze细节（课堂版）.md|1.1.3.3": 1
   },
-  "imageUrlType": "jsdelivr"
+  "imageUrlType": "jsdelivr",
+  "maxHeadingDepth": 6
 }
