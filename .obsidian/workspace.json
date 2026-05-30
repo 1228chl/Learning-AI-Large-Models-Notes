@@ -104,8 +104,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 358.5,
-    "collapsed": true
+    "width": 358.5
   },
   "right": {
     "id": "f07a0c5b7e11463b",
@@ -223,8 +222,21 @@
       "obsidian-excalidraw-plugin:新建绘图文件": false
     }
   },
-  "active": "578d1628917aa920",
+  "active": "e83158f79f242826",
   "lastOpenFiles": [
+    "Assets/Image/AI-Large-Modlels-Notes/Agent/Dify/04Dify/1.8-4.png",
+    "Assets/Image/AI-Large-Modlels-Notes/Agent/Dify/04Dify/1.8-1.png",
+    "Assets/Image/AI-Large-Modlels-Notes/Agent/Dify/04Dify/1.8-3.png",
+    "Assets/Image/AI-Large-Modlels-Notes/Agent/Dify/04Dify/1.8-2.png",
+    "Assets/Image/AI-Large-Modlels-Notes/Agent/Dify/04Dify/1.7.2-4.png",
+    "Assets/Image/AI-Large-Modlels-Notes/Agent/Dify/04Dify/1.7.2-2.png",
+    "Assets/Image/AI-Large-Modlels-Notes/Agent/Dify/04Dify/1.7.2-3.png",
+    "Assets/Image/AI-Large-Modlels-Notes/Agent/Dify/04Dify/1.7.2-1.png",
+    "Assets/Image/AI-Large-Modlels-Notes/Agent/Dify/04Dify/1.7.1-1.png",
+    "Assets/Image/AI-Large-Modlels-Notes/Agent/Dify/04Dify/1.6.1-1.png",
+    "Assets/Image/AI-Large-Modlels-Notes/Agent/Dify/04Dify/1.5.4-1.png",
+    "Assets/Image/AI-Large-Modlels-Notes/Agent/Dify/04Dify",
+    "Assets/Image/AI-Large-Modlels-Notes/Agent/Dify",
     "AI-Large-Modlels-Notes/Python/09正则表达式.md",
     "AI-Large-Modlels-Notes/Python/10python_进阶.md",
     "AI-Large-Modlels-Notes/SQL/01MySQL数据库.md",
@@ -250,17 +262,6 @@
     "AI-Large-Modlels-Notes/DataAnalysis/02NumPy（AI大全版）.md",
     "AI-Large-Modlels-Notes/DataAnalysis/01NumPy模块（课堂版）.md",
     "AI-Large-Modlels-Notes/Conda/Conda基础命令.md",
-    "AI-Large-Modlels-Notes/Agent/Dify/05Rag和知识库的三种索引方式（重点扩展）.md",
-    "Assets/Image/AI-Large-Modlels-Notes/Agent/Coze/03Coze细节（课堂版）/1.4.1.3-4.png",
-    "Assets/Image/AI-Large-Modlels-Notes/Agent/Coze/03Coze细节（课堂版）/1.4.1.3-3.png",
-    "Assets/Image/AI-Large-Modlels-Notes/Agent/Coze/03Coze细节（课堂版）/1.4.1.3-2.png",
-    "Assets/Image/AI-Large-Modlels-Notes/Agent/Coze/03Coze细节（课堂版）/1.4.1.3-1.png",
-    "Assets/Image/AI-Large-Modlels-Notes/Agent/Coze/03Coze细节（课堂版）/1.4.1.2-2.png",
-    "Assets/Image/AI-Large-Modlels-Notes/Agent/Coze/03Coze细节（课堂版）/1.4.1.2-1.png",
-    "Assets/Image/AI-Large-Modlels-Notes/Agent/Coze/03Coze细节（课堂版）/1.3.1.2-1.png",
-    "Assets/Image/AI-Large-Modlels-Notes/Agent/Coze/03Coze细节（课堂版）/1.2.2-2.png",
-    "Assets/Image/AI-Large-Modlels-Notes/Agent/Coze/03Coze细节（课堂版）/1.2.2-1.png",
-    "Assets/Image/AI-Large-Modlels-Notes/Agent/Coze/03Coze细节（课堂版）/1.2.1-1.png",
     "Assets/Image/AI-Large-Modlels-Notes/Agent/Coze/03Coze细节（课堂版）",
     "Assets/Image/AI-Large-Modlels-Notes/Agent/Coze",
     "Assets/Image/AI-Large-Modlels-Notes/Agent",
@@ -269,8 +270,6 @@
     "AI-Large-Modlels-Notes/DL/基础",
     "AI-Large-Modlels-Notes/DL/ANN",
     "Assets/NotePix-Uploads",
-    "AI-Large-Modlels-Notes/DL",
-    "未命名.base",
     "未命名.canvas"
   ]
 }
