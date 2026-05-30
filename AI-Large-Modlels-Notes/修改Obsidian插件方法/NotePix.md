@@ -887,3 +887,239 @@ if (this.plugin.settings.imageStorageStrategy === 'byNotePath') {
 以上所有修改均未破坏原有功能，仅增加了**按笔记路径分类存储**的策略选择。用户可通过插件设置自由切换两种模式，新上传的图片会根据策略自动归类。
 
 ---
+
+# 修改上传文件名的命名格式
+
+以下是实现“文件名基于文档标题层级和顺序”的完整修改代码。主要在 `handleImageUpload` 中替换原来的时间戳文件名生成逻辑，新增 `generateFileNameFromHeading` 方法和相关的计数器管理。
+
+---
+
+## 修改 1：在 `MyPlugin` 类中新增计数器属性及相关方法
+
+在 `MyPlugin` 类的 `constructor` 中（约第 100 行附近）新增：
+
+```javascript
+constructor() {
+    super(...arguments);
+    // ... 原有属性保持不变
+    this.imageCounterMap = new Map(); // 键: "notePath|headingPath"，值: 当前已使用的最大序号
+}
+```
+
+在 `onunload` 中无需特别清理，内存即可。
+
+新增两个方法（放在 `generateImageRemotePath` 方法之后）：
+
+```javascript
+// 获取下一个图片序号（基于笔记和标题路径）
+getNextImageCounter(notePath, headingPath) {
+    const key = `${notePath}|${headingPath}`;
+    const current = this.imageCounterMap.get(key) || 0;
+    const next = current + 1;
+    this.imageCounterMap.set(key, next);
+    return next;
+}
+
+// 重置某个笔记标题下的计数器（可选，用于手动清理；本实现暂不自动重置）
+resetImageCounter(notePath, headingPath) {
+    const key = `${notePath}|${headingPath}`;
+    this.imageCounterMap.delete(key);
+}
+```
+
+新增核心文件名生成方法（放在 `getNextImageCounter` 之后）：
+
+```javascript
+// 根据当前编辑器光标位置生成层级路径和序号
+async generateFileNameFromHeading(editor, noteBasename, extension) {
+    if (!editor) {
+        // 如果没有编辑器，回退到时间戳
+        const timestamp = new Date().toISOString().replace(/[-:.]/g, "");
+        return `${timestamp}.${extension}`;
+    }
+
+    const cursor = editor.getCursor();
+    const currentLineNum = cursor.line;
+    const lines = editor.getValue().split('\n');
+    
+    // 收集光标位置向上的所有标题及其层级序号
+    // 结果示例: [{ level: 1, text: "简介", index: 1 }, { level: 2, text: "背景", index: 1 }]
+    const headings = [];
+    const levelCounters = {}; // 记录每个层级当前遇到的序号
+    
+    for (let i = currentLineNum; i >= 0; i--) {
+        const line = lines[i];
+        const match = line.match(/^(#{1,6})\s+(.*)$/);
+        if (match) {
+            const level = match[1].length;
+            const title = match[2].trim();
+            // 计算该层级在当前段落中出现的序号（从1开始）
+            if (!levelCounters[level]) levelCounters[level] = 0;
+            levelCounters[level]++;
+            headings.unshift({ level, title, index: levelCounters[level] });
+            // 只向上收集，遇到更高层级时继续，但只需收集到最顶层即可，不需要继续向上
+            // 如果已经收集到 level 1，通常可以继续向上（但 markdown 只允许一个 H1，继续也没问题）
+        }
+    }
+
+    // 构建层级路径，例如 "1.2.3"
+    const hierarchyPath = headings.map(h => h.index).join('.');
+    if (!hierarchyPath) {
+        // 如果没有任何标题，使用 "root"
+        const fallbackPath = "root";
+        const counter = this.getNextImageCounter(noteBasename, fallbackPath);
+        return `${noteBasename}-${fallbackPath}-${counter}.${extension}`;
+    }
+
+    // 获取当前笔记路径（用于计数器键）
+    const notePath = this.app.workspace.getActiveFile()?.path || 'unknown';
+    const counter = this.getNextImageCounter(notePath, hierarchyPath);
+    // 文件名：文档名-层级路径-序号.扩展名
+    // 注意：移除文档名中的非法字符（只保留字母数字、汉字、连字符、下划线）
+    const safeBasename = noteBasename.replace(/[\\/:*?"<>|]/g, '-');
+    const safeHierarchy = hierarchyPath.replace(/[^0-9.]/g, '');
+    return `${safeBasename}-${safeHierarchy}-${counter}.${extension}`;
+}
+```
+
+---
+
+## 修改 2：修改 `handleImageUpload` 中的文件名生成逻辑
+
+找到 `handleImageUpload` 方法中原有代码：
+
+```javascript
+const timestamp = new Date().toISOString().replace(/[-:.]/g, "");
+const newFileName = `${timestamp}.${file.extension}`;
+```
+
+将其替换为：
+
+```javascript
+let newFileName;
+// 尝试基于编辑器光标位置生成层级文件名
+const activeView = this.app.workspace.getActiveViewOfType(import_obsidian.MarkdownView);
+if (activeView && activeView.editor && sourceNotePath) {
+    const noteFile = this.app.vault.getAbstractFileByPath(sourceNotePath);
+    const noteBasename = noteFile ? noteFile.basename : 'image';
+    try {
+        newFileName = await this.generateFileNameFromHeading(activeView.editor, noteBasename, file.extension);
+    } catch (err) {
+        console.error("Failed to generate heading-based filename, fallback to timestamp", err);
+        const timestamp = new Date().toISOString().replace(/[-:.]/g, "");
+        newFileName = `${timestamp}.${file.extension}`;
+    }
+} else {
+    // 无编辑器或无法获取源路径时，回退时间戳
+    const timestamp = new Date().toISOString().replace(/[-:.]/g, "");
+    newFileName = `${timestamp}.${file.extension}`;
+}
+```
+
+注意：`sourceNotePath` 已经在之前的修改中传入，可以直接使用。
+
+同时注意：如果是在 `isPaste` 模式下，`sourceNotePath` 可能已经由 `uploadPastedImage` 传递，因此同样有效。
+
+---
+
+## 修改 3：确保 `uploadPastedImage` 传递正确的源笔记路径
+
+之前已经修改过 `uploadPastedImage`，确保调用 `handleImageUpload` 时传递了 `sourcePath`。无需额外改动。
+
+---
+
+## 完整修改后的 `handleImageUpload` 片段（仅显示修改区域）
+
+```javascript
+async handleImageUpload(file, isPaste = false, sourceNotePath = null) {
+    // ... 前面检查 token 等不变 ...
+    const uploadNotice = new import_obsidian.Notice(`Uploading ${file.name} to GitHub...`, 0);
+    try {
+        // 生成新文件名
+        let newFileName;
+        const activeView = this.app.workspace.getActiveViewOfType(import_obsidian.MarkdownView);
+        if (activeView && activeView.editor && (sourceNotePath || activeView.file?.path)) {
+            const notePath = sourceNotePath || activeView.file.path;
+            const noteFile = this.app.vault.getAbstractFileByPath(notePath);
+            const noteBasename = noteFile ? noteFile.basename : 'image';
+            try {
+                newFileName = await this.generateFileNameFromHeading(activeView.editor, noteBasename, file.extension);
+            } catch (err) {
+                console.error("Heading filename failed, fallback to timestamp", err);
+                const timestamp = new Date().toISOString().replace(/[-:.]/g, "");
+                newFileName = `${timestamp}.${file.extension}`;
+            }
+        } else {
+            const timestamp = new Date().toISOString().replace(/[-:.]/g, "");
+            newFileName = `${timestamp}.${file.extension}`;
+        }
+
+        const fileData = await (isPaste ? file.readBinary() : this.app.vault.readBinary(file));
+        // ... 后续上传逻辑不变，使用 newFileName ...
+    } catch (error) {
+        // ...
+    }
+}
+```
+
+---
+
+## 修改 4（可选）：持久化计数器到插件数据
+
+如果需要跨会话保留每个标题下的图片计数，可以在 `saveSettings` 和 `loadSettings` 中保存/恢复 `imageCounterMap`。由于计数器仅影响文件名顺序，不保存影响也不大（重启后会从1开始重新计数，可能导致文件名重复冲突的风险）。为了避免冲突，可以在生成文件名时扫描远程仓库中已存在的最大序号（但会增加 API 调用）。更简单的方式是将计数器保存在 settings 中：
+
+在 `DEFAULT_SETTINGS` 中添加：
+
+```javascript
+imageCounters: {}, // 存储 { "notePath|headingPath": number }
+```
+
+在 `loadSettings` 中恢复 `imageCounterMap`：
+
+```javascript
+async loadSettings() {
+    this.settings = Object.assign({}, DEFAULT_SETTINGS, await this.loadData());
+    // 恢复计数器
+    this.imageCounterMap = new Map(Object.entries(this.settings.imageCounters || {}));
+}
+```
+
+在 `saveSettings` 中保存 `imageCounterMap`：
+
+```javascript
+async saveSettings() {
+    this.settings.imageCounters = Object.fromEntries(this.imageCounterMap);
+    await this.saveData(this.settings);
+}
+```
+
+修改 `getNextImageCounter` 方法，使其同时更新 `this.settings.imageCounters`（保持持久化）：
+
+```javascript
+getNextImageCounter(notePath, headingPath) {
+    const key = `${notePath}|${headingPath}`;
+    const current = this.imageCounterMap.get(key) || 0;
+    const next = current + 1;
+    this.imageCounterMap.set(key, next);
+    // 同时更新 settings 以便持久化
+    if (this.settings) {
+        this.settings.imageCounters = Object.fromEntries(this.imageCounterMap);
+    }
+    return next;
+}
+```
+
+这样，计数器会跨会话保留，避免重启后重复文件名。
+
+---
+
+## 总结
+
+通过以上修改，实现了：
+
+- 文件名格式：`文档名-标题层级路径-序号.扩展名`（如 `ANN-1.2.3-1.png`）
+- 标题层级从当前光标位置向上解析，生成如 `1.2.3` 的多级编号。
+- 计数器基于笔记路径和标题路径，持久化存储，避免命名冲突。
+- 如果无法获取编辑器或解析失败，回退到时间戳文件名，保证稳定性。
+
+所有修改均与现有的“按笔记路径存储”策略完美集成，不影响其他功能。
