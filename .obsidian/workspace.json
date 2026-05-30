@@ -224,8 +224,10 @@
       "obsidian-excalidraw-plugin:新建绘图文件": false
     }
   },
-  "active": "f432670bd6181883",
+  "active": "a73ebf785a6e6ac6",
   "lastOpenFiles": [
+    "Assets/Image/20260530T022848855Z.png",
+    "Assets/Image-Backup/20260530T022848855Z.png",
     "AI-Large-Modlels-Notes/DL/基础/03Pytorch自动微分.md",
     "AI-Large-Modlels-Notes/DL/ANN/ANN完整拓展+.md",
     "Assets/NotePix-Uploads/ANN完整拓展+-1.png",
@@ -270,7 +272,6 @@
     "Assets/Image/20260518T022501036Z.png",
     "Assets/Image/20260518T022400560Z.png",
     "Assets/Image/20260518T022353311Z.png",
-    "Assets/Image-Backup/20260518T022910748Z.png",
     "未命名.canvas"
   ]
 }

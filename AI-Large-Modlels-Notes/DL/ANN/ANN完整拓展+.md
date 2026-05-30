@@ -175,7 +175,9 @@ plt.show()
 ```
 
 绘图：
-![[ANN完整拓展+-1.png]]
+
+![](https://raw.githubusercontent.com/1228chl/Learning-AI-Large-Models-Notes/master/Assets/Image/20260530T022848855Z.png)
+
 ---
 
 #### 2.2 Tanh 激活函数
