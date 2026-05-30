@@ -58,8 +58,8 @@
         "head": 307
       },
       "AI-Large-Modlels-Notes/ML/监督学习/决策树/01决策树完整版.md": {
-        "anchor": 13884,
-        "head": 13556
+        "anchor": 13811,
+        "head": 13811
       },
       "AI-Large-Modlels-Notes/ML/无监督学习/聚类算法/K-means算法.md": {
         "anchor": 9599,
@@ -158,8 +158,8 @@
         "head": 3811
       },
       "AI-Large-Modlels-Notes/DL/基础/03Pytorch自动微分.md": {
-        "anchor": 2158,
-        "head": 2158
+        "anchor": 2059,
+        "head": 2059
       },
       "AI-Large-Modlels-Notes/DL/基础/02Pytorch.md": {
         "anchor": 3263,
@@ -170,12 +170,16 @@
         "head": 394
       },
       "AI-Large-Modlels-Notes/Agent/Coze/03Coze细节（课堂版）.md": {
-        "anchor": 4798,
-        "head": 4798
+        "anchor": 40465,
+        "head": 40465
       },
       "conflict-files-obsidian-git.md": {
         "anchor": 818,
         "head": 0
+      },
+      "AI-Large-Modlels-Notes/Agent/Dify/04Dify.md": {
+        "anchor": 10943,
+        "head": 10822
       }
     }
   },

@@ -208,7 +208,7 @@ ls [a-d]*.py                  # 以 a/b/c/d 开头的 .py 文件
 
 使用 `ls -l` 输出示例：
 
-```
+```python
 -rwxr-xr-- 1 user group 1234 Apr 28 10:00 script.sh
 ```
 
@@ -1152,7 +1152,7 @@ crontab -r
 
 ### 4.2 Crontab 时间格式
 
-```
+```python
 * * * * * command_to_execute
 ┬ ┬ ┬ ┬ ┬
 │ │ │ │ └── 星期几（0-7，0和7都代表周日）
@@ -1269,7 +1269,7 @@ logrotate -f /etc/logrotate.conf
 
 **示例配置文件** `/etc/logrotate.d/nginx`：
 
-```
+```python
 /var/log/nginx/*.log {
     daily
     missingok

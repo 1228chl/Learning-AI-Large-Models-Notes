@@ -632,7 +632,7 @@ LIMIT M, N;
 
 **实际执行顺序**：
 
-```
+```python
 1. FROM          -- 确定数据源
 2. WHERE         -- 过滤行数据
 3. GROUP BY      -- 分组

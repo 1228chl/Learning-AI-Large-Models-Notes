@@ -49,7 +49,9 @@
 **归一化词频**（常用形式）：  
 为了避免长文档天然具有更高词频的问题，通常会对词频进行归一化：
 
-$$TF\left(t,d\right)=\frac{词t在文档d中出现的次数}{文档d的总词数}$$
+$$
+TF\left(t,d\right)=\frac{词t在文档d中出现的次数}{文档d的总词数}
+$$
 
 > 示例：doc 1 总词数 = 20，其中“全文检索”出现 2 次，则 TF = 2/20 = 0.1。
 
@@ -64,7 +66,9 @@ $$TF\left(t,d\right)=\frac{词t在文档d中出现的次数}{文档d的总词数
 
 **公式**：
 
-$$IDF\left(t\right)=\log_{}\left(\frac{N}{n\left(t\right)+1}\right)$$
+$$
+IDF\left(t\right)=\log_{}\left(\frac{N}{n\left(t\right)+1}\right)
+$$
 
 - N：文档集中的总文档数
 - n(t)：包含词 t 的文档数量
@@ -72,7 +76,9 @@ $$IDF\left(t\right)=\log_{}\left(\frac{N}{n\left(t\right)+1}\right)$$
 
 **变体（BM 25 中使用）**：
 
-$$IDF\left(t\right)=\log\left(1+\frac{N-n\left(t\right)+0.5}{n\left(t\right)+0.5}\right)$$
+$$
+IDF\left(t\right)=\log\left(1+\frac{N-n\left(t\right)+0.5}{n\left(t\right)+0.5}\right)
+$$
 
 > 示例：总文档数 N = 1000，包含“全文检索”的文档有 50 篇，则 IDF ≈ log(1000/51) ≈ 1.29；而包含“的”的文档有 990 篇，IDF ≈ log(1000/991) ≈ 0.004，几乎无区分度。
 
@@ -87,7 +93,9 @@ TF‑IDF 综合了词频（局部重要性）和逆文档频率（全局独特�
 
 **公式**：
 
-$${TF\text {-}IDF}\left(t,d\right)=TF\left(t,d\right)\cdot IDF\left(t\right)$$
+$$
+{TF\text {-}IDF}\left(t,d\right)=TF\left(t,d\right)\cdot IDF\left(t\right)
+$$
 
 **特点**：
 
@@ -108,7 +116,9 @@ BM 25 是目前 **全文检索中最主流的排序算法**，被 Elasticsearch�
 
 ### 5.1 BM 25 公式
 
-$$score\left(D,Q\right)=\sum_{i=1}^{n}IDF\left(t_{i}\right)\cdot\frac{f\left(t_{i},D\right)\cdot\left(k1+1\right)}{f\left(t_{i},D\right)+k1\cdot\left(1-b+b\cdot\frac{\left|D\right|}{avgd1}\right)}$$
+$$
+score\left(D,Q\right)=\sum_{i=1}^{n}IDF\left(t_{i}\right)\cdot\frac{f\left(t_{i},D\right)\cdot\left(k1+1\right)}{f\left(t_{i},D\right)+k1\cdot\left(1-b+b\cdot\frac{\left|D\right|}{avgd1}\right)}
+$$
 
 参数解释：
 
@@ -145,7 +155,7 @@ $$score\left(D,Q\right)=\sum_{i=1}^{n}IDF\left(t_{i}\right)\cdot\frac{f\left(t_{
 
 计算 IDF：
 
-```
+```python
 IDF(全文检索) = log(1 + (100-10+0.5)/(10+0.5)) = log(1 + 90.5/10.5) ≈ log(9.62) ≈ 0.983
 IDF(效率) = log(1 + (100-20+0.5)/(20+0.5)) = log(1 + 80.5/20.5) ≈ log(4.93) ≈ 0.693
 ```
@@ -157,7 +167,7 @@ IDF(效率) = log(1 + (100-20+0.5)/(20+0.5)) = log(1 + 80.5/20.5) ≈ log(4.93) 
 
 总分：
 
-```
+```python
 score = 0.983×0.652 + 0.693×0.652 = (0.983+0.693)×0.652 ≈ 1.676×0.652 ≈ 1.093
 ```
 

@@ -194,17 +194,17 @@ Coze 工作流中的数据库节点支持：
 
 ![](https://raw.githubusercontent.com/1228chl/Learning-AI-Large-Models-Notes/master/Assets/Image/AI-Large-Modlels-Notes/Agent/Coze/03Coze细节（课堂版）/1.4.1.3-4.png)
 
-![](https://raw.githubusercontent.com/1228chl/Learning-AI-Large-Models-Notes/master/Assets/Image/20260517T112830623Z.png)
+![](https://raw.githubusercontent.com/1228chl/Learning-AI-Large-Models-Notes/master/Assets/Image/AI-Large-Modlels-Notes/Agent/Coze/03Coze细节（课堂版）/1.4.1.3-5.png)
 
-![](https://raw.githubusercontent.com/1228chl/Learning-AI-Large-Models-Notes/master/Assets/Image/20260517T112841714Z.png)
+![](https://raw.githubusercontent.com/1228chl/Learning-AI-Large-Models-Notes/master/Assets/Image/AI-Large-Modlels-Notes/Agent/Coze/03Coze细节（课堂版）/1.4.1.3-6.png)
 
-![](https://raw.githubusercontent.com/1228chl/Learning-AI-Large-Models-Notes/master/Assets/Image/20260517T112852497Z.png)
+![](https://raw.githubusercontent.com/1228chl/Learning-AI-Large-Models-Notes/master/Assets/Image/AI-Large-Modlels-Notes/Agent/Coze/03Coze细节（课堂版）/1.4.1.3-7.png)
 
-![](https://raw.githubusercontent.com/1228chl/Learning-AI-Large-Models-Notes/master/Assets/Image/20260517T112904969Z.png)
+![](https://raw.githubusercontent.com/1228chl/Learning-AI-Large-Models-Notes/master/Assets/Image/AI-Large-Modlels-Notes/Agent/Coze/03Coze细节（课堂版）/1.4.1.3-8.png)
 
-![](https://raw.githubusercontent.com/1228chl/Learning-AI-Large-Models-Notes/master/Assets/Image/20260517T112919507Z.png)
+![](https://raw.githubusercontent.com/1228chl/Learning-AI-Large-Models-Notes/master/Assets/Image/AI-Large-Modlels-Notes/Agent/Coze/03Coze细节（课堂版）/1.4.1.3-9.png)
 
-![](https://raw.githubusercontent.com/1228chl/Learning-AI-Large-Models-Notes/master/Assets/Image/20260517T112928498Z.png)
+![](https://raw.githubusercontent.com/1228chl/Learning-AI-Large-Models-Notes/master/Assets/Image/AI-Large-Modlels-Notes/Agent/Coze/03Coze细节（课堂版）/1.4.1.3-10.png)
 
 **性能优化建议**：
 
@@ -213,13 +213,13 @@ Coze 工作流中的数据库节点支持：
 - 将联表查询改成单表查询，或使用视图
 - 预计算常用指标，直接返回已处理好的数据
 
-![](https://raw.githubusercontent.com/1228chl/Learning-AI-Large-Models-Notes/master/Assets/Image/20260517T112945470Z.png)
+![](https://raw.githubusercontent.com/1228chl/Learning-AI-Large-Models-Notes/master/Assets/Image/AI-Large-Modlels-Notes/Agent/Coze/03Coze细节（课堂版）/1.4.1.3-11.png)
 
-![](https://raw.githubusercontent.com/1228chl/Learning-AI-Large-Models-Notes/master/Assets/Image/20260517T113020250Z.png)
+![](https://raw.githubusercontent.com/1228chl/Learning-AI-Large-Models-Notes/master/Assets/Image/AI-Large-Modlels-Notes/Agent/Coze/03Coze细节（课堂版）/1.4.1.3-12.png)
 
-![](https://raw.githubusercontent.com/1228chl/Learning-AI-Large-Models-Notes/master/Assets/Image/20260517T113028199Z.png)
+![](https://raw.githubusercontent.com/1228chl/Learning-AI-Large-Models-Notes/master/Assets/Image/AI-Large-Modlels-Notes/Agent/Coze/03Coze细节（课堂版）/1.4.1.3-13.png)
 
-![](https://raw.githubusercontent.com/1228chl/Learning-AI-Large-Models-Notes/master/Assets/Image/20260517T113035648Z.png)
+![](https://raw.githubusercontent.com/1228chl/Learning-AI-Large-Models-Notes/master/Assets/Image/AI-Large-Modlels-Notes/Agent/Coze/03Coze细节（课堂版）/1.4.1.3-14.png)
 
 ---
 
@@ -227,7 +227,9 @@ Coze 工作流中的数据库节点支持：
 
 用于将循环或分支中的多个结果合并成一个变量。
 
-![](https://raw.githubusercontent.com/1228chl/Learning-AI-Large-Models-Notes/master/Assets/Image/20260517T113049970Z.png) ![](https://raw.githubusercontent.com/1228chl/Learning-AI-Large-Models-Notes/master/Assets/Image/20260517T113059832Z.png)
+![](https://raw.githubusercontent.com/1228chl/Learning-AI-Large-Models-Notes/master/Assets/Image/AI-Large-Modlels-Notes/Agent/Coze/03Coze细节（课堂版）/1.4.1.4-1.png)
+
+![](https://raw.githubusercontent.com/1228chl/Learning-AI-Large-Models-Notes/master/Assets/Image/AI-Large-Modlels-Notes/Agent/Coze/03Coze细节（课堂版）/1.4.1.4-2.png)
 
 ---
 
@@ -235,9 +237,9 @@ Coze 工作流中的数据库节点支持：
 
 当内置的数据库节点不满足需求时，可以编写原生 SQL 语句执行复杂查询（如多表 JOIN、子查询、窗口函数等）。
 
-![](https://raw.githubusercontent.com/1228chl/Learning-AI-Large-Models-Notes/master/Assets/Image/20260517T113112577Z.png)
+![](https://raw.githubusercontent.com/1228chl/Learning-AI-Large-Models-Notes/master/Assets/Image/AI-Large-Modlels-Notes/Agent/Coze/03Coze细节（课堂版）/1.4.1.5-1.png)
 
-![](https://raw.githubusercontent.com/1228chl/Learning-AI-Large-Models-Notes/master/Assets/Image/20260517T113119464Z.png)
+![](https://raw.githubusercontent.com/1228chl/Learning-AI-Large-Models-Notes/master/Assets/Image/AI-Large-Modlels-Notes/Agent/Coze/03Coze细节（课堂版）/1.4.1.5-2.png)
 
 ---
 
@@ -256,7 +258,7 @@ Coze 平台集成了多种多模态节点。
 
 根据文本描述生成图片。
 
-![](https://raw.githubusercontent.com/1228chl/Learning-AI-Large-Models-Notes/master/Assets/Image/20260517T113131594Z.png)
+![](https://raw.githubusercontent.com/1228chl/Learning-AI-Large-Models-Notes/master/Assets/Image/AI-Large-Modlels-Notes/Agent/Coze/03Coze细节（课堂版）/1.5.1.1-1.png)
 
 ---
 
@@ -264,7 +266,7 @@ Coze 平台集成了多种多模态节点。
 
 对输入的低质量图片进行增强、去噪、超分辨率等处理。
 
-![](https://raw.githubusercontent.com/1228chl/Learning-AI-Large-Models-Notes/master/Assets/Image/20260517T113142461Z.png)
+![](https://raw.githubusercontent.com/1228chl/Learning-AI-Large-Models-Notes/master/Assets/Image/AI-Large-Modlels-Notes/Agent/Coze/03Coze细节（课堂版）/1.5.1.2-1.png)
 
 ---
 
@@ -272,7 +274,7 @@ Coze 平台集成了多种多模态节点。
 
 Automatic Speech Recognition，将语音转化为文字。
 
-![](https://raw.githubusercontent.com/1228chl/Learning-AI-Large-Models-Notes/master/Assets/Image/20260517T113149442Z.png)
+![](https://raw.githubusercontent.com/1228chl/Learning-AI-Large-Models-Notes/master/Assets/Image/AI-Large-Modlels-Notes/Agent/Coze/03Coze细节（课堂版）/1.5.1.3-1.png)
 
 ---
 
@@ -280,7 +282,7 @@ Automatic Speech Recognition，将语音转化为文字。
 
 Text-to-Speech，将文本信息转化为语音。
 
-![](https://raw.githubusercontent.com/1228chl/Learning-AI-Large-Models-Notes/master/Assets/Image/20260517T113156723Z.png)
+![](https://raw.githubusercontent.com/1228chl/Learning-AI-Large-Models-Notes/master/Assets/Image/AI-Large-Modlels-Notes/Agent/Coze/03Coze细节（课堂版）/1.5.1.4-1.png)
 
 ---
 
@@ -288,7 +290,7 @@ Text-to-Speech，将文本信息转化为语音。
 
 通过文本描述或参考图生成视频。**注意**：此节点为付费节点，具体费用需查看节点文档。
 
-![](https://raw.githubusercontent.com/1228chl/Learning-AI-Large-Models-Notes/master/Assets/Image/20260517T113207295Z.png)
+![](https://raw.githubusercontent.com/1228chl/Learning-AI-Large-Models-Notes/master/Assets/Image/AI-Large-Modlels-Notes/Agent/Coze/03Coze细节（课堂版）/1.5.1.5-1.png)
 
 ---
 
@@ -302,7 +304,7 @@ Coze 工作流中的循环节点支持三种类型：
 2. **指定循环次数**：固定次数的循环（类似 for i in range）
 3. **无限循环**：需要手动设置退出条件，谨慎使用
 
-![](https://raw.githubusercontent.com/1228chl/Learning-AI-Large-Models-Notes/master/Assets/Image/20260517T113215806Z.png)
+![](https://raw.githubusercontent.com/1228chl/Learning-AI-Large-Models-Notes/master/Assets/Image/AI-Large-Modlels-Notes/Agent/Coze/03Coze细节（课堂版）/1.6.1-1.png)
 
 ---
 
@@ -337,7 +339,7 @@ Coze 工作流中的循环节点支持三种类型：
 
 ### 12. 技术架构图
 
-![](https://raw.githubusercontent.com/1228chl/Learning-AI-Large-Models-Notes/master/Assets/Image/20260517T113340669Z.png)
+![](https://raw.githubusercontent.com/1228chl/Learning-AI-Large-Models-Notes/master/Assets/Image/AI-Large-Modlels-Notes/Agent/Coze/03Coze细节（课堂版）/1.7.3-1.png)
 
 **架构说明**：
 
@@ -901,13 +903,13 @@ Coze 工作流中的循环节点支持三种类型：
 - **个人访问令牌（PAT）**：在 Coze 平台后台创建
 - **Bot ID**：进入项目 → 选择智能体 → 在 URL 中获取
 
-![](https://raw.githubusercontent.com/1228chl/Learning-AI-Large-Models-Notes/master/Assets/Image/20260517T115130120Z.png)
+![](https://raw.githubusercontent.com/1228chl/Learning-AI-Large-Models-Notes/master/Assets/Image/AI-Large-Modlels-Notes/Agent/Coze/03Coze细节（课堂版）/1.7.7.1-1.png)
 
-![](https://raw.githubusercontent.com/1228chl/Learning-AI-Large-Models-Notes/master/Assets/Image/20260517T115142846Z.png) 
+![](https://raw.githubusercontent.com/1228chl/Learning-AI-Large-Models-Notes/master/Assets/Image/AI-Large-Modlels-Notes/Agent/Coze/03Coze细节（课堂版）/1.7.7.1-2.png)
 
-![](https://raw.githubusercontent.com/1228chl/Learning-AI-Large-Models-Notes/master/Assets/Image/20260517T115155704Z.png)
+![](https://raw.githubusercontent.com/1228chl/Learning-AI-Large-Models-Notes/master/Assets/Image/AI-Large-Modlels-Notes/Agent/Coze/03Coze细节（课堂版）/1.7.7.1-3.png)
 
-![](https://raw.githubusercontent.com/1228chl/Learning-AI-Large-Models-Notes/master/Assets/Image/20260517T115215030Z.png)
+![](https://raw.githubusercontent.com/1228chl/Learning-AI-Large-Models-Notes/master/Assets/Image/AI-Large-Modlels-Notes/Agent/Coze/03Coze细节（课堂版）/1.7.7.1-4.png)
 
 ---
 
@@ -925,7 +927,7 @@ Coze 工作流中的循环节点支持三种类型：
   - 无上传则返回固定话术
 - 输出格式：无特定格式
 
-![](https://raw.githubusercontent.com/1228chl/Learning-AI-Large-Models-Notes/master/Assets/Image/20260517T115226475Z.png)
+![](https://raw.githubusercontent.com/1228chl/Learning-AI-Large-Models-Notes/master/Assets/Image/AI-Large-Modlels-Notes/Agent/Coze/03Coze细节（课堂版）/1.7.7.2-1.png)
 
 ---
 
@@ -1081,7 +1083,7 @@ if __name__ == '__main__':
 
 在工作流中可以在耗时节点之间加入输出节点，提示用户“正在处理中...”，避免用户因等待而焦虑。
 
-![](https://raw.githubusercontent.com/1228chl/Learning-AI-Large-Models-Notes/master/Assets/Image/20260517T115418969Z.png)
+![](https://raw.githubusercontent.com/1228chl/Learning-AI-Large-Models-Notes/master/Assets/Image/AI-Large-Modlels-Notes/Agent/Coze/03Coze细节（课堂版）/1.7.8.1-1.png)
 
 ---
 
@@ -1089,7 +1091,7 @@ if __name__ == '__main__':
 
 整合循环中的元素，减少重复计算。
 
-![](https://raw.githubusercontent.com/1228chl/Learning-AI-Large-Models-Notes/master/Assets/Image/20260517T115409684Z.png)
+![](https://raw.githubusercontent.com/1228chl/Learning-AI-Large-Models-Notes/master/Assets/Image/AI-Large-Modlels-Notes/Agent/Coze/03Coze细节（课堂版）/1.7.8.2-1.png)
 
 ---
 
