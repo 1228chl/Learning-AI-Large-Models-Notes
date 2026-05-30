@@ -515,35 +515,90 @@ var MyPlugin = class extends import_obsidian.Plugin {
             const timestamp = new Date().toISOString().replace(/[-:.]/g, "");
             return `${timestamp}.${extension}`;
         }
+
+        const activeFile = this.app.workspace.getActiveFile();
+        if (!activeFile) {
+            const timestamp = new Date().toISOString().replace(/[-:.]/g, "");
+            return `${timestamp}.${extension}`;
+        }
+
+        const cache = this.app.metadataCache.getFileCache(activeFile);
+        const headings = cache?.headings;
+        if (!headings || headings.length === 0) {
+            const timestamp = new Date().toISOString().replace(/[-:.]/g, "");
+            return `${timestamp}.${extension}`;
+        }
+
         const cursor = editor.getCursor();
-        const currentLineNum = cursor.line;
-        const lines = editor.getValue().split('\n');
-        const headings = [];
-        const levelCounters = {};
-        for (let i = currentLineNum; i >= 0; i--) {
-            const line = lines[i];
-            const match = line.match(/^(#{1,6})\s+(.*)$/);
-            if (match) {
-                const level = match[1].length;
-                const title = match[2].trim();
-                if (!levelCounters[level]) levelCounters[level] = 0;
-                levelCounters[level]++;
-                headings.unshift({ level, title, index: levelCounters[level] });
+        const cursorLine = cursor.line;
+
+        // 找到光标所在的标题（最后一个行号 ≤ 光标行号的标题）
+        let currentHeading = null;
+        for (let i = headings.length - 1; i >= 0; i--) {
+            const heading = headings[i];
+            const headingLine = heading.position.start.line;
+            if (headingLine <= cursorLine) {
+                currentHeading = heading;
+                break;
             }
         }
-        const hierarchyPath = headings.map(h => h.index).join('.');
-        if (!hierarchyPath) {
-            const fallbackPath = "root";
-            const notePath = this.app.workspace.getActiveFile()?.path || 'unknown';
-            const counter = this.getNextImageCounter(notePath, fallbackPath);
-            const safeBasename = noteBasename.replace(/[\\/:*?"<>|]/g, '-');
-            return `${safeBasename}-${fallbackPath}-${counter}.${extension}`;
+
+        if (!currentHeading) {
+            const notePath = activeFile.path;
+            const counter = await this.getNextImageCounter(notePath, "root");
+            return `root-${counter}.${extension}`;
         }
-        const notePath = this.app.workspace.getActiveFile()?.path || 'unknown';
-        const counter = this.getNextImageCounter(notePath, hierarchyPath);
-        const safeBasename = noteBasename.replace(/[\\/:*?"<>|]/g, '-');
-        const safeHierarchy = hierarchyPath.replace(/[^0-9.]/g, '');
-        return `${safeBasename}-${safeHierarchy}-${counter}.${extension}`;
+
+        // ---------- 核心：为每个标题分配正确的大纲编号 ----------
+        // 使用堆栈方式，每个标题存储其编号数组
+        const counters = [];          // 存储当前层级的计数器值
+        let targetPath = null;
+
+        for (let i = 0; i < headings.length; i++) {
+            const h = headings[i];
+            const level = h.level;
+
+            // 调整计数器长度：如果当前级别小于等于当前深度，则截断到 level-1
+            if (counters.length >= level) {
+                counters.length = level - 1;
+            }
+            // 确保长度至少为 level
+            while (counters.length < level) {
+                counters.push(0);
+            }
+            // 当前层级计数 +1
+            counters[level - 1]++;
+
+            // 生成路径字符串（点分隔，只包含已确定的层级）
+            const pathStr = counters.slice(0, level).join('.');
+
+            // 如果当前标题就是光标所在的标题，记录路径
+            if (h === currentHeading) {
+                targetPath = pathStr;
+                break;
+            }
+        }
+
+        if (!targetPath) {
+            // 未找到（理论上不会）
+            const timestamp = new Date().toISOString().replace(/[-:.]/g, "");
+            return `${timestamp}.${extension}`;
+        }
+
+        // ---------- 可选：限制最大深度 ----------
+        const maxDepth = this.settings.maxHeadingDepth || 3;
+        const parts = targetPath.split('.');
+        if (parts.length > maxDepth) {
+            targetPath = parts.slice(0, maxDepth).join('.');
+        }
+
+        // 获取该路径下的图片计数器
+        const notePath = activeFile.path;
+        const counter = await this.getNextImageCounter(notePath, targetPath);
+
+        // 生成最终文件名（格式：层级路径-计数器.扩展名）
+        const safeHierarchy = targetPath.replace(/[^0-9.]/g, '');
+        return `${safeHierarchy}-${counter}.${extension}`;
     }
 
     // ========== 上传图片到 GitHub ==========
