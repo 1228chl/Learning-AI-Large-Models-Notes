@@ -151,6 +151,8 @@ $$
 ```python
 import torch
 import matplotlib.pyplot as plt
+plt.rcParams['font.sans-serif'] = ['Microsoft YaHei']  
+plt.rcParams['axes.unicode_minus'] = False
 
 # 创建画布
 _, axes = plt.subplots(1, 2, figsize=(12, 4))
@@ -172,6 +174,8 @@ axes[1].set_title('Sigmoid 导数图像')
 plt.show()
 ```
 
+绘图：
+![[ANN完整拓展+-1.png]]
 ---
 
 #### 2.2 Tanh 激活函数
