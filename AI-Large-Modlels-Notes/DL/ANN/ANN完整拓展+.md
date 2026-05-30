@@ -176,7 +176,7 @@ plt.show()
 
 绘图：
 
-![663](https://raw.githubusercontent.com/1228chl/Learning-AI-Large-Models-Notes/master/Assets/Image/20260530T022848855Z.png)
+
 
 ---
 
