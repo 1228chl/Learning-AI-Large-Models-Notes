@@ -186,7 +186,6 @@ Coze 工作流中的数据库节点支持：
 - **更新（UPDATE）**：修改已有记录
 - **自定义 SQL**：复杂查询时可手写 SQL
 
-
 ![](https://raw.githubusercontent.com/1228chl/Learning-AI-Large-Models-Notes/master/Assets/Image/AI-Large-Modlels-Notes/Agent/Coze/03Coze细节（课堂版）/1.4.1.3-1.png)
 
 ![](https://raw.githubusercontent.com/1228chl/Learning-AI-Large-Models-Notes/master/Assets/Image/AI-Large-Modlels-Notes/Agent/Coze/03Coze细节（课堂版）/1.4.1.3-2.png)
@@ -194,6 +193,7 @@ Coze 工作流中的数据库节点支持：
 > ![](https://raw.githubusercontent.com/1228chl/Learning-AI-Large-Models-Notes/master/Assets/Image/AI-Large-Modlels-Notes/Agent/Coze/03Coze细节（课堂版）/1.4.1.3-3.png)
 
 ![](https://raw.githubusercontent.com/1228chl/Learning-AI-Large-Models-Notes/master/Assets/Image/AI-Large-Modlels-Notes/Agent/Coze/03Coze细节（课堂版）/1.4.1.3-4.png)
+
 ![](https://raw.githubusercontent.com/1228chl/Learning-AI-Large-Models-Notes/master/Assets/Image/20260517T112830623Z.png)
 
 ![](https://raw.githubusercontent.com/1228chl/Learning-AI-Large-Models-Notes/master/Assets/Image/20260517T112841714Z.png)
