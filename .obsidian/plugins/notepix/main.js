@@ -129,7 +129,8 @@ const DEFAULT_SETTINGS = {
     autoDeleteEnabled: false,
     confirmBeforeDelete: true,
     // 图片计数器持久化
-    imageCounters: {}    // { "笔记路径|标题层级路径": 当前序号 }
+    imageCounters: {},    // { "笔记路径|标题层级路径": 当前序号 }
+    imageUrlType: 'raw',   // 'raw' 或 'jsdelivr'，用于公开仓库的链接格式
 };
 
 // ========== 主插件类 ==========
@@ -619,7 +620,13 @@ var MyPlugin = class extends import_obsidian.Plugin {
                     finalUrl = `obsidian://notepix/v2/${encOwner}/${encRepo}/${encBranch}/${encPath}`;
                     new import_obsidian.Notice("检测到私有仓库，已创建私有图片链接。");
                 } else {
-                    finalUrl = `https://raw.githubusercontent.com/${this.settings.githubUser}/${this.settings.repoName}/${this.settings.branchName}/${filePath}`;
+                    //finalUrl = `https://raw.githubusercontent.com/${this.settings.githubUser}/${this.settings.repoName}/${this.settings.branchName}/${filePath}`;
+                    //finalUrl = `https://cdn.jsdelivr.net/gh/${this.settings.githubUser}/${this.settings.repoName}@${this.settings.branchName}/${filePath}`;
+                    if (this.settings.imageUrlType === 'jsdelivr') {
+                        finalUrl = `https://cdn.jsdelivr.net/gh/${this.settings.githubUser}/${this.settings.repoName}@${this.settings.branchName}/${filePath}`;
+                    } else {
+                        finalUrl = `https://raw.githubusercontent.com/${this.settings.githubUser}/${this.settings.repoName}/${this.settings.branchName}/${filePath}`;
+                    }
                     if (detectedPrivacy === 'unknown') new import_obsidian.Notice("无法检测仓库隐私，使用公共 URL 作为后备。");
                 }
             } else {
@@ -862,6 +869,83 @@ var MyPlugin = class extends import_obsidian.Plugin {
             else await this.saveImageLocally(imageFile);
         }
     }
+    /**
+     * 处理拖拽悬停（必须阻止默认行为才能成为有效的放置目标）
+     */
+    handleDragOver(evt) {
+        evt.preventDefault();
+        evt.stopPropagation();
+        evt.dataTransfer.dropEffect = "copy";
+    }
+
+    /**
+     * 处理拖拽放置
+     */
+    async handleDrop(evt, view) {
+        evt.preventDefault();
+        evt.stopPropagation();
+        
+        // 获取拖拽的文件列表
+        const files = evt.dataTransfer?.files;
+        if (!files || files.length === 0) return;
+        
+        // 找到第一个图片文件
+        const imageFile = Array.from(files).find(file => file.type.startsWith("image/"));
+        if (!imageFile) return;
+        
+        // 复用粘贴图片的上传逻辑（直接上传，不需要额外确认）
+        await this.uploadDroppedImage(imageFile, view);
+    }
+
+    /**
+     * 处理拖拽放入的图片（直接上传，与粘贴行为类似）
+     */
+    async uploadDroppedImage(imageFile, view) {
+        const arrayBuffer = await imageFile.arrayBuffer();
+        if (!view) {
+            view = this.app.workspace.getActiveViewOfType(import_obsidian.MarkdownView);
+            if (!view) {
+                new import_obsidian.Notice("无法处理图片：没有活动的编辑器。");
+                return;
+            }
+        }
+        
+        const uploadFolder = (this.settings.uploadImageFolder || 'notepix-uploads').replace(/\\\\/g, "/").replace(/^\/+|\/+$/g, "");
+        try { if (uploadFolder) await this.app.vault.createFolder(uploadFolder); } catch { }
+        
+        const noteName = view.file ? view.file.basename : 'Untitled';
+        const extension = imageFile.name.split('.').pop() || 'png';
+        let i = 1, newFilePath;
+        do {
+            newFilePath = uploadFolder ? `${uploadFolder}/${noteName}-${i}.${extension}` : `${noteName}-${i}.${extension}`;
+            i++;
+        } while (await this.app.vault.adapter.exists(newFilePath));
+        
+        this.markFileAsUserApproved(newFilePath);
+        let newFile;
+        try {
+            newFile = await this.app.vault.createBinary(newFilePath, arrayBuffer);
+        } catch (e) {
+            this.consumeUserApprovedUpload(newFilePath);
+            throw e;
+        }
+        if (newFile.path !== newFilePath) this.markFileAsUserApproved(newFile.path);
+        
+        // 插入占位符（拖拽后需要将图片插入到光标位置）
+        const editor = view.editor;
+        const cursor = editor.getCursor();
+        const placeholderText = `![[${newFile.name}]]`;
+        editor.replaceRange(placeholderText, cursor);
+        
+        const sourcePath = view.file?.path || "";
+        this.recordPendingLinkPlaceholder(newFile.path, placeholderText, sourcePath);
+        this.recordPendingLinkPlaceholder(newFile.name, placeholderText, sourcePath);
+        
+        // 立即上传（参照修正后的逻辑）
+        if (this.settings.autoUpload !== false) {
+            await this.handleImageUpload(newFile, false, sourcePath);
+        }
+    }
 
     async uploadPastedImage(imageFile) {
         const arrayBuffer = await imageFile.arrayBuffer();
@@ -893,7 +977,7 @@ var MyPlugin = class extends import_obsidian.Plugin {
         this.recordPendingLinkPlaceholder(newFile.path, placeholderText, sourcePath);
         this.recordPendingLinkPlaceholder(newFile.name, placeholderText, sourcePath);
         activeView.editor.replaceSelection(placeholderText);
-        if (!this.settings.autoUpload) await this.handleImageUpload(newFile, false, sourcePath);
+        if (this.settings.autoUpload) await this.handleImageUpload(newFile, false, sourcePath);
     }
 
     async saveImageLocally(imageFile) {
@@ -1358,21 +1442,37 @@ var MyPlugin = class extends import_obsidian.Plugin {
 
     getRemotePathFromImageSrc(src) {
         if (!src) return null;
+        // 私有链接
         const privateMatch = src.match(/obsidian:\/\/notepix\/v2\/[^\/]+\/[^\/]+\/[^\/]+\/(.+)$/);
         if (privateMatch) return decodeURIComponent(privateMatch[1]);
+        // 公开 Raw 链接
         const publicMatch = src.match(/https?:\/\/raw\.githubusercontent\.com\/[^\/]+\/[^\/]+\/[^\/]+\/(.+)$/);
         if (publicMatch) return decodeURIComponent(publicMatch[1]);
+        // jsDelivr CDN 链接
+        const cdnMatch = src.match(/https?:\/\/cdn\.jsdelivr\.net\/gh\/[^\/]+\/[^@]+@[^\/]+\/(.+)$/);
+        if (cdnMatch) return decodeURIComponent(cdnMatch[1]);
         return null;
     }
 
     extractNotepixImageLinks(content) {
         const links = [];
         if (!content) return links;
+        // 私有链接
         const privateRegex = /!\[[^\]]*\]\(obsidian:\/\/notepix\/v2\/[^\/]+\/[^\/]+\/[^\/]+\/([^)]+)\)/g;
         let match;
-        while ((match = privateRegex.exec(content)) !== null) links.push({ fullMatch: match[0], remotePath: match[1] });
-        const publicRegex = /!\[[^\]]*\]\(https?:\/\/raw\.githubusercontent\.com\/[^\/]+\/[^\/]+\/[^\/]+\/([^)]+)\)/g;
-        while ((match = publicRegex.exec(content)) !== null) links.push({ fullMatch: match[0], remotePath: match[1] });
+        while ((match = privateRegex.exec(content)) !== null) {
+            links.push({ fullMatch: match[0], remotePath: match[1] });
+        }
+        // 公开 Raw 链接 (GitHub raw)
+        const publicRawRegex = /!\[[^\]]*\]\(https?:\/\/raw\.githubusercontent\.com\/[^\/]+\/[^\/]+\/[^\/]+\/([^)]+)\)/g;
+        while ((match = publicRawRegex.exec(content)) !== null) {
+            links.push({ fullMatch: match[0], remotePath: match[1] });
+        }
+        // 新增：jsDelivr CDN 链接
+        const cdnRegex = /!\[[^\]]*\]\(https?:\/\/cdn\.jsdelivr\.net\/gh\/[^\/]+\/[^@]+@[^\/]+\/([^)]+)\)/g;
+        while ((match = cdnRegex.exec(content)) !== null) {
+            links.push({ fullMatch: match[0], remotePath: match[1] });
+        }
         return links;
     }
 
@@ -1453,6 +1553,36 @@ var MyPlugin = class extends import_obsidian.Plugin {
         this.registerMarkdownPostProcessor(this.postProcessImages.bind(this));
         this.registerEvent(this.app.workspace.on("editor-paste", this.handlePaste.bind(this)));
 
+        // 注册拖拽上传事件
+        const attachDragEvents = (leaf) => {
+            const view = leaf?.view;
+            if (!(view instanceof import_obsidian.MarkdownView)) return;
+            
+            // 监听编辑器的内容区域
+            const contentEl = view.contentEl;
+            if (!contentEl) return;
+            
+            const dragOverHandler = (evt) => this.handleDragOver(evt);
+            const dropHandler = (evt) => this.handleDrop(evt, view);
+            
+            contentEl.addEventListener("dragover", dragOverHandler);
+            contentEl.addEventListener("drop", dropHandler);
+            
+            // 插件卸载时自动移除（使用 register 清理）
+            this.register(() => {
+                contentEl.removeEventListener("dragover", dragOverHandler);
+                contentEl.removeEventListener("drop", dropHandler);
+            });
+        };
+
+        // 为当前活动叶子添加拖拽监听
+        const activeLeaf = this.app.workspace.activeLeaf;
+        if (activeLeaf) attachDragEvents(activeLeaf);
+
+        // 监听叶子切换，为新打开的笔记添加拖拽监听
+        this.registerEvent(this.app.workspace.on("active-leaf-change", attachDragEvents));
+        
+        
         // 文件创建监听（自动上传）
         this.registerEvent(this.app.vault.on("create", async (file) => {
             if (!(file instanceof import_obsidian.TFile)) return;
@@ -1467,6 +1597,14 @@ var MyPlugin = class extends import_obsidian.Plugin {
                 .map(s => (s || '').trim()).filter(Boolean)
                 .map(s => s.replace(/\\\\/g, "/").replace(/^\/+|\/+$/g, ""));
             if (localOnly.some(ign => filePathNorm === ign || filePathNorm.startsWith(ign + "/"))) return;
+            
+            // 【修复1】检查是否已手动批准（粘贴/拖拽已处理）
+            const alreadyConfirmed = this.consumeUserApprovedUpload(file.path);
+            if (alreadyConfirmed) {
+                // 已通过粘贴或拖拽手动上传，文件事件不再重复处理
+                return;
+            }
+
             if (!this.settings.autoUpload) return;
 
             const uploadNorm = (this.settings.uploadImageFolder || 'notepix-uploads').replace(/\\\\/g, "/").replace(/^\/+|\/+$/g, "");
@@ -1482,9 +1620,9 @@ var MyPlugin = class extends import_obsidian.Plugin {
             if (!(inUpload || inExtra || inAttach)) return;
 
             this.captureFilePlaceholder(file);
-            const alreadyConfirmed = this.consumeUserApprovedUpload(file.path);
-            const shouldPrompt = (this.settings.uploadOnPaste === 'ask') && !alreadyConfirmed;
-
+            
+            // 【修复2】询问模式下，不再依赖 alreadyConfirmed 来决定是否弹窗
+            const shouldPrompt = (this.settings.uploadOnPaste === 'ask');
             let sourceNotePath = null;
             const placeholderEntry = this.peekPendingLinkPlaceholder(file.path) || this.peekPendingLinkPlaceholder(file.name);
             if (placeholderEntry && placeholderEntry.sourcePath) sourceNotePath = placeholderEntry.sourcePath;
@@ -1818,6 +1956,28 @@ class GitHubUploaderSettingTab extends import_obsidian.PluginSettingTab {
                     this.plugin.settings.imageStorageStrategy = value;
                     await this.plugin.saveSettings();
                     this.display(); // 刷新界面
+                }));
+        
+        new import_obsidian.Setting(containerEl)
+            .setName("公开图片链接格式")
+            .setDesc("仅当仓库为公开时生效。jsDelivr CDN 在国内访问更快，但有24小时缓存；GitHub Raw 无缓存但速度较慢。")
+            .addDropdown(dropdown => dropdown
+                .addOption('raw', 'GitHub Raw (原始链接)')
+                .addOption('jsdelivr', 'jsDelivr CDN (加速推荐)')
+                .setValue(this.plugin.settings.imageUrlType || 'raw')
+                .onChange(async (value) => {
+                    this.plugin.settings.imageUrlType = value;
+                    await this.plugin.saveSettings();
+        }));
+
+        new import_obsidian.Setting(containerEl)
+            .setName("自动上传监控图片")
+            .setDesc("当图片被放入监控文件夹（上传临时文件夹/额外监控文件夹/移动端附件文件夹）时，自动上传到 GitHub。关闭后图片将仅保存在本地。")
+            .addToggle(toggle => toggle
+                .setValue(this.plugin.settings.autoUpload)
+                .onChange(async (value) => {
+                    this.plugin.settings.autoUpload = value;
+                    await this.plugin.saveSettings();
                 }));
 
         if (this.plugin.settings.imageStorageStrategy === 'byNotePath') {

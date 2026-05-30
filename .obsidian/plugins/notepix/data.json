@@ -4,7 +4,9 @@
   "encryptedToken": "kjlqiYNOo2BbKYxspbNWLA==:s7gLoJA5wTZeahx7:f2DN8a6bPB08djhWrtluKPW1vEVBnhu/OgXqtH+ngUGGNCjKH3SlP+WtwCWIGgZWOmqRUSsPGbw=",
   "plainToken": "",
   "branchName": "master",
+  "imageStorageStrategy": "byNotePath",
   "folderPath": "Assets/Image/",
+  "byNotePathBaseFolder": "Assets/Image",
   "deleteLocal": true,
   "useEncryption": true,
   "repoVisibility": "auto",
@@ -20,9 +22,9 @@
     "Learning-AI-Large-Models-Notes/settings"
   ],
   "uploadOnPaste": "always",
+  "autoUpload": true,
   "localImageFolder": "Assets/NotePix-Local",
   "uploadImageFolder": "Assets/NotePix-Uploads",
-  "autoUpload": true,
   "extraWatchedFolders": "",
   "extraWatchedList": [],
   "localOnlyFolders": "",
@@ -33,6 +35,10 @@
   "lastPromptedRepo": "",
   "autoDeleteEnabled": true,
   "confirmBeforeDelete": true,
-  "imageStorageStrategy": "byNotePath",
-  "byNotePathBaseFolder": "Assets/Image"
+  "imageCounters": {
+    "AI-Large-Modlels-Notes/Agent/Coze/03Coze细节（课堂版）.md|1.1.1": 1,
+    "AI-Large-Modlels-Notes/Agent/Coze/03Coze细节（课堂版）.md|1.1.3.2.1.1": 1,
+    "AI-Large-Modlels-Notes/Agent/Coze/03Coze细节（课堂版）.md|1.1.3.2.1.2.1": 1
+  },
+  "imageUrlType": "jsdelivr"
 }
