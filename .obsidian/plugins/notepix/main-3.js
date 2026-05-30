@@ -115,9 +115,6 @@ var DEFAULT_SETTINGS = {
     lastPromptedRepo: '',
     autoDeleteEnabled: false,
     confirmBeforeDelete: true,
-    // NEW: Image storage strategy
-    imageStorageStrategy: 'global', // 'global' or 'byNotePath'
-    byNotePathBaseFolder: 'Assets/Image', // base folder when using byNotePath
 };
 var MyPlugin = class extends import_obsidian.Plugin {
     constructor() {
@@ -567,30 +564,17 @@ var MyPlugin = class extends import_obsidian.Plugin {
                 const alreadyConfirmed = this.consumeUserApprovedUpload(file.path);
                 const shouldPrompt = (this.settings.uploadOnPaste === 'ask') && !alreadyConfirmed;
 
-                // NEW: Retrieve source note path from pending placeholder (if any)
-                let sourceNotePath = null;
-                const placeholderEntry = this.peekPendingLinkPlaceholder(file.path) || this.peekPendingLinkPlaceholder(file.name);
-                if (placeholderEntry && placeholderEntry.sourcePath) {
-                    sourceNotePath = placeholderEntry.sourcePath;
-                } else {
-                    // Fallback: get currently active markdown view path
-                    const activeView = this.app.workspace.getActiveViewOfType(import_obsidian.MarkdownView);
-                    if (activeView && activeView.file) {
-                        sourceNotePath = activeView.file.path;
-                    }
-                }
-
                 if (shouldPrompt) {
                     const confirmed = await this.promptUploadConfirmation(file);
                     if (confirmed) {
-                        await this.handleImageUpload(file, false, sourceNotePath);
+                        await this.handleImageUpload(file);
                     } else {
                         await this.handleDeclinedUpload(file);
                     }
                     return;
                 }
 
-                await this.handleImageUpload(file, false, sourceNotePath);
+                await this.handleImageUpload(file);
             })
         );
 
@@ -602,8 +586,42 @@ var MyPlugin = class extends import_obsidian.Plugin {
                 this.checkRepoMismatchOnFileOpen(file);
             })
         );
+        // // 自动删除：监听文件修改（保存时触发）（有bug不用了）
+        // this.registerEvent(
+        //     this.app.vault.on("modify", async (file) => {
+        //         if (!this.settings.autoDeleteEnabled) return;
+        //         if (!(file instanceof import_obsidian.TFile) || file.extension !== "md") return;
 
-        // 右键菜单手动删除
+        //         const currentContent = await this.app.vault.read(file);
+        //         const oldContent = this.fileContentCache.get(file.path);
+        //         if (!oldContent) {
+        //             this.fileContentCache.set(file.path, currentContent);
+        //             return;
+        //         }
+        //         if (currentContent === oldContent) return;
+
+        //         const deleted = this.findDeletedImageLinks(oldContent, currentContent);
+        //         if (deleted.length === 0) {
+        //             this.fileContentCache.set(file.path, currentContent);
+        //             return;
+        //         }
+
+        //         for (const img of deleted) {
+        //             if (this.settings.confirmBeforeDelete) {
+        //                 const confirmModal = new ConfirmationModal(
+        //                     this.app,
+        //                     "Confirm Delete",
+        //                     `Delete ${img.remotePath} from GitHub?`
+        //                 );
+        //                 const confirmed = await confirmModal.open();
+        //                 if (!confirmed) continue;
+        //             }
+        //             await this.deleteFileFromGitHub(img.remotePath);
+        //         }
+        //         this.fileContentCache.set(file.path, currentContent);
+        //     })
+        // );
+                // 右键菜单手动删除
         this.registerEvent(
             this.app.workspace.on("editor-menu", (menu, editor, view) => {
                 const cursor = editor.getCursor();
@@ -833,7 +851,7 @@ var MyPlugin = class extends import_obsidian.Plugin {
 
         // If autoUpload is disabled, upload directly; else watcher will trigger and replace the link
         if (!this.settings.autoUpload) {
-            await this.handleImageUpload(newFile, false, sourcePath);
+            await this.handleImageUpload(newFile);
         }
     }
 
@@ -1008,7 +1026,7 @@ var MyPlugin = class extends import_obsidian.Plugin {
             });
             if (deleteResp.ok) {
                 new import_obsidian.Notice(`已从 GitHub 删除: ${fullPath}`);
-                // await this.deleteLocalBackupImage(remotePath);   // <-- 新增这一行
+                await this.deleteLocalBackupImage(remotePath);   // <-- 新增这一行
                 return true;
             } else {
                 const error = await deleteResp.json();
@@ -1022,33 +1040,33 @@ var MyPlugin = class extends import_obsidian.Plugin {
         }
     }
     // 删除本地备份目录中的对应文件
-    // async deleteLocalBackupImage(remotePath) {
-    //     if (!remotePath) return false;
-    //     // 从 remotePath 中提取文件名（例如 assets/20260515T130941441Z.png -> 20260515T130941441Z.png）
-    //     const parts = remotePath.split('/');
-    //     const fileName = parts[parts.length - 1];
-    //     if (!fileName) return false;
+    async deleteLocalBackupImage(remotePath) {
+        if (!remotePath) return false;
+        // 从 remotePath 中提取文件名（例如 assets/20260515T130941441Z.png -> 20260515T130941441Z.png）
+        const parts = remotePath.split('/');
+        const fileName = parts[parts.length - 1];
+        if (!fileName) return false;
 
-    //     const backupFolder = "Assets/Image-Backup";
-    //     const backupPath = `${backupFolder}/${fileName}`;
+        const backupFolder = "Assets/Image-Backup";
+        const backupPath = `${backupFolder}/${fileName}`;
 
-    //     try {
-    //         const file = this.app.vault.getAbstractFileByPath(backupPath);
-    //         if (file && file instanceof import_obsidian.TFile) {
-    //             await this.app.vault.delete(file);
-    //             console.log(`Deleted local backup: ${backupPath}`);
-    //             new import_obsidian.Notice(`已删除本地备份: ${fileName}`);
-    //             return true;
-    //         } else {
-    //             // 备份文件不存在，静默跳过
-    //             console.log(`Local backup not found: ${backupPath}`);
-    //             return false;
-    //         }
-    //     } catch (err) {
-    //         console.error(`Failed to delete local backup ${backupPath}:`, err);
-    //         return false;
-    //     }
-    // }
+        try {
+            const file = this.app.vault.getAbstractFileByPath(backupPath);
+            if (file && file instanceof import_obsidian.TFile) {
+                await this.app.vault.delete(file);
+                console.log(`Deleted local backup: ${backupPath}`);
+                new import_obsidian.Notice(`已删除本地备份: ${fileName}`);
+                return true;
+            } else {
+                // 备份文件不存在，静默跳过
+                console.log(`Local backup not found: ${backupPath}`);
+                return false;
+            }
+        } catch (err) {
+            console.error(`Failed to delete local backup ${backupPath}:`, err);
+            return false;
+        }
+    }
 
     // Unified token getter: returns a usable GitHub token based on settings/state.
     // - If a decrypted token is already cached in memory, returns it.
@@ -1245,51 +1263,7 @@ var MyPlugin = class extends import_obsidian.Plugin {
         return choice;
     }
 
-    // NEW: Generate remote path for image based on storage strategy
-    generateImageRemotePath(noteFilePath, imageFileName) {
-        if (this.settings.imageStorageStrategy !== 'byNotePath') {
-            // Global mode: use configured folderPath
-            return joinRepoPath(this.settings.folderPath, imageFileName);
-        }
-
-        // By-note-path mode
-        const baseFolder = (this.settings.byNotePathBaseFolder || 'Assets/Image').replace(/\\/g, '/').replace(/^\/+|\/+$/g, '');
-        if (!noteFilePath) {
-            // Fallback if no note path available
-            return joinRepoPath(baseFolder, imageFileName);
-        }
-
-        // Normalize note path (vault-relative, e.g. "DL/ANN.md")
-        const normalizedNotePath = this.normalizeVaultPath(noteFilePath);
-        if (!normalizedNotePath) {
-            return joinRepoPath(baseFolder, imageFileName);
-        }
-
-        // Split directory and basename
-        const lastSlash = normalizedNotePath.lastIndexOf('/');
-        let noteDir = '';
-        let noteBase = normalizedNotePath;
-        if (lastSlash >= 0) {
-            noteDir = normalizedNotePath.substring(0, lastSlash);
-            noteBase = normalizedNotePath.substring(lastSlash + 1);
-        }
-        // Remove extension from basename
-        const extIndex = noteBase.lastIndexOf('.');
-        if (extIndex > 0) {
-            noteBase = noteBase.substring(0, extIndex);
-        }
-
-        // Build relative subpath: baseFolder / noteDir / noteBase
-        const parts = [];
-        if (baseFolder) parts.push(baseFolder);
-        if (noteDir) parts.push(noteDir);
-        if (noteBase) parts.push(noteBase);
-
-        const subfolder = parts.join('/');
-        return joinRepoPath(subfolder, imageFileName);
-    }
-
-    async handleImageUpload(file, isPaste = false, sourceNotePath = null) {
+    async handleImageUpload(file, isPaste = false) {
         if (!this.settings.githubUser || !this.settings.repoName) {
             new import_obsidian.Notice("GitHub User and Repo Name must be configured.");
             return;
@@ -1302,22 +1276,8 @@ var MyPlugin = class extends import_obsidian.Plugin {
             const newFileName = `${timestamp}.${file.extension}`;
             const fileData = await (isPaste ? file.readBinary() : this.app.vault.readBinary(file));
 
-            // Determine the target remote path based on strategy and note source
-            let filePath;
-            if (sourceNotePath) {
-                filePath = this.generateImageRemotePath(sourceNotePath, newFileName);
-            } else {
-                // Fallback: try to get active note path
-                const activeView = this.app.workspace.getActiveViewOfType(import_obsidian.MarkdownView);
-                if (activeView && activeView.file) {
-                    filePath = this.generateImageRemotePath(activeView.file.path, newFileName);
-                } else {
-                    // Ultimate fallback: use global folderPath
-                    filePath = joinRepoPath(this.settings.folderPath, newFileName);
-                }
-            }
-
             const base64Data = arrayBufferToBase64(fileData);
+            const filePath = joinRepoPath(this.settings.folderPath, newFileName);
             const apiUrl = `https://api.github.com/repos/${this.settings.githubUser}/${this.settings.repoName}/contents/${filePath}`;
             const requestBody = {
                 message: `feat: Add image '${newFileName}' from Obsidian`,
@@ -1397,23 +1357,32 @@ var MyPlugin = class extends import_obsidian.Plugin {
 
             new import_obsidian.Notice(`${newFileName} uploaded successfully!`);
 
-            // // Backup: copy to Assets/Image-Backup with the remote filename
-            // const backupFolder = 'Assets/Image-Backup';
-            // await this.ensureFolderExists(backupFolder);
-            // const backupPath = `${backupFolder}/${newFileName}`;
-            // const backupExists = await this.app.vault.adapter.exists(backupPath);
-            // if (!backupExists) {
-            //     try {
-            //         const fileData = await this.app.vault.readBinary(file);
-            //         await this.app.vault.createBinary(backupPath, fileData);
-            //         new import_obsidian.Notice(`已备份到 ${backupPath}`);
-            //     } catch (e) {
-            //         console.error('备份失败', e);
-            //         new import_obsidian.Notice(`备份失败：${e.message}`);
-            //     }
-            // } else {
-            //     new import_obsidian.Notice(`备份文件已存在，跳过：${backupPath}`);
-            // }
+            // =========================================================================================================
+
+
+
+
+            // ========== 备份：复制一份到 Assets/Image-Backup，并重命名为云端文件名 ==========
+            const backupFolder = 'Assets/Image-Backup';
+            await this.ensureFolderExists(backupFolder);  // 确保文件夹存在（见下方辅助函数）
+            const backupPath = `${backupFolder}/${newFileName}`;
+            const backupExists = await this.app.vault.adapter.exists(backupPath);
+
+
+
+            // =========================================================================================================
+            if (!backupExists) {
+                try {
+                    const fileData = await this.app.vault.readBinary(file);
+                    await this.app.vault.createBinary(backupPath, fileData);
+                    new import_obsidian.Notice(`已备份到 ${backupPath}`);
+                } catch (e) {
+                    console.error('备份失败', e);
+                    new import_obsidian.Notice(`备份失败：${e.message}`);
+                }
+            } else {
+                new import_obsidian.Notice(`备份文件已存在，跳过：${backupPath}`);
+            }
 
             if (this.settings.deleteLocal && !isPaste && replacedLink) {
                 await this.app.vault.delete(file);
@@ -2192,40 +2161,10 @@ var GitHubUploaderSettingTab = class extends import_obsidian.PluginSettingTab {
             this.plugin.settings.branchName = value;
             await this.plugin.saveSettings();
         }));
-        
-        // NEW: Image storage strategy setting
-        new import_obsidian.Setting(containerEl)
-            .setName("Image storage strategy")
-            .setDesc("Global: all images go to the folder below. By Note Path: images are stored in subfolders matching the note's location (e.g., Assets/Image/DL/ANN/ for note DL/ANN.md).")
-            .addDropdown(dropdown => dropdown
-                .addOption('global', 'Global Folder')
-                .addOption('byNotePath', 'By Note Path')
-                .setValue(this.plugin.settings.imageStorageStrategy || 'global')
-                .onChange(async (value) => {
-                    this.plugin.settings.imageStorageStrategy = value;
-                    await this.plugin.saveSettings();
-                    this.display(); // refresh to show/hide relevant fields
-                }));
-        
-        if (this.plugin.settings.imageStorageStrategy === 'byNotePath') {
-            new import_obsidian.Setting(containerEl)
-                .setName("Base folder for by-note-path storage")
-                .setDesc("Images will be saved under this folder, followed by the note's directory and name (e.g., Assets/Image/DL/ANN/).")
-                .addText(text => text
-                    .setPlaceholder("Assets/Image")
-                    .setValue(this.plugin.settings.byNotePathBaseFolder || 'Assets/Image')
-                    .onChange(async (value) => {
-                        this.plugin.settings.byNotePathBaseFolder = value.replace(/\\/g, '/').replace(/^\/+|\/+$/g, '');
-                        await this.plugin.saveSettings();
-                    }));
-        } else {
-            // Global folder path (original setting)
-            new import_obsidian.Setting(containerEl).setName("Folder path in repository").addText((text) => text.setPlaceholder("assets/").setValue(this.plugin.settings.folderPath).onChange(async (value) => {
-                this.plugin.settings.folderPath = value.length > 0 && !value.endsWith("/") ? value + "/" : value;
-                await this.plugin.saveSettings();
-            }));
-        }
-        
+        new import_obsidian.Setting(containerEl).setName("Folder path in repository").addText((text) => text.setPlaceholder("assets/").setValue(this.plugin.settings.folderPath).onChange(async (value) => {
+            this.plugin.settings.folderPath = value.length > 0 && !value.endsWith("/") ? value + "/" : value;
+            await this.plugin.saveSettings();
+        }));
         new import_obsidian.Setting(containerEl).setName("Delete local file after upload").addToggle((toggle) => toggle.setValue(this.plugin.settings.deleteLocal).onChange(async (value) => {
             this.plugin.settings.deleteLocal = value;
             await this.plugin.saveSettings();
@@ -2728,6 +2667,17 @@ var GitHubUploaderSettingTab = class extends import_obsidian.PluginSettingTab {
                     });
                 });
         }
+        // // 自动删除开关
+        // new import_obsidian.Setting(containerEl)
+        //     .setName("Auto-delete images from GitHub")
+        //     .setDesc("When an image link is removed from a note, automatically delete the corresponding file from GitHub.")
+        //     .addToggle(toggle => toggle
+        //         .setValue(this.plugin.settings.autoDeleteEnabled)
+        //         .onChange(async (value) => {
+        //             this.plugin.settings.autoDeleteEnabled = value;
+        //             await this.plugin.saveSettings();
+        //         }));
+        
         // 删除前确认开关
         new import_obsidian.Setting(containerEl)
             .setName("Confirm before deletion")

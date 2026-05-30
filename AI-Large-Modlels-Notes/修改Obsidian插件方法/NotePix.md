@@ -576,3 +576,314 @@ this.register(() => {
 
     }
 ```
+
+---
+
+以下是针对原始 `main.js` 的所有**详细修改代码**，以 **diff**（修改前后对比）的形式列出。每个修改点均标注了原始代码位置（基于您提供的文件）以及修改后的完整代码块。
+
+---
+
+# 添加文档图片按文档位置进行存储
+
+## 修改点 1：`DEFAULT_SETTINGS` 增加两个新字段
+
+**原始代码**（约第 56-80 行）  
+
+```javascript
+var DEFAULT_SETTINGS = {
+    githubUser: "",
+    repoName: "",
+    encryptedToken: "",
+    plainToken: "",
+    branchName: "main",
+    folderPath: "assets/",
+    deleteLocal: false,
+    useEncryption: true,
+    repoVisibility: 'auto',
+    repoHistory: [],
+    uploadOnPaste: 'always',
+    localImageFolder: 'notepix-local',
+    uploadImageFolder: 'notepix-uploads',
+    autoUpload: true,
+    extraWatchedFolders: '',
+    extraWatchedList: [],
+    localOnlyFolders: '',
+    localOnlyList: [],
+    attachmentsFolderName: 'attachment',
+    integrateAttachmentsOnMobile: true,
+    lastPromptedAt: 0,
+    lastPromptedRepo: '',
+    autoDeleteEnabled: false,
+    confirmBeforeDelete: true,
+};
+```
+
+**修改后**  
+
+```javascript
+var DEFAULT_SETTINGS = {
+    githubUser: "",
+    repoName: "",
+    encryptedToken: "",
+    plainToken: "",
+    branchName: "main",
+    folderPath: "assets/",
+    deleteLocal: false,
+    useEncryption: true,
+    repoVisibility: 'auto',
+    repoHistory: [],
+    uploadOnPaste: 'always',
+    localImageFolder: 'notepix-local',
+    uploadImageFolder: 'notepix-uploads',
+    autoUpload: true,
+    extraWatchedFolders: '',
+    extraWatchedList: [],
+    localOnlyFolders: '',
+    localOnlyList: [],
+    attachmentsFolderName: 'attachment',
+    integrateAttachmentsOnMobile: true,
+    lastPromptedAt: 0,
+    lastPromptedRepo: '',
+    autoDeleteEnabled: false,
+    confirmBeforeDelete: true,
+    // NEW: Image storage strategy
+    imageStorageStrategy: 'global', // 'global' or 'byNotePath'
+    byNotePathBaseFolder: 'Assets/Image', // base folder when using byNotePath
+};
+```
+
+---
+
+## 修改点 2：新增 `generateImageRemotePath` 方法
+
+**插入位置**：在 `maybePromptRepoMismatch` 方法之后（约第 800-850 行区域，无原始代码，直接新增）
+
+**新增代码**  
+
+```javascript
+// NEW: Generate remote path for image based on storage strategy
+generateImageRemotePath(noteFilePath, imageFileName) {
+    if (this.settings.imageStorageStrategy !== 'byNotePath') {
+        // Global mode: use configured folderPath
+        return joinRepoPath(this.settings.folderPath, imageFileName);
+    }
+
+    // By-note-path mode
+    const baseFolder = (this.settings.byNotePathBaseFolder || 'Assets/Image').replace(/\\/g, '/').replace(/^\/+|\/+$/g, '');
+    if (!noteFilePath) {
+        // Fallback if no note path available
+        return joinRepoPath(baseFolder, imageFileName);
+    }
+
+    // Normalize note path (vault-relative, e.g. "DL/ANN.md")
+    const normalizedNotePath = this.normalizeVaultPath(noteFilePath);
+    if (!normalizedNotePath) {
+        return joinRepoPath(baseFolder, imageFileName);
+    }
+
+    // Split directory and basename
+    const lastSlash = normalizedNotePath.lastIndexOf('/');
+    let noteDir = '';
+    let noteBase = normalizedNotePath;
+    if (lastSlash >= 0) {
+        noteDir = normalizedNotePath.substring(0, lastSlash);
+        noteBase = normalizedNotePath.substring(lastSlash + 1);
+    }
+    // Remove extension from basename
+    const extIndex = noteBase.lastIndexOf('.');
+    if (extIndex > 0) {
+        noteBase = noteBase.substring(0, extIndex);
+    }
+
+    // Build relative subpath: baseFolder / noteDir / noteBase
+    const parts = [];
+    if (baseFolder) parts.push(baseFolder);
+    if (noteDir) parts.push(noteDir);
+    if (noteBase) parts.push(noteBase);
+
+    const subfolder = parts.join('/');
+    return joinRepoPath(subfolder, imageFileName);
+}
+```
+
+---
+
+## 修改点 3：修改 `handleImageUpload` 方法签名和内部实现
+
+**原始代码**（约第 850-950 行）  
+
+```javascript
+async handleImageUpload(file, isPaste = false) {
+    if (!this.settings.githubUser || !this.settings.repoName) {
+        new import_obsidian.Notice("GitHub User and Repo Name must be configured.");
+        return;
+    }
+    const token = await this.getToken();
+    if (!token) return;
+    const uploadNotice = new import_obsidian.Notice(`Uploading ${file.name} to GitHub...`, 0);
+    try {
+        const timestamp = new Date().toISOString().replace(/[-:.]/g, "");
+        const newFileName = `${timestamp}.${file.extension}`;
+        const fileData = await (isPaste ? file.readBinary() : this.app.vault.readBinary(file));
+
+        const base64Data = arrayBufferToBase64(fileData);
+        const filePath = joinRepoPath(this.settings.folderPath, newFileName);   // <-- 原始路径生成
+        // ... 后续上传逻辑
+```
+
+**修改后**  
+
+```javascript
+async handleImageUpload(file, isPaste = false, sourceNotePath = null) {   // <-- 新增参数
+    if (!this.settings.githubUser || !this.settings.repoName) {
+        new import_obsidian.Notice("GitHub User and Repo Name must be configured.");
+        return;
+    }
+    const token = await this.getToken();
+    if (!token) return;
+    const uploadNotice = new import_obsidian.Notice(`Uploading ${file.name} to GitHub...`, 0);
+    try {
+        const timestamp = new Date().toISOString().replace(/[-:.]/g, "");
+        const newFileName = `${timestamp}.${file.extension}`;
+        const fileData = await (isPaste ? file.readBinary() : this.app.vault.readBinary(file));
+
+        // Determine the target remote path based on strategy and note source
+        let filePath;
+        if (sourceNotePath) {
+            filePath = this.generateImageRemotePath(sourceNotePath, newFileName);
+        } else {
+            // Fallback: try to get active note path
+            const activeView = this.app.workspace.getActiveViewOfType(import_obsidian.MarkdownView);
+            if (activeView && activeView.file) {
+                filePath = this.generateImageRemotePath(activeView.file.path, newFileName);
+            } else {
+                // Ultimate fallback: use global folderPath
+                filePath = joinRepoPath(this.settings.folderPath, newFileName);
+            }
+        }
+
+        const base64Data = arrayBufferToBase64(fileData);
+        const apiUrl = `https://api.github.com/repos/${this.settings.githubUser}/${this.settings.repoName}/contents/${filePath}`;
+        // ... 后续上传逻辑（不变）
+```
+
+---
+
+## 修改点 4：修改 `vault.on("create")` 监听器，获取并传递源笔记路径
+
+**原始代码**（约第 280-350 行，`this.registerEvent(this.app.vault.on("create", ...))` 内部）
+
+在原始代码中，监听到图片文件创建后，直接调用 `this.handleImageUpload(file)`。
+
+**修改后**：在调用 `handleImageUpload` 之前，增加获取 `sourceNotePath` 的逻辑，并传递给该方法。
+
+```javascript
+// 在 this.registerEvent(this.app.vault.on("create", async (file) => { ... }) 内部
+// 找到调用 handleImageUpload 的位置（两处：shouldPrompt 分支和最后直接上传）
+
+// 修改前（两处类似）：
+await this.handleImageUpload(file);
+
+// 修改后：
+// NEW: Retrieve source note path from pending placeholder (if any)
+let sourceNotePath = null;
+const placeholderEntry = this.peekPendingLinkPlaceholder(file.path) || this.peekPendingLinkPlaceholder(file.name);
+if (placeholderEntry && placeholderEntry.sourcePath) {
+    sourceNotePath = placeholderEntry.sourcePath;
+} else {
+    // Fallback: get currently active markdown view path
+    const activeView = this.app.workspace.getActiveViewOfType(import_obsidian.MarkdownView);
+    if (activeView && activeView.file) {
+        sourceNotePath = activeView.file.path;
+    }
+}
+
+// 然后调用时传入
+await this.handleImageUpload(file, false, sourceNotePath);
+```
+
+> 注：两处调用（确认上传和自动上传）都需要同样修改。
+
+---
+
+## 修改点 5：修改 `uploadPastedImage` 方法，传递源笔记路径
+
+**原始代码**（约第 500-550 行）  
+在方法末尾，当 `autoUpload` 为 false 时直接调用 `handleImageUpload` 未传路径。
+
+**修改后**  
+
+```javascript
+// 在 uploadPastedImage 方法中，创建临时文件并记录占位符后，原来为：
+if (!this.settings.autoUpload) {
+    await this.handleImageUpload(newFile);
+}
+
+// 修改为：
+const sourcePath = activeView.file?.path || "";
+if (!this.settings.autoUpload) {
+    await this.handleImageUpload(newFile, false, sourcePath);
+}
+```
+
+> 注意：此修改确保粘贴图片且关闭自动上传时，仍能按笔记路径存储。
+
+---
+
+## 修改点 6：修改设置界面（`GitHubUploaderSettingTab.display`）增加策略选项
+
+**原始代码**（约第 1300-1400 行，设置项中只包含原有的 `Folder path in repository` 文本框）
+
+**修改后**：在 `Branch name` 设置项之后、`Delete local file after upload` 之前插入以下 UI 代码。
+
+```javascript
+// 在 Branch name 设置项之后添加
+new import_obsidian.Setting(containerEl)
+    .setName("Image storage strategy")
+    .setDesc("Global: all images go to the folder below. By Note Path: images are stored in subfolders matching the note's location (e.g., Assets/Image/DL/ANN/ for note DL/ANN.md).")
+    .addDropdown(dropdown => dropdown
+        .addOption('global', 'Global Folder')
+        .addOption('byNotePath', 'By Note Path')
+        .setValue(this.plugin.settings.imageStorageStrategy || 'global')
+        .onChange(async (value) => {
+            this.plugin.settings.imageStorageStrategy = value;
+            await this.plugin.saveSettings();
+            this.display(); // refresh to show/hide relevant fields
+        }));
+
+// 条件显示：根据策略决定显示哪个路径设置
+if (this.plugin.settings.imageStorageStrategy === 'byNotePath') {
+    new import_obsidian.Setting(containerEl)
+        .setName("Base folder for by-note-path storage")
+        .setDesc("Images will be saved under this folder, followed by the note's directory and name (e.g., Assets/Image/DL/ANN/).")
+        .addText(text => text
+            .setPlaceholder("Assets/Image")
+            .setValue(this.plugin.settings.byNotePathBaseFolder || 'Assets/Image')
+            .onChange(async (value) => {
+                this.plugin.settings.byNotePathBaseFolder = value.replace(/\\/g, '/').replace(/^\/+|\/+$/g, '');
+                await this.plugin.saveSettings();
+            }));
+} else {
+    // 原有的 "Folder path in repository" 设置项（保持原样）
+    new import_obsidian.Setting(containerEl).setName("Folder path in repository").addText((text) => text.setPlaceholder("assets/").setValue(this.plugin.settings.folderPath).onChange(async (value) => {
+        this.plugin.settings.folderPath = value.length > 0 && !value.endsWith("/") ? value + "/" : value;
+        await this.plugin.saveSettings();
+    }));
+}
+```
+
+> 注意：原设置中的“Folder path in repository”代码块需要移到 `else` 分支内，或者用条件判断隐藏显示。上述修改展示了完整的替换逻辑。
+
+---
+
+## 修改点 7：调整 `handlePaste` 中的相关调用（可选，已包含在修改点 5 中）
+
+因为 `uploadPastedImage` 已经修改，无需额外改动。但为了完整性，确认 `handlePaste` 中调用 `uploadPastedImage` 的地方无需修改（因为 `uploadPastedImage` 内部会获取当前笔记路径并传递）。
+
+---
+
+## 总结
+
+以上所有修改均未破坏原有功能，仅增加了**按笔记路径分类存储**的策略选择。用户可通过插件设置自由切换两种模式，新上传的图片会根据策略自动归类。
+
+---

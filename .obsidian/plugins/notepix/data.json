@@ -32,5 +32,7 @@
   "lastPromptedAt": 0,
   "lastPromptedRepo": "",
   "autoDeleteEnabled": true,
-  "confirmBeforeDelete": true
+  "confirmBeforeDelete": true,
+  "imageStorageStrategy": "byNotePath",
+  "byNotePathBaseFolder": "Assets/Image"
 }
