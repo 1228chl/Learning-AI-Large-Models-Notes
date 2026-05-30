@@ -119,7 +119,6 @@ Agent = LLM + 记忆 + 规划 + 工具
 
 ![](https://raw.githubusercontent.com/1228chl/Learning-AI-Large-Models-Notes/master/Assets/Image/AI-Large-Modlels-Notes/Agent/Coze/03Coze细节（课堂版）/1.2.2-2.png)
 
-
 **人设与回复逻辑编写要点**：
 
 - 明确角色定义
@@ -150,7 +149,6 @@ Agent = LLM + 记忆 + 规划 + 工具
 **在线部分**：用户问题 → Embedding（同模型） → 向量检索 → 召回相关片段 → 拼接 Prompt → LLM 生成回答
 
 **关键点**：离线与在线必须使用**同一个 Embedding 模型**，否则语义空间不一致。
-
 
 ![](https://raw.githubusercontent.com/1228chl/Learning-AI-Large-Models-Notes/master/Assets/Image/AI-Large-Modlels-Notes/Agent/Coze/03Coze细节（课堂版）/1.3.1.2-1.png)
 ---
