@@ -23,8 +23,7 @@ Agent = LLM + 记忆 + 规划 + 工具
 - **规划**：任务分解、步骤安排、决策能力
 - **工具**：调用外部 API、插件、工作流等执行具体动作
 
-[图片 1]
-![](https://cdn.jsdelivr.net/gh/1228chl/Learning-AI-Large-Models-Notes@master/Assets/Image/AI-Large-Modlels-Notes/Agent/Coze/03Coze细节（课堂版）/1.1.1-1.png)
+![752](https://raw.githubusercontent.com/1228chl/Learning-AI-Large-Models-Notes/master/Assets/Image/AI-Large-Modlels-Notes/Agent/Coze/03Coze细节（课堂版）/1.1.1-1.png)
 
 ---
 
@@ -76,8 +75,7 @@ Agent = LLM + 记忆 + 规划 + 工具
 
 示例：TopP=0.6 时，只保留概率最高的词直到累计概率达到 60%。
 
-[图片二]
-![](https://cdn.jsdelivr.net/gh/1228chl/Learning-AI-Large-Models-Notes@master/Assets/Image/AI-Large-Modlels-Notes/Agent/Coze/03Coze细节（课堂版）/1.1.3.2-1.png)
+![](https://raw.githubusercontent.com/1228chl/Learning-AI-Large-Models-Notes/master/Assets/Image/AI-Large-Modlels-Notes/Agent/Coze/03Coze细节（课堂版）/1.1.3.2-1.png)
 
 ---
 
@@ -87,8 +85,7 @@ Agent = LLM + 记忆 + 规划 + 工具
 
 示例：TopK=5，只保留概率排名前5的词。
 
-[图片 3]
-![](https://cdn.jsdelivr.net/gh/1228chl/Learning-AI-Large-Models-Notes@master/Assets/Image/AI-Large-Modlels-Notes/Agent/Coze/03Coze细节（课堂版）/1.1.3.3-1.png)
+![](https://raw.githubusercontent.com/1228chl/Learning-AI-Large-Models-Notes/master/Assets/Image/AI-Large-Modlels-Notes/Agent/Coze/03Coze细节（课堂版）/1.1.3.3-1.png)
 
 **实用建议**：
 
@@ -105,8 +102,7 @@ Agent = LLM + 记忆 + 规划 + 工具
 
 **实操方法**：可以直接新建工作流，将已有的工作流 JSON 代码粘贴进去即可复现。
 
-![](https://raw.githubusercontent.com/1228chl/Learning-AI-Large-Models-Notes/master/Assets/Image/20260517T111723144Z.png)
-
+![](https://raw.githubusercontent.com/1228chl/Learning-AI-Large-Models-Notes/master/Assets/Image/AI-Large-Modlels-Notes/Agent/Coze/03Coze细节（课堂版）/1.2.1-1.png)
 
 **重要提示**：
 
@@ -119,9 +115,10 @@ Agent = LLM + 记忆 + 规划 + 工具
 
 **示例智能体“小多”**：能够识别文档、查询天气、旅行规划、识别图片文字等。
 
-![](https://raw.githubusercontent.com/1228chl/Learning-AI-Large-Models-Notes/master/Assets/Image/20260517T111800553Z.png)
+![](https://raw.githubusercontent.com/1228chl/Learning-AI-Large-Models-Notes/master/Assets/Image/AI-Large-Modlels-Notes/Agent/Coze/03Coze细节（课堂版）/1.2.2-1.png)
 
-![](https://raw.githubusercontent.com/1228chl/Learning-AI-Large-Models-Notes/master/Assets/Image/20260517T111903066Z.png)
+![](https://raw.githubusercontent.com/1228chl/Learning-AI-Large-Models-Notes/master/Assets/Image/AI-Large-Modlels-Notes/Agent/Coze/03Coze细节（课堂版）/1.2.2-2.png)
+
 
 **人设与回复逻辑编写要点**：
 
@@ -154,8 +151,8 @@ Agent = LLM + 记忆 + 规划 + 工具
 
 **关键点**：离线与在线必须使用**同一个 Embedding 模型**，否则语义空间不一致。
 
-![](https://raw.githubusercontent.com/1228chl/Learning-AI-Large-Models-Notes/master/Assets/Image/20260517T111933124Z.png)
 
+![](https://raw.githubusercontent.com/1228chl/Learning-AI-Large-Models-Notes/master/Assets/Image/AI-Large-Modlels-Notes/Agent/Coze/03Coze细节（课堂版）/1.3.1.2-1.png)
 ---
 
 ### 7. 数据库（Database）
@@ -176,7 +173,7 @@ Agent = LLM + 记忆 + 规划 + 工具
 - **渠道共享**：创建数据库时必须选择“渠道共享”模式，否则可能查不出数据。
 - **逻辑删除**：公司内部禁止使用物理删除（DELETE、TRUNCATE）。应使用逻辑删除，增加字段 `is_delete`，1表示删除，0表示有效。查询时加上条件 `WHERE is_delete = 0`。
 
-![](https://raw.githubusercontent.com/1228chl/Learning-AI-Large-Models-Notes/master/Assets/Image/20260517T112018475Z.png)
+![](https://raw.githubusercontent.com/1228chl/Learning-AI-Large-Models-Notes/master/Assets/Image/AI-Large-Modlels-Notes/Agent/Coze/03Coze细节（课堂版）/1.4.1.2-1.png)
 
 ![](https://raw.githubusercontent.com/1228chl/Learning-AI-Large-Models-Notes/master/Assets/Image/20260517T112317987Z.png)
 
