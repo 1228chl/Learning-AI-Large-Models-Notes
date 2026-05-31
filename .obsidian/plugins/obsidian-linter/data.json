@@ -1,7 +1,7 @@
 {
   "ruleConfigs": {
     "add-blank-line-after-yaml": {
-      "enabled": false
+      "enabled": true
     },
     "dedupe-yaml-array-values": {
       "enabled": false,
