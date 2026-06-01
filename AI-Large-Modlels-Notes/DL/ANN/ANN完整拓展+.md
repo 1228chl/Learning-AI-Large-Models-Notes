@@ -785,6 +785,10 @@ loss = criterion(y_pred, y_true)
 print(loss.item())   # (|1-2| + |1-2| + |1.9-2|)/3 = (1+1+0.1)/3 = 0.7
 ```
 
+**图例**：
+
+![](https://raw.githubusercontent.com/1228chl/Learning-AI-Large-Models-Notes/master/Assets/Image/AI-Large-Modlels-Notes/DL/ANN/ANN完整拓展+/1.4.3.1-1.png)
+
 ---
 
 #### 3.2 MSE 损失（L 2 Loss）
@@ -810,6 +814,10 @@ criterion = nn.MSELoss()
 loss = criterion(y_pred, y_true)  # (1^2 + 1^2 + 0.1^2)/3 = 0.67
 print(loss.item())
 ```
+
+**图例**：
+
+![](https://raw.githubusercontent.com/1228chl/Learning-AI-Large-Models-Notes/master/Assets/Image/AI-Large-Modlels-Notes/DL/ANN/ANN完整拓展+/1.4.3.2-1.png)
 
 ---
 
@@ -840,6 +848,10 @@ criterion = nn.SmoothL1Loss()
 loss = criterion(y_pred, y_true)
 print(loss.item())
 ```
+
+**图例**：
+
+![](https://raw.githubusercontent.com/1228chl/Learning-AI-Large-Models-Notes/master/Assets/Image/AI-Large-Modlels-Notes/DL/ANN/ANN完整拓展+/1.4.3.3-1.png)
 
 ---
 
