@@ -675,6 +675,10 @@ $$
 
 实际上，`nn.CrossEntropyLoss` 将 **LogSoftmax** 和 **Negative Log-Likelihood (NLLLoss)** 合并为一个数值稳定的实现。
 
+**图例**：
+
+![](https://raw.githubusercontent.com/1228chl/Learning-AI-Large-Models-Notes/master/Assets/Image/AI-Large-Modlels-Notes/DL/ANN/ANN完整拓展+/1.4.2.1-1.png)
+
 **例子**：上图中的交叉熵损失为：$-(0\log(0.10) + 1\log(0.7) + 0\log(0.2)) = -\log 0.7$。从概率角度理解，我们的目的是最小化正确类别所对应的预测概率的对数的负值（损失值最小）。
 
 **重要特性**：
@@ -731,6 +735,10 @@ criterion = nn.BCELoss()
 loss = criterion(probabilities, targets)
 print(loss.item())
 ```
+
+**图例**：
+
+![](https://raw.githubusercontent.com/1228chl/Learning-AI-Large-Models-Notes/master/Assets/Image/AI-Large-Modlels-Notes/DL/ANN/ANN完整拓展+/1.4.2.2-1.png)
 
 **数值稳定的版本**：`nn.BCEWithLogitsLoss` 将 Sigmoid 和 BCE 合并，并在内部进行数值稳定处理，推荐使用。
 
