@@ -154,8 +154,8 @@
         "head": 678
       },
       "AI-Large-Modlels-Notes/DL/ANN/ANN完整拓展+.md": {
-        "anchor": 3969,
-        "head": 3969
+        "anchor": 2972,
+        "head": 2972
       },
       "AI-Large-Modlels-Notes/DL/基础/03Pytorch自动微分.md": {
         "anchor": 2059,
@@ -180,6 +180,14 @@
       "AI-Large-Modlels-Notes/Agent/Dify/04Dify.md": {
         "anchor": 10943,
         "head": 10822
+      },
+      "AI-Large-Modlels-Notes/Question/DL.md": {
+        "anchor": 49,
+        "head": 49
+      },
+      "AI-Large-Modlels-Notes/Question/DL-Question.md": {
+        "anchor": 641,
+        "head": 641
       }
     }
   },

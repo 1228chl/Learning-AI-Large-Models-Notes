@@ -13,13 +13,13 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "AI-Large-Modlels-Notes/DL/ANN/ANN最终完整版.md",
+                "file": "AI-Large-Modlels-Notes/Question/DL-Question.md",
                 "mode": "source",
                 "source": false,
                 "backlinks": false
               },
               "icon": "lucide-file",
-              "title": "ANN最终完整版"
+              "title": "DL-Question"
             }
           },
           {
@@ -38,16 +38,17 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "AI-Large-Modlels-Notes/修改Obsidian插件方法/NotePix.md",
+                "file": "AI-Large-Modlels-Notes/DL/ANN/ANN完整拓展+.md",
                 "mode": "source",
                 "source": false,
                 "backlinks": false
               },
               "icon": "lucide-file",
-              "title": "NotePix"
+              "title": "ANN完整拓展+"
             }
           }
-        ]
+        ],
+        "currentTab": 2
       }
     ],
     "direction": "vertical"
@@ -223,12 +224,16 @@
       "obsidian-excalidraw-plugin:新建绘图文件": false
     }
   },
-  "active": "a73ebf785a6e6ac6",
+  "active": "f432670bd6181883",
   "lastOpenFiles": [
+    "AI-Large-Modlels-Notes/Question/DL-Question.md",
+    "AI-Large-Modlels-Notes/DL/基础/02Pytorch.md",
+    "AI-Large-Modlels-Notes/DL/ANN/ANN完整拓展+.md",
+    "AI-Large-Modlels-Notes/修改Obsidian插件方法/NotePix.md",
+    "AI-Large-Modlels-Notes/Question",
+    "AI-Large-Modlels-Notes/DL/ANN/ANN笔记草稿2.md",
     "Assets/Image/AI-Large-Modlels-Notes/DL/ANN/ANN完整拓展+/1.2.2.3-1.png",
     "Assets/Image/AI-Large-Modlels-Notes/DL/ANN/ANN完整拓展+/1.2.2.2-1.png",
-    "AI-Large-Modlels-Notes/修改Obsidian插件方法/NotePix.md",
-    "AI-Large-Modlels-Notes/DL/ANN/ANN最终完整版.md",
     "Assets/Image/AI-Large-Modlels-Notes/DL/ANN/ANN完整拓展+/1.2.2.1-1.png",
     "Assets/Image/AI-Large-Modlels-Notes/DL/ANN/ANN完整拓展+",
     "Assets/Image/AI-Large-Modlels-Notes/DL/ANN",
@@ -241,7 +246,6 @@
     "Assets/Image/AI-Large-Modlels-Notes/Agent/Dify/04Dify/1.7.2-4.png",
     "Assets/Image/AI-Large-Modlels-Notes/Agent/Dify/04Dify/1.7.2-2.png",
     "Assets/Image/AI-Large-Modlels-Notes/Agent/Dify/04Dify/1.7.2-3.png",
-    "Assets/Image/AI-Large-Modlels-Notes/Agent/Dify/04Dify/1.7.2-1.png",
     "Assets/Image/AI-Large-Modlels-Notes/Agent/Dify/04Dify",
     "Assets/Image/AI-Large-Modlels-Notes/Agent/Dify",
     "AI-Large-Modlels-Notes/Python/09正则表达式.md",
@@ -260,17 +264,14 @@
     "AI-Large-Modlels-Notes/DL/ANN/ANN笔记草稿1.md",
     "AI-Large-Modlels-Notes/DL/基础/pytorch练习题目.md",
     "AI-Large-Modlels-Notes/DL/基础/03Pytorch自动微分.md",
-    "AI-Large-Modlels-Notes/DL/基础/02Pytorch.md",
     "AI-Large-Modlels-Notes/DL/基础/01深度学习概述.md",
     "AI-Large-Modlels-Notes/DataAnalysis/05Matplotlib.md",
     "AI-Large-Modlels-Notes/DataAnalysis/04Pandas（AI大全版）.md",
     "AI-Large-Modlels-Notes/DataAnalysis/03Pandas模块（课堂版）.md",
-    "AI-Large-Modlels-Notes/DataAnalysis/02NumPy（AI大全版）.md",
     "Assets/Image/AI-Large-Modlels-Notes/Agent/Coze/03Coze细节（课堂版）",
     "Assets/Image/AI-Large-Modlels-Notes/Agent/Coze",
     "Assets/Image/AI-Large-Modlels-Notes/Agent",
     "Assets/Image/AI-Large-Modlels-Notes",
-    "Assets/NotePix-Local",
     "未命名.canvas"
   ]
 }
