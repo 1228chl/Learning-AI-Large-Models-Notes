@@ -58,8 +58,8 @@
         "head": 307
       },
       "AI-Large-Modlels-Notes/ML/监督学习/决策树/01决策树完整版.md": {
-        "anchor": 13811,
-        "head": 13811
+        "anchor": 211,
+        "head": 211
       },
       "AI-Large-Modlels-Notes/ML/无监督学习/聚类算法/K-means算法.md": {
         "anchor": 9599,
@@ -70,8 +70,8 @@
         "head": 640
       },
       "AI-Large-Modlels-Notes/ML/监督学习/线性回归/02线性回归(改进版).md": {
-        "anchor": 5153,
-        "head": 5153
+        "anchor": 34204,
+        "head": 34204
       },
       "AI-Large-Modlels-Notes/ML/监督学习/KNN/01KNN算法简介.md": {
         "anchor": 139,
@@ -106,8 +106,8 @@
         "head": 381
       },
       "AI-Large-Modlels-Notes/ML/基础/02机器学习基础.md": {
-        "anchor": 7794,
-        "head": 7808
+        "anchor": 7792,
+        "head": 7806
       },
       "AI-Large-Modlels-Notes/ML/监督学习/集成学习/01随机森林完整版.md": {
         "anchor": 8696,
@@ -154,8 +154,8 @@
         "head": 678
       },
       "AI-Large-Modlels-Notes/DL/ANN/ANN完整拓展+.md": {
-        "anchor": 17456,
-        "head": 17456
+        "anchor": 28087,
+        "head": 28087
       },
       "AI-Large-Modlels-Notes/DL/基础/03Pytorch自动微分.md": {
         "anchor": 2059,
@@ -186,8 +186,28 @@
         "head": 49
       },
       "AI-Large-Modlels-Notes/Question/DL-Question.md": {
-        "anchor": 802,
-        "head": 802
+        "anchor": 121,
+        "head": 121
+      },
+      "AI-Large-Modlels-Notes/DL/ANN/ANN笔记草稿1.md": {
+        "anchor": 143,
+        "head": 143
+      },
+      "AI-Large-Modlels-Notes/DL/ANN/ANN笔记草稿2.md": {
+        "anchor": 158,
+        "head": 158
+      },
+      "AI-Large-Modlels-Notes/DL/基础/01深度学习概述.md": {
+        "anchor": 0,
+        "head": 0
+      },
+      "AI-Large-Modlels-Notes/ML/基础/监督学习.md": {
+        "anchor": 0,
+        "head": 0
+      },
+      "AI-Large-Modlels-Notes/Question/DL-ANN-Question.md": {
+        "anchor": 6006,
+        "head": 6006
       }
     }
   },
