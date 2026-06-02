@@ -1211,7 +1211,7 @@ scheduler = torch.optim.lr_scheduler.MultiStepLR(optimizer, milestones=[50,125,1
 
 **图例**：
 
-![](https://raw.githubusercontent.com/1228chl/Learning-AI-Large-Models-Notes/master/Assets/Image/AI-Large-Modlels-Notes/DL/ANN/ANN完整拓展+/1.5.5.2-1.png)
+
 ---
 
 #### 5.3 指数衰减（ExponentialLR）
@@ -1224,7 +1224,7 @@ scheduler = torch.optim.lr_scheduler.ExponentialLR(optimizer, gamma=0.95)
 
 **图例**：
 
-![](https://raw.githubusercontent.com/1228chl/Learning-AI-Large-Models-Notes/master/Assets/Image/AI-Large-Modlels-Notes/DL/ANN/ANN完整拓展+/1.5.5.3-1.png)
+
 ---
 
 #### 5.4 余弦退火（CosineAnnealingLR）
@@ -1241,7 +1241,7 @@ scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max=50)
 
 **图例**：
 
-![](https://raw.githubusercontent.com/1228chl/Learning-AI-Large-Models-Notes/master/Assets/Image/AI-Large-Modlels-Notes/DL/ANN/ANN完整拓展+/1.5.5.4-1.png)
+
 ---
 
 #### 5.5 自适应衰减（ReduceLROnPlateau）
