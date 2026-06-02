@@ -104,7 +104,8 @@
       }
     ],
     "direction": "horizontal",
-    "width": 319.5
+    "width": 319.5,
+    "collapsed": true
   },
   "right": {
     "id": "f07a0c5b7e11463b",
@@ -224,6 +225,8 @@
   },
   "active": "a73ebf785a6e6ac6",
   "lastOpenFiles": [
+    "Assets/Image/AI-Large-Modlels-Notes/DL/ANN/ANN完整拓展+/1.5.5.3-2.png",
+    "Assets/Image/AI-Large-Modlels-Notes/DL/ANN/ANN完整拓展+/1.5.5.2-2.png",
     "Assets/Image/AI-Large-Modlels-Notes/DL/ANN/ANN完整拓展+/1.8.0.1-1.png",
     "Assets/Image/AI-Large-Modlels-Notes/DL/ANN/ANN完整拓展+/1.8-1.png",
     "Assets/Image/AI-Large-Modlels-Notes/DL/ANN/ANN完整拓展+/1.7-1.png",
@@ -235,8 +238,6 @@
     "Assets/Image/AI-Large-Modlels-Notes/ML/监督学习/线性回归/02线性回归(改进版)/5.6-3.png",
     "Assets/Image/AI-Large-Modlels-Notes/ML/监督学习/线性回归/02线性回归(改进版)/5.6-2.png",
     "Assets/Image/AI-Large-Modlels-Notes/ML/监督学习/线性回归/02线性回归(改进版)/5.6-1.png",
-    "Assets/Image/AI-Large-Modlels-Notes/ML/监督学习/线性回归/02线性回归(改进版)/5.2.4-1.png",
-    "Assets/Image/AI-Large-Modlels-Notes/ML/监督学习/线性回归/02线性回归(改进版)/5.2.3-1.png",
     "Assets/Image/AI-Large-Modlels-Notes/ML/监督学习/线性回归/02线性回归(改进版)",
     "Assets/Image/AI-Large-Modlels-Notes/ML/监督学习/线性回归",
     "Assets/Image/AI-Large-Modlels-Notes/ML/监督学习",
