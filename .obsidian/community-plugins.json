@@ -3,12 +3,12 @@
   "editing-toolbar",
   "custom-font-loader",
   "obsidian-linter",
-  "floating-toc",
   "obsidian-minimal-settings",
   "templater-obsidian",
   "easy-typing-obsidian",
   "mathlive",
   "notepix",
   "typewriter-mode",
-  "obsidian-excalidraw-plugin"
+  "obsidian-excalidraw-plugin",
+  "floating-toc"
 ]

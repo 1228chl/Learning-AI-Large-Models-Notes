@@ -104,8 +104,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 358.5,
-    "collapsed": true
+    "width": 319.5
   },
   "right": {
     "id": "f07a0c5b7e11463b",
@@ -211,6 +210,7 @@
   },
   "left-ribbon": {
     "hiddenItems": {
+      "obsidian-excalidraw-plugin:新建绘图文件": false,
       "switcher:打开快速切换": false,
       "graph:查看关系图谱": false,
       "canvas:新建白板": false,
@@ -226,6 +226,7 @@
   "lastOpenFiles": [
     "Assets/Image/AI-Large-Modlels-Notes/DL/ANN/ANN完整拓展+/1.5.1-1.png",
     "AI-Large-Modlels-Notes/DL/ANN/ANN完整拓展+.md",
+    "Assets/Image/AI-Large-Modlels-Notes/DL/ANN/ANN完整拓展+/1.2.2.1-1.png",
     "AI-Large-Modlels-Notes/ML/监督学习/线性回归/02线性回归(改进版).md",
     "Assets/Image/AI-Large-Modlels-Notes/ML/监督学习/线性回归/02线性回归(改进版)/5.6-4.png",
     "Assets/Image/AI-Large-Modlels-Notes/ML/监督学习/线性回归/02线性回归(改进版)/5.6-3.png",
@@ -239,8 +240,6 @@
     "Assets/Image/AI-Large-Modlels-Notes/ML/监督学习",
     "Assets/Image/AI-Large-Modlels-Notes/ML",
     "Assets/Image/AI-Large-Modlels-Notes/DL/ANN/ANN完整拓展+/1.5.5.4-1.png",
-    "Assets/Image/AI-Large-Modlels-Notes/DL/ANN/ANN完整拓展+/1.5.5.3-1.png",
-    "Assets/Image/AI-Large-Modlels-Notes/DL/ANN/ANN完整拓展+/1.5.5.2-1.png",
     "AI-Large-Modlels-Notes/ML/基础/02机器学习基础.md",
     "AI-Large-Modlels-Notes/Question/DL-Question.md",
     "AI-Large-Modlels-Notes/Question/DL-ANN-Question.md",
