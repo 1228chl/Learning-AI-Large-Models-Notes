@@ -154,8 +154,8 @@
         "head": 678
       },
       "AI-Large-Modlels-Notes/DL/ANN/ANN完整拓展+.md": {
-        "anchor": 19607,
-        "head": 19607
+        "anchor": 44107,
+        "head": 44107
       },
       "AI-Large-Modlels-Notes/DL/基础/03Pytorch自动微分.md": {
         "anchor": 2059,
@@ -208,6 +208,10 @@
       "AI-Large-Modlels-Notes/Question/DL-ANN-Question.md": {
         "anchor": 6006,
         "head": 6006
+      },
+      "AI-Large-Modlels-Notes/DL/ANN/手机价格预测进阶版.md": {
+        "anchor": 2331,
+        "head": 2331
       }
     }
   },
