@@ -17,8 +17,16 @@
       "b": "digit"
     },
     {
-      "a": "digit",
-      "b": "english"
+      "a": "chinese",
+      "b": "japanese"
+    },
+    {
+      "a": "chinese",
+      "b": "korean"
+    },
+    {
+      "a": "chinese",
+      "b": "russian"
     }
   ],
   "PrefixDictionary": "n8n, /[1234][dD]/\npython3, Python3",

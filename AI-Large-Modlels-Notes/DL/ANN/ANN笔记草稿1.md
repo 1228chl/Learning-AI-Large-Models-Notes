@@ -659,16 +659,16 @@ loss = criterion(logits, targets)
 
 ### 3. 回归任务损失函数
 
-回归任务的目标是预测连续数值，常见的损失函数有 MAE（L 1 Loss）、MSE（L 2 Loss）和 Smooth L 1 Loss。
+回归任务的目标是预测连续数值，常见的损失函数有 MAE（L1 Loss）、MSE（L2 Loss）和 Smooth L1 Loss。
 
 ---
 
-#### 3.1 MAE 损失（L 1 Loss）
+#### 3.1 MAE 损失（L1 Loss）
 
 **公式**：
 
 $$
-\text{L 1 Loss}(y, \hat{y}) = \frac{1}{N} \sum_{i=1}^{N} |y_i - \hat{y}_i|
+\text{L1 Loss}(y, \hat{y}) = \frac{1}{N} \sum_{i=1}^{N} |y_i - \hat{y}_i|
 $$
 
 **特点**：
@@ -690,7 +690,7 @@ print(loss.item())   # (|1-2| + |1-2| + |1.9-2|)/3 = (1+1+0.1)/3 = 0.7
 
 ---
 
-#### 3.2 MSE 损失（L 2 Loss）
+#### 3.2 MSE 损失（L2 Loss）
 
 **公式**：
 
@@ -714,12 +714,12 @@ print(loss.item())
 
 ---
 
-#### 3.3 Smooth L 1 损失
+#### 3.3 Smooth L1 损失
 
 **公式**：
 
 $$
-\text{SmoothL 1 Loss}(x) = \begin{cases}
+\text{SmoothL1 Loss}(x) = \begin{cases}
 0.5 x^2 & \text{if } |x| < 1 \\
 |x| - 0.5 & \text{otherwise}
 \end{cases}
@@ -729,7 +729,7 @@ $$
 
 **特点**：
 
-- 结合了 L 1 和 L 2 的优点：当误差较小时，表现为 L 2 损失（光滑）；当误差较大时，表现为 L 1 损失（对异常值鲁棒，梯度不会爆炸）。
+- 结合了 L1 和 L2 的优点：当误差较小时，表现为 L2 损失（光滑）；当误差较大时，表现为 L1 损失（对异常值鲁棒，梯度不会爆炸）。
 - 常用于目标检测中的边界框回归（如 Faster R-CNN）。
 
 **代码示例**：
@@ -751,7 +751,7 @@ print(loss.item())
 | **二分类（概率）** | BCE | `nn.BCELoss` | 输入为概率（需先 Sigmoid） |
 | **回归（通用）** | MSE Loss | `nn.MSELoss` | 平滑，对异常值敏感 |
 | **回归（稳健）** | MAE Loss | `nn.L1Loss` | 对异常值鲁棒 |
-| **回归（平衡）** | Smooth L 1 Loss | `nn.SmoothL1Loss` | 结合 L 1/L 2 优点 |
+| **回归（平衡）** | Smooth L1 Loss | `nn.SmoothL1Loss` | 结合 L1/L2 优点 |
 
 **其他常用损失**：
 
@@ -1101,9 +1101,9 @@ for epoch in range(num_epochs):
 
 ### 2. 范数惩罚（权重衰减）
 
-范数惩罚通过在损失函数中增加参数 $W$ 的范数项来约束权重大小。最常用的是 **L 2 正则化**（权重衰减，Weight Decay）。
+范数惩罚通过在损失函数中增加参数 $W$ 的范数项来约束权重大小。最常用的是 **L2 正则化**（权重衰减，Weight Decay）。
 
-**L 2 正则化公式**：
+**L2 正则化公式**：
 
 $$
 L_{\text{total}}(W) = L_{\text{original}}(W) + \frac{\lambda}{2} \|W\|_2^2
@@ -1113,17 +1113,17 @@ $$
 
 **效果**：使权重趋向于较小的值，但不为零。小权重意味着模型对输入的微小变化不敏感，从而提高稳定性。
 
-**L 1 正则化**（Lasso）：
+**L1 正则化**（Lasso）：
 
 $$
 L_{\text{total}}(W) = L_{\text{original}}(W) + \lambda \|W\|_1
 $$
 
-L 1 正则化会使部分权重变为 0，产生稀疏解，可用于特征选择。
+L1 正则化会使部分权重变为 0，产生稀疏解，可用于特征选择。
 
 **PyTorch 中的权重衰减**：
 
-在优化器中直接设置 `weight_decay` 参数即可，等价于 L 2 正则化。
+在优化器中直接设置 `weight_decay` 参数即可，等价于 L2 正则化。
 
 ```python
 # SGD 中设置 weight_decay
