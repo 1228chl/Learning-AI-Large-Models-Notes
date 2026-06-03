@@ -1569,7 +1569,7 @@ def create_dataset(csv_path='data/手机价格预测.csv', test_size=0.2, random
     # 1. 读取数据
     data = pd.read_csv(csv_path)
     X = data.iloc[:, :-1].values.astype(np.float32)
-    y = data.iloc[:, -1].values.astype(np.int64)
+    y = data.iloc[:, -1].values.astype(np.int 64)
     
     # 2. 划分训练集和验证集（80% 训练，20% 验证）
     X_train, X_valid, y_train, y_valid = train_test_split(

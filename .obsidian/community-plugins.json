@@ -1,7 +1,6 @@
 [
   "obsidian-git",
   "editing-toolbar",
-  "custom-font-loader",
   "obsidian-linter",
   "obsidian-minimal-settings",
   "templater-obsidian",
@@ -9,5 +8,8 @@
   "mathlive",
   "notepix",
   "obsidian-excalidraw-plugin",
-  "floating-toc"
+  "obsidian-pandoc",
+  "floating-toc",
+  "custom-font-loader",
+  "obsidian-style-settings"
 ]
