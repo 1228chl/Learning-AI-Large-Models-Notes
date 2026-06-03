@@ -105,7 +105,8 @@
       }
     ],
     "direction": "horizontal",
-    "width": 319.5
+    "width": 319.5,
+    "collapsed": true
   },
   "right": {
     "id": "f07a0c5b7e11463b",
@@ -219,7 +220,7 @@
       "templater-obsidian:Templater": false
     }
   },
-  "active": "f432670bd6181883",
+  "active": "a73ebf785a6e6ac6",
   "lastOpenFiles": [
     "AI-Large-Modlels-Notes/DL/ANN/ANN完整拓展+.pdf",
     "AI-Large-Modlels-Notes/DL/ANN/ANN完整拓展+.md",
