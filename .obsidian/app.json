@@ -12,5 +12,12 @@
   "attachmentFolderPath": "Assets",
   "livePreview": true,
   "spellcheck": false,
-  "showInlineTitle": true
+  "showInlineTitle": true,
+  "pdfExportSettings": {
+    "includeName": false,
+    "pageSize": "Legal",
+    "landscape": false,
+    "margin": "0",
+    "downscalePercent": 100
+  }
 }

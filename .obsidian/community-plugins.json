@@ -11,5 +11,6 @@
   "obsidian-pandoc",
   "floating-toc",
   "custom-font-loader",
-  "obsidian-style-settings"
+  "obsidian-style-settings",
+  "better-export-pdf"
 ]
