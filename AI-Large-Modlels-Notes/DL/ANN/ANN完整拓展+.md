@@ -1391,7 +1391,7 @@ print("失活后输出:", x_drop)
 #### 3.2 Dropout 的使用建议
 
 - **只在训练时启用 Dropout**：PyTorch 的 `nn.Dropout` 会自动根据 `model.train()` 和 `model.eval()` 状态切换行为。在 `eval()` 模式下 Dropout 不生效。
-- **适用位置**：通常放在全连接层之后、激活函数之前或之后。对于卷积层，有时也使用 Dropout 2 d（随机丢弃整个通道）。
+- **适用位置**：通常放在全连接层之后、激活函数之前或之后。对于卷积层，有时也使用 Dropout 2d（随机丢弃整个通道）。
 - **常用丢弃率**：
   - 输入层：0.2 左右
   - 隐藏层：0.3 ~ 0.5
@@ -1439,14 +1439,14 @@ print("失活后输出:", x_drop)
 
 #### 4.3 BN 在卷积网络和全连接网络中的区别
 
-- **全连接层**：对每个神经元分别计算均值和方差，即每个特征维度独立进行 BN。输入形状 `(N, D)`，输出形状 `(N, D)`。PyTorch 中使用 `nn.BatchNorm 1 d`。
-- **卷积层**：BN 通常放在卷积层之后、激活函数之前。计算时对每个通道（channel）独立进行，即同一个通道内的所有像素共享相同的均值和方差。输入形状 `(N, C, H, W)`，输出形状 `(N, C, H, W)`。PyTorch 中使用 `nn.BatchNorm 2 d`。
+- **全连接层**：对每个神经元分别计算均值和方差，即每个特征维度独立进行 BN。输入形状 `(N, D)`，输出形状 `(N, D)`。PyTorch 中使用 `nn.BatchNorm1d`。
+- **卷积层**：BN 通常放在卷积层之后、激活函数之前。计算时对每个通道（channel）独立进行，即同一个通道内的所有像素共享相同的均值和方差。输入形状 `(N, C, H, W)`，输出形状 `(N, C, H, W)`。PyTorch 中使用 `nn.BatchNorm2d`。
 
 PyTorch 提供了对应的 BN 层：
 
-- `nn.BatchNorm 1 d`：用于 2D 输入 `(N, C)` 或 3D 序列 `(N, C, L)`
-- `nn.BatchNorm 2 d`：用于 4D 图像 `(N, C, H, W)`
-- `nn.BatchNorm 3 d`：用于 5 D 视频/体积数据 `(N, C, D, H, W)`
+- `nn.BatchNorm1d`：用于 2D 输入 `(N, C)` 或 3D 序列 `(N, C, L)`
+- `nn.BatchNorm2d`：用于 4D 图像 `(N, C, H, W)`
+- `nn.BatchNorm3d`：用于 5D 视频/体积数据 `(N, C, D, H, W)`
 
 ---
 
@@ -1456,7 +1456,7 @@ PyTorch 提供了对应的 BN 层：
 import torch.nn as nn
 
 # 假设输入形状 (batch, channels, height, width)
-bn = nn.BatchNorm 2 d(num_features=2)  # 通道数为 2
+bn = nn.BatchNorm2d(num_features=2)  # 通道数为 2
 input = torch.randn(1, 2, 3, 4)
 output = bn(input)
 
@@ -1659,12 +1659,12 @@ class PhonePriceModelAdvanced(nn.Module):
         x = self.fc 1(x)
         x = self.bn 1(x)
         x = torch.relu(x)
-        x = self.dropout 1(x)
+        x = self.dropout1(x)
         
         x = self.fc 2(x)
         x = self.bn 2(x)
         x = torch.relu(x)
-        x = self.dropout 2(x)
+        x = self.dropout2(x)
         
         x = self.out(x)
         return x
