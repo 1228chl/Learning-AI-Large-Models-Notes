@@ -38,13 +38,13 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "AI-Large-Modlels-Notes/DL/ANN/ANN完整拓展+.md",
+                "file": "AI-Large-Modlels-Notes/DL/CNN/CNN.md",
                 "mode": "source",
                 "source": false,
                 "backlinks": false
               },
               "icon": "lucide-file",
-              "title": "ANN完整拓展+"
+              "title": "CNN"
             }
           }
         ],
@@ -80,7 +80,7 @@
             "state": {
               "type": "search",
               "state": {
-                "query": "",
+                "query": "tag:#FF0000",
                 "matchingCase": false,
                 "explainSearch": false,
                 "collapseAll": false,
@@ -220,10 +220,12 @@
       "templater-obsidian:Templater": false
     }
   },
-  "active": "a73ebf785a6e6ac6",
+  "active": "f432670bd6181883",
   "lastOpenFiles": [
-    "AI-Large-Modlels-Notes/Markdown语法.md",
     "AI-Large-Modlels-Notes/DL/ANN/ANN完整拓展+.md",
+    "AI-Large-Modlels-Notes/DL/CNN/CNN.md",
+    "AI-Large-Modlels-Notes/DL/CNN",
+    "AI-Large-Modlels-Notes/Markdown语法.md",
     "AI-Large-Modlels-Notes/DL/ANN/ANN完整拓展+.pdf",
     "AI-Large-Modlels-Notes/DL/DL.xmind",
     "AI-Large-Modlels-Notes/DL/基础/01深度学习概述.md",
@@ -266,7 +268,6 @@
     "Assets/Image/AI-Large-Modlels-Notes/ML",
     "AI-Large-Modlels-Notes/Question",
     "Assets/Image/AI-Large-Modlels-Notes/DL/ANN/ANN完整拓展+",
-    "Assets/Image/AI-Large-Modlels-Notes/DL/ANN",
     "未命名.canvas"
   ]
 }
