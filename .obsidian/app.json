@@ -15,7 +15,7 @@
   "showInlineTitle": true,
   "pdfExportSettings": {
     "includeName": false,
-    "pageSize": "Legal",
+    "pageSize": "Letter",
     "landscape": false,
     "margin": "0",
     "downscalePercent": 100
