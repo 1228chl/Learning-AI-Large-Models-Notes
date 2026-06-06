@@ -284,7 +284,15 @@
   "linterLocale": "system-default",
   "logLevel": "ERROR",
   "lintCommands": [],
-  "customRegexes": [],
+  "customRegexes": [
+    {
+      "label": "标题前面自动加上分隔线",
+      "find": "(?<!\\n---\\n\\n)(^(#{1,6}\\s+[^#\\n]+))",
+      "replace": "---\\n\\n$1",
+      "flags": "gm",
+      "enabled": false
+    }
+  ],
   "commonStyles": {
     "aliasArrayStyle": "single-line",
     "tagArrayStyle": "single-line",

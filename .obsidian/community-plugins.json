@@ -9,8 +9,8 @@
   "notepix",
   "obsidian-excalidraw-plugin",
   "obsidian-pandoc",
-  "floating-toc",
   "custom-font-loader",
   "better-export-pdf",
-  "obsidian-style-settings"
+  "obsidian-style-settings",
+  "floating-toc"
 ]

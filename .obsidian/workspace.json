@@ -33,21 +33,6 @@
             }
           },
           {
-            "id": "f432670bd6181883",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "AI-Large-Modlels-Notes/DL/RNN/RNN.md",
-                "mode": "source",
-                "source": false,
-                "backlinks": false
-              },
-              "icon": "lucide-file",
-              "title": "RNN"
-            }
-          },
-          {
             "id": "8c2a8b2ea9ee8665",
             "type": "leaf",
             "state": {
@@ -61,9 +46,24 @@
               "icon": "lucide-file",
               "title": "Markdown语法"
             }
+          },
+          {
+            "id": "3e679e1cfdb1e0c3",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "AI-Large-Modlels-Notes/NLP/03-FastText分类任务.md",
+                "mode": "source",
+                "source": false,
+                "backlinks": false
+              },
+              "icon": "lucide-file",
+              "title": "03-FastText分类任务"
+            }
           }
         ],
-        "currentTab": 2
+        "currentTab": 3
       }
     ],
     "direction": "vertical"
@@ -185,13 +185,13 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "AI大模型学习/机器学习/KNN/05距离度量.md",
+                "file": "AI-Large-Modlels-Notes/NLP/03-FastText分类任务.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "05距离度量 的大纲"
+              "title": "03-FastText分类任务 的大纲"
             }
           },
           {
@@ -239,13 +239,19 @@
       "templater-obsidian:Templater": false
     }
   },
-  "active": "f432670bd6181883",
+  "active": "a73ebf785a6e6ac6",
   "lastOpenFiles": [
     "AI-Large-Modlels-Notes/DL/CNN/CNN.md",
-    "AI-Large-Modlels-Notes/DL/ANN/ANN完整拓展+.md",
-    "AI-Large-Modlels-Notes/DL/RNN/RNN.md",
-    "AI-Large-Modlels-Notes/DL/ANN/完整的模型训练流程.md",
     "AI-Large-Modlels-Notes/Markdown语法.md",
+    "AI-Large-Modlels-Notes/NLP/03-FastText分类任务.md",
+    "AI-Large-Modlels-Notes/NLP/02-文本预处理-分词-张量.md",
+    "AI-Large-Modlels-Notes/NLP/01-自然语言处理概述.md",
+    "AI-Large-Modlels-Notes/NLP/test.md",
+    "AI-Large-Modlels-Notes/NLP/NLP-大纲概括.md",
+    "AI-Large-Modlels-Notes/DL/RNN/RNN.md",
+    "AI-Large-Modlels-Notes/NLP",
+    "AI-Large-Modlels-Notes/DL/ANN/ANN完整拓展+.md",
+    "AI-Large-Modlels-Notes/DL/ANN/完整的模型训练流程.md",
     "AI-Large-Modlels-Notes/DL/RNN",
     "AI-Large-Modlels-Notes/DL/ANN/手机价格预测进阶版.md",
     "AI-Large-Modlels-Notes/DL/ANN/手机价格预测基础版.md",
@@ -267,11 +273,6 @@
     "AI-Large-Modlels-Notes/ML/基础/01机器学习概论.md",
     "AI-Large-Modlels-Notes/ML/监督学习/集成学习/01随机森林完整版.md",
     "AI-Large-Modlels-Notes/ML/监督学习/决策树/01决策树完整版.md",
-    "AI-Large-Modlels-Notes/ML/监督学习/KNN/07KNN完整版.md",
-    "AI-Large-Modlels-Notes/ML/监督学习/KNN/06超参数选择方法.md",
-    "AI-Large-Modlels-Notes/ML/监督学习/KNN/05模型拟合.md",
-    "AI-Large-Modlels-Notes/ML/监督学习/KNN/04特征预处理.md",
-    "AI-Large-Modlels-Notes/ML/监督学习/KNN/03距离度量.md",
     "Assets/Image/AI-Large-Modlels-Notes/DL/ANN/ANN完整拓展+/1.5.5.5-1.png",
     "Assets/Image/AI-Large-Modlels-Notes/DL/ANN/ANN完整拓展+/1.5.5.3-2.png",
     "Assets/Image/AI-Large-Modlels-Notes/DL/ANN/ANN完整拓展+/1.5.5.2-2.png",
@@ -286,7 +287,6 @@
     "Assets/Image/AI-Large-Modlels-Notes/ML/监督学习/线性回归",
     "Assets/Image/AI-Large-Modlels-Notes/ML/监督学习",
     "Assets/Image/AI-Large-Modlels-Notes/ML",
-    "AI-Large-Modlels-Notes/Question",
     "未命名.canvas"
   ]
 }
