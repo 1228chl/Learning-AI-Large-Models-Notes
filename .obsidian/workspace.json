@@ -13,13 +13,13 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "AI-Large-Modlels-Notes/DL/ANN/完整的模型训练流程.md",
+                "file": "AI-Large-Modlels-Notes/DL/CNN/CNN.md",
                 "mode": "source",
                 "source": false,
                 "backlinks": false
               },
               "icon": "lucide-file",
-              "title": "完整的模型训练流程"
+              "title": "CNN"
             }
           },
           {
@@ -239,16 +239,16 @@
       "templater-obsidian:Templater": false
     }
   },
-  "active": "a73ebf785a6e6ac6",
+  "active": "f432670bd6181883",
   "lastOpenFiles": [
-    "AI-Large-Modlels-Notes/Markdown语法.md",
-    "AI-Large-Modlels-Notes/DL/ANN/完整的模型训练流程.md",
-    "AI-Large-Modlels-Notes/DL/RNN/RNN.md",
     "AI-Large-Modlels-Notes/DL/CNN/CNN.md",
+    "AI-Large-Modlels-Notes/DL/ANN/ANN完整拓展+.md",
+    "AI-Large-Modlels-Notes/DL/RNN/RNN.md",
+    "AI-Large-Modlels-Notes/DL/ANN/完整的模型训练流程.md",
+    "AI-Large-Modlels-Notes/Markdown语法.md",
     "AI-Large-Modlels-Notes/DL/RNN",
     "AI-Large-Modlels-Notes/DL/ANN/手机价格预测进阶版.md",
     "AI-Large-Modlels-Notes/DL/ANN/手机价格预测基础版.md",
-    "AI-Large-Modlels-Notes/DL/ANN/ANN完整拓展+.md",
     "AI-Large-Modlels-Notes/Conda/Conda基础命令.md",
     "AI-Large-Modlels-Notes/DL/CNN",
     "AI-Large-Modlels-Notes/DL/ANN/ANN完整拓展+.pdf",
