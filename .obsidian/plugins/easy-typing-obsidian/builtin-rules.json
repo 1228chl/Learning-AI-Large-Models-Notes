@@ -86,7 +86,8 @@
     "replacement": "",
     "options": "d",
     "priority": 30,
-    "description": "删除行内公式 $...$ 配对"
+    "description": "删除行内公式 $...$ 配对",
+    "enabled": false
   },
   {
     "id": "builtin-del-highlight",
@@ -95,7 +96,8 @@
     "replacement": "",
     "options": "d",
     "priority": 30,
-    "description": "删除高亮 ==...== 配对"
+    "description": "删除高亮 ==...== 配对",
+    "enabled": false
   },
   {
     "id": "builtin-del-block-formula",
@@ -104,7 +106,8 @@
     "replacement": "",
     "options": "d",
     "priority": 30,
-    "description": "删除块级公式 $$...$$ 配对"
+    "description": "删除块级公式 $$...$$ 配对",
+    "enabled": false
   },
   {
     "id": "builtin-del-codeblock",
@@ -113,7 +116,8 @@
     "replacement": "[[1]]",
     "options": "dr",
     "priority": 30,
-    "description": "快速删除空代码块"
+    "description": "快速删除空代码块",
+    "enabled": false
   },
   {
     "id": "builtin-del-wikilink",
@@ -121,7 +125,8 @@
     "replacement": "",
     "options": "dr",
     "priority": 30,
-    "description": "快速删除双链及嵌入（![[]]）"
+    "description": "快速删除双链及嵌入（![[]]）",
+    "enabled": false
   },
   {
     "id": "builtin-sel-wrap-backtick",

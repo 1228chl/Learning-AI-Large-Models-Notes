@@ -97,12 +97,10 @@ $$
 
 - 输出概率：
 
-  $$
-
-  P(y \mid \text{text}) = \text{softmax}(\mathbf{W} \mathbf{h} + \mathbf{b})
-
-
 $$
+  P(y \mid \text{text}) = \text{softmax}(\mathbf{W} \mathbf{h} + \mathbf{b})
+$$
+
   其中 $\mathbf{W}$ 是输出权重矩阵（大小为 $K \times d$ ）， $K$ 为类别数。
 
 ---
@@ -156,11 +154,11 @@ n-gram 使得模型能够捕捉局部词序和短语信息，显著提升分类�
 **数学公式**（以二分类为例）：
 
 设某个内部节点对应的逻辑回归参数为 $\mathbf{u}$ ，该节点选择左子（编码为 0）或右子（编码为 1）的概率为：
-$$
 
+$$
 P(\text{左}) = \sigma(\mathbf{u}^\top \mathbf{h}), \quad P(\text{右}) = 1 - \sigma(\mathbf{u}^\top \mathbf{h})
-
 $$
+
 损失函数为交叉熵，梯度仅更新路径上的节点。
 
 ---
@@ -196,11 +194,11 @@ $$
 **数学形式**：
 
 Skip-gram 的负采样损失函数（对于一对中心词 $w_c$ 和上下文词 $w_o$ ）：
-$$
 
+$$
 \mathcal{L} = - \log \sigma(\mathbf{u}_{w_o}^\top \mathbf{v}_{w_c}) - \sum_{k=1}^{N} \mathbb{E}_{w_k \sim P_n(w)} \log \sigma(-\mathbf{u}_{w_k}^\top \mathbf{v}_{w_c})
-
 $$
+
 其中 $N$ 是负样本数量（通常 2~20）， $P_n(w)$ 是负样本采样分布（通常为词频的 3/4 次方归一化）。该损失旨在增大正样本的相似度，减小负样本的相似度。
 
 ---
@@ -248,6 +246,7 @@ $$
 1. FastText 主要用于：**文本分类、词向量学习等**（C）。
 2. 层次 Softmax 解决的问题：**加速多分类计算**，具体通过**将标签组织成树形结构**（C）。
 3. 负采样的作用：**减少计算成本**（B）；负样本生成方式：**从整个词汇表中按照概率分布选取**（B，但 PPT 答案选 C，指从上下文窗口中排除正样本后按概率分布选取——此处用于词向量训练，分类任务略有不同）。
+
 ---
 
 ## 第二部分：FastText 文本分类
@@ -265,6 +264,7 @@ $$
 **文本分类**（Text Classification）是将文档（如电子邮件、帖子、产品评论等）分配到一个或多个预定义类别的任务。它是监督学习的一种，需要标注好的训练数据。
 
 例如：
+
 - 将用户评论分为“正面”或“负面”（情感分析）。
 - 将新闻文章分为“体育”、“政治”、“科技”等。
 
@@ -288,11 +288,12 @@ FastText 支持以上所有类型，只需调整损失函数和预测参数。
 
 FastText 的有监督训练要求输入文件为 **每行一条样本**，格式如下：
 
-```
+```python
 __label__类别1 __label__类别2 ... 词1 词2 词3 ... 词N
 ```
 
 **具体规则**：
+
 - 标签使用前缀 `__label__` 标识，后面紧跟类别名称（类别名称中不应包含空格）。
 - 单标签样本：只有 **一个** `__label__` 前缀。
 - 多标签样本：可以有 **多个** `__label__` 前缀，每个对应一个标签。
@@ -301,19 +302,22 @@ __label__类别1 __label__类别2 ... 词1 词2 词3 ... 词N
 **示例**：
 
 - **单标签二分类**（情感分析）：
-  ```
+
+  ```python
   __label__positive I love this movie !
   __label__negative This film is terrible .
   ```
 
 - **单标签多分类**（新闻分类）：
-  ```
+
+  ```python
   __label__sports The team won the championship .
   __label__tech The new smartphone has a great camera .
   ```
 
 - **多标签多分类**（烹饪问题话题分类）：
-  ```
+
+  ```python
   __label__sauce __label__cheese How much does potato starch affect a cheese sauce recipe ?
   __label__baking __label__oven __label__convection Fan bake vs bake
   ```
@@ -339,7 +343,7 @@ tar xvzf cooking.stackexchange.tar.gz
 
 解压后得到一个文本文件 `cooking.stackexchange.txt`，内容格式如下（每行一个样本，标签已带 `__label__` 前缀）：
 
-```
+```python
 __label__sauce __label__cheese How much does potato starch affect a cheese sauce recipe ?
 __label__food-safety __label__acidity Dangerous pathogens capable of growing in acidic environments
 __label__cast-iron __label__stove How do I cover up the white spots on my cast iron stove ?
@@ -368,6 +372,7 @@ tail -n 3000 cooking.stackexchange.txt > cooking_valid.txt
 ```
 
 **划分注意事项**：
+
 - 应保证类别分布相似（可使用 `sklearn.model_selection.train_test_split` 进行分层抽样）。
 - 验证集用于评估模型和超参数调优，不能用于训练。
 
@@ -596,24 +601,26 @@ print(pred)
 ### 2.6 多标签分类的损失函数 `ova` 详解
 
 在多标签多分类问题中，每个样本可能同时属于多个类别。标准 softmax 假设类别互斥（概率之和为 1），不适合多标签。**ova**（One‑vs‑All）将问题拆解为多个独立的二分类器（每个标签一个分类器），输出层使用 sigmoid 函数：
-$$
 
+$$
 P(\text{label}_i = 1 \mid \text{text}) = \sigma(\mathbf{w}_i^\top \mathbf{h})
-
 $$
+
 训练时，每个样本同时更新所有标签对应的二分类器（正标签对应正例，负标签对应负例）。损失函数为**二元交叉熵**之和：
-$$
 
+$$
 \mathcal{L} = -\sum_{i=1}^{K} \left[ y_i \log(p_i) + (1-y_i) \log(1-p_i) \right]
-
 $$
+
 其中 $y_i \in \{0,1\}$ 表示该样本是否属于标签 $i$ ， $p_i$ 为模型预测的概率。
 
 **优点**：
+
 - 支持多标签。
 - 可独立为每个标签设置阈值，灵活控制精确率/召回率权衡。
 
 **缺点**：
+
 - 训练时间随类别数线性增长（但 FastText 内部仍高效）。
 - 忽略了标签之间的相关性。
 
@@ -657,6 +664,7 @@ $$
    A：可尝试增加训练数据、进行数据增强（如回译）、使用 dropout（FastText 未直接支持，可降低 `dim` 或增加正则化）、减小学习率。
 
 ---
+
 ---
 
 ## 第三部分：FastText 词向量训练（无监督模式）
@@ -719,11 +727,11 @@ model = fasttext.train_unsupervised(
 传统的 Word2Vec 为每个词分配一个独立的向量，无法处理未登录词（OOV）。FastText 引入了**子词**机制：将一个词拆分为多个字符 n-gram（例如 “apple” 且 minn=3, maxn=6 会生成 "app", "ppl", "ple", "appl", "pple", "apple" 以及特殊的 `<apple>`），每个 n-gram 也有一个向量。最终词的向量为所有这些 n-gram 向量的**和**（或平均）。
 
 数学表示：
-$$
 
+$$
 \mathbf{v}_w = \sum_{g \in G_w} \mathbf{z}_g
-
 $$
+
 其中 $G_w$ 是词 $w$ 的所有字符 n-gram 集合（包括词本身作为特殊 n-gram），$\mathbf{z}_g$ 是 n-gram 对应的向量。
 
 ---
@@ -851,6 +859,7 @@ for score, word in analogies:
 | **适用场景** | 大规模生产环境，需要 OOV 处理 | 学术研究，经典词向量实验 |
 
 **选择建议**：
+
 - 若需要处理未登录词或形态丰富的语言，选 FastText。
 - 若只需经典 Word2Vec 且语料规范，两者均可；Gensim 更易与 sklearn 等集成。
 - 若需要训练极大规模（> 10⁹ 词），FastText 更高效。
@@ -929,6 +938,7 @@ def evaluate_similarity(model, word_pairs):
 | 词类比 | `model.get_analogies(pos1, neg1, pos2, k=5)` | 实现 `pos1 - neg1 + pos2` |
 
 **关键参数默认值（`train_unsupervised`）**：
+
 - `model='skipgram'`
 - `dim=100`
 - `ws=5`
@@ -941,6 +951,7 @@ def evaluate_similarity(model, word_pairs):
 - `lr=0.05`
 
 ---
+
 ---
 
 ## 第四部分：FastText 实战进阶
@@ -985,6 +996,7 @@ print("苹果的相似词:", neighbors)
 #### 4.1.2 跨语言相似度（需要对齐的向量）
 
 官方提供的不同语言向量是**独立训练**的，不在同一空间中。若要进行跨语言比较（如中文“苹果”与英文“apple”相似），需要使用**对齐**技术。常见方法：
+
 - 使用双语词典通过 Procrustes 分析学习一个线性映射矩阵。
 - 使用 MUSE 工具包（Facebook 开源）进行无监督或监督的跨语言对齐。
 
@@ -1055,6 +1067,7 @@ model = fasttext.train_supervised(input='multilingual_train.txt')
 FastText 的自动调优会在指定的时间（秒）内，使用验证集评估多个超参数组合，最终选择在验证集上性能最好的模型。调优的超参数包括：`lr`（学习率）、`epoch`（轮数）、`wordNgrams`、`dim`、`ws`、`minCount`、`neg`、`loss` 等。
 
 **工作原理**（简化）：
+
 - 从默认超参数开始，进行小范围扰动（如随机搜索或贝叶斯优化）。
 - 每次评估一组超参数时，在训练集的一个子集上快速训练（可能减少 epoch 或采用早期停止），然后在验证集上评估。
 - 根据有限的评估结果，选择最有希望的参数组合，最后使用完整训练集和最优参数重新训练最终模型。
@@ -1085,6 +1098,7 @@ print(f"最终 wordNgrams: {model.wordNgrams}")
 ```
 
 **注意**：
+
 - 自动调优会修改模型对象的属性，训练出的模型已经是优化后的结果。
 - 自动调优时间设置需合理：时间越长，搜索越充分，但耗时也越久。通常根据数据集大小设置 300~3600 秒。
 - 调优过程中会临时创建多个模型，占用额外磁盘空间，确保有足够空闲空间。

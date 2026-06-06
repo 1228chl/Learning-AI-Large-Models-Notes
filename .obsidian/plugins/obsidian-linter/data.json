@@ -290,7 +290,14 @@
       "find": "(?<!\\n---\\n\\n)(^(#{1,6}\\s+[^#\\n]+))",
       "replace": "---\\n\\n$1",
       "flags": "gm",
-      "enabled": false
+      "enabled": true
+    },
+    {
+      "label": "公式$$自动顶格",
+      "find": "^[ \\t]+\\$\\$",
+      "replace": "$$",
+      "flags": "gm",
+      "enabled": true
     }
   ],
   "commonStyles": {

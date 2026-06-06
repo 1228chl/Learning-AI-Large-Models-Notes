@@ -12,6 +12,8 @@
 
 ## 第一部分：图像基础知识
 
+---
+
 ### 1. 图像的基本概念
 
 图像是人类视觉的基础，是自然景物的客观反映。在计算机中，图像被表示为一个由**像素点**组成的二维（或三维）矩阵。每个像素点存储了该位置的颜色或灰度信息。
@@ -30,26 +32,12 @@
 
 根据颜色和灰度的多少，图像可分为四种基本类型：
 
-| 图像类型 | 描述 | 数据表示 |
-|----------|------|----------|
-| **二值图像** | 每个像素非黑即白，只有 0 和 1 两个值。0 代表黑色，1 代表白色。常用于文字识别、掩膜等。 | 二维矩阵，元素为 0 或 1 |
-| **灰度图像** | 每个像素的灰度值范围
-
-$$
-0, 255
-$$
-
-，0 为纯黑，255 为纯白，中间为不同亮度。 | 二维矩阵，元素为 uint8 |
-
-| **索引图像** | 包含一个数据矩阵和一个颜色索引矩阵（MAP）。数据矩阵中的值作为索引，从 MAP 中查找 RGB 颜色。 | 二维索引矩阵 + 256×3 的 MAP |
-
-| **真彩色（RGB）图像** | 每个像素由红（R）、绿（G）、蓝（B）三个分量组成，每个分量范围
-
-$$
-0, 255
-$$
-
-。三个 M×N 矩阵分别表示 R、G、B。 | 三维数组 H×W×3（或 3×H×W） |
+| 图像类型           | 描述                                                            | 数据表示                 |
+| -------------- | ------------------------------------------------------------- | -------------------- |
+| **二值图像**       | 每个像素非黑即白，只有 0 和 1 两个值。0 代表黑色，1 代表白色。常用于文字识别、掩膜等。              | 二维矩阵，元素为 0 或 1       |
+| **灰度图像**       | 每个像素的灰度值范围 [0, 255]，0 为纯黑，255 为纯白，中间为不同亮度。                    | 二维矩阵，元素为 uint8       |
+| **索引图像**       | 包含一个数据矩阵和一个颜色索引矩阵（MAP）。数据矩阵中的值作为索引，从 MAP 中查找 RGB 颜色。          | 二维索引矩阵 + 256×3 的 MAP |
+| **真彩色（RGB）图像** | 每个像素由红（R）、绿（G）、蓝（B）三个分量组成，每个分量范围[0, 255]。三个 M×N 矩阵分别表示 R、G、B。 | 三维数组 H×W×3（或 3×H×W）  |
 
 > 注意：在常见的深度学习库（如 PyTorch、TensorFlow）中，RGB 图像的通道顺序通常为 **C×H×W**（通道数、高度、宽度），而 Matplotlib 读取图像时默认是 **H×W×C**。
 
@@ -82,12 +70,16 @@ Matplotlib 是 Python 中常用的图像可视化库，提供了读取、显示�
 import numpy as np
 import matplotlib.pyplot as plt
 
+---
+
 # 全黑图像：所有像素为 0
 black_img = np.zeros(shape=[200, 200, 3], dtype=np.uint8)
 plt.imshow(black_img)
 plt.axis("off")      # 关闭坐标轴
 plt.title("全黑图像")
 plt.show()
+
+---
 
 # 全白图像：所有像素为 255
 white_img = np.full(shape=[200, 200, 3], fill_value=255, dtype=np.uint8)
@@ -102,14 +94,20 @@ plt.show()
 #### 2.2 读取和保存图像
 
 ```python
+---
+
 # 读取图像
 img = plt.imread("data/img.jpg")   # 读取后形状为 (H, W, C)，数据类型 uint8，范围 [0,255]
 print("图像形状 (H, W, C):", img.shape)   # 例如 (640, 640, 3)
+
+---
 
 # 显示图像
 plt.imshow(img)
 plt.axis("off")
 plt.show()
+
+---
 
 # 保存图像
 plt.imsave("data/saved_img.jpg", img)
@@ -127,6 +125,8 @@ plt.imsave("data/saved_img.jpg", img)
 4. **添加批次维度**：增加 batch 维度，形状变为 B×C×H×W。
 
 ```python
+---
+
 # 示例：使用 PyTorch 的预处理
 import torchvision.transforms as transforms
 
@@ -140,6 +140,8 @@ transform = transforms.Compose([
 ---
 
 ## 第二部分：卷积神经网络（CNN）概述
+
+---
 
 ### 1. 什么是卷积神经网络
 
@@ -227,6 +229,8 @@ transform = transforms.Compose([
 
 ----
 
+---
+
 #### 4.4 GoogLeNet（Inception，2014）
 
 - 创新点：
@@ -288,6 +292,8 @@ transform = transforms.Compose([
 ---
 
 ### 1. 卷积计算
+
+---
 
 #### 1.1 单通道卷积计算
 
@@ -352,8 +358,12 @@ import torch
 import torch.nn as nn
 import matplotlib.pyplot as plt
 
+---
+
 # 演示一个简单的手工卷积核进行边缘检测
 import numpy as np
+
+---
 
 # 创建一个简单图像（模拟边缘）
 img = np.array([
@@ -364,6 +374,8 @@ img = np.array([
     [0, 0, 0, 0, 0]
 ], dtype=np.float32)
 
+---
+
 # 定义边缘检测卷积核（Sobel垂直边缘）
 sobel_kernel = np.array([
     [-1, 0, 1],
@@ -371,9 +383,13 @@ sobel_kernel = np.array([
     [-1, 0, 1]
 ], dtype=np.float32)
 
+---
+
 # 转换为PyTorch张量并添加通道和批次维度
 img_tensor = torch.tensor(img).unsqueeze(0).unsqueeze(0)  # (1,1,5,5)
 kernel_tensor = torch.tensor(sobel_kernel).unsqueeze(0).unsqueeze(0)
+
+---
 
 # 进行卷积操作（使用nn.functional.conv2d）
 import torch.nn.functional as F
@@ -384,6 +400,8 @@ print("边缘检测结果：\n", output.squeeze().detach().numpy())
 ---
 
 ### 2. 填充（Padding）
+
+---
 
 #### 2.1 为什么需要填充？
 
@@ -410,11 +428,17 @@ print("边缘检测结果：\n", output.squeeze().detach().numpy())
 ```python
 import torch.nn as nn
 
+---
+
 # Valid Padding（无填充）
 conv_valid = nn.Conv2d(in_channels=3, out_channels=64, kernel_size=3, stride=1, padding=0)
 
+---
+
 # Same Padding（保持输出尺寸与输入相同，kernel_size=3时padding=1）
 conv_same = nn.Conv2d(3, 64, kernel_size=3, stride=1, padding=1)
+
+---
 
 # Full Padding（例如 kernel_size=3，padding=2 使每个元素都至少滑动一次）
 conv_full = nn.Conv2d(3, 64, kernel_size=3, stride=1, padding=2)
@@ -423,6 +447,8 @@ conv_full = nn.Conv2d(3, 64, kernel_size=3, stride=1, padding=2)
 ---
 
 ### 3. 步长（Stride）
+
+---
 
 #### 3.1 步长的概念
 
@@ -447,13 +473,19 @@ conv_full = nn.Conv2d(3, 64, kernel_size=3, stride=1, padding=2)
 import torch
 import torch.nn as nn
 
+---
+
 # 输入：1通道，5x5
 input_tensor = torch.randn(1, 1, 5, 5)
+
+---
 
 # 步长为1
 conv_stride1 = nn.Conv2d(1, 1, kernel_size=3, stride=1, padding=0)
 out1 = conv_stride1(input_tensor)
 print("Stride=1 输出尺寸:", out1.shape)  # (1,1,3,3)
+
+---
 
 # 步长为2
 conv_stride2 = nn.Conv2d(1, 1, kernel_size=3, stride=2, padding=0)
@@ -479,11 +511,17 @@ $$
 **示例**：输入为 5×5×3，卷积核为 3×3×3，输出为 3×3（若 stride=1, padding=0）。
 
 ```python
+---
+
 # PyTorch 中多通道卷积示例
 import torch.nn as nn
 
+---
+
 # 输入：1张RGB图像，形状 (1, 3, 32, 32)
 input_tensor = torch.randn(1, 3, 32, 32)
+
+---
 
 # 定义卷积层：输入通道3，输出通道64，卷积核3x3
 conv = nn.Conv2d(in_channels=3, out_channels=64, kernel_size=3, stride=1, padding=1)
@@ -505,8 +543,12 @@ print("多通道卷积输出形状:", output.shape)  # (1, 64, 32, 32)
 **示例**：输入为 5×5×3，使用 2 个卷积核，每个卷积核大小为 3×3×3，输出特征图尺寸为 3×3×2（若 stride=1, padding=0）。
 
 ```python
+---
+
 # 多卷积核示例
 conv_multi = nn.Conv2d(in_channels=3, out_channels=64, kernel_size=3, stride=1, padding=1)
+---
+
 # out_channels=64 表示有64个卷积核，输出特征图通道数为64
 ```
 
@@ -539,6 +581,8 @@ $$
 
 ### 7. PyTorch 卷积层 API 详解
 
+---
+
 #### 7.1 `torch.nn.Conv2d`
 
 ```python
@@ -569,12 +613,16 @@ import torch
 import torch.nn as nn
 import matplotlib.pyplot as plt
 
+---
+
 # 1. 读取图像并预处理
 def load_and_preprocess(image_path):
     img = plt.imread(image_path)                 # 形状 (H, W, C)
     img_tensor = torch.tensor(img).permute(2, 0, 1)  # 转为 (C, H, W)
     img_tensor = img_tensor.unsqueeze(0)         # 增加批次维度 (1, C, H, W)
     return img_tensor.float() / 255.0            # 归一化到 [0,1]
+
+---
 
 # 2. 定义卷积层
 conv_layer = nn.Conv2d(
@@ -585,13 +633,19 @@ conv_layer = nn.Conv2d(
     padding=1            # 为了保持尺寸，padding=1，stride=2 会减半
 )
 
+---
+
 # 3. 加载图像
 img_tensor = load_and_preprocess("data/img.jpg")
 print("输入形状:", img_tensor.shape)   # (1, 3, H, W)
 
+---
+
 # 4. 卷积操作
 output = conv_layer(img_tensor)
 print("输出形状:", output.shape)       # (1, 4, H/2, W/2) 约等于 (1,4,320,320)
+
+---
 
 # 5. 可视化特征图
 output_np = output[0].detach().numpy()  # (4, H/2, W/2)
@@ -608,9 +662,13 @@ plt.show()
 #### 7.3 特征图尺寸变化的直观验证
 
 ```python
+---
+
 # 验证特征图尺寸公式
 def compute_output_size(W, F, P, S):
     return (W - F + 2 * P) // S + 1
+
+---
 
 # 示例
 W = 640   # 输入宽度
@@ -647,11 +705,15 @@ $$
 
 ### 9. 卷积层的高级变体
 
+---
+
 #### 9.1 空洞卷积（Dilated Convolution）
 
 在卷积核元素之间插入空洞（即间隔），以扩大感受野而不增加参数量。
 
 ```python
+---
+
 # dilation=2，相当于3x3卷积核覆盖的区域为5x5
 conv_dilated = nn.Conv2d(3, 64, kernel_size=3, dilation=2, padding=2)
 ```
@@ -663,6 +725,8 @@ conv_dilated = nn.Conv2d(3, 64, kernel_size=3, dilation=2, padding=2)
 将输入通道和输出通道分成若干组，每组独立进行卷积，可减少计算量。常用于深度可分离卷积（Depthwise Separable Convolution）。
 
 ```python
+---
+
 # 分组数为输入通道数时，为深度卷积（Depthwise Conv）
 conv_depthwise = nn.Conv2d(32, 32, kernel_size=3, groups=32)
 ```
@@ -674,6 +738,8 @@ conv_depthwise = nn.Conv2d(32, 32, kernel_size=3, groups=32)
 用于上采样，将小特征图放大为大特征图，常用于生成模型和语义分割。
 
 ```python
+---
+
 # 上采样：输入尺寸 7x7，输出 14x14
 conv_transpose = nn.ConvTranspose2d(64, 32, kernel_size=4, stride=2, padding=1)
 ```
@@ -710,6 +776,8 @@ conv_transpose = nn.ConvTranspose2d(64, 32, kernel_size=4, stride=2, padding=1)
 ---
 
 ### 2. 池化层的类型
+
+---
 
 #### 2.1 最大池化（Max Pooling）
 
@@ -793,6 +861,8 @@ $$
 import torch
 import torch.nn as nn
 
+---
+
 # 多通道输入：3 通道，每通道 4×4
 input_multi = torch.randn(1, 3, 4, 4)
 pool = nn.MaxPool2d(kernel_size=2, stride=2)
@@ -803,6 +873,8 @@ print(output.shape)  # torch.Size([1, 3, 2, 2])  通道数不变
 ---
 
 ### 5. PyTorch 池化层 API
+
+---
 
 #### 5.1 `nn.MaxPool2d`
 
