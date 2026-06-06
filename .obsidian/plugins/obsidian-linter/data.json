@@ -275,7 +275,7 @@
   "recordLintOnSaveLogs": false,
   "displayChanged": true,
   "suppressMessageWhenNoChange": true,
-  "lintOnFileChange": true,
+  "lintOnFileChange": false,
   "displayLintOnFileChangeNotice": true,
   "settingsConvertedToConfigKeyValues": true,
   "additionalFileExtensions": [],
@@ -290,7 +290,7 @@
       "find": "(?<!\\n---\\n\\n)(^(#{1,6}\\s+[^#\\n]+))",
       "replace": "---\\n\\n$1",
       "flags": "gm",
-      "enabled": true
+      "enabled": false
     },
     {
       "label": "公式$$自动顶格",

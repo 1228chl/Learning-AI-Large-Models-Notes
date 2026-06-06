@@ -1,6 +1,6 @@
 **上一级：** [02-文本预处理-分词-张量](02-文本预处理-分词-张量.md)
 
-**下一级：** [[]]
+**下一级：** [04-RNN及其变体](04-RNN及其变体.md)
 
 **标签：** #NLP
 
@@ -53,12 +53,8 @@ FastText 之所以“快速”，来源于以下几点设计：
 **安装方法**（推荐使用 pip）：
 
 ```bash
----
-
 # Linux / macOS
 pip install fasttext
-
----
 
 # Windows（可能需预装 Visual C++ Build Tools）
 pip install fasttext-wheel
@@ -359,12 +355,8 @@ __label__cast-iron __label__stove How do I cover up the white spots on my cast i
 **简单划分方法**（在命令行中）：
 
 ```bash
----
-
 # 查看总行数
 wc -l cooking.stackexchange.txt
-
----
 
 # 取前 80% 作为训练集，后 20% 作为验证集（示例中总行数约 15000，取 12000 训练，3000 验证）
 head -n 12000 cooking.stackexchange.txt > cooking_train.txt
@@ -385,12 +377,8 @@ tail -n 3000 cooking.stackexchange.txt > cooking_valid.txt
 ```python
 import fasttext
 
----
-
 # 训练模型（使用默认参数）
 model = fasttext.train_supervised(input="cooking_train.txt")
-
----
 
 # 评估模型在验证集上的表现
 result = model.test("cooking_valid.txt")
@@ -428,8 +416,6 @@ def clean_text(line):
     # 合并多余空格
     text = re.sub(r'\s+', ' ', text).strip()
     return f"{labels} {text}"
-
----
 
 # 处理训练集和验证集
 with open("cooking_train.txt", "r") as f:
@@ -495,8 +481,6 @@ model = fasttext.train_supervised(input="cooking_train_pre.txt", epoch=25, lr=1.
 对于烹饪数据集（多标签），使用 `loss='ova'` 可以更好地处理多个标签共现的情况。
 
 ```python
----
-
 # 使用 ova 损失，学习率不宜过大（如 lr=0.2）
 model = fasttext.train_supervised(input="cooking_train_pre.txt", epoch=25, lr=0.2, wordNgrams=2, loss='ova')
 ```
@@ -546,13 +530,9 @@ model = fasttext.train_supervised(
 - `threshold`：概率阈值，仅对 `loss='ova'` 有效（或对所有模式按需使用）。
 
 ```python
----
-
 # 单标签预测（取最高分标签）
 pred = model.predict("Which baking dish is best to bake a banana bread ?", k=1)
 print(pred)  # (('__label__baking',), array([0.98]))
-
----
 
 # 多标签预测，返回所有概率 > 0.5 的标签
 pred = model.predict("Which baking dish is best to bake a banana bread ?", k=-1, threshold=0.5)
@@ -577,17 +557,11 @@ print(result)  # (样本数, 精确率, 召回率)
 ### 2.5 模型保存与加载
 
 ```python
----
-
 # 保存模型
 model.save_model("fasttext_cooking.bin")
 
----
-
 # 加载模型
 loaded_model = fasttext.load_model("fasttext_cooking.bin")
-
----
 
 # 使用加载的模型进行预测
 pred = loaded_model.predict("How to make pizza dough?")
@@ -662,8 +636,6 @@ $$
 
 4. **Q：如何提升模型的泛化能力？**  
    A：可尝试增加训练数据、进行数据增强（如回译）、使用 dropout（FastText 未直接支持，可降低 `dim` 或增加正则化）、减小学习率。
-
----
 
 ---
 
@@ -760,8 +732,6 @@ $$
 ```python
 import fasttext
 
----
-
 # 训练 CBOW 模型
 model_cbow = fasttext.train_unsupervised(
     input='data/fil9',
@@ -805,13 +775,9 @@ model_sg.save_model('fasttext_skipgram.bin')
 #### 3.4.3 获取词向量
 
 ```python
----
-
 # 获取词向量（若词 OOV，FastText 会基于子词生成向量）
 vec = model_sg.get_word_vector('artificial')
 print(vec.shape)  # (300,)
-
----
 
 # 批量获取多个词的向量
 words = ['machine', 'learning', 'nlp']
@@ -823,8 +789,6 @@ vectors = [model_sg.get_word_vector(w) for w in words]
 #### 3.4.4 查找最近邻
 
 ```python
----
-
 # 返回与给定词最相似的 k 个词
 neighbors = model_sg.get_nearest_neighbors('computer', k=10)
 for score, word in neighbors:
@@ -836,8 +800,6 @@ for score, word in neighbors:
 #### 3.4.5 计算词类比（如 “king - man + woman ≈ queen”）
 
 ```python
----
-
 # 使用 get_analogies 方法
 analogies = model_sg.get_analogies("king", "man", "woman", k=5)
 for score, word in analogies:
@@ -880,8 +842,6 @@ for score, word in analogies:
 ```python
 import numpy as np
 from scipy.stats import spearmanr
-
----
 
 # 假设有一个相似度数据集 word_pairs = [('word1', 'word2', human_score)]
 def evaluate_similarity(model, word_pairs):
@@ -973,18 +933,12 @@ FastText 官方提供了 **157 种语言的预训练词向量**（包括中文�
 ```python
 import fasttext
 
----
-
 # 加载中文预训练词向量
 zh_model = fasttext.load_model('cc.zh.300.bin')
-
----
 
 # 获取中文词的向量
 vec_北京 = zh_model.get_word_vector('北京')
 vec_上海 = zh_model.get_word_vector('上海')
-
----
 
 # 查找中文词的最近邻
 neighbors = zh_model.get_nearest_neighbors('苹果', k=5)
@@ -1005,8 +959,6 @@ print("苹果的相似词:", neighbors)
 **简单示例：加载 .vec 文本格式（词表有限）**
 
 ```python
----
-
 # .vec 文件格式：第一行是 词数 维度，之后每行 "word vector"
 def load_fasttext_vec(file_path):
     with open(file_path, 'r', encoding='utf-8') as f:
@@ -1019,14 +971,8 @@ def load_fasttext_vec(file_path):
             vectors[word] = vec
     return vectors
 
----
-
 # 加载中文和英文的 .vec 文件（需要先下载或自己训练）
----
-
 # zh_vectors = load_fasttext_vec('cc.zh.300.vec')
----
-
 # en_vectors = load_fasttext_vec('cc.en.300.vec')
 ```
 
@@ -1037,17 +983,9 @@ def load_fasttext_vec(file_path):
 可以使用 FastText 直接在**多语言混合语料**上训练分类模型（但要求所有语言都使用相同的标签）。FastText 的 n-gram 和子词机制对多语言有一定适应性（因为字符 n-gram 跨语言共享）。例如，同时使用中文和英文的训练数据，模型能学到一些跨语言的模式。
 
 ```python
----
-
 # 准备多语言训练数据（每行格式：__label__category 词1 词2 ...）
----
-
 # 例如：
----
-
 # __label__sport 篮球 比赛 决赛
----
-
 # __label__sport basketball game final
 model = fasttext.train_supervised(input='multilingual_train.txt')
 ```
@@ -1079,8 +1017,6 @@ FastText 的自动调优会在指定的时间（秒）内，使用验证集评�
 ```python
 import fasttext
 
----
-
 # 使用自动调优，最大搜索时间 300 秒（5分钟）
 model = fasttext.train_supervised(
     input='cooking_train_pre.txt',
@@ -1088,8 +1024,6 @@ model = fasttext.train_supervised(
     autotuneDuration=300,      # 单位：秒
     verbose=2                  # 输出调优过程细节
 )
-
----
 
 # 查看最终使用的超参数（通过 model 的属性或调优日志）
 print(f"最终学习率: {model.lr}")
@@ -1134,18 +1068,12 @@ import torch.nn as nn
 import fasttext
 import numpy as np
 
----
-
 # 1. 训练或加载 FastText 模型
 ft_model = fasttext.load_model('fasttext_cbow.bin')
-
----
 
 # 2. 构建词汇表（仅包含训练集中出现的词）
 vocab = {'<PAD>': 0, '<UNK>': 1}   # 预留特殊 token
 word_vectors = []
-
----
 
 # 假设我们已经有了词汇表列表 words_list
 for word in words_list:
@@ -1155,20 +1083,14 @@ for word in words_list:
         vec = ft_model.get_word_vector(word)
         word_vectors.append(vec)
 
----
-
 # 添加 <PAD> 和 <UNK> 的向量（全零 或 随机初始化）
 pad_vec = np.zeros(ft_model.get_dimension())
 unk_vec = np.random.randn(ft_model.get_dimension()) * 0.01
 word_vectors = [pad_vec, unk_vec] + word_vectors
 
----
-
 # 3. 创建 PyTorch 嵌入层并加载预训练权重
 embedding_weight = torch.tensor(np.array(word_vectors), dtype=torch.float32)
 embedding_layer = nn.Embedding.from_pretrained(embedding_weight, freeze=True)   # freeze=True 表示固定
-
----
 
 # 4. 在模型中使用该嵌入层
 class TextCNN(nn.Module):
@@ -1203,8 +1125,6 @@ class TextCNN(nn.Module):
 在使用 BERT 等大模型之前，可以先用 FastText 训练一个简单分类器，作为**基线模型**。基线模型可以快速验证数据可学习性，并为复杂模型提供性能下限。
 
 ```python
----
-
 # 快速构建 FastText 基线
 baseline = fasttext.train_supervised(input='train.txt', epoch=10, lr=0.5)
 baseline_acc = baseline.test('valid.txt')[1]

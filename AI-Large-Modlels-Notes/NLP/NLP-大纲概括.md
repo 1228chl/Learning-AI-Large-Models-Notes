@@ -1,4 +1,4 @@
-**下一级：** [[]]
+**下一级：** [01-自然语言处理概述](01-自然语言处理概述.md)
 
 **标签：** #NLP
 
@@ -70,29 +70,21 @@ NLP 的两大子领域：
 import torch
 import torch.nn as nn
 
----
-
 # 假设词汇表大小 1000，嵌入维度 128
 vocab_size = 1000
 embedding_dim = 128
 
 embedding_layer = nn.Embedding(num_embeddings=vocab_size, embedding_dim=embedding_dim)
 
----
-
 # 模拟一个 batch 的输入：3 个句子，每个句子 5 个词（词索引）
 input_ids = torch.tensor([[ 12,  45,  99,   2, 341],
                           [  5, 123,   8,  12,  56],
                           [ 78,  34, 567,   1,  89]])  # shape: (batch_size=3, seq_len=5)
 
----
-
 # 通过嵌入层得到词向量
 embeddings = embedding_layer(input_ids)  # shape: (3, 5, 128)
 
 print("词嵌入输出形状:", embeddings.shape)
-
----
 
 # 简单分类模型：平均池化 + 线性层
 class SimpleTextClassifier(nn.Module):
@@ -231,25 +223,17 @@ from transformers import BertTokenizer, BertForSequenceClassification
 from torch.utils.data import DataLoader
 import torch.optim as optim
 
----
-
 # 1. 加载分词器和模型
 model_name = "bert-base-uncased"
 tokenizer = BertTokenizer.from_pretrained(model_name)
 model = BertForSequenceClassification.from_pretrained(model_name, num_labels=2)  # 二分类
 
----
-
 # 2. 示例输入（单个句子）
 texts = ["I love this movie!", "This film is terrible."]
 labels = [1, 0]  # 1=正面，0=负面
 
----
-
 # 3. 对文本进行分词、填充、截断、生成 attention mask
 encodings = tokenizer(texts, truncation=True, padding=True, return_tensors="pt")
-
----
 
 # 4. 简单训练循环（演示）
 optimizer = optim.AdamW(model.parameters(), lr=2e-5)
@@ -263,8 +247,6 @@ for epoch in range(1):
     optimizer.step()
     optimizer.zero_grad()
     print(f"Loss: {loss.item()}")
-
----
 
 # 5. 推理
 model.eval()
@@ -511,8 +493,6 @@ $$
 from transformers import DistilBertTokenizer, DistilBertForSequenceClassification
 from datasets import load_dataset
 from transformers import Trainer, TrainingArguments
-
----
 
 # 加载 IMDB 数据集（需先安装 datasets）
 dataset = load_dataset("imdb")
@@ -1054,8 +1034,6 @@ class MultiHeadSelfAttention(nn.Module):
         output = self.W_o(context)
         return output
 
----
-
 # 示例
 x = torch.randn(2, 10, 512)   # batch=2, seq_len=10, d_model=512
 mha = MultiHeadSelfAttention(512, 8)
@@ -1273,21 +1251,13 @@ $$
 ```python
 from tokenizers import Tokenizer, models, trainers, pre_tokenizers
 
----
-
 # 初始化一个 BPE tokenizer
 tokenizer = Tokenizer(models.BPE())
 tokenizer.pre_tokenizer = pre_tokenizers.ByteLevel(add_prefix_space=False)  # GPT‑2 风格
 
----
-
 # 训练（需要提供文件列表）
 trainer = trainers.BpeTrainer(vocab_size=30000, special_tokens=["<unk>", "<pad>"])
----
-
 # tokenizer.train(files=["path/to/corpus.txt"], trainer=trainer)
-
----
 
 # 或者使用预训练的 BERT tokenizer
 from transformers import BertTokenizerFast
@@ -1483,17 +1453,11 @@ from datasets import load_dataset
 import numpy as np
 from sklearn.metrics import accuracy_score, f1_score
 
----
-
 # 1. 加载数据集（IMDB）
 dataset = load_dataset("imdb")
----
-
 # 取子集加快演示速度（可选）
 small_train = dataset["train"].shuffle(seed=42).select(range(2000))
 small_test = dataset["test"].shuffle(seed=42).select(range(500))
-
----
 
 # 2. 加载分词器
 model_name = "bert-base-uncased"
@@ -1507,12 +1471,8 @@ test_enc = small_test.map(tokenize, batched=True)
 train_enc.set_format("torch", columns=["input_ids", "attention_mask", "label"])
 test_enc.set_format("torch", columns=["input_ids", "attention_mask", "label"])
 
----
-
 # 3. 加载模型
 model = AutoModelForSequenceClassification.from_pretrained(model_name, num_labels=2)
-
----
 
 # 4. 定义评估指标
 def compute_metrics(eval_pred):
@@ -1521,8 +1481,6 @@ def compute_metrics(eval_pred):
     acc = accuracy_score(labels, preds)
     f1 = f1_score(labels, preds)
     return {"accuracy": acc, "f1": f1}
-
----
 
 # 5. 配置训练参数
 training_args = TrainingArguments(
@@ -1537,8 +1495,6 @@ training_args = TrainingArguments(
     metric_for_best_model="accuracy",
 )
 
----
-
 # 6. Trainer API
 trainer = Trainer(
     model=model,
@@ -1547,8 +1503,6 @@ trainer = Trainer(
     eval_dataset=test_enc,
     compute_metrics=compute_metrics,
 )
-
----
 
 # 7. 训练与评估
 trainer.train()
@@ -1574,8 +1528,6 @@ lora_config = LoraConfig(
 model = AutoModelForSequenceClassification.from_pretrained(model_name, num_labels=2)
 model = get_peft_model(model, lora_config)
 model.print_trainable_parameters()  # 仅显示可训练参数量（远小于全量）
-
----
 
 # 后续 Trainer 使用同上，但只训练 LoRA 参数
 ```
@@ -1780,32 +1732,22 @@ from langchain.vectorstores import FAISS
 from langchain.llms import HuggingFacePipeline
 from langchain.chains import RetrievalQA
 
----
-
 # 1. 加载文档并切分
 loader = TextLoader("knowledge.txt")
 documents = loader.load()
 text_splitter = CharacterTextSplitter(chunk_size=500, chunk_overlap=50)
 docs = text_splitter.split_documents(documents)
 
----
-
 # 2. 创建嵌入与向量库
 embedding_model = HuggingFaceEmbeddings(model_name="sentence-transformers/all-MiniLM-L6-v2")
 vectorstore = FAISS.from_documents(docs, embedding_model)
 
----
-
 # 3. 设置检索器
 retriever = vectorstore.as_retriever(search_kwargs={"k": 4})
-
----
 
 # 4. 加载 LLM（本例以 GPT-2 示意，实际应用使用大模型）
 from transformers import pipeline
 llm = pipeline("text-generation", model="gpt2", max_new_tokens=256)
-
----
 
 # 5. 创建 RAG 链
 qa_chain = RetrievalQA.from_chain_type(llm=llm, chain_type="stuff", retriever=retriever)
@@ -1937,30 +1879,20 @@ print(response)
 #### 9.2.1 HuggingFace 生态核心组件
 
 ```python
----
-
 # 1. transformers：加载模型、分词器
 from transformers import AutoModel, AutoTokenizer
-
----
 
 # 2. datasets：加载、处理、缓存数据集
 from datasets import load_dataset
 dataset = load_dataset("imdb")
-
----
 
 # 3. evaluate：评估指标统一接口
 from evaluate import load
 accuracy = load("accuracy")
 accuracy.compute(predictions=[0,1], references=[0,1])
 
----
-
 # 4. PEFT：参数高效微调（LoRA, Adapter）
 from peft import LoraConfig, get_peft_model
-
----
 
 # 5. accelerate：分布式训练简化
 from accelerate import Accelerator
@@ -2005,14 +1937,10 @@ from transformers import AutoModelForSequenceClassification
 model = AutoModelForSequenceClassification.from_pretrained("bert-base-uncased")
 model.eval()
 
----
-
 # 动态量化：仅对 Linear 层进行 INT8 量化
 quantized_model = torch.quantization.quantize_dynamic(
     model, {torch.nn.Linear}, dtype=torch.qint8
 )
-
----
 
 # 比较大小
 def print_model_size(model):
@@ -2093,29 +2021,19 @@ print_model_size(quantized_model) # ~110 MB (INT8)
 #### 9.5.4 典型工作流示例（简化版）
 
 ```bash
----
-
 # 1. 数据版本管理
 dvc add data/raw.csv
 git add data/raw.csv.dvc
 
----
-
 # 2. 训练脚本（wandb 记录）
 python train.py --lr 2e-5 --model bert-base
-
----
 
 # 3. 模型注册（MLflow）
 mlflow models register -m runs:/<run_id>/model -n bert-imdb
 
----
-
 # 4. 部署为 REST API（BentoML）
 bentoml build
 bentoml serve
-
----
 
 # 5. 监控（Evidently）
 evidently run monitoring --reference data/train.csv --current data/production.csv

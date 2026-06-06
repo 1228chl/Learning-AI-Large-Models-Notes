@@ -1,3 +1,5 @@
+**下一级：**[04-RNN及其变体](../../NLP/04-RNN及其变体.md)
+
 **标签：** #DL
 
 ---
@@ -9,6 +11,8 @@
 ---
 
 ## 第一部分：RNN 介绍与序列数据
+
+---
 
 ### 1. 什么是循环神经网络（RNN）
 
@@ -58,6 +62,8 @@
 
 ## 第二部分：自然语言处理（NLP）与词嵌入层详解
 
+---
+
 ### 1. 自然语言处理概述
 
 自然语言处理（Nature Language Processing，NLP）研究的主要是通过计算机算法来理解自然语言。NLP 处理的数据主要是人类的语言（如汉语、英语、法语等），这类数据不像结构化数据或图像数据那样可以直接数值化。
@@ -96,6 +102,8 @@
 
 ### 3. 词嵌入层的工作原理
 
+---
+
 #### 3.1 词向量矩阵
 
 词嵌入层内部维护一个**词向量矩阵（Embedding Matrix）**，形状为 `(vocab_size, embedding_dim)`：
@@ -126,6 +134,8 @@
 
 ### 4. PyTorch 中的词嵌入层（`nn.Embedding`）
 
+---
+
 #### 4.1 API 说明
 
 ```python
@@ -151,6 +161,8 @@ torch.nn.Embedding(num_embeddings, embedding_dim, padding_idx=None,
 import torch
 import torch.nn as nn
 import jieba  # 中文分词库
+
+---
 
 # 示例：将中文句子中的词转换为词向量
 if __name__ == '__main__':
@@ -192,7 +204,11 @@ if __name__ == '__main__':
 实际中，我们通常批量处理多个句子。句子长度可能不同，需要进行**填充（padding）** 和**打包（packing）**（后面会涉及）。
 
 ```python
+---
+
 # 假设有一个批次的句子索引序列（已经转换为索引）
+---
+
 # shape: (batch_size, seq_len)
 indices = torch.tensor([[1, 2, 3, 0, 0],   # 句子1，0表示填充
                         [4, 5, 6, 7, 8]])   # 句子2，长度5
@@ -209,11 +225,23 @@ print(embedded.shape)   # torch.Size([2, 5, 128])
 除了随机初始化，还可以使用预训练的词向量，如 Word2Vec、GloVe、FastText 等。这些向量在大规模语料上训练，能够捕捉丰富的语义信息。
 
 ```python
+---
+
 # 使用 Gensim 加载预训练的 Word2Vec 或使用 torchtext 加载 GloVe
+---
+
 # 示例：使用 torchtext 加载 GloVe（需要安装 torchtext）
+---
+
 # from torchtext.vocab import GloVe
+---
+
 # glove = GloVe(name='6B', dim=100)   # 6B 表示 60亿词数据集，100维
+---
+
 # word_vector = glove['hello']
+---
+
 # 然后将预训练向量赋值给 nn.Embedding 的权重
 ```
 
@@ -233,7 +261,11 @@ print(embedded.shape)   # torch.Size([2, 5, 128])
 
 ## 第三部分：循环网络层（RNN Layer）
 
+---
+
 ### 1. RNN 网络结构与原理
+
+---
 
 #### 1.1 RNN 的基本结构
 
@@ -280,6 +312,8 @@ RNN 的核心是**循环连接**：隐藏层的输出不仅传递到下一层，
 ---
 
 ### 2. RNN 内部计算公式
+
+---
 
 #### 2.1 隐藏状态更新公式
 
@@ -351,6 +385,8 @@ $$
 
 ### 4. PyTorch 中的 RNN 层
 
+---
+
 #### 4.1 API 说明
 
 ```python
@@ -392,6 +428,8 @@ torch.nn.RNN(input_size, hidden_size, num_layers=1, nonlinearity='tanh',
 ```python
 import torch
 import torch.nn as nn
+
+---
 
 # 测试 RNN 层
 def test_rnn():
@@ -443,12 +481,20 @@ print("batch_first=True 时的 output 形状:", output.shape)  # (32, 5, 256)
 #### 4.5 多层 RNN 与双向 RNN
 
 ```python
+---
+
 # 2 层 RNN
 rnn_2layers = nn.RNN(128, 256, num_layers=2)
+---
+
 # 输出：output (seq_len, batch, 256)，hn (2, batch, 256)
+
+---
 
 # 双向 RNN
 rnn_bidirectional = nn.RNN(128, 256, bidirectional=True)
+---
+
 # 输出：output (seq_len, batch, 256*2)，hn (2, batch, 256)  # 2 个方向
 ```
 
@@ -492,6 +538,8 @@ import torch
 import torch.nn as nn
 import torch.optim as optim
 
+---
+
 # 超参数
 seq_len = 10
 batch_size = 1
@@ -501,20 +549,30 @@ num_layers = 2
 num_epochs = 100
 learning_rate = 0.01
 
+---
+
 # 模拟字符词汇表（假设 100 个不同的字符）
 vocab_size = 100
 embedding = nn.Embedding(vocab_size, input_size)
 rnn = nn.RNN(input_size, hidden_size, num_layers, batch_first=True)
 fc = nn.Linear(hidden_size, vocab_size)
 
+---
+
 # 损失函数和优化器
 criterion = nn.CrossEntropyLoss()
 optimizer = optim.Adam(list(embedding.parameters()) + list(rnn.parameters()) + list(fc.parameters()), lr=learning_rate)
 
+---
+
 # 模拟输入和标签（随机索引）
+---
+
 # 输入: (batch, seq_len)  标签: (batch, seq_len)  每个位置预测下一个字符
 inputs = torch.randint(0, vocab_size, (batch_size, seq_len))
 targets = torch.randint(0, vocab_size, (batch_size, seq_len))
+
+---
 
 # 训练循环（示意）
 for epoch in range(num_epochs):
