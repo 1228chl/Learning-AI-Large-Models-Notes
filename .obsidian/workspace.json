@@ -38,13 +38,13 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "AI-Large-Modlels-Notes/NLP/02-文本预处理-分词-张量.md",
+                "file": "AI-Large-Modlels-Notes/NLP/03-FastText分类任务.md",
                 "mode": "source",
                 "source": false,
                 "backlinks": false
               },
               "icon": "lucide-file",
-              "title": "02-文本预处理-分词-张量"
+              "title": "03-FastText分类任务"
             }
           }
         ],
@@ -105,7 +105,8 @@
       }
     ],
     "direction": "horizontal",
-    "width": 319.5
+    "width": 319.5,
+    "collapsed": true
   },
   "right": {
     "id": "f07a0c5b7e11463b",
@@ -225,12 +226,12 @@
   },
   "active": "fc66b27653448d70",
   "lastOpenFiles": [
+    "AI-Large-Modlels-Notes/NLP/02-文本预处理-分词-张量.md",
+    "AI-Large-Modlels-Notes/NLP/03-FastText分类任务.md",
     "AI-Large-Modlels-Notes/NLP/01-自然语言处理概述.md",
     "AI-Large-Modlels-Notes/NLP/aaaa.md",
-    "AI-Large-Modlels-Notes/NLP/02-文本预处理-分词-张量.md",
     "AI-Large-Modlels-Notes/NLP/NLP-大纲概括.md",
     "AI-Large-Modlels-Notes/NLP/04-RNN及其变体.md",
-    "AI-Large-Modlels-Notes/NLP/03-FastText分类任务.md",
     "AI-Large-Modlels-Notes/DL/RNN/RNN.md",
     "AI-Large-Modlels-Notes/DL/CNN/CNN.md",
     "AI-Large-Modlels-Notes/NLP/aa.md",
