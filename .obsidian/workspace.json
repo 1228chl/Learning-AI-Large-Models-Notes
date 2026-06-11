@@ -13,13 +13,13 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "AI-Large-Modlels-Notes/NLP/05-注意力机制和Seq2Seq介绍.md",
+                "file": "AI-Large-Modlels-Notes/NLP/06-Transformer.md",
                 "mode": "source",
                 "source": false,
                 "backlinks": false
               },
               "icon": "lucide-file",
-              "title": "05-注意力机制和Seq2Seq介绍"
+              "title": "06-Transformer"
             }
           },
           {
@@ -210,7 +210,9 @@
   },
   "active": "578d1628917aa920",
   "lastOpenFiles": [
+    "AI-Large-Modlels-Notes/NLP/06-Transformer.md",
     "AI-Large-Modlels-Notes/NLP/05-注意力机制和Seq2Seq介绍.md",
+    "AI-Large-Modlels-Notes/Draft/Seq2Seq和注意力机制.md",
     "AI-Large-Modlels-Notes/NLP/04-RNN及其变体.md",
     "AI-Large-Modlels-Notes/DL/ANN/手机价格预测基础版.md",
     "AI-Large-Modlels-Notes/NLP/NLP-大纲概括.md",
@@ -242,7 +244,6 @@
     "AI-Large-Modlels-Notes/Draft",
     "AI-Large-Modlels-Notes/未命名.md",
     "AI-Large-Modlels-Notes/DL/基础/02Pytorch.md",
-    "AI-Large-Modlels-Notes/DL/基础/03Pytorch自动微分.md",
     "Assets/Image/AI-Large-Modlels-Notes/DL/ANN/ANN完整拓展+/1.5.5.5-1.png",
     "Assets/Image/AI-Large-Modlels-Notes/DL/ANN/ANN完整拓展+/1.5.5.3-2.png",
     "Assets/Image/AI-Large-Modlels-Notes/DL/ANN/ANN完整拓展+/1.5.5.2-2.png",
