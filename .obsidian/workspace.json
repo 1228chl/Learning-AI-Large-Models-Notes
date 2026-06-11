@@ -13,13 +13,13 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "AI-Large-Modlels-Notes/NLP/04-1-RNN及其变体.md",
+                "file": "AI-Large-Modlels-Notes/NLP/04-RNN及其变体.md",
                 "mode": "source",
                 "source": false,
                 "backlinks": false
               },
               "icon": "lucide-file",
-              "title": "04-1-RNN及其变体"
+              "title": "04-RNN及其变体"
             }
           },
           {
@@ -30,21 +30,6 @@
               "state": {},
               "icon": "lucide-git-fork",
               "title": "关系图谱"
-            }
-          },
-          {
-            "id": "fc66b27653448d70",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "AI-Large-Modlels-Notes/NLP/04-RNN及其变体.md",
-                "mode": "source",
-                "source": false,
-                "backlinks": false
-              },
-              "icon": "lucide-file",
-              "title": "04-RNN及其变体"
             }
           }
         ]
@@ -225,10 +210,10 @@
   },
   "active": "578d1628917aa920",
   "lastOpenFiles": [
-    "AI-Large-Modlels-Notes/DL/ANN/手机价格预测基础版.md",
-    "AI-Large-Modlels-Notes/NLP/04-1-RNN及其变体.md",
-    "AI-Large-Modlels-Notes/NLP/NLP-大纲概括.md",
     "AI-Large-Modlels-Notes/NLP/04-RNN及其变体.md",
+    "AI-Large-Modlels-Notes/NLP/04-RNN及其变体.md",
+    "AI-Large-Modlels-Notes/DL/ANN/手机价格预测基础版.md",
+    "AI-Large-Modlels-Notes/NLP/NLP-大纲概括.md",
     "AI-Large-Modlels-Notes/NLP/03-FastText分类任务.md",
     "AI-Large-Modlels-Notes/NLP/02-文本预处理-分词-张量.md",
     "AI-Large-Modlels-Notes/NLP/01-自然语言处理概述.md",
