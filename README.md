@@ -39,7 +39,6 @@
 
 - **README.md** - 项目说明文档（当前浏览）
 - **LICENSE** - 开源许可证
-- **LXGWNeoZhiSongPlus.ttf** - 中文字体文件（用于笔记渲染显示）
 - **.obsidian/** - Obsidian 软件的配置文件夹
 
 这个仓库是使用 **Obsidian** 笔记软件组织管理的学习资源库，涵盖了 AI 和大模型学习的全面内容。
