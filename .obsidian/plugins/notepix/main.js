@@ -1281,7 +1281,7 @@ var MyPlugin = class extends import_obsidian.Plugin {
             return;
         }
 
-        // 获取标题结构
+        // 获取整个文档的标题树
         const cache = this.app.metadataCache.getFileCache(file);
         const headings = cache?.headings;
         if (!headings || headings.length === 0) {
@@ -1289,7 +1289,7 @@ var MyPlugin = class extends import_obsidian.Plugin {
             return;
         }
 
-        // 根据行号获取标题层级路径
+        // 辅助函数：根据行号获取标题绝对路径
         const getHeadingPathAtLine = (lineNumber) => {
             let currentHeading = null;
             for (let i = headings.length - 1; i >= 0; i--) {
@@ -1317,7 +1317,7 @@ var MyPlugin = class extends import_obsidian.Plugin {
             return parts.slice(0, maxDepth).join('.');
         };
 
-        // 解析所有图片链接，获取完整信息
+        // 解析所有图片链接
         const imageInfos = [];
         for (const link of links) {
             const url = this.extractUrlFromFullMatch(link.fullMatch);
@@ -1386,16 +1386,13 @@ var MyPlugin = class extends import_obsidian.Plugin {
             return;
         }
 
-        // 智能检测：对每个层级，检查是否需要重排
+        // 智能检测：哪些层级需要重排
         const layersToReorder = [];
         for (const [hierarchy, infos] of groups.entries()) {
-            // 按行号排序（笔记中的顺序）
             infos.sort((a, b) => a.lineNumber - b.lineNumber);
             const noteCount = infos.length;
-            // 获取远程目录路径
             const remoteDir = infos[0].remotePath.substring(0, infos[0].remotePath.lastIndexOf('/') + 1);
             const prefix = `${hierarchy}-`;
-            // 列出远程所有匹配前缀的文件
             let remoteFiles = [];
             try {
                 remoteFiles = await this.listRemoteDirectoryContents(
@@ -1406,20 +1403,17 @@ var MyPlugin = class extends import_obsidian.Plugin {
                 console.warn(`无法列出远程目录 ${remoteDir}，将进行全量重排`, err);
                 remoteFiles = [];
             }
-            // 解析远程文件的编号
             const remoteNumbers = new Set();
             for (const rf of remoteFiles) {
                 const fileName = rf.path.split('/').pop();
                 const match = fileName.match(new RegExp(`^${escapeRegex(prefix)}(\\d+)\\.`));
                 if (match) remoteNumbers.add(parseInt(match[1], 10));
             }
-            // 检查是否完全匹配：数量相同且笔记中的每个图片的当前编号恰好等于其顺序索引+1
             let needReorder = false;
             if (remoteFiles.length !== noteCount) {
                 needReorder = true;
                 console.log(`层级 ${hierarchy}: 远程文件数 ${remoteFiles.length} 与笔记图片数 ${noteCount} 不一致，需要重排`);
             } else {
-                // 对每个图片，从其当前 remotePath 中提取编号，检查是否等于 i+1
                 for (let i = 0; i < infos.length; i++) {
                     const info = infos[i];
                     const fileName = info.remotePath.split('/').pop();
@@ -1445,9 +1439,9 @@ var MyPlugin = class extends import_obsidian.Plugin {
             return;
         }
 
-        // 提示用户需要重排的层级
-        let msg = `需要重排 ${layersToReorder.length} 个图片组（共 ${layersToReorder.reduce((sum, l) => sum + l.infos.length, 0)} 张图片）。\n这将清空旧文件并按顺序重新上传（编号从1开始）。确定继续吗？`;
-        const confirmModal = new ConfirmationModal(this.app, "重新整理图片序号", msg);
+        const totalImages = layersToReorder.reduce((sum, l) => sum + l.infos.length, 0);
+        const confirmModal = new ConfirmationModal(this.app, "重新整理图片序号",
+            `需要重排 ${layersToReorder.length} 个图片组（共 ${totalImages} 张图片）。\n这将清空旧文件并按顺序重新上传（编号从1开始）。确定继续吗？`);
         const confirmed = await confirmModal.open();
         if (!confirmed) return;
 
@@ -1457,7 +1451,7 @@ var MyPlugin = class extends import_obsidian.Plugin {
 
         for (const { hierarchy, infos, remoteDir, prefix } of layersToReorder) {
             notice.setMessage(`处理层级 ${hierarchy}：下载 ${infos.length} 张图片...`);
-            // 1. 下载所有原图数据到内存
+            // 1. 下载所有原图到内存
             const imageDataList = [];
             let downloadFailed = false;
             for (let i = 0; i < infos.length; i++) {
@@ -1483,17 +1477,20 @@ var MyPlugin = class extends import_obsidian.Plugin {
                 continue;
             }
 
-            // 2. 删除该层级下所有以 `${hierarchy}-` 开头的旧文件
+            // 2. 删除该层级下所有以 prefix 开头的旧文件（使用 listRemoteDirectoryContents 获得的 SHA）
             notice.setMessage(`层级 ${hierarchy}：删除旧文件...`);
             try {
-                await this.deleteRemoteFilesWithPrefix(
+                const deletedCount = await this.deleteRemoteFilesWithPrefix(
                     infos[0].owner, infos[0].repo, infos[0].branch, remoteDir, prefix, token
                 );
+                if (deletedCount > 0) {
+                    console.log(`已删除 ${deletedCount} 个旧文件（前缀 ${prefix}）`);
+                }
             } catch (err) {
                 console.warn(`删除旧文件时出错: ${err.message}`);
             }
 
-            // 3. 按顺序上传新文件（编号从1开始）
+            // 3. 按顺序上传新文件（编号从1开始），若文件已存在则覆盖（带上 sha）
             let successCount = 0;
             for (let i = 0; i < infos.length; i++) {
                 const info = infos[i];
@@ -1503,17 +1500,33 @@ var MyPlugin = class extends import_obsidian.Plugin {
                 const base64Data = arrayBufferToBase64(imageDataList[i]);
                 const encodedNewPath = this.encodeRemotePath(newRemotePath);
                 const uploadUrl = `https://api.github.com/repos/${info.owner}/${info.repo}/contents/${encodedNewPath}`;
+
+                // 检查文件是否已存在，获取其 sha（用于覆盖）
+                let existingSha = null;
+                const checkResp = await fetch(`${uploadUrl}?ref=${encodeURIComponent(info.branch)}`, {
+                    headers: { "Authorization": `token ${token}`, "Accept": "application/vnd.github.v3+json" }
+                });
+                if (checkResp.ok) {
+                    const existingData = await checkResp.json();
+                    existingSha = existingData.sha;
+                }
+
+                const requestBody = {
+                    message: `Reorder image to ${newFilename}`,
+                    content: base64Data,
+                    branch: info.branch
+                };
+                if (existingSha) requestBody.sha = existingSha;
+
                 const uploadResp = await fetch(uploadUrl, {
                     method: "PUT",
                     headers: { "Authorization": `token ${token}`, "Content-Type": "application/json" },
-                    body: JSON.stringify({
-                        message: `Reorder image to ${newFilename}`,
-                        content: base64Data,
-                        branch: info.branch
-                    })
+                    body: JSON.stringify(requestBody)
                 });
                 if (!uploadResp.ok) {
-                    console.error(`上传失败: ${newRemotePath}`);
+                    const errorText = await uploadResp.text();
+                    console.error(`上传失败: ${newRemotePath}`, errorText);
+                    new import_obsidian.Notice(`上传 ${newFilename} 失败: ${errorText}`);
                     continue;
                 }
                 const newUrl = info.type === 'raw'
@@ -1711,7 +1724,7 @@ var MyPlugin = class extends import_obsidian.Plugin {
      * @param {string} owner 仓库所有者
      * @param {string} repo 仓库名
      * @param {string} branch 分支名
-     * @param {string} dirPath 目录路径（相对于仓库根目录，以 '/' 结尾或不以 '/' 结尾都可以）
+     * @param {string} dirPath 目录路径（相对于仓库根目录，可以不以 '/' 结尾）
      * @param {string} token GitHub Token
      * @returns {Promise<Array<{path: string, sha: string}>>}
      */
@@ -1723,7 +1736,7 @@ var MyPlugin = class extends import_obsidian.Plugin {
             headers: { "Authorization": `token ${token}`, "Accept": "application/vnd.github.v3+json" }
         });
         if (!response.ok) {
-            if (response.status === 404) return []; // 目录不存在，返回空
+            if (response.status === 404) return []; // 目录不存在
             throw new Error(`列出目录失败: ${response.statusText}`);
         }
         const data = await response.json();
@@ -1734,7 +1747,49 @@ var MyPlugin = class extends import_obsidian.Plugin {
     }
 
     /**
-     * 删除远程目录下所有匹配指定前缀的文件
+     * 通过已知 SHA 删除远程文件（无需再次获取）
+     * @param {string} remotePath 远程路径
+     * @param {string} sha 文件 SHA
+     * @returns {Promise<boolean>}
+     */
+    async deleteFileBySha(remotePath, sha) {
+        const token = await this.getToken();
+        if (!token) return false;
+        const owner = this.settings.githubUser;
+        const repo = this.settings.repoName;
+        const branch = this.settings.branchName;
+        const encodedPath = this.encodeRemotePath(remotePath);
+        const deleteUrl = `https://api.github.com/repos/${owner}/${repo}/contents/${encodedPath}`;
+        try {
+            const deleteResp = await fetch(deleteUrl, {
+                method: "DELETE",
+                headers: {
+                    "Authorization": `token ${token}`,
+                    "Content-Type": "application/json",
+                    "Accept": "application/vnd.github.v3+json"
+                },
+                body: JSON.stringify({
+                    message: `通过 NotePix 删除图片`,
+                    sha: sha,
+                    branch: branch
+                })
+            });
+            if (deleteResp.ok) {
+                console.log(`已删除: ${remotePath}`);
+                return true;
+            } else {
+                const error = await deleteResp.json();
+                console.error(`删除失败: ${error.message}`);
+                return false;
+            }
+        } catch (err) {
+            console.error("GitHub 删除错误:", err);
+            return false;
+        }
+    }
+
+    /**
+     * 删除远程目录下所有匹配指定前缀的文件（利用 listRemoteDirectoryContents 获取的 SHA）
      * @param {string} owner 仓库所有者
      * @param {string} repo 仓库名
      * @param {string} branch 分支名
@@ -1745,11 +1800,14 @@ var MyPlugin = class extends import_obsidian.Plugin {
      */
     async deleteRemoteFilesWithPrefix(owner, repo, branch, dirPath, prefix, token) {
         const files = await this.listRemoteDirectoryContents(owner, repo, branch, dirPath, token);
-        const toDelete = files.filter(f => f.path.split('/').pop().startsWith(prefix));
+        const toDelete = files.filter(f => {
+            const fileName = f.path.split('/').pop();
+            return fileName.startsWith(prefix);
+        });
         if (toDelete.length === 0) return 0;
         let deletedCount = 0;
         for (const file of toDelete) {
-            const success = await this.deleteFileFromGitHub(file.path);
+            const success = await this.deleteFileBySha(file.path, file.sha);
             if (success) deletedCount++;
         }
         return deletedCount;
