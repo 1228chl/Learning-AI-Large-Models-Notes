@@ -1,6 +1,6 @@
 {
   "cssTheme": "Minimal",
-  "theme": "system",
+  "theme": "moonstone",
   "baseFontSize": 20,
   "accentColor": "#8a5cf5",
   "nativeMenus": false,
@@ -11,7 +11,7 @@
     "image-center",
     "inline-code"
   ],
-  "textFontFamily": "霞鹜新致宋＋",
-  "interfaceFontFamily": "霞鹜新致宋＋",
+  "textFontFamily": "Times New Roman,霞鹜新致宋＋",
+  "interfaceFontFamily": "Times New Roman,霞鹜新致宋＋",
   "monospaceFontFamily": "JetBrainsMono Nerd Font"
 }

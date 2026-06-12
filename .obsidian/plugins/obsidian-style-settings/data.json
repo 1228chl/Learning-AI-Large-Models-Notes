@@ -5,7 +5,7 @@
   "typomagical-text@@callout-style": "callout-border-gradient",
   "typomagical-title@@font-title": "Playfair Display",
   "minimal-advanced@@mobile-toolbar-off": false,
-  "minimal-style@@active-line-on": true,
+  "minimal-style@@active-line-on": false,
   "minimal-style@@minimal-code-scroll": false,
   "catppuccin-theme-settings@@catppuccin-theme-dark": "ctp-mocha",
   "catppuccin-theme-settings@@catppuccin-theme-accents": "ctp-full-palette",

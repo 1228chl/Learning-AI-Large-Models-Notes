@@ -1,13 +1,20 @@
-/* 浅色模式下的行内代码 */
+/* 浅色模式：所有行内代码（包括表格内） */
 .theme-light .cm-inline-code,
-.theme-light .markdown-preview-view code {
-    color: #4DB95A !important;           /* 保持你喜欢的绿色3C9B45 52AD5C 4DB95A*/
+.theme-light .markdown-preview-view code,
+.theme-light .cm-table-widget code,
+.theme-light .table-cell-wrapper code {
+    color: #4DB95A !important;
+    background-color: #FAFAFA !important;
     border-radius: 4px !important;
+
 }
 
-/* 深色模式下的行内代码 */
+/* 深色模式：所有行内代码（包括表格内） */
 .theme-dark .cm-inline-code,
-.theme-dark .markdown-preview-view code {
-    color: #62D770 !important;           /* 更亮的浅绿色，深色背景下清晰 */
+.theme-dark .markdown-preview-view code,
+.theme-dark .cm-table-widget code,
+.theme-dark .table-cell-wrapper code {
+    color: #7EC67E !important;
+    background-color: #242424 !important;
     border-radius: 4px !important;
 }

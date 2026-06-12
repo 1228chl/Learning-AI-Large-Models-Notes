@@ -4,11 +4,13 @@
 
 ---
 
-# 第一部分：Transformers 库简介
+# Transformers 库和 Bert 应用
 
-## 1.1 什么是 Huggingface Transformers？
+## 第一部分：Transformers 库简介
 
-**Transformers 库**是由** Huggingface** 公司开发并开源的、基于 Transformer 模型结构的**预训练语言模型库**。它提供了 NLP 领域大量**最先进（State-of-the-Art，SOTA）**的预训练语言模型和统一的调用框架。
+### 1.1 什么是 Huggingface Transformers？
+
+**Transformers 库**是由**Huggingface** 公司开发并开源的、基于 Transformer 模型结构的**预训练语言模型库**。它提供了 NLP 领域大量**最先进（State-of-the-Art，SOTA）**的预训练语言模型和统一的调用框架。
 
 **Huggingface 公司背景**：
 
@@ -25,7 +27,7 @@
 
 ---
 
-## 1.2 Transformers 库支持的模型与框架
+### 1.2 Transformers 库支持的模型与框架
 
 Transformers 库提供了大量 SOTA 预训练模型，包括但不限于：
 
@@ -46,7 +48,7 @@ Transformers 库提供了大量 SOTA 预训练模型，包括但不限于：
 
 ---
 
-## 1.3 Transformers 库的核心价值
+### 1.3 Transformers 库的核心价值
 
 | 价值 | 说明 |
 | --- | --- |
@@ -58,7 +60,7 @@ Transformers 库提供了大量 SOTA 预训练模型，包括但不限于：
 
 ---
 
-## 1.4 安装 Transformers 库
+### 1.4 安装 Transformers 库
 
 建议使用 **conda **或** pip** 在指定的 Python 虚拟环境中安装。
 
@@ -89,7 +91,7 @@ pip install transformers
 
 ---
 
-## 1.5 快速验证安装
+### 1.5 快速验证安装
 
 ```python
 import transformers
@@ -98,7 +100,7 @@ print(transformers.__version__)  # 例如 4.36.0
 
 ---
 
-# 第二部分：Transformers 库三层应用结构
+## 第二部分：Transformers 库三层应用结构
 
 Transformers 库为开发者提供了**三种不同抽象层次**的 API，以适应不同需求场景：从极速入门到高度定制。这三层分别是：
 
@@ -110,9 +112,9 @@ Transformers 库为开发者提供了**三种不同抽象层次**的 API，以�
 
 ---
 
-## 2.1 第一层：管道（Pipeline）方式
+### 2.1 第一层：管道（Pipeline）方式
 
-### 2.1.1 什么是 Pipeline？
+#### 2.1.1 什么是 Pipeline？
 
 Pipeline 是 Transformers 库中**高度集成**的使用方式，只需几行代码即可完成一个完整的 NLP 任务（如情感分析、文本生成、特征提取、问答等）。它封装了**分词、模型前向传播、输出后处理**的全流程。
 
@@ -124,7 +126,7 @@ Pipeline 是 Transformers 库中**高度集成**的使用方式，只需几行�
 
 ---
 
-### 2.1.2 Pipeline 支持的任务类型
+#### 2.1.2 Pipeline 支持的任务类型
 
 | 任务参数 | 任务名称 | 说明 | 输出示例 |
 | --- | --- | --- | --- |
@@ -140,7 +142,7 @@ Pipeline 是 Transformers 库中**高度集成**的使用方式，只需几行�
 
 ---
 
-### 2.1.3 Pipeline 示例：特征提取（Feature Extraction）
+#### 2.1.3 Pipeline 示例：特征提取（Feature Extraction）
 
 **应用场景**：将文本转换为固定维度的向量表示（例如用于下游分类、相似度计算）。
 
@@ -173,7 +175,7 @@ print(np.array(result).shape)  # 输出类似 (1, 5, 768)
 
 ---
 
-### 2.1.4 Pipeline 示例：其他任务快速演示
+#### 2.1.4 Pipeline 示例：其他任务快速演示
 
 ```python
 # 情感分类
@@ -194,7 +196,7 @@ print(output)  # 返回top-5候选词
 
 ---
 
-### 2.1.5 Pipeline 的优缺点
+#### 2.1.5 Pipeline 的优缺点
 
 | 优点 | 缺点 |
 | --- | --- |
@@ -205,9 +207,9 @@ print(output)  # 返回top-5候选词
 
 ---
 
-## 2.2 第二层：自动模型（AutoModel）方式
+### 2.2 第二层：自动模型（AutoModel）方式
 
-### 2.2.1 什么是 AutoModel？
+#### 2.2.1 什么是 AutoModel？
 
 AutoModel 是 Transformers 库提供的**自动模型加载接口**。它允许开发者**不显式指定具体的模型类**（如 BertModel、GPT2Model），而是通过模型名称或路径，让库自动推断并加载正确的模型架构。
 
@@ -225,7 +227,7 @@ AutoModel 是 Transformers 库提供的**自动模型加载接口**。它允许�
 
 ---
 
-### 2.2.2 自动模型的三个关键步骤
+#### 2.2.2 自动模型的三个关键步骤
 
 1. **加载分词器**（Tokenizer）：将文本转换为模型可接受的输入格式。
 2. **加载模型**（Model）：加载预训练权重。
@@ -234,14 +236,14 @@ AutoModel 是 Transformers 库提供的**自动模型加载接口**。它允许�
 
 ---
 
-### 2.2.3 完整代码示例（单个文本）
+#### 2.2.3 完整代码示例（单个文本）
 
 ```python
 import transformers
 import torch
 
-# 准备文本
-text = '我爱你'
+# 准备文本（使用较长句子，确保超过 max_length 以触发截断）
+text = '我爱你，我也非常恨你，同时又对你充满好奇和期待。'
 
 # 使用自动模型加载分词器（指定模型名称或本地路径）
 tokenizer = transformers.AutoTokenizer.from_pretrained('bert-base-chinese')
@@ -249,20 +251,22 @@ tokenizer = transformers.AutoTokenizer.from_pretrained('bert-base-chinese')
 model = transformers.AutoModel.from_pretrained('bert-base-chinese')
 
 # 处理文本：进行分词、添加特殊标记、填充、截断、返回PyTorch张量
+# 注意：新版 transformers 建议使用 padding='max_length' 替代 pad_to_max_length=True
 tk_data = tokenizer(
     text, 
-    max_length=10,        # 最大序列长度（超过截断）
-    truncation=True,      # 启用截断
-    pad_to_max_length=True,  # 填充到max_length（确保所有样本长度一致）
-    return_tensors='pt'   # 返回PyTorch张量（'tf'表示TensorFlow，'np'表示NumPy）
+    max_length=8,               # 最大序列长度（超过截断）设为8，强制截断长文本
+    truncation=True,            # 启用截断（超出max_length的部分丢弃）
+    padding='max_length',       # 填充到max_length（确保所有样本长度一致）
+    return_tensors='pt'         # 返回PyTorch张量（'tf'表示TensorFlow，'np'表示NumPy）
 )
 
 # 查看编码后的内容
 print(tk_data)  
 # 输出包含：
-# - 'input_ids': token索引序列，包含[CLS]和[SEP]，形状(1, 10)
+# - 'input_ids': token索引序列，包含[CLS]和[SEP]，形状(1, 8)  → 长度被固定为8
 # - 'token_type_ids': 句子分段标识（0表示第一个句子，1表示第二个），这里全0
 # - 'attention_mask': 注意力掩码（1表示真实token，0表示填充位置）
+# 由于max_length=8小于实际token数，后面的token被截断，且填充不足部分（本例中没有不足）自动处理
 
 # 将模型设置为评估模式（关闭dropout等）
 model.eval()
@@ -272,8 +276,12 @@ with torch.no_grad():  # 不计算梯度，节省内存
     result = model(**tk_data)
 
 # result是一个BaseModelOutput对象，包含多个字段
-print(result['last_hidden_state'].shape)  # (batch_size, seq_len, hidden_dim) -> (1, 10, 768)
+print(result['last_hidden_state'].shape)  # (batch_size, seq_len, hidden_dim) -> (1, 8, 768)
 print(result['pooler_output'].shape)      # (batch_size, hidden_dim) -> (1, 768)
+
+# 验证截断效果：解码后可见序列长度正好是8，原始长句末尾被截断
+print("解码后的token序列:", tokenizer.decode(tk_data['input_ids'][0]))
+# 输出类似：[CLS] 我 爱 你 ， 我 [SEP] （后面原本有“也非常恨你...”但被截断）
 ```
 
 **关键概念解释**：
@@ -286,7 +294,7 @@ print(result['pooler_output'].shape)      # (batch_size, hidden_dim) -> (1, 768)
 
 ---
 
-### 2.2.4 处理多个不等长文本（自动填充）
+#### 2.2.4 处理多个不等长文本（自动填充）
 
 当输入是一个文本列表时，可以设置 `padding=True` 让 tokenizer 自动将批次内所有样本填充到**最长样本的长度**。
 
@@ -318,7 +326,7 @@ print(result['pooler_output'].shape)      # (2, 768)
 
 ---
 
-### 2.2.5 自动模型用于特定任务
+#### 2.2.5 自动模型用于特定任务
 
 除了基础 `AutoModel`，Transformers 还提供了**带任务头的自动模型**，例如：
 
@@ -346,7 +354,7 @@ logits = outputs.logits  # (batch, 2)
 
 ---
 
-### 2.2.6 自动模型的优缺点
+#### 2.2.6 自动模型的优缺点
 
 | 优点 | 缺点 |
 | --- | --- |
@@ -356,9 +364,9 @@ logits = outputs.logits  # (batch, 2)
 
 ---
 
-## 2.3 第三层：具体模型（SpecificModel）方式
+### 2.3 第三层：具体模型（SpecificModel）方式
 
-### 2.3.1 什么是具体模型方式？
+#### 2.3.1 什么是具体模型方式？
 
 具体模型方式要求开发者**明确指定要使用的模型类**（如 `BertModel`、`GPT2Model`），并按照该模型特定的参数进行调用。这是**最底层、最灵活**的使用方式，适合专业人士和对模型内部有精细控制需求的场景。
 
@@ -371,7 +379,7 @@ logits = outputs.logits  # (batch, 2)
 
 ---
 
-### 2.3.2 代码示例（与自动模型对比）
+#### 2.3.2 代码示例（与自动模型对比）
 
 自动模型方式：
 
@@ -393,7 +401,7 @@ model = BertModel.from_pretrained('bert-base-chinese')
 
 ---
 
-### 2.3.3 使用具体模型进行文本特征提取（完整示例）
+#### 2.3.3 使用具体模型进行文本特征提取（完整示例）
 
 ```python
 import transformers
@@ -420,20 +428,20 @@ print(result['pooler_output'].shape)      # (2, 768)
 
 ---
 
-### 2.3.4 何时使用具体模型方式？
+#### 2.3.4 何时使用具体模型方式？
 
-| 场景 | 推荐方式 |
-| --- | --- |
-| 快速原型、演示、入门学习 | Pipeline |
-| 大多数微调任务、更换模型实验 | AutoModel |
-| 需要修改模型内部结构（如添加层） | 具体模型 |
+| 场景                        | 推荐方式                              |
+| ------------------------- | --------------------------------- |
+| 快速原型、演示、入门学习              | Pipeline                          |
+| 大多数微调任务、更换模型实验            | AutoModel                         |
+| 需要修改模型内部结构（如添加层）          | 具体模型                              |
 | 使用模型特有功能（如 BERT 的输出注意力权重） | 具体模型（设置 `output_attentions=True`） |
-| 调试或研究特定架构细节 | 具体模型 |
-| 导出模型到 ONNX/TensorRT 等 | 具体模型（更可控） |
+| 调试或研究特定架构细节               | 具体模型                              |
+| 导出模型到 ONNX/TensorRT 等     | 具体模型（更可控）                         |
 
 ---
 
-### 2.3.5 具体模型的高级用法：输出注意力权重和隐藏状态
+#### 2.3.5 具体模型的高级用法：输出注意力权重和隐藏状态
 
 ```python
 from transformers import BertModel, BertTokenizer
@@ -459,7 +467,7 @@ print(f"Number of attention matrices: {len(outputs.attentions)}")
 
 ---
 
-## 2.4 三层方式对比总结
+### 2.4 三层方式对比总结
 
 | 维度 | Pipeline | AutoModel | SpecificModel |
 | --- | --- | --- | --- |
@@ -473,9 +481,9 @@ print(f"Number of attention matrices: {len(outputs.attentions)}")
 
 ---
 
-## 2.5 常见问题与注意事项
+### 2.5 常见问题与注意事项
 
-### Q1：如何下载并使用本地已下载的预训练模型？
+#### Q1：如何下载并使用本地已下载的预训练模型？
 
 将所有模型文件（`config.json`, `pytorch_model.bin`, `vocab.txt` 等）放在一个本地文件夹中，然后使用 `from_pretrained('本地路径')` 即可。例如：
 
@@ -486,7 +494,7 @@ model = BertModel.from_pretrained('./my_bert_model/')
 
 ---
 
-### Q2：`return_tensors='pt'` 和 `'tf'` 的区别是什么？
+#### Q2：`return_tensors='pt'` 和 `'tf'` 的区别是什么？
 
 - `'pt'`：返回 PyTorch 张量（`torch.Tensor`），需要在 PyTorch 环境下使用。
 - `'tf'`：返回 TensorFlow 张量（`tf.Tensor`），用于 TensorFlow 模型。
@@ -494,13 +502,13 @@ model = BertModel.from_pretrained('./my_bert_model/')
 
 ---
 
-### Q3：为什么需要 `attention_mask`？如何处理填充？
+#### Q3：为什么需要 `attention_mask`？如何处理填充？
 
 模型不应关注填充的 `[PAD]` 位置，否则会引入噪声。`attention_mask` 中的 0 位置在注意力计算时会被置为 `-inf`（通过 `masked_fill`），使得 Softmax 后权重为 0。在调用模型时，只需将 `attention_mask` 作为参数传入，模型内部会自动处理。
 
 ---
 
-### Q4：如何节省内存/加速推理？
+#### Q4：如何节省内存/加速推理？
 
 - 使用 `.eval()` 模式关闭 dropout 和 batch norm 的随机性。
 - 使用 `with torch.no_grad():` 禁用梯度计算。
@@ -510,19 +518,19 @@ model = BertModel.from_pretrained('./my_bert_model/')
 
 ---
 
-### Q5：Pipeline、AutoModel、SpecificModel 的性能有差异吗？
+#### Q5：Pipeline、AutoModel、SpecificModel 的性能有差异吗？
 
 三种方式在推理性能上**没有本质差异**，因为底层都是相同的模型前向计算。区别仅在于封装层次和易用性。
 
 ---
 
-## 第二部分总结速查表
+### 第二部分总结速查表
 
-| 方式 | 加载代码示例 | 输出示例 |
-| --- | --- | --- |
-| **Pipeline** | `pipeline('feature-extraction', model='bert-base-chinese')` | 列表/张量 |
-| **AutoModel** | `AutoTokenizer.from_pretrained(...)`, `AutoModel.from_pretrained(...)` | `BaseModelOutput` 对象 |
-| **SpecificModel** | `BertTokenizer.from_pretrained(...)`, `BertModel.from_pretrained(...)` | 同上 |
+| 方式                | 加载代码示例                                                                 | 输出示例                 |
+| ----------------- | ---------------------------------------------------------------------- | -------------------- |
+| **Pipeline**      | `pipeline('feature-extraction', model='bert-base-chinese')`            | 列表/张量                |
+| **AutoModel**     | `AutoTokenizer.from_pretrained(...)`, `AutoModel.from_pretrained(...)` | `BaseModelOutput` 对象 |
+| **SpecificModel** | `BertTokenizer.from_pretrained(...)`, `BertModel.from_pretrained(...)` | 同上                   |
 
 **核心 API 记忆**：
 
@@ -532,9 +540,9 @@ model = BertModel.from_pretrained('./my_bert_model/')
 
 ---
 
-## 3.1 练习一：使用 Pipeline 进行特征提取
+### 3.1 练习一：使用 Pipeline 进行特征提取
 
-### 3.1.1 代码回顾与解释
+#### 3.1.1 代码回顾与解释
 
 ```python
 import transformers
@@ -560,7 +568,7 @@ print(np.array(result).shape)  # (1, 5, 768)
 
 ---
 
-### 3.1.2 Pipeline 的局限性及应对
+#### 3.1.2 Pipeline 的局限性及应对
 
 - **不能自定义批处理大小**：Pipeline 默认逐个样本处理，大批量时效率低。可以传入文本列表来触发内部批处理。
 - **不能获取中间层输出**：Pipeline 只返回 `last_hidden_state`。如需特定层输出或注意力权重，必须使用 AutoModel 或 SpecificModel。
@@ -576,7 +584,7 @@ result = model(texts, truncation=True, max_length=128)
 
 ---
 
-### 3.1.3 使用场景
+#### 3.1.3 使用场景
 
 - **快速验证**：测试 BERT 能否为你的文本生成合理的向量。
 - **特征提取用于下游模型**：例如将 BERT 的输出作为传统机器学习模型（SVM、逻辑回归）的输入。
@@ -584,9 +592,9 @@ result = model(texts, truncation=True, max_length=128)
 
 ---
 
-## 3.2 练习二：使用 AutoModel 进行特征提取（单句与多句）
+### 3.2 练习二：使用 AutoModel 进行特征提取（单句与多句）
 
-### 3.2.1 单句处理代码详解
+#### 3.2.1 单句处理代码详解
 
 ```python
 import transformers
@@ -623,7 +631,7 @@ print(result['pooler_output'].shape)      # (1, 768)
 
 ---
 
-### 3.2.2 多句不等长处理（自动填充）
+#### 3.2.2 多句不等长处理（自动填充）
 
 ```python
 texts = ['我爱你', '我喜欢你我喜欢你我喜欢你']
@@ -647,7 +655,7 @@ print(result['pooler_output'].shape)      # (2, 768)
 
 ---
 
-### 3.2.3 常见陷阱与解决方案
+#### 3.2.3 常见陷阱与解决方案
 
 | 陷阱 | 解决方案 |
 | --- | --- |
@@ -659,7 +667,7 @@ print(result['pooler_output'].shape)      # (2, 768)
 
 ---
 
-## 3.3 练习三：使用 SpecificModel（BertModel）进行特征提取
+### 3.3 练习三：使用 SpecificModel（BertModel）进行特征提取
 
 ```python
 import transformers
@@ -688,9 +696,9 @@ print(result['pooler_output'].shape)      # (2, 768)
 
 ---
 
-## 3.4 BERT 下游任务微调实战
+### 3.4 BERT 下游任务微调实战
 
-### 3.4.1 文本分类任务（以情感分析为例）
+#### 3.4.1 文本分类任务（以情感分析为例）
 
 **步骤概览**：
 
@@ -774,7 +782,7 @@ tokenizer.save_pretrained('./my_sentiment_model')
 
 ---
 
-### 3.4.2 序列标注任务（如命名实体识别 NER）
+#### 3.4.2 序列标注任务（如命名实体识别 NER）
 
 ```python
 from transformers import AutoTokenizer, AutoModelForTokenClassification, Trainer
@@ -802,7 +810,7 @@ tokenizer = AutoTokenizer.from_pretrained('bert-base-chinese')
 
 ---
 
-### 3.4.3 使用 Pipeline 进行微调后模型推理
+#### 3.4.3 使用 Pipeline 进行微调后模型推理
 
 ```python
 from transformers import pipeline
@@ -814,9 +822,9 @@ print(result)  # [{'label': 'LABEL_1', 'score': 0.99}] 需要将label映射回�
 
 ---
 
-## 3.5 高级技巧与最佳实践
+### 3.5 高级技巧与最佳实践
 
-### 3.5.1 动态填充（Dynamic Padding）提高效率
+#### 3.5.1 动态填充（Dynamic Padding）提高效率
 
 使用 `DataCollatorWithPadding` 在批处理时动态填充，避免将整个数据集填充到固定最大长度。
 
@@ -829,13 +837,13 @@ trainer = Trainer(..., data_collator=data_collator)
 
 ---
 
-### 3.5.2 混合精度训练
+#### 3.5.2 混合精度训练
 
 在 `TrainingArguments` 中设置 `fp16=True` 可大幅加速训练并减少显存（需 GPU 支持）。
 
 ---
 
-### 3.5.3 梯度累积
+#### 3.5.3 梯度累积
 
 当显存不足以容纳大批次时，使用梯度累积模拟大批次：
 
@@ -846,7 +854,7 @@ training_args = TrainingArguments(..., per_device_train_batch_size=4, gradient_a
 
 ---
 
-### 3.5.4 冻结部分层以加速微调
+#### 3.5.4 冻结部分层以加速微调
 
 如果下游数据量很小，可以冻结 BERT 主体，只训练分类头：
 
@@ -858,7 +866,7 @@ for param in model.bert.parameters():
 
 ---
 
-### 3.5.5 使用 `accelerate` 库自定义训练循环（更灵活）
+#### 3.5.5 使用 `accelerate` 库自定义训练循环（更灵活）
 
 ```python
 from accelerate import Accelerator
@@ -870,7 +878,7 @@ model, optimizer, dataloader = accelerator.prepare(model, optimizer, dataloader)
 
 ---
 
-## 3.6 常见错误与调试
+### 3.6 常见错误与调试
 
 | 错误信息 | 可能原因 | 解决方法 |
 | --- | --- | --- |
@@ -882,7 +890,7 @@ model, optimizer, dataloader = accelerator.prepare(model, optimizer, dataloader)
 
 ---
 
-## 3.7 Transformers 库与 BERT 应用总结速查表
+### 3.7 Transformers 库与 BERT 应用总结速查表
 
 | 任务 | 推荐方式 | 关键类/函数 |
 | --- | --- | --- |
