@@ -7,6 +7,10 @@
   "showRibbon": true,
   "showViewHeader": true,
   "enabledCssSnippets": [
-    "mathlive-light-fix"
-  ]
+    "mathlive-light-fix",
+    "image-center"
+  ],
+  "textFontFamily": "霞鹜新致宋＋",
+  "interfaceFontFamily": "霞鹜新致宋＋",
+  "monospaceFontFamily": "JetBrainsMono Nerd Font"
 }

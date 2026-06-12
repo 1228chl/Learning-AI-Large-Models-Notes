@@ -60,11 +60,12 @@ BERT 的出现被视为 NLP 发展史上的里程碑，其核心结构仍然是 
 
 BERT 宏观上分为**三个主要模块**（从下至上）：
 
-![](https://raw.githubusercontent.com/1228chl/Learning-AI-Large-Models-Notes/master/Assets/Image/AI-Large-Modlels-Notes/NLP/07-Bert系列模型/1.1.2-1.png)
+![|300](https://raw.githubusercontent.com/1228chl/Learning-AI-Large-Models-Notes/master/Assets/Image/AI-Large-Modlels-Notes/NLP/07-Bert系列模型/1.1.2-1.png)
 
 1. **Embedding 模块**（底层，黄色标记）
 2. **Transformer 模块**（中间层，蓝色标记）
 3. **预微调模块**（最上层，绿色标记）
+
 ---
 
 #### 1.2.1 Embedding 模块
@@ -123,6 +124,8 @@ class BERTEmbeddings(nn.Module):
 
 BERT **只使用了 Transformer 架构中的 Encoder 部分**，完全舍弃了 Decoder。这是因为 BERT 的目标是**深度双向理解**，而非自回归生成。
 
+![|400](https://raw.githubusercontent.com/1228chl/Learning-AI-Large-Models-Notes/master/Assets/Image/AI-Large-Modlels-Notes/NLP/07-Bert系列模型/1.1.2.2-1.png)
+
 **特点**：
 
 - 堆叠多个 Encoder 层（BERT-base 为 12 层，BERT-large 为 24 层）。
@@ -142,12 +145,14 @@ BERT **只使用了 Transformer 架构中的 Encoder 部分**，完全舍弃了 
 
 BERT 经过预训练后，最后一层的输出会根据**下游任务的不同**进行不同的调整，只需微调少量参数即可获得 SOTA 结果。常见的四类 NLP 微调任务架构如下：
 
-| 任务类型 | 图例 | 说明 | 微调方式 |
-| --- | --- | --- | --- |
-| **句子对关系判断** | (a) | 输入两个句子，判断关系（如蕴含、中性、矛盾；或是否相似） | 使用 `[CLS]` 位置的输出，接分类层 |
-| **单文本分类** | (b) | 输入一个句子，输出类别（情感分析、语法正确性等） | 同样使用 `[CLS]` 输出 |
-| **问答任务（QA）** | (c) | 输入问题和上下文，输出答案在上下文中的起始和结束位置 | 在编码器输出上接两个线性层，分别预测起始和结束位置 |
-| **序列标注（如 NER）** | (d) | 输入一个句子，对每个 token 进行分类（如 B-PER、I-LOC 等） | 使用每个 token 对应的输出，接分类层 |
+![|500](https://raw.githubusercontent.com/1228chl/Learning-AI-Large-Models-Notes/master/Assets/Image/AI-Large-Modlels-Notes/NLP/07-Bert系列模型/1.1.2.3-1.png)
+
+| 任务类型            | 图例  | 说明                                     | 微调方式                      |
+| --------------- | --- | -------------------------------------- | ------------------------- |
+| **句子对关系判断**     | (a) | 输入两个句子，判断关系（如蕴含、中性、矛盾；或是否相似）           | 使用 `[CLS]` 位置的输出，接分类层     |
+| **单文本分类**       | (b) | 输入一个句子，输出类别（情感分析、语法正确性等）               | 同样使用 `[CLS]` 输出           |
+| **问答任务（QA）**    | (c) | 输入问题和上下文，输出答案在上下文中的起始和结束位置             | 在编码器输出上接两个线性层，分别预测起始和结束位置 |
+| **序列标注（如 NER）** | (d) | 输入一个句子，对每个 token 进行分类（如 B-PER、I-LOC 等） | 使用每个 token 对应的输出，接分类层     |
 
 **微调的优势**：只需在预训练模型基础上添加一个简单的输出层，并用少量标注数据训练即可。预训练模型已经掌握了丰富的语言知识，微调相当于“定制化”。
 
@@ -741,6 +746,7 @@ input_tensor = token_emb + pos_emb
    - 与词向量矩阵 `E`（形状 `vocab_size × d_model`）做矩阵乘法（或使用独立的输出投影层）：
 
 $
+
      \text{logits} = E \cdot h_{\text{last}} \quad (\text{形状 } vocab\_size)
 
 $$

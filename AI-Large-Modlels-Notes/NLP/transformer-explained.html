@@ -1,0 +1,3195 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Transformer 交互式解析 — 动手理解 AI 核心架构</title>
+<style>
+/* ═══════════════════════════════════════════════════════════
+   DESIGN TOKENS — Light academic theme, indigo accent
+   ═══════════════════════════════════════════════════════════ */
+:root {
+  /* Color: Restrained + functional */
+  --c-bg:        oklch(0.975 0.003 265);
+  --c-surface:   oklch(0.992 0.002 265);
+  --c-surface-2: oklch(0.955 0.006 265);
+  --c-border:    oklch(0.88 0.008 265);
+  --c-border-light: oklch(0.92 0.005 265);
+
+  --c-ink:       oklch(0.14 0.015 265);
+  --c-text:      oklch(0.24 0.012 265);
+  --c-text-dim:  oklch(0.44 0.01 265);
+  --c-text-muted:oklch(0.46 0.008 265);
+
+  --c-accent:    oklch(0.46 0.19 268);
+  --c-accent-hover: oklch(0.40 0.20 268);
+  --c-accent-bg: oklch(0.94 0.025 268);
+  --c-accent-bg-2: oklch(0.97 0.012 268);
+
+  /* Functional: Q/K/V roles */
+  --c-q:         oklch(0.48 0.18 280);
+  --c-q-bg:      oklch(0.94 0.025 280);
+  --c-q-border:  oklch(0.78 0.10 280);
+
+  --c-k:         oklch(0.52 0.16 58);
+  --c-k-bg:      oklch(0.95 0.04 58);
+  --c-k-border:  oklch(0.80 0.10 58);
+
+  --c-v:         oklch(0.48 0.12 195);
+  --c-v-bg:      oklch(0.94 0.03 195);
+  --c-v-border:  oklch(0.78 0.08 195);
+
+  --c-encoder:   oklch(0.48 0.18 268);
+  --c-encoder-bg:oklch(0.95 0.025 268);
+  --c-decoder:   oklch(0.52 0.16 25);
+  --c-decoder-bg:oklch(0.95 0.03 25);
+
+  --c-green:     oklch(0.50 0.14 155);
+  --c-rose:      oklch(0.50 0.16 10);
+
+  /* Typography */
+  --font-heading: "Source Han Serif SC", "Noto Serif SC", "Songti SC", Georgia, "Times New Roman", serif;
+  --font-body: system-ui, -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", "Segoe UI", sans-serif;
+  --font-mono: "SF Mono", "Cascadia Code", "JetBrains Mono", "Fira Code", "Consolas", monospace;
+
+  /* Spacing — 4px base scale */
+  --space-3xs: 4px;
+  --space-2xs: 8px;
+  --space-xs:  12px;
+  --space-sm:  16px;
+  --space-md:  24px;
+  --space-lg:  32px;
+  --space-xl:  48px;
+  --space-2xl: 64px;
+  --space-3xl: 96px;
+  --space-4xl: 128px;
+
+  /* Radii */
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --radius-xl: 20px;
+
+  /* Shadows */
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.06);
+  --shadow-md: 0 4px 16px rgba(0,0,0,0.07), 0 1px 4px rgba(0,0,0,0.05);
+  --shadow-lg: 0 8px 32px rgba(0,0,0,0.08), 0 2px 8px rgba(0,0,0,0.04);
+
+  /* Easing */
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-in-out: cubic-bezier(0.45, 0, 0.25, 1);
+
+  /* Layout */
+  --measure: 68ch;
+  --content-max: 880px;
+
+  /* Z-index scale */
+  --z-dropdown: 100;
+  --z-sticky:   200;
+  --z-overlay:  300;
+  --z-modal:    400;
+  --z-toast:    500;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   RESET & BASE
+   ═══════════════════════════════════════════════════════════ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html {
+  scroll-behavior: smooth;
+  font-size: 17px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+body {
+  font-family: var(--font-body);
+  background: var(--c-bg);
+  color: var(--c-text);
+  line-height: 1.65;
+  overflow-x: hidden;
+  font-optical-sizing: auto;
+  font-kerning: normal;
+}
+
+::selection {
+  background: var(--c-accent);
+  color: #fff;
+}
+
+a {
+  color: var(--c-accent);
+  text-decoration: none;
+  transition: color 0.2s var(--ease-out);
+}
+a:hover { color: var(--c-accent-hover); }
+
+/* ═══════════════════════════════════════════════════════════
+   TYPOGRAPHY
+   ═══════════════════════════════════════════════════════════ */
+h1, h2, h3, h4 {
+  font-family: var(--font-heading);
+  line-height: 1.2;
+  font-weight: 700;
+  color: var(--c-ink);
+}
+
+h1, h2, h3 { text-wrap: balance; }
+
+p, .lead { text-wrap: pretty; }
+
+h1 {
+  font-size: clamp(2.2rem, 5vw, 3.6rem);
+  letter-spacing: -0.025em;
+  margin-bottom: var(--space-md);
+}
+
+h2 {
+  font-size: clamp(1.6rem, 3.5vw, 2.1rem);
+  letter-spacing: -0.015em;
+  margin-bottom: var(--space-xl);
+  position: relative;
+}
+
+h3 {
+  font-family: var(--font-body);
+  font-size: 1.15rem;
+  font-weight: 650;
+  color: var(--c-text);
+  margin-bottom: var(--space-sm);
+}
+
+h4 {
+  font-family: var(--font-body);
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--c-text);
+  margin-bottom: var(--space-2xs);
+}
+
+p { margin-bottom: var(--space-sm); }
+p + p { margin-top: var(--space-sm); }
+
+.lead {
+  font-size: 1.1rem;
+  color: var(--c-text-dim);
+  line-height: 1.75;
+  max-width: var(--measure);
+  margin-bottom: var(--space-lg);
+}
+
+.lead strong { color: var(--c-text); }
+
+code {
+  font-family: var(--font-mono);
+  font-size: 0.88em;
+  background: var(--c-surface-2);
+  padding: 0.15em 0.4em;
+  border-radius: 3px;
+  color: var(--c-accent);
+  font-variant-ligatures: none;
+}
+
+/* Inline highlights — semantic, not decorative */
+.hl-accent { color: var(--c-accent); font-weight: 600; }
+.hl-q { color: var(--c-q); font-weight: 600; }
+.hl-k { color: var(--c-k); font-weight: 600; }
+.hl-v { color: var(--c-v); font-weight: 600; }
+
+/* ═══════════════════════════════════════════════════════════
+   LAYOUT
+   ═══════════════════════════════════════════════════════════ */
+.container {
+  max-width: var(--content-max);
+  margin: 0 auto;
+  padding: 0 var(--space-lg);
+}
+
+section {
+  padding: var(--space-3xl) 0;
+  position: relative;
+}
+
+.section-divider {
+  width: 60px;
+  height: 1px;
+  background: var(--c-border);
+  margin: 0 auto var(--space-3xl);
+}
+
+/* Side progress indicator */
+.progress-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 3px;
+  background: var(--c-accent);
+  z-index: var(--z-sticky);
+  width: 0%;
+  transition: width 0.1s linear;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   HERO — Clean typographic
+   ═══════════════════════════════════════════════════════════ */
+.hero {
+  min-height: 90vh;
+  display: flex;
+  align-items: center;
+  padding: var(--space-4xl) var(--space-lg);
+  position: relative;
+  overflow: hidden;
+}
+
+.hero::before {
+  content: '';
+  position: absolute;
+  top: 10%;
+  right: -15%;
+  width: 500px;
+  height: 500px;
+  background: radial-gradient(circle at center,
+    rgba(91, 79, 217, 0.07) 0%,
+    rgba(91, 79, 217, 0.025) 40%,
+    transparent 70%
+  );
+  pointer-events: none;
+}
+
+.hero-inner {
+  max-width: 720px;
+  position: relative;
+  z-index: 1;
+}
+
+.hero-tag {
+  display: inline-block;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--c-accent);
+  background: var(--c-accent-bg);
+  padding: var(--space-3xs) var(--space-xs);
+  border-radius: var(--radius-sm);
+  margin-bottom: var(--space-lg);
+  letter-spacing: 0.01em;
+}
+
+.hero h1 {
+  margin-bottom: var(--space-lg);
+}
+
+.hero h1 .em {
+  color: var(--c-accent);
+}
+
+.hero .subtitle {
+  font-size: clamp(1.05rem, 2.2vw, 1.25rem);
+  color: var(--c-text-dim);
+  line-height: 1.75;
+  margin-bottom: var(--space-xl);
+  max-width: 560px;
+}
+
+.hero-scroll {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2xs);
+  color: var(--c-text-muted);
+  font-size: 0.85rem;
+  font-weight: 500;
+  animation: subtle-bob 2.5s ease-in-out infinite;
+}
+
+@keyframes subtle-bob {
+  0%, 100% { transform: translateY(0); opacity: 0.6; }
+  50% { transform: translateY(5px); opacity: 1; }
+}
+
+/* ═══════════════════════════════════════════════════════════
+   CONCEPT BLOCKS — varied layouts, not identical cards
+   ═══════════════════════════════════════════════════════════ */
+.concept-block {
+  margin: var(--space-xl) 0;
+}
+
+/* Insight box — full border, background tint */
+.insight {
+  background: var(--c-accent-bg-2);
+  border: 1px solid oklch(0.85 0.04 268);
+  border-radius: var(--radius-md);
+  padding: var(--space-md) var(--space-lg);
+  margin: var(--space-lg) 0;
+}
+
+.insight-label {
+  display: inline-block;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--c-accent);
+  letter-spacing: 0.03em;
+  margin-bottom: var(--space-xs);
+}
+
+.insight p {
+  color: var(--c-text-dim);
+  margin-bottom: 0;
+}
+
+.insight p strong { color: var(--c-text); }
+
+/* Analogy box — warm accent */
+.analogy {
+  background: oklch(0.97 0.015 58);
+  border: 1px solid oklch(0.82 0.06 58);
+  border-radius: var(--radius-lg);
+  padding: var(--space-lg);
+  margin: var(--space-xl) 0;
+}
+
+.analogy-head {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2xs);
+  font-weight: 700;
+  font-size: 0.9rem;
+  color: oklch(0.45 0.12 55);
+  margin-bottom: var(--space-sm);
+}
+
+.analogy p { color: oklch(0.28 0.03 55); }
+.analogy p:last-child { margin-bottom: 0; }
+
+/* Formula display */
+.formula {
+  background: var(--c-surface);
+  border: 1px solid var(--c-border);
+  border-radius: var(--radius-md);
+  padding: var(--space-md) var(--space-lg);
+  margin: var(--space-lg) 0;
+  text-align: center;
+  font-family: var(--font-mono);
+  font-size: clamp(0.9rem, 2vw, 1.1rem);
+  color: var(--c-ink);
+  overflow-x: auto;
+  font-variant-ligatures: none;
+  letter-spacing: 0.01em;
+}
+
+.formula .paren { color: var(--c-text-muted); }
+.formula .fn { color: var(--c-accent); }
+.formula .op { color: var(--c-text-dim); }
+
+/* ═══════════════════════════════════════════════════════════
+   INTERACTIVE DEMO SHELL
+   ═══════════════════════════════════════════════════════════ */
+.demo {
+  background: var(--c-surface);
+  border: 1px solid var(--c-border);
+  border-radius: var(--radius-xl);
+  padding: var(--space-xl);
+  margin: var(--space-2xl) 0;
+  box-shadow: var(--shadow-md);
+  position: relative;
+}
+
+.demo-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--space-lg);
+  flex-wrap: wrap;
+  gap: var(--space-sm);
+}
+
+.demo-title {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--c-ink);
+  display: flex;
+  align-items: center;
+  gap: var(--space-2xs);
+}
+
+.demo-title .dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.demo-hint {
+  font-size: 0.78rem;
+  color: var(--c-text-muted);
+  font-weight: 500;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   DEMO 1: RNN vs Transformer comparison — toggle animation
+   ═══════════════════════════════════════════════════════════ */
+.compare-demo {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+}
+
+.compare-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  flex-wrap: wrap;
+  padding: var(--space-md);
+  border-radius: var(--radius-md);
+}
+
+.compare-row.rnn {
+  background: oklch(0.96 0.008 25);
+  border: 1px solid oklch(0.85 0.03 25);
+}
+
+.compare-row.transformer {
+  background: oklch(0.96 0.012 195);
+  border: 1px solid oklch(0.85 0.05 195);
+}
+
+.compare-label {
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: var(--space-3xs) var(--space-2xs);
+  border-radius: var(--radius-sm);
+  flex-shrink: 0;
+  min-width: 90px;
+  text-align: center;
+}
+
+.compare-label.rnn { background: oklch(0.90 0.04 25); color: oklch(0.40 0.10 30); }
+.compare-label.transformer { background: oklch(0.90 0.04 195); color: oklch(0.40 0.08 200); }
+
+.token-pill {
+  padding: var(--space-2xs) var(--space-sm);
+  border-radius: var(--radius-sm);
+  font-size: 0.85rem;
+  font-weight: 600;
+  transition: transform 0.2s var(--ease-out), box-shadow 0.2s var(--ease-out);
+  cursor: default;
+}
+
+.token-pill.word {
+  background: var(--c-surface);
+  border: 1px solid var(--c-border);
+  color: var(--c-text);
+}
+
+.token-pill.word:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-sm);
+}
+
+.token-pill.active-rnn {
+  background: oklch(0.50 0.15 25);
+  color: #fff;
+  animation: rnn-pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes rnn-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(199, 85, 34, 0.3); }
+  50% { box-shadow: 0 0 0 8px rgba(199, 85, 34, 0); }
+}
+
+.token-pill.active-tf {
+  background: oklch(0.48 0.14 195);
+  color: #fff;
+  animation: tf-glow 1s ease-in-out infinite alternate;
+}
+
+@keyframes tf-glow {
+  from { box-shadow: 0 0 8px rgba(57, 163, 163, 0.3); }
+  to   { box-shadow: 0 0 20px rgba(57, 163, 163, 0.5); }
+}
+
+.flow-arrow {
+  color: var(--c-text-muted);
+  font-size: 1.1rem;
+  flex-shrink: 0;
+}
+
+.compare-note {
+  font-size: 0.78rem;
+  color: var(--c-text-muted);
+  text-align: center;
+  margin-top: var(--space-xs);
+}
+
+/* ═══════════════════════════════════════════════════════════
+   DEMO 2: Attention heatmap — click to explore
+   ═══════════════════════════════════════════════════════════ */
+.heatmap-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-md);
+}
+
+.heatmap-sentence {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2xs);
+  justify-content: center;
+}
+
+.heatmap-word {
+  padding: var(--space-2xs) var(--space-sm);
+  border-radius: var(--radius-sm);
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.25s var(--ease-out);
+  background: var(--c-surface-2);
+  border: 1px solid transparent;
+  color: var(--c-text);
+  user-select: none;
+}
+
+.heatmap-word:hover {
+  border-color: var(--c-accent);
+  background: var(--c-accent-bg);
+}
+
+.heatmap-word.source {
+  background: var(--c-accent);
+  color: #fff;
+  border-color: var(--c-accent);
+  box-shadow: 0 2px 12px rgba(91, 79, 217, 0.25);
+}
+
+.heatmap-word.target {
+  background: var(--c-k);
+  color: #fff;
+  border-color: var(--c-k);
+  box-shadow: 0 2px 12px rgba(204, 119, 34, 0.25);
+}
+
+.heatmap-grid {
+  display: grid;
+  gap: 2px;
+}
+
+.heatmap-cell {
+  aspect-ratio: 1;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: transform 0.15s var(--ease-out);
+  min-width: 40px;
+  min-height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: transparent;
+  position: relative;
+}
+
+.heatmap-cell:hover {
+  transform: scale(1.18);
+  z-index: 2;
+  color: rgba(255,255,255,0.9);
+}
+
+.heatmap-cell.highlighted {
+  color: rgba(255,255,255,0.9);
+  outline: 2px solid var(--c-ink);
+  outline-offset: 1px;
+  z-index: 2;
+}
+
+.heatmap-row-label,
+.heatmap-col-label {
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--c-text-dim);
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding-right: var(--space-2xs);
+}
+
+.heatmap-col-label {
+  justify-content: center;
+  padding-right: 0;
+  padding-bottom: var(--space-3xs);
+}
+
+.heatmap-explanation {
+  text-align: center;
+  font-size: 0.88rem;
+  color: var(--c-text-dim);
+  min-height: 1.5em;
+  max-width: 480px;
+  line-height: 1.55;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   DEMO 3: Q/K/V dot product calculator
+   ═══════════════════════════════════════════════════════════ */
+.qkv-calc {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-lg);
+}
+
+.qkv-calc-col {
+  background: var(--c-surface-2);
+  border-radius: var(--radius-md);
+  padding: var(--space-lg);
+}
+
+.qkv-calc-col h4 {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2xs);
+  margin-bottom: var(--space-md);
+}
+
+.qkv-calc-col .role-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.qkv-slider-group {
+  margin-bottom: var(--space-md);
+}
+
+.qkv-slider-group:last-child { margin-bottom: 0; }
+
+.qkv-slider-label {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.82rem;
+  margin-bottom: var(--space-3xs);
+  color: var(--c-text-dim);
+  font-weight: 500;
+}
+
+.qkv-slider-label .val {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  color: var(--c-text);
+}
+
+.qkv-slider {
+  width: 100%;
+  height: 4px;
+  -webkit-appearance: none;
+  appearance: none;
+  background: var(--c-border);
+  border-radius: 2px;
+  outline: none;
+}
+
+.qkv-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  cursor: pointer;
+  border: 2px solid #fff;
+  box-shadow: var(--shadow-sm);
+}
+
+.qkv-slider.slider-q::-webkit-slider-thumb { background: var(--c-q); }
+.qkv-slider.slider-k::-webkit-slider-thumb { background: var(--c-k); }
+
+.qkv-calc-result {
+  grid-column: 1 / -1;
+  background: var(--c-accent-bg-2);
+  border-radius: var(--radius-md);
+  padding: var(--space-lg);
+  text-align: center;
+  border: 1px solid oklch(0.85 0.04 268);
+}
+
+.qkv-calc-result .dot-product {
+  font-family: var(--font-mono);
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: var(--c-accent);
+  margin-bottom: var(--space-xs);
+}
+
+.qkv-calc-result .interpretation {
+  font-size: 0.9rem;
+  color: var(--c-text-dim);
+}
+
+/* ═══════════════════════════════════════════════════════════
+   DEMO 4: Multi-head comparison
+   ═══════════════════════════════════════════════════════════ */
+.heads-panel {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--space-sm);
+}
+
+.head-view {
+  text-align: center;
+  padding: var(--space-md) var(--space-sm);
+  border-radius: var(--radius-md);
+  background: var(--c-surface-2);
+  border: 2px solid transparent;
+  cursor: pointer;
+  transition: all 0.25s var(--ease-out);
+}
+
+.head-view:hover {
+  border-color: var(--c-border);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-sm);
+}
+
+.head-view.active-head {
+  border-color: var(--c-accent);
+  background: var(--c-accent-bg);
+}
+
+.head-view .head-icon {
+  font-size: 1.3rem;
+  margin-bottom: var(--space-2xs);
+}
+
+.head-view .head-name {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--c-ink);
+  margin-bottom: var(--space-3xs);
+}
+
+.head-view .head-focus {
+  font-size: 0.68rem;
+  color: var(--c-text-muted);
+}
+
+.head-detail {
+  margin-top: var(--space-lg);
+  padding: var(--space-lg);
+  background: var(--c-surface-2);
+  border-radius: var(--radius-md);
+  text-align: center;
+}
+
+.head-detail .focus-pattern {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2xs);
+  justify-content: center;
+  margin-top: var(--space-md);
+}
+
+.focus-token {
+  padding: var(--space-2xs) var(--space-sm);
+  border-radius: var(--radius-sm);
+  font-size: 0.82rem;
+  font-weight: 600;
+  transition: all 0.3s var(--ease-out);
+}
+
+/* ═══════════════════════════════════════════════════════════
+   DEMO 5: Positional encoding — canvas wave explorer
+   ═══════════════════════════════════════════════════════════ */
+.pos-enc-demo {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+}
+
+.pos-canvas-wrap {
+  background: var(--c-surface-2);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  position: relative;
+}
+
+.pos-canvas-wrap canvas {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.pos-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-lg);
+  align-items: flex-end;
+  justify-content: center;
+}
+
+.pos-control {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3xs);
+  align-items: center;
+}
+
+.pos-control label {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--c-text-dim);
+}
+
+.pos-control input[type="range"] {
+  width: 140px;
+  height: 4px;
+  -webkit-appearance: none;
+  appearance: none;
+  background: var(--c-border);
+  border-radius: 2px;
+  outline: none;
+}
+
+.pos-control input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--c-accent);
+  cursor: pointer;
+  border: 2px solid #fff;
+  box-shadow: var(--shadow-sm);
+}
+
+.pos-control .pos-val {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  color: var(--c-text);
+  font-weight: 600;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   DEMO 6: Architecture stepper
+   ═══════════════════════════════════════════════════════════ */
+.arch-stepper {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+}
+
+.arch-diagram {
+  display: flex;
+  align-items: stretch;
+  gap: var(--space-lg);
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.arch-col {
+  flex: 1;
+  min-width: 220px;
+  max-width: 300px;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2xs);
+}
+
+.arch-col-header {
+  font-family: var(--font-heading);
+  font-size: 0.9rem;
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: var(--space-sm);
+  letter-spacing: 0.02em;
+}
+
+.arch-col-header.enc { color: var(--c-encoder); }
+.arch-col-header.dec { color: var(--c-decoder); }
+
+.arch-step {
+  padding: var(--space-sm) var(--space-md);
+  border-radius: var(--radius-md);
+  text-align: center;
+  font-size: 0.82rem;
+  font-weight: 600;
+  transition: all 0.3s var(--ease-out);
+  cursor: default;
+  border: 2px solid transparent;
+}
+
+.arch-step.enc-step {
+  background: var(--c-encoder-bg);
+  color: oklch(0.35 0.10 268);
+}
+
+.arch-step.dec-step {
+  background: var(--c-decoder-bg);
+  color: oklch(0.35 0.10 25);
+}
+
+.arch-step.active-step {
+  border-color: var(--c-accent);
+  box-shadow: 0 0 0 4px rgba(91, 79, 217, 0.1);
+  transform: scale(1.03);
+}
+
+.arch-step .step-sub {
+  font-size: 0.7rem;
+  font-weight: 400;
+  opacity: 0.7;
+  margin-top: 2px;
+}
+
+.arch-flow-arrow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-xs) 0;
+  color: var(--c-text-muted);
+  font-size: 1rem;
+}
+
+.arch-bridge {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--c-v);
+  font-size: 1.5rem;
+  padding: 0 var(--space-md);
+  flex-shrink: 0;
+}
+
+.arch-stepper-controls {
+  display: flex;
+  gap: var(--space-sm);
+  align-items: center;
+  justify-content: center;
+}
+
+.arch-btn {
+  padding: var(--space-2xs) var(--space-lg);
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--c-border);
+  background: var(--c-surface);
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  color: var(--c-text);
+  transition: all 0.2s var(--ease-out);
+  font-family: var(--font-body);
+}
+
+.arch-btn:hover {
+  border-color: var(--c-accent);
+  color: var(--c-accent);
+  background: var(--c-accent-bg);
+}
+
+.arch-btn:active { transform: scale(0.97); }
+
+.arch-step-desc {
+  text-align: center;
+  font-size: 0.9rem;
+  color: var(--c-text-dim);
+  min-height: 3em;
+  max-width: 560px;
+  margin: 0 auto;
+}
+
+.arch-step-counter {
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  color: var(--c-text-muted);
+  text-align: center;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   DEMO 7: Token probability distribution
+   ═══════════════════════════════════════════════════════════ */
+.token-pred-demo {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+}
+
+.pred-input-area {
+  display: flex;
+  gap: var(--space-sm);
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.pred-input {
+  flex: 1;
+  min-width: 200px;
+  padding: var(--space-xs) var(--space-md);
+  border: 1px solid var(--c-border);
+  border-radius: var(--radius-md);
+  font-size: 0.95rem;
+  font-family: var(--font-body);
+  background: var(--c-surface);
+  color: var(--c-ink);
+  transition: border-color 0.2s var(--ease-out);
+}
+
+.pred-input:focus {
+  outline: none;
+  border-color: var(--c-accent);
+  box-shadow: 0 0 0 3px rgba(91, 79, 217, 0.1);
+}
+
+.pred-btn {
+  padding: var(--space-xs) var(--space-lg);
+  border-radius: var(--radius-md);
+  background: var(--c-accent);
+  color: #fff;
+  border: none;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s var(--ease-out);
+  font-family: var(--font-body);
+}
+
+.pred-btn:hover { background: var(--c-accent-hover); }
+.pred-btn:active { transform: scale(0.96); }
+
+.pred-distribution {
+  display: flex;
+  align-items: flex-end;
+  gap: var(--space-sm);
+  height: 200px;
+  justify-content: center;
+  padding: var(--space-md) 0;
+  flex-wrap: wrap;
+}
+
+.pred-bar-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-3xs);
+  cursor: pointer;
+  transition: transform 0.15s var(--ease-out);
+}
+
+.pred-bar-wrap:hover {
+  transform: translateY(-4px);
+}
+
+.pred-bar-wrap:hover .pred-bar-label {
+  color: var(--c-accent);
+  font-weight: 700;
+}
+
+.pred-bar {
+  width: 48px;
+  border-radius: var(--radius-sm) var(--radius-sm) 0 0;
+  transition: height 0.45s var(--ease-out), background 0.3s var(--ease-out);
+  min-height: 2px;
+  position: relative;
+}
+
+.pred-bar-label {
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--c-text-dim);
+  white-space: nowrap;
+  transition: color 0.15s var(--ease-out);
+}
+
+.pred-bar-value {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: var(--c-text);
+  position: absolute;
+  top: -20px;
+  left: 50%;
+  transform: translateX(-50%);
+  white-space: nowrap;
+}
+
+.pred-explanation {
+  text-align: center;
+  font-size: 0.88rem;
+  color: var(--c-text-dim);
+  max-width: 520px;
+  margin: 0 auto;
+  line-height: 1.6;
+}
+
+.pred-temp-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-sm);
+  padding: 0;
+}
+
+.pred-temp-label {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--c-text-dim);
+}
+
+.pred-temp-slider {
+  width: 100px;
+  height: 4px;
+  -webkit-appearance: none;
+  appearance: none;
+  background: var(--c-border);
+  border-radius: 2px;
+  outline: none;
+}
+
+.pred-temp-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--c-accent);
+  cursor: pointer;
+  border: 2px solid #fff;
+  box-shadow: var(--shadow-sm);
+}
+
+.pred-temp-val {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--c-accent);
+  min-width: 28px;
+  text-align: center;
+}
+
+.pred-temp-hint {
+  font-size: 0.72rem;
+  color: var(--c-text-muted);
+}
+
+/* ═══════════════════════════════════════════════════════════
+   TIMELINE — clean, no markers
+   ═══════════════════════════════════════════════════════════ */
+.timeline {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+  margin: var(--space-xl) 0;
+}
+
+.timeline-item {
+  display: grid;
+  grid-template-columns: 80px 1fr;
+  gap: var(--space-lg);
+  align-items: baseline;
+}
+
+.timeline-year {
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--c-accent);
+  text-align: right;
+}
+
+.timeline-body h3 {
+  margin-bottom: var(--space-3xs);
+  font-size: 1rem;
+}
+
+.timeline-body p {
+  color: var(--c-text-dim);
+  font-size: 0.88rem;
+  margin-bottom: 0;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   VARIED SECTION LAYOUTS — not identical card grids
+   ═══════════════════════════════════════════════════════════ */
+
+/* Two-column asymmetric */
+.split-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-xl);
+  margin: var(--space-xl) 0;
+  align-items: start;
+}
+
+/* Wide-narrow */
+.split-wide-narrow {
+  display: grid;
+  grid-template-columns: 1.3fr 1fr;
+  gap: var(--space-xl);
+  margin: var(--space-xl) 0;
+  align-items: start;
+}
+
+/* Application showcase — varied sizes */
+.app-showcase {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: var(--space-md);
+  margin: var(--space-xl) 0;
+}
+
+.app-item {
+  padding: var(--space-lg);
+  border-radius: var(--radius-lg);
+  background: var(--c-surface);
+  border: 1px solid var(--c-border);
+  transition: transform 0.2s var(--ease-out), box-shadow 0.2s var(--ease-out);
+}
+
+.app-item:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-md);
+}
+
+.app-item .app-emoji {
+  font-size: 1.6rem;
+  margin-bottom: var(--space-sm);
+  display: block;
+}
+
+.app-item h4 {
+  font-size: 0.95rem;
+  margin-bottom: var(--space-2xs);
+  color: var(--c-ink);
+}
+
+.app-item p {
+  font-size: 0.82rem;
+  color: var(--c-text-dim);
+  margin-bottom: 0;
+  line-height: 1.5;
+}
+
+/* Summary cluster */
+.summary-cluster {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: var(--space-md);
+  margin: var(--space-xl) 0;
+}
+
+.summary-item {
+  padding: var(--space-lg);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--c-border-light);
+  transition: border-color 0.2s var(--ease-out), box-shadow 0.2s var(--ease-out);
+}
+
+.summary-item:hover {
+  border-color: var(--c-accent);
+  box-shadow: 0 0 0 1px rgba(91, 79, 217, 0.15);
+}
+
+.summary-item .s-icon {
+  font-size: 1.4rem;
+  margin-bottom: var(--space-sm);
+  display: block;
+}
+
+.summary-item .s-label {
+  font-family: var(--font-heading);
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--c-ink);
+  margin-bottom: var(--space-2xs);
+}
+
+.summary-item .s-desc {
+  font-size: 0.82rem;
+  color: var(--c-text-dim);
+  margin-bottom: 0;
+}
+
+/* Glossary / table style */
+.glossary {
+  margin: var(--space-xl) 0;
+  border-top: 1px solid var(--c-border);
+}
+
+.glossary-row {
+  display: grid;
+  grid-template-columns: 140px 1fr;
+  gap: var(--space-lg);
+  padding: var(--space-sm) 0;
+  border-bottom: 1px solid var(--c-border-light);
+  font-size: 0.9rem;
+  align-items: baseline;
+}
+
+.glossary-term {
+  font-weight: 700;
+  color: var(--c-ink);
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  color: var(--c-accent);
+}
+
+.glossary-def {
+  color: var(--c-text-dim);
+}
+
+/* ═══════════════════════════════════════════════════════════
+   BUTTON
+   ═══════════════════════════════════════════════════════════ */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2xs);
+  padding: var(--space-xs) var(--space-lg);
+  border-radius: var(--radius-sm);
+  font-size: 0.9rem;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s var(--ease-out);
+  font-family: var(--font-body);
+}
+
+.btn-primary {
+  background: var(--c-accent);
+  color: #fff;
+}
+.btn-primary:hover { background: var(--c-accent-hover); }
+
+.btn-outline {
+  background: transparent;
+  border: 1px solid var(--c-border);
+  color: var(--c-text);
+}
+.btn-outline:hover { border-color: var(--c-accent); color: var(--c-accent); }
+
+.btn:active { transform: scale(0.97); }
+
+/* ═══════════════════════════════════════════════════════════
+   FOOTER
+   ═══════════════════════════════════════════════════════════ */
+.footer {
+  text-align: center;
+  padding: var(--space-3xl) var(--space-lg);
+  border-top: 1px solid var(--c-border);
+  color: var(--c-text-muted);
+  font-size: 0.82rem;
+  line-height: 1.7;
+}
+
+.footer a { color: var(--c-text-dim); }
+.footer a:hover { color: var(--c-accent); }
+
+/* ═══════════════════════════════════════════════════════════
+   ANIMATIONS — subtle, purposeful
+   ═══════════════════════════════════════════════════════════ */
+.fade-up {
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity 0.6s var(--ease-out), transform 0.6s var(--ease-out);
+}
+
+.fade-up.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ═══════════════════════════════════════════════════════════
+   SIDE NAVIGATION
+   ═══════════════════════════════════════════════════════════ */
+.side-nav {
+  position: fixed;
+  left: max(calc((100vw - var(--content-max)) / 2 - 180px), 16px);
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: var(--z-sticky);
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  padding: var(--space-md) 0;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.4s var(--ease-out);
+}
+
+.side-nav.visible {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* Vertical track */
+.side-nav::before {
+  content: '';
+  position: absolute;
+  left: 12px;
+  top: var(--space-md);
+  bottom: var(--space-md);
+  width: 1px;
+  background: var(--c-border);
+  border-radius: 0.5px;
+}
+
+.side-nav a {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: 7px var(--space-sm) 7px 0;
+  text-decoration: none;
+  color: var(--c-text-muted);
+  font-size: 0.78rem;
+  font-weight: 450;
+  transition: color 0.2s var(--ease-out), font-weight 0.2s var(--ease-out);
+  position: relative;
+  white-space: nowrap;
+  line-height: 1.3;
+}
+
+/* Dot on the track */
+.side-nav a::before {
+  content: '';
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--c-border);
+  flex-shrink: 0;
+  margin-left: 9px;
+  transition: all 0.25s var(--ease-out);
+  position: relative;
+  z-index: 1;
+}
+
+/* Active state */
+.side-nav a.active {
+  color: var(--c-accent);
+  font-weight: 600;
+}
+
+.side-nav a.active::before {
+  background: var(--c-accent);
+  box-shadow: 0 0 0 4px rgba(91, 79, 217, 0.12);
+  transform: scale(1.15);
+}
+
+/* Hover */
+.side-nav a:hover {
+  color: var(--c-accent);
+}
+
+.side-nav a:hover::before {
+  background: var(--c-accent);
+  transform: scale(1.15);
+}
+
+/* Hide on narrow screens */
+@media (max-width: 1300px) {
+  .side-nav { display: none; }
+}
+
+/* ═══════════════════════════════════════════════════════════
+   RESPONSIVE
+   ═══════════════════════════════════════════════════════════ */
+@media (max-width: 768px) {
+  html { font-size: 15px; }
+
+  section { padding: var(--space-2xl) 0; }
+
+  .container { padding: 0 var(--space-md); }
+
+  .hero { min-height: 70vh; padding: var(--space-3xl) var(--space-md); }
+
+  .split-2,
+  .split-wide-narrow {
+    grid-template-columns: 1fr;
+    gap: var(--space-lg);
+  }
+
+  .qkv-calc { grid-template-columns: 1fr; }
+
+  .heads-panel { grid-template-columns: repeat(2, 1fr); }
+
+  .arch-diagram { flex-direction: column; align-items: center; }
+  .arch-col { max-width: 100%; min-width: 100%; }
+
+  .timeline-item { grid-template-columns: 60px 1fr; gap: var(--space-md); }
+
+  .demo { padding: var(--space-lg); }
+
+  .heatmap-cell { min-width: 32px; min-height: 32px; }
+
+  .pred-distribution { height: 160px; }
+  .pred-bar { width: 36px; }
+
+  .glossary-row { grid-template-columns: 100px 1fr; }
+}
+
+@media (max-width: 480px) {
+  .heads-panel { grid-template-columns: 1fr 1fr; }
+  .arch-col { min-width: 100%; }
+  .heatmap-cell { min-width: 26px; min-height: 26px; font-size: 0.6rem; }
+  .compare-row { gap: var(--space-3xs); }
+  .token-pill { font-size: 0.78rem; padding: var(--space-3xs) var(--space-2xs); }
+  .pos-controls { gap: var(--space-md); }
+  .pos-control input[type="range"] { width: 100px; }
+  .timeline-item { grid-template-columns: 50px 1fr; gap: var(--space-sm); }
+}
+
+/* ═══════════════════════════════════════════════════════════
+   ACCESSIBILITY: Reduced motion
+   ═══════════════════════════════════════════════════════════ */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  html { scroll-behavior: auto; }
+}
+</style>
+</head>
+<body>
+
+<!-- Progress bar -->
+<div class="progress-bar" id="progressBar" aria-hidden="true"></div>
+
+<!-- Side Navigation -->
+<nav class="side-nav" id="sideNav" aria-label="页面导航">
+  <a href="#hero"><span class="nav-label">开篇</span></a>
+  <a href="#why"><span class="nav-label">为什么需要</span></a>
+  <a href="#embedding"><span class="nav-label">词嵌入</span></a>
+  <a href="#attention"><span class="nav-label">自注意力</span></a>
+  <a href="#qkv"><span class="nav-label">Q / K / V</span></a>
+  <a href="#multihead"><span class="nav-label">多头注意力</span></a>
+  <a href="#position"><span class="nav-label">位置编码</span></a>
+  <a href="#architecture"><span class="nav-label">整体架构</span></a>
+  <a href="#residual"><span class="nav-label">残差 & Norm</span></a>
+  <a href="#training"><span class="nav-label">训练 & 推理</span></a>
+  <a href="#applications"><span class="nav-label">实际应用</span></a>
+  <a href="#summary"><span class="nav-label">总结</span></a>
+</nav>
+
+<!-- ═══════════════════════════════════════════════════════════
+     HERO
+     ═══════════════════════════════════════════════════════════ -->
+<section class="hero" id="hero">
+  <div class="hero-inner">
+    <div class="hero-tag">交互式学习</div>
+    <h1>Transformer <span class="em">是什么？</span></h1>
+    <p class="subtitle">
+      驱动 ChatGPT、Claude、翻译软件和 AI 绘画的核心架构。这篇文章不要求数学背景 —— 每一个概念都有一个<strong>可动手操作的交互组件</strong>，像拆解一台精密机器一样，亲手感受每个零件如何运转。
+    </p>
+    <div class="hero-scroll" aria-hidden="true">
+      <span>向下滚动，开始探索</span>
+      <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6l4 4 4-4"/></svg>
+    </div>
+  </div>
+</section>
+
+<div class="container">
+
+<!-- ═══════════════════════════════════════════════════════════
+     WHY TRANSFORMER
+     ═══════════════════════════════════════════════════════════ -->
+<section id="why" class="fade-up">
+  <h2>为什么需要 Transformer？</h2>
+
+  <p class="lead">
+    在 Transformer 出现之前，处理语言的主流方案是 <strong>RNN</strong>（循环神经网络）和它的改进版 <strong>LSTM</strong>。它们能工作，但有一个结构性缺陷：<strong>顺序处理，无法并行</strong>。
+  </p>
+
+  <div class="analogy">
+    <div class="analogy-head">📖 想象你在翻译一句话</div>
+    <p>「我昨天在公园里看到的那只非常可爱的橘猫正在追一只蝴蝶。」</p>
+    <p>要理解"追"的主语是"橘猫"不是"蝴蝶"，你需要<strong>同时把握整句话的结构</strong>。但 RNN 像一个只能逐字阅读的人 —— 读到句末时，句首信息已经模糊。这就像传话游戏：信息传递越远，失真越严重。</p>
+  </div>
+
+  <!-- Demo 1: RNN vs Transformer comparison -->
+  <div class="demo" id="demoCompare">
+    <div class="demo-header">
+      <div class="demo-title"><span class="dot" style="background:var(--c-accent)"></span> 处理方式对比</div>
+      <div class="demo-hint">观察两种架构如何处理同一句话</div>
+    </div>
+    <div class="compare-demo">
+      <div class="compare-row rnn">
+        <div class="compare-label rnn">RNN 顺序</div>
+        <div class="token-pill word">我</div>
+        <div class="flow-arrow">→</div>
+        <div class="token-pill word">昨天</div>
+        <div class="flow-arrow">→</div>
+        <div class="token-pill word">在</div>
+        <div class="flow-arrow">→</div>
+        <div class="token-pill word">公园</div>
+        <div class="flow-arrow">→</div>
+        <div class="token-pill word">看到</div>
+        <div class="flow-arrow">→</div>
+        <div class="token-pill word">橘猫</div>
+        <div class="flow-arrow">→</div>
+        <div class="token-pill word">追</div>
+        <div class="flow-arrow">→</div>
+        <div class="token-pill word">蝴蝶</div>
+      </div>
+      <div class="compare-note">信息像传话游戏，越传越模糊</div>
+
+      <div class="compare-row transformer">
+        <div class="compare-label transformer">Transformer 并行</div>
+        <div class="token-pill word">我</div>
+        <div class="token-pill word">昨天</div>
+        <div class="token-pill word">在</div>
+        <div class="token-pill word">公园</div>
+        <div class="token-pill word">看到</div>
+        <div class="token-pill word">橘猫</div>
+        <div class="token-pill word">追</div>
+        <div class="token-pill word">蝴蝶</div>
+      </div>
+      <div class="compare-note">所有词同时参与运算，直接建立关联</div>
+    </div>
+  </div>
+
+  <div class="insight">
+    <div class="insight-label">核心突破</div>
+    <p>Transformer 摒弃了逐字阅读，让<strong>每个词都能直接"看到"句子里的所有其他词</strong>。这就是 <strong style="color:var(--c-accent)">Self-Attention（自注意力机制）</strong>—— Transformer 的灵魂。而且，因为所有词同时处理，它可以充分利用 GPU 的并行计算能力，训练出千亿参数级别的超大模型。</p>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     EMBEDDING
+     ═══════════════════════════════════════════════════════════ -->
+<section id="embedding" class="fade-up">
+  <h2>第一步：把文字变成数字</h2>
+
+  <p class="lead">
+    计算机不理解「猫」这个汉字，它只理解数字。所以 Transformer 的第一件事，就是把每个词映射到一个<strong>高维向量</strong>—— 一串有意义的数字。
+  </p>
+
+  <div class="analogy">
+    <div class="analogy-head">🗺️ 想象给每个词一张"身份地图"</div>
+    <p>把每个词想象成一个城市。城市之间距离越近，语义越相似。「国王」和「王后」很近，「国王」和「披萨」很远。Embedding 层就是把词放到这样一张多维地图上，让语义相近的词靠在一起。</p>
+  </div>
+
+  <div class="demo">
+    <div class="demo-header">
+      <div class="demo-title"><span class="dot" style="background:var(--c-accent)"></span> 词向量语义空间</div>
+      <div class="demo-hint">悬停文字查看语义关系</div>
+    </div>
+    <div style="text-align:center;">
+      <svg viewBox="0 0 500 360" style="max-width:100%; height:auto;" id="embeddingSvg" role="img" aria-label="词向量2D投影图">
+        <!-- Axes -->
+        <line x1="40" y1="320" x2="480" y2="320" stroke="#ccc" stroke-width="1"/>
+        <line x1="40" y1="320" x2="40" y2="20" stroke="#ccc" stroke-width="1"/>
+        <text x="250" y="350" fill="#999" font-size="11" text-anchor="middle">语义维度 1</text>
+        <text x="10" y="170" fill="#999" font-size="11" text-anchor="middle" transform="rotate(-90, 10, 170)">语义维度 2</text>
+
+        <!-- Clusters will be drawn here -->
+        <g id="embeddingPoints"></g>
+
+        <!-- Labels -->
+        <g font-size="11" fill="var(--c-text-dim)" text-anchor="middle" id="embeddingLabels"></g>
+      </svg>
+    </div>
+    <p style="text-align:center; font-size:0.85rem; color:var(--c-text-dim); margin-top:var(--space-sm);">
+      这是 128 维词向量压缩到 2D 的投影。语义相近的词自然会聚在一起。
+    </p>
+  </div>
+
+  <p>Transformer 使用的 embedding 维度通常是 <strong>512</strong>（基础版）或 <strong>768</strong>（BERT-base）。每一个维度捕捉了词的某种抽象属性 —— 比如性别、时态、情感色彩等 —— 虽然我们无法直接解释每个维度，但模型通过训练学会了如何利用它们。</p>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     SELF-ATTENTION
+     ═══════════════════════════════════════════════════════════ -->
+<section id="attention" class="fade-up">
+  <h2>Self-Attention：让每个词"看到"所有词</h2>
+
+  <p class="lead">
+    这是 Transformer 最核心的创新。Self-Attention 计算句子中<strong>每对词之间的相关性</strong>，让每个词都能从所有其他词那里收集信息。
+  </p>
+
+  <div class="analogy">
+    <div class="analogy-head">🔍 想象你在图书馆查资料</div>
+    <p>你想搞懂「苹果」在文章里是什么意思。你会快速扫视周围的词 —— 看到「iPhone」「库克」就判断是苹果公司；看到「香蕉」「果园」就知道是水果。Self-Attention 做的就是这件事：<strong>每个词扫视所有其他词，根据相关性决定关注谁</strong>。</p>
+  </div>
+
+  <!-- Demo 2: Attention heatmap -->
+  <div class="demo" id="demoHeatmap">
+    <div class="demo-header">
+      <div class="demo-title"><span class="dot" style="background:var(--c-accent)"></span> 注意力矩阵热力图</div>
+      <div class="demo-hint">点击任意词查看它关注了谁</div>
+    </div>
+
+    <div class="heatmap-wrap">
+      <div class="heatmap-sentence" id="heatmapSentence"></div>
+
+      <div style="display:flex; gap: var(--space-lg); align-items: flex-start; flex-wrap: wrap; justify-content: center;">
+        <div class="heatmap-grid" id="heatmapGrid" style="grid-template-columns: 40px repeat(8, 1fr);"></div>
+      </div>
+
+      <div class="heatmap-explanation" id="heatmapExplanation">
+        点击上方任意词查看注意力分布
+      </div>
+    </div>
+  </div>
+
+  <p>注意力的计算可以概括为：<strong>越相似的词，注意力分数越高</strong>。而「相似度」通过向量点积来衡量 —— 这就是下一节 Q、K、V 的作用。</p>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     Q / K / V
+     ═══════════════════════════════════════════════════════════ -->
+<section id="qkv" class="fade-up">
+  <h2>Q、K、V：注意力的三个角色</h2>
+
+  <p class="lead">
+    Transformer 用三个可学习的线性变换为每个词生成三个向量：<span class="hl-q">Query（查询）</span>、<span class="hl-k">Key（键）</span>、<span class="hl-v">Value（值）</span>。它们共同完成一次注意力计算。
+  </p>
+
+  <div class="analogy">
+    <div class="analogy-head">🍽️ 想象你在餐厅点菜</div>
+    <p><strong>Query = 你的需求</strong>：「我想吃辣的、肉类的、预算 50 元以内的」</p>
+    <p><strong>Key = 菜单标签</strong>：每道菜的属性标签 ——「麻辣」「清淡」「牛肉」「甜品」</p>
+    <p><strong>Value = 菜本身</strong>：实际提供的内容。你最终享用的是菜的 Value，而选择依据是 Query 和 Key 的匹配度。</p>
+  </div>
+
+  <!-- Demo 3: Q/K dot product calculator -->
+  <div class="demo" id="demoQKV">
+    <div class="demo-header">
+      <div class="demo-title"><span class="dot" style="background:var(--c-accent)"></span> Q·K 点积计算器</div>
+      <div class="demo-hint">拖动滑块改变向量值，观察点积变化</div>
+    </div>
+
+    <div class="qkv-calc">
+      <div class="qkv-calc-col">
+        <h4><span class="role-dot" style="background:var(--c-q)"></span> Query（当前词的"需求"）</h4>
+        <div class="qkv-slider-group">
+          <div class="qkv-slider-label"><span>维度 0</span><span class="val" id="q0Val">0.50</span></div>
+          <input type="range" class="qkv-slider slider-q" id="q0Slider" min="-1" max="1" step="0.05" value="0.5">
+        </div>
+        <div class="qkv-slider-group">
+          <div class="qkv-slider-label"><span>维度 1</span><span class="val" id="q1Val">0.30</span></div>
+          <input type="range" class="qkv-slider slider-q" id="q1Slider" min="-1" max="1" step="0.05" value="0.3">
+        </div>
+        <div class="qkv-slider-group">
+          <div class="qkv-slider-label"><span>维度 2</span><span class="val" id="q2Val">-0.20</span></div>
+          <input type="range" class="qkv-slider slider-q" id="q2Slider" min="-1" max="1" step="0.05" value="-0.2">
+        </div>
+      </div>
+
+      <div class="qkv-calc-col">
+        <h4><span class="role-dot" style="background:var(--c-k)"></span> Key（另一个词的"标签"）</h4>
+        <div class="qkv-slider-group">
+          <div class="qkv-slider-label"><span>维度 0</span><span class="val" id="k0Val">0.60</span></div>
+          <input type="range" class="qkv-slider slider-k" id="k0Slider" min="-1" max="1" step="0.05" value="0.6">
+        </div>
+        <div class="qkv-slider-group">
+          <div class="qkv-slider-label"><span>维度 1</span><span class="val" id="k1Val">-0.10</span></div>
+          <input type="range" class="qkv-slider slider-k" id="k1Slider" min="-1" max="1" step="0.05" value="-0.1">
+        </div>
+        <div class="qkv-slider-group">
+          <div class="qkv-slider-label"><span>维度 2</span><span class="val" id="k2Val">0.40</span></div>
+          <input type="range" class="qkv-slider slider-k" id="k2Slider" min="-1" max="1" step="0.05" value="0.4">
+        </div>
+      </div>
+
+      <div class="qkv-calc-result" id="qkvResult">
+        <div class="dot-product" id="dotProductVal">0.19</div>
+        <div class="interpretation">Q · K = 两个向量在每个维度上的乘积之和。正值表示方向相似（相关），负值表示方向相反（不相关），接近零表示正交（无关）。</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="formula">
+    <span class="fn">Attention</span><span class="paren">(</span>Q, K, V<span class="paren">)</span> <span class="op">=</span> <span class="fn">softmax</span><span class="paren">(</span>QK<span class="paren"><sup>T</sup></span> <span class="op">/</span> √d<span class="paren"><sub>k</sub></span><span class="paren">)</span> <span class="op">·</span> V
+  </div>
+
+  <div class="insight">
+    <div class="insight-label">为什么要除以 √d<sub>k</sub>？</div>
+    <p>点积结果会随着向量维度增大而增大。当 d<sub>k</sub> = 64 时，Q·K 的取值范围可能达到几十甚至上百，经过 Softmax 后会趋近于 0 或 1（丧失区分度）。除以 √d<sub>k</sub>（约 8）将数值拉回合理范围，让梯度能正常流动。这被称为 <strong>Scaled Dot-Product Attention</strong>。</p>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     MULTI-HEAD ATTENTION
+     ═══════════════════════════════════════════════════════════ -->
+<section id="multihead" class="fade-up">
+  <h2>多头注意力：多个"视角"同时理解</h2>
+
+  <p class="lead">
+    一组 Q/K/V 只能学到一种关系模式。但语言包含多种关系：主谓搭配、代词指代、修饰关系、因果逻辑…… 怎么办？<strong>同时用多组注意力，每组关注不同模式。</strong>
+  </p>
+
+  <!-- Demo 4: Multi-head comparison -->
+  <div class="demo" id="demoMultiHead">
+    <div class="demo-header">
+      <div class="demo-title"><span class="dot" style="background:var(--c-accent)"></span> 多头注意力对比</div>
+      <div class="demo-hint">点击不同 Head 查看各自的关注模式</div>
+    </div>
+
+    <div class="heads-panel" id="headsPanel"></div>
+    <div class="head-detail" id="headDetail">
+      <p style="color:var(--c-text-dim);">↑ 点击上方 Head 查看详情</p>
+    </div>
+  </div>
+
+  <div class="split-2">
+    <div>
+      <h3>为什么用多头？</h3>
+      <p>单头注意力可能会把多个不相关的关系「平均」在一起，导致信息模糊。多头让每个头<strong>专门化</strong>：一个头专门找主语-谓语关系，另一个头专门找代词指代，再一个头专门看位置相邻关系。</p>
+    </div>
+    <div>
+      <h3>效率很关键</h3>
+      <p>每个头的维度 = 模型维度 ÷ 头数。比如模型维度 512、8 个头，每个头维度是 64。总计算量和单头差不多，但捕捉到的模式丰富得多。原始论文使用了 <strong>8 个注意力头</strong>。</p>
+    </div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     POSITIONAL ENCODING
+     ═══════════════════════════════════════════════════════════ -->
+<section id="position" class="fade-up">
+  <h2>位置编码：让模型知道词序</h2>
+
+  <p class="lead">
+    Self-Attention 把所有词当作<strong>无序集合</strong>—— 它看不到「猫吃鱼」和「鱼吃猫」的区别。但语言中，词序显然很重要。解决方案：给每个词加上一个<strong>位置信号</strong>。
+  </p>
+
+  <!-- Demo 5: Positional encoding wave explorer -->
+  <div class="demo" id="demoPosEnc">
+    <div class="demo-header">
+      <div class="demo-title"><span class="dot" style="background:var(--c-accent)"></span> 正弦位置编码浏览器</div>
+      <div class="demo-hint">调整维度观察不同频率的正弦波</div>
+    </div>
+
+    <div class="pos-enc-demo">
+      <div class="pos-canvas-wrap">
+        <canvas id="posCanvas" width="800" height="280" aria-label="位置编码正弦波可视化" role="img"></canvas>
+      </div>
+      <div class="pos-controls">
+        <div class="pos-control">
+          <label for="posDimSlider">查看维度</label>
+          <input type="range" id="posDimSlider" min="0" max="63" value="0" step="1">
+          <span class="pos-val" id="posDimVal">0</span>
+        </div>
+        <div class="pos-control">
+          <label for="posFreqSlider">频率倍数</label>
+          <input type="range" id="posFreqSlider" min="1" max="10" value="1" step="0.5">
+          <span class="pos-val" id="posFreqVal">1×</span>
+        </div>
+        <button class="btn btn-outline" id="posToggleFunc">切换到余弦</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="insight">
+    <div class="insight-label">正弦位置编码的巧妙之处</div>
+    <p>Transformer 使用不同频率的正弦/余弦函数来编码位置：偶数维度用正弦，奇数维度用余弦。高频维度能区分相邻位置（位置 3 和位置 4），低频维度能区分远距离位置（位置 3 和位置 50）。所有维度组合起来，每个位置就有了<strong>独一无二的指纹</strong>，而且模型可以通过简单的线性变换推断两个位置之间的距离 —— 这是正弦函数的内在属性。</p>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     ARCHITECTURE
+     ═══════════════════════════════════════════════════════════ -->
+<section id="architecture" class="fade-up">
+  <h2>整体架构：Encoder + Decoder</h2>
+
+  <p class="lead">
+    原始 Transformer 由 <strong>Encoder（编码器）</strong>和 <strong>Decoder（解码器）</strong>两大部分组成，各重复 N 层（论文中 N=6）。
+  </p>
+
+  <!-- Demo 6: Architecture stepper -->
+  <div class="demo" id="demoArch">
+    <div class="demo-header">
+      <div class="demo-title"><span class="dot" style="background:var(--c-accent)"></span> 数据流逐步演示</div>
+      <div class="demo-hint">追踪一个 Token 如何流经整个 Transformer</div>
+    </div>
+
+    <div class="arch-stepper">
+      <div class="arch-stepper-controls">
+        <button class="arch-btn" id="archPrev">← 上一步</button>
+        <span class="arch-step-counter" id="archCounter">步骤 1 / 12</span>
+        <button class="arch-btn" id="archNext">下一步 →</button>
+      </div>
+
+      <div class="arch-diagram" id="archDiagram">
+        <!-- Encoder Column -->
+        <div class="arch-col">
+          <div class="arch-col-header enc">Encoder × 6 层</div>
+          <div class="arch-step enc-step" data-step="1">Input Embedding<div class="step-sub">词→稠密向量</div></div>
+          <div class="arch-flow-arrow">↓</div>
+          <div class="arch-step enc-step" data-step="2">+ 位置编码<div class="step-sub">加入位置信息</div></div>
+          <div class="arch-flow-arrow">↓</div>
+          <div class="arch-step enc-step" data-step="3">Multi-Head Self-Attention<div class="step-sub">每个词关注所有词</div></div>
+          <div class="arch-flow-arrow">↓</div>
+          <div class="arch-step enc-step" data-step="4">Add & Layer Norm<div class="step-sub">残差连接 + 归一化</div></div>
+          <div class="arch-flow-arrow">↓</div>
+          <div class="arch-step enc-step" data-step="5">Feed Forward Network<div class="step-sub">两层全连接 + GeLU</div></div>
+          <div class="arch-flow-arrow">↓</div>
+          <div class="arch-step enc-step" data-step="6">Add & Layer Norm<div class="step-sub">残差连接 + 归一化</div></div>
+        </div>
+
+        <div class="arch-bridge" aria-hidden="true">⟹</div>
+
+        <!-- Decoder Column -->
+        <div class="arch-col">
+          <div class="arch-col-header dec">Decoder × 6 层</div>
+          <div class="arch-step dec-step" data-step="7">Output Embedding<div class="step-sub">已生成序列的向量</div></div>
+          <div class="arch-flow-arrow">↓</div>
+          <div class="arch-step dec-step" data-step="8">+ 位置编码<div class="step-sub">加入位置信息</div></div>
+          <div class="arch-flow-arrow">↓</div>
+          <div class="arch-step dec-step" data-step="9">Masked Multi-Head Attn<div class="step-sub">只能看已生成的词</div></div>
+          <div class="arch-flow-arrow">↓</div>
+          <div class="arch-step dec-step" data-step="10">Add & Layer Norm</div>
+          <div class="arch-flow-arrow">↓</div>
+          <div class="arch-step dec-step" data-step="11">Cross-Attention<div class="step-sub">关注 Encoder 的输出</div></div>
+          <div class="arch-flow-arrow">↓</div>
+          <div class="arch-step dec-step" data-step="12">Add & Layer Norm</div>
+          <div class="arch-flow-arrow">↓</div>
+          <div class="arch-step dec-step" data-step="13">FFN → Linear → Softmax<div class="step-sub">输出下一个词的概率</div></div>
+        </div>
+      </div>
+
+      <div class="arch-step-desc" id="archDesc">点击「下一步」开始追踪数据流</div>
+    </div>
+  </div>
+
+  <div class="insight">
+    <div class="insight-label">现代变体</div>
+    <p><strong>GPT 系列只用 Decoder</strong>（自回归生成，预测下一个词），<strong>BERT 只用 Encoder</strong>（双向理解，做分类/问答），<strong>T5 用完整 Encoder-Decoder</strong>（翻译/摘要）。架构可按任务灵活裁剪 —— 这也是 Transformer 强大的原因之一。</p>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     FFN + RESIDUAL + LAYER NORM
+     ═══════════════════════════════════════════════════════════ -->
+<section id="residual" class="fade-up">
+  <h2>Feed-Forward、残差连接 与 Layer Normalization</h2>
+
+  <p class="lead">
+    注意力之后，每个词还要经过一个<strong>前馈网络（FFN）</strong>。而架构图中反复出现的「Add & Layer Norm」是保证深层网络能稳定训练的关键。
+  </p>
+
+  <div class="split-wide-narrow">
+    <div>
+      <h3>Feed-Forward Network</h3>
+      <p>FFN 是一个<strong>对每个位置独立</strong>应用的两层全连接网络：</p>
+      <div class="formula" style="font-size:0.9rem;">
+        FFN(x) = W<span style="font-size:0.7rem;">2</span> · GeLU(W<span style="font-size:0.7rem;">1</span> · x + b<span style="font-size:0.7rem;">1</span>) + b<span style="font-size:0.7rem;">2</span>
+      </div>
+      <p>第一层将维度从 d<sub>model</sub>(512) 扩展到 d<sub>ff</sub>(2048)，经过 GeLU 激活函数，再压缩回 512 维。这种 <strong>扩展-压缩</strong> 结构让网络能学习更复杂的特征变换。</p>
+    </div>
+    <div>
+      <h3>残差连接</h3>
+      <p>每个子层的输出不是直接传递，而是 <strong>输入 + 子层输出</strong>：</p>
+      <div class="formula" style="font-size:0.85rem;">
+        output = LayerNorm(x + Sublayer(x))
+      </div>
+      <p>这就像在原文基础上修改，而非丢掉重写。它为梯度提供了一条<strong>高速公路</strong>，让深层网络也能有效训练。</p>
+
+      <h3 style="margin-top:var(--space-lg);">Layer Normalization</h3>
+      <p>对<strong>单个样本的所有特征</strong>做归一化（均值=0，方差=1），然后通过可学习的缩放/偏移参数调整。相比 Batch Norm（对一批样本的同一特征归一化），Layer Norm 不依赖 batch size，更稳定，特别适合序列长度不固定的 NLP 任务。</p>
+    </div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     TRAINING & INFERENCE
+     ═══════════════════════════════════════════════════════════ -->
+<section id="training" class="fade-up">
+  <h2>训练 vs 推理：两种工作模式</h2>
+
+  <p class="lead">
+    Transformer 在<strong>训练</strong>和<strong>推理</strong>（实际使用）时的工作方式有本质区别。理解这个区别，才能真正理解 ChatGPT 等模型是怎么工作的。
+  </p>
+
+  <!-- Demo 7: Token Prediction -->
+  <div class="demo" id="demoPrediction">
+    <div class="demo-header">
+      <div class="demo-title"><span class="dot" style="background:var(--c-accent)"></span> 下一个 Token 预测模拟</div>
+      <div class="demo-hint">输入上文，模型预测最可能的下一个词（可链式预测）</div>
+    </div>
+
+    <div class="token-pred-demo">
+      <div class="pred-input-area">
+        <input type="text" class="pred-input" id="predInput" value="人工智能正在改变" placeholder="输入中文上文...">
+        <button class="pred-btn" id="predBtn">预测 →</button>
+      </div>
+
+      <!-- Temperature control -->
+      <div class="pred-temp-row">
+        <span class="pred-temp-label">多样性（Temperature）</span>
+        <input type="range" class="pred-temp-slider" id="predTemp" min="0.2" max="2.0" step="0.1" value="0.8">
+        <span class="pred-temp-val" id="predTempVal">0.8</span>
+        <span class="pred-temp-hint">低=确定 高=随机</span>
+      </div>
+
+      <div class="pred-distribution" id="predDistribution"></div>
+
+      <!-- Chain prediction hint -->
+      <div class="pred-explanation" id="predExplanation"></div>
+    </div>
+  </div>
+
+  <div class="split-2" style="margin-top:var(--space-2xl);">
+    <div>
+      <h3>训练阶段</h3>
+      <p>使用 <strong>Teacher Forcing</strong>：给模型看完整的输入和输出序列，它尝试预测每个位置的下一个词。因为知道了正确答案，可以<strong>并行</strong>计算所有位置的预测。损失函数是比较预测和真实下一个词的差距（交叉熵）。</p>
+      <p>Decoder 中的 <strong>Masked Attention</strong> 确保预测位置 i 时只能看到位置 1 到 i-1，不能「偷看」未来。</p>
+    </div>
+    <div>
+      <h3>推理阶段（自回归生成）</h3>
+      <p>模型<strong>逐词生成</strong>：先输出第一个词，然后把这个词追加到输入中，再预测下一个词……重复直到输出结束符或达到最大长度。这个过程是<strong>串行的</strong>（每步依赖前一步的结果），所以推理比训练慢得多。</p>
+      <p>这就是为什么 ChatGPT 是一个字一个字吐出来的 —— 它在做自回归生成。</p>
+    </div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     APPLICATIONS
+     ═══════════════════════════════════════════════════════════ -->
+<section id="applications" class="fade-up">
+  <h2>Transformer 如何改变了 AI 世界</h2>
+
+  <div class="timeline">
+    <div class="timeline-item">
+      <div class="timeline-year">2017</div>
+      <div class="timeline-body">
+        <h3>「Attention Is All You Need」</h3>
+        <p>Google Brain 团队发表 Transformer 论文，最初用于机器翻译，在 BLEU 分数和训练速度上全面超越当时的 SOTA。</p>
+      </div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-year">2018</div>
+      <div class="timeline-body">
+        <h3>BERT</h3>
+        <p>Google 发布 BERT，用 Transformer Encoder 做双向文本理解。在 11 项 NLP 任务上刷新纪录，引发 NLP 领域的范式转变。</p>
+      </div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-year">2019-2020</div>
+      <div class="timeline-body">
+        <h3>GPT-2 → GPT-3</h3>
+        <p>OpenAI 展示了大模型的涌现能力。GPT-3 的 1750 亿参数展示了少样本学习（few-shot learning）—— 仅凭几个示例就能完成新任务。</p>
+      </div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-year">2020</div>
+      <div class="timeline-body">
+        <h3>Vision Transformer (ViT)</h3>
+        <p>Transformer 进入计算机视觉。把图片切成 16×16 的小块当作「词」，在 ImageNet 上达到与 CNN 相当的效果。</p>
+      </div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-year">2022-2024</div>
+      <div class="timeline-body">
+        <h3>ChatGPT & 多模态</h3>
+        <p>基于 Transformer Decoder 的大语言模型走向大众。GPT-4、Claude 等多模态模型能同时理解文字和图像。Stable Diffusion 中的 U-Net 也采用了 Transformer 块。</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="app-showcase">
+    <div class="app-item">
+      <span class="app-emoji">💬</span>
+      <h4>对话 AI</h4>
+      <p>ChatGPT、Claude、文心一言 —— 所有大语言模型的核心架构</p>
+    </div>
+    <div class="app-item">
+      <span class="app-emoji">🌐</span>
+      <h4>机器翻译</h4>
+      <p>Google 翻译、DeepL 全面转向 Transformer</p>
+    </div>
+    <div class="app-item">
+      <span class="app-emoji">🎨</span>
+      <h4>图像生成</h4>
+      <p>DALL-E、Stable Diffusion 中的核心组件</p>
+    </div>
+    <div class="app-item">
+      <span class="app-emoji">🧬</span>
+      <h4>蛋白质预测</h4>
+      <p>AlphaFold 用 Transformer 预测 3D 结构</p>
+    </div>
+    <div class="app-item">
+      <span class="app-emoji">🎵</span>
+      <h4>音频处理</h4>
+      <p>Whisper 语音识别、MusicGen 音乐生成</p>
+    </div>
+    <div class="app-item">
+      <span class="app-emoji">💻</span>
+      <h4>代码生成</h4>
+      <p>GitHub Copilot、Cursor 等编程助手</p>
+    </div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     SUMMARY
+     ═══════════════════════════════════════════════════════════ -->
+<section id="summary" class="fade-up">
+  <h2>总结：一张图回顾核心概念</h2>
+
+  <div class="summary-cluster">
+    <div class="summary-item">
+      <span class="s-icon">🎯</span>
+      <div class="s-label" style="color:var(--c-accent)">Self-Attention</div>
+      <div class="s-desc">每个词同时看所有词，通过点积计算相关性 —— Transformer 的灵魂</div>
+    </div>
+    <div class="summary-item">
+      <span class="s-icon">🔑</span>
+      <div class="s-label" style="color:var(--c-q)">Q / K / V</div>
+      <div class="s-desc">Query 表达需求，Key 表达身份，Value 提供内容 —— 注意力机制的三个角色</div>
+    </div>
+    <div class="summary-item">
+      <span class="s-icon">👁️</span>
+      <div class="s-label" style="color:var(--c-k)">Multi-Head</div>
+      <div class="s-desc">多组注意力并行，各自关注不同的语言模式，最后拼接融合</div>
+    </div>
+    <div class="summary-item">
+      <span class="s-icon">📍</span>
+      <div class="s-label" style="color:var(--c-v)">位置编码</div>
+      <div class="s-desc">用不同频率的正弦波给每个位置打上独一无二的"指纹"</div>
+    </div>
+    <div class="summary-item">
+      <span class="s-icon">🏗️</span>
+      <div class="s-label" style="color:var(--c-encoder)">Encoder-Decoder</div>
+      <div class="s-desc">Encoder 理解输入，Decoder 生成输出，中间通过 Cross-Attention 传递信息</div>
+    </div>
+    <div class="summary-item">
+      <span class="s-icon">🔄</span>
+      <div class="s-label" style="color:var(--c-green)">残差 + Layer Norm</div>
+      <div class="s-desc">残差连接保留原始信息，Layer Norm 稳定训练 —— 让深层网络能正常工作</div>
+    </div>
+  </div>
+
+  <div class="glossary">
+    <div class="glossary-row">
+      <div class="glossary-term">d<sub>model</sub></div>
+      <div class="glossary-def">模型的主维度（论文中=512），即每个 token 的向量表示维度</div>
+    </div>
+    <div class="glossary-row">
+      <div class="glossary-term">d<sub>k</sub>, d<sub>v</sub></div>
+      <div class="glossary-def">每个注意力头中 Key/Value 的维度（= d<sub>model</sub> / h，论文中=64）</div>
+    </div>
+    <div class="glossary-row">
+      <div class="glossary-term">h</div>
+      <div class="glossary-def">注意力头数（论文中=8）</div>
+    </div>
+    <div class="glossary-row">
+      <div class="glossary-term">d<sub>ff</sub></div>
+      <div class="glossary-def">FFN 中间层维度（论文中=2048），通常是 d<sub>model</sub> 的 4 倍</div>
+    </div>
+    <div class="glossary-row">
+      <div class="glossary-term">N</div>
+      <div class="glossary-def">Encoder 和 Decoder 的层数（论文中=6）</div>
+    </div>
+    <div class="glossary-row">
+      <div class="glossary-term">Softmax</div>
+      <div class="glossary-def">将一组任意实数转换为 0-1 之间的概率分布（总和=1），用于将注意力分数变成权重</div>
+    </div>
+  </div>
+</section>
+
+</div><!-- /.container -->
+
+<footer class="footer">
+  <p>基于 <a href="https://arxiv.org/abs/1706.03762" target="_blank" rel="noopener">「Attention Is All You Need」</a>(Vaswani et al., 2017) 论文构建</p>
+  <p>所有交互组件均为纯 HTML/CSS/JavaScript，无需任何依赖，可直接在浏览器中运行</p>
+</footer>
+
+<script>
+/* ═══════════════════════════════════════════════════════════
+   SCROLL: Progress bar + fade-in
+   ═══════════════════════════════════════════════════════════ */
+const progressBar = document.getElementById('progressBar');
+
+function updateProgress() {
+  const scrollTop = window.scrollY;
+  const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+  progressBar.style.width = docHeight > 0 ? Math.min(100, (scrollTop / docHeight) * 100) + '%' : '0%';
+}
+
+function updateSideNav() {
+  const sideNav = document.getElementById('sideNav');
+  const hero = document.getElementById('hero');
+  const heroBottom = hero.getBoundingClientRect().bottom;
+
+  // Show nav only after hero is fully scrolled past
+  sideNav.classList.toggle('visible', heroBottom < 0);
+
+  // Active section tracking
+  const navLinks = document.querySelectorAll('.side-nav a');
+  const sections = document.querySelectorAll('section[id]');
+  let current = '';
+  sections.forEach(section => {
+    const rect = section.getBoundingClientRect();
+    if (rect.top <= window.innerHeight * 0.35) current = section.id;
+  });
+  navLinks.forEach(link => {
+    const href = link.getAttribute('href');
+    link.classList.toggle('active', href === '#' + current);
+  });
+}
+
+window.addEventListener('scroll', () => {
+  updateProgress();
+  updateSideNav();
+}, { passive: true });
+
+updateSideNav();
+
+const fadeObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('visible');
+      fadeObserver.unobserve(entry.target);
+    }
+  });
+}, { threshold: 0.08, rootMargin: '0px 0px -30px 0px' });
+
+document.querySelectorAll('.fade-up').forEach(el => fadeObserver.observe(el));
+
+/* ═══════════════════════════════════════════════════════════
+   DEMO 1: RNN vs Transformer animation
+   ═══════════════════════════════════════════════════════════ */
+(function() {
+  const rnnPills = document.querySelectorAll('.compare-row.rnn .token-pill.word');
+  const tfPills = document.querySelectorAll('.compare-row.transformer .token-pill.word');
+  let step = 0;
+  let animRunning = true;
+
+  function animateCompare() {
+    if (!animRunning) return;
+    // Reset all
+    rnnPills.forEach(p => { p.classList.remove('active-rnn'); p.classList.add('word'); });
+    tfPills.forEach(p => { p.classList.remove('active-tf'); p.classList.add('word'); });
+
+    // RNN: highlight one at a time
+    const rnnIdx = step % rnnPills.length;
+    rnnPills[rnnIdx].classList.add('active-rnn');
+
+    // Transformer: all highlighted together
+    tfPills.forEach(p => p.classList.add('active-tf'));
+
+    step++;
+    setTimeout(animateCompare, 800);
+  }
+
+  // Only animate when visible
+  const compareDemo = document.getElementById('demoCompare');
+  const compareObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      animRunning = entry.isIntersecting;
+      if (animRunning) animateCompare();
+    });
+  }, { threshold: 0.3 });
+  compareObserver.observe(compareDemo);
+  animateCompare();
+})();
+
+/* ═══════════════════════════════════════════════════════════
+   DEMO 2: Attention Heatmap
+   ═══════════════════════════════════════════════════════════ */
+(function() {
+  const sentence = ['猫', '在', '沙发上', '睡觉', '因为', '它', '很', '累'];
+  const attnWeights = {
+    '猫': [0.35, 0.05, 0.15, 0.20, 0.02, 0.15, 0.03, 0.05],
+    '在': [0.08, 0.10, 0.45, 0.12, 0.05, 0.05, 0.05, 0.10],
+    '沙发上': [0.20, 0.35, 0.10, 0.15, 0.03, 0.05, 0.05, 0.07],
+    '睡觉': [0.30, 0.10, 0.15, 0.20, 0.05, 0.08, 0.05, 0.07],
+    '因为': [0.05, 0.03, 0.03, 0.08, 0.10, 0.08, 0.08, 0.55],
+    '它':   [0.55, 0.03, 0.05, 0.08, 0.05, 0.10, 0.05, 0.09],
+    '很':   [0.05, 0.03, 0.03, 0.05, 0.05, 0.08, 0.15, 0.56],
+    '累':   [0.15, 0.05, 0.05, 0.18, 0.30, 0.10, 0.10, 0.07],
+  };
+  const heatExplanations = {
+    '猫': '「猫」最关注自己（主语身份，35%）和「睡觉」（核心谓语，20%），也关注「它」（代词同指，15%）',
+    '在': '「在」最关注「沙发上」（介词宾语，45%），形成地点短语',
+    '沙发上': '「沙发上」关注「在」（35%）和「猫」（20%），理解"谁在哪里"',
+    '睡觉': '「睡觉」最关注「猫」（谁在睡，30%）和自己（动作本身，20%）',
+    '因为': '「因为」最关注「累」（原因，55%），形成因果关系连词',
+    '它': '「它」最关注「猫」（55%！），正确识别了指代对象 —— 这是注意力机制最精彩的表现',
+    '很': '「很」最关注「累」（56%），作为程度副词紧密依附于形容词',
+    '累': '「累」关注「因为」（30%）和「很」（10%），理解因果和修饰关系',
+  };
+
+  const sentenceEl = document.getElementById('heatmapSentence');
+  const gridEl = document.getElementById('heatmapGrid');
+  const explanationEl = document.getElementById('heatmapExplanation');
+  let selectedSource = null;
+
+  // Build sentence pills
+  sentence.forEach((word, i) => {
+    const pill = document.createElement('span');
+    pill.className = 'heatmap-word';
+    pill.textContent = word;
+    pill.dataset.index = i;
+    pill.addEventListener('click', () => selectSource(i));
+    sentenceEl.appendChild(pill);
+  });
+
+  // Build heatmap grid
+  // Header row
+  const corner = document.createElement('div');
+  corner.style.cssText = 'grid-column:1; grid-row:1;';
+  gridEl.appendChild(corner);
+
+  sentence.forEach((word, i) => {
+    const header = document.createElement('div');
+    header.className = 'heatmap-col-label';
+    header.textContent = word;
+    header.style.cssText = `grid-column:${i+2}; grid-row:1; font-size:0.7rem;`;
+    gridEl.appendChild(header);
+  });
+
+  const cells = [];
+  sentence.forEach((rowWord, i) => {
+    // Row label
+    const label = document.createElement('div');
+    label.className = 'heatmap-row-label';
+    label.textContent = rowWord;
+    label.style.cssText = `grid-column:1; grid-row:${i+2};`;
+    gridEl.appendChild(label);
+
+    // Cells
+    sentence.forEach((colWord, j) => {
+      const cell = document.createElement('div');
+      cell.className = 'heatmap-cell';
+      cell.style.cssText = `grid-column:${j+2}; grid-row:${i+2};`;
+      cell.addEventListener('click', () => selectSource(i));
+      cell.addEventListener('mouseenter', () => highlightCell(i, j));
+      cell.addEventListener('mouseleave', () => clearHighlight());
+      gridEl.appendChild(cell);
+      cells.push({ el: cell, row: i, col: j });
+    });
+  });
+
+  function updateHeatmap(sourceIdx) {
+    const weights = attnWeights[sentence[sourceIdx]];
+    cells.forEach(c => {
+      const w = weights[c.col];
+      // Indigo gradient: darker = more attention
+      const alpha = w;
+      c.el.style.background = `oklch(${0.92 - w * 0.45} ${0.05 + w * 0.12} 268)`;
+      c.el.style.color = w > 0.3 ? '#fff' : 'transparent';
+      c.el.textContent = Math.round(w * 100);
+    });
+
+    // Highlight row and column
+    document.querySelectorAll('.heatmap-word').forEach((pw, i) => {
+      pw.classList.remove('source', 'target');
+    });
+    const sourcePill = document.querySelectorAll('.heatmap-word')[sourceIdx];
+    if (sourcePill) sourcePill.classList.add('source');
+  }
+
+  function selectSource(idx) {
+    selectedSource = idx;
+    updateHeatmap(idx);
+    explanationEl.textContent = heatExplanations[sentence[idx]];
+    // Highlight column labels
+    document.querySelectorAll('.heatmap-col-label').forEach((l, i) => {
+      l.style.color = 'var(--c-text)';
+      l.style.fontWeight = '700';
+    });
+  }
+
+  function highlightCell(row, col) {
+    cells.forEach(c => {
+      c.el.classList.toggle('highlighted', c.row === row && c.col === col);
+    });
+  }
+
+  function clearHighlight() {
+    cells.forEach(c => c.el.classList.remove('highlighted'));
+  }
+
+  // Default: show "它" attention
+  selectSource(5);
+})();
+
+/* ═══════════════════════════════════════════════════════════
+   DEMO 3: Q/K dot product calculator
+   ═══════════════════════════════════════════════════════════ */
+(function() {
+  const sliders = {
+    q0: document.getElementById('q0Slider'),
+    q1: document.getElementById('q1Slider'),
+    q2: document.getElementById('q2Slider'),
+    k0: document.getElementById('k0Slider'),
+    k1: document.getElementById('k1Slider'),
+    k2: document.getElementById('k2Slider'),
+  };
+
+  function update() {
+    const q = [parseFloat(sliders.q0.value), parseFloat(sliders.q1.value), parseFloat(sliders.q2.value)];
+    const k = [parseFloat(sliders.k0.value), parseFloat(sliders.k1.value), parseFloat(sliders.k2.value)];
+
+    document.getElementById('q0Val').textContent = q[0].toFixed(2);
+    document.getElementById('q1Val').textContent = q[1].toFixed(2);
+    document.getElementById('q2Val').textContent = q[2].toFixed(2);
+    document.getElementById('k0Val').textContent = k[0].toFixed(2);
+    document.getElementById('k1Val').textContent = k[1].toFixed(2);
+    document.getElementById('k2Val').textContent = k[2].toFixed(2);
+
+    const dotProduct = q[0]*k[0] + q[1]*k[1] + q[2]*k[2];
+    document.getElementById('dotProductVal').textContent = dotProduct.toFixed(3);
+
+    const interpEl = document.getElementById('qkvResult').querySelector('.interpretation');
+    const absVal = Math.abs(dotProduct);
+    let interp;
+    if (absVal > 1.5) interp = 'Q 和 K 高度相关 —— 这个词会被给予很高的注意力权重。';
+    else if (absVal > 0.5) interp = 'Q 和 K 有一定相关性 —— 这个词会获得中等注意力。';
+    else interp = 'Q 和 K 几乎不相关 —— 这个词的注意力权重会很低。';
+    if (dotProduct < 0) interp += '（负相关：方向相反，模型认为这两个角色"排斥"）';
+    interpEl.textContent = interp;
+  }
+
+  Object.values(sliders).forEach(s => s.addEventListener('input', update));
+  update();
+})();
+
+/* ═══════════════════════════════════════════════════════════
+   DEMO 4: Multi-Head comparison
+   ═══════════════════════════════════════════════════════════ */
+(function() {
+  const heads = [
+    { icon: '🔗', name: '语法关系', focus: '主谓宾结构', pattern: [0.6, 0.1, 0.05, 0.15, 0.02, 0.03, 0.02, 0.03] },
+    { icon: '👉', name: '指代关系', focus: '代词→先行词',  pattern: [0.05, 0.02, 0.02, 0.03, 0.03, 0.55, 0.05, 0.25] },
+    { icon: '📍', name: '位置相邻', focus: '相邻词关联',   pattern: [0.05, 0.45, 0.35, 0.05, 0.02, 0.02, 0.04, 0.02] },
+    { icon: '⚖️', name: '修饰关系', focus: '形容词→名词',  pattern: [0.05, 0.02, 0.05, 0.08, 0.03, 0.05, 0.52, 0.20] },
+  ];
+  const headSentence = ['猫', '在', '沙发上', '睡觉', '因为', '它', '很', '累'];
+
+  const panelEl = document.getElementById('headsPanel');
+  const detailEl = document.getElementById('headDetail');
+
+  heads.forEach((head, idx) => {
+    const el = document.createElement('div');
+    el.className = 'head-view';
+    el.innerHTML = `<div class="head-icon">${head.icon}</div><div class="head-name">Head ${idx+1}</div><div class="head-focus">${head.focus}</div>`;
+    el.addEventListener('click', () => selectHead(idx));
+    panelEl.appendChild(el);
+  });
+
+  function selectHead(idx) {
+    const head = heads[idx];
+    document.querySelectorAll('.head-view').forEach((el, i) => el.classList.toggle('active-head', i === idx));
+
+    const maxWeight = Math.max(...head.pattern);
+    const tokensHtml = headSentence.map((word, i) => {
+      const w = head.pattern[i];
+      const opacity = 0.3 + (w / maxWeight) * 0.7;
+      const size = 0.75 + (w / maxWeight) * 0.35;
+      const bg = w > 0.3 ? `rgba(91, 79, 217, ${opacity})` : `rgba(212, 210, 218, ${opacity})`;
+      const color = w > 0.3 ? '#fff' : 'var(--c-text)';
+      return `<span class="focus-token" style="background:${bg}; color:${color}; font-size:${size}rem; padding:${4 + w*12}px ${6 + w*16}px;">${word}<br><small style="font-size:0.65rem;opacity:0.8">${Math.round(w*100)}%</small></span>`;
+    }).join('');
+
+    detailEl.innerHTML = `
+      <p style="font-weight:700; color:var(--c-ink); margin-bottom:var(--space-sm);">${head.icon} Head ${idx+1}：${head.name}</p>
+      <p style="font-size:0.88rem; color:var(--c-text-dim); margin-bottom:var(--space-md);">这个注意力头专门关注<strong>${head.focus}</strong></p>
+      <div class="focus-pattern">${tokensHtml}</div>
+    `;
+  }
+
+  selectHead(0);
+})();
+
+/* ═══════════════════════════════════════════════════════════
+   DEMO 5: Positional Encoding Canvas
+   ═══════════════════════════════════════════════════════════ */
+(function() {
+  const canvas = document.getElementById('posCanvas');
+  const ctx = canvas.getContext('2d');
+  const dimSlider = document.getElementById('posDimSlider');
+  const freqSlider = document.getElementById('posFreqSlider');
+  const toggleBtn = document.getElementById('posToggleFunc');
+  let useSine = true;
+  const dpr = window.devicePixelRatio || 1;
+
+  function resize() {
+    const rect = canvas.parentElement.getBoundingClientRect();
+    canvas.width = rect.width * dpr;
+    canvas.height = 280 * dpr;
+    canvas.style.width = rect.width + 'px';
+    canvas.style.height = '280px';
+    ctx.setTransform(1, 0, 0, 1, 0, 0);
+    ctx.scale(dpr, dpr);
+  }
+
+  function draw() {
+    const w = canvas.width / dpr;
+    const h = canvas.height / dpr;
+    ctx.clearRect(0, 0, w, h);
+
+    const dim = parseInt(dimSlider.value);
+    const freqMult = parseFloat(freqSlider.value);
+
+    // Grid
+    ctx.strokeStyle = '#e8e6f0';
+    ctx.lineWidth = 0.5;
+    for (let i = 0; i <= 8; i++) {
+      const y = 30 + (i / 8) * 200;
+      ctx.beginPath();
+      ctx.moveTo(40, y);
+      ctx.lineTo(w - 20, y);
+      ctx.stroke();
+    }
+
+    // Wave
+    const baseFreq = Math.pow(10000, -(2 * dim) / 64) * freqMult;
+    const fn = useSine ? Math.sin : Math.cos;
+
+    ctx.beginPath();
+    ctx.strokeStyle = 'oklch(0.46 0.19 268)';
+    ctx.lineWidth = 2.5;
+    for (let pos = 0; pos <= 100; pos++) {
+      const x = 40 + (pos / 100) * (w - 60);
+      const val = fn(baseFreq * pos);
+      const y = 130 - val * 90;
+      if (pos === 0) ctx.moveTo(x, y);
+      else ctx.lineTo(x, y);
+    }
+    ctx.stroke();
+
+    // Position markers
+    [0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100].forEach(pos => {
+      const x = 40 + (pos / 100) * (w - 60);
+      const val = fn(baseFreq * pos);
+      const y = 130 - val * 90;
+
+      ctx.beginPath();
+      ctx.arc(x, y, 4, 0, Math.PI * 2);
+      ctx.fillStyle = 'oklch(0.46 0.19 268)';
+      ctx.fill();
+
+      // Position label every 20
+      if (pos % 20 === 0) {
+        ctx.fillStyle = '#9895a8';
+        ctx.font = '11px system-ui, sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText(`位置 ${pos}`, x, 250);
+      }
+    });
+
+    // Labels
+    ctx.fillStyle = '#6b6880';
+    ctx.font = '12px system-ui, sans-serif';
+    ctx.textAlign = 'left';
+    ctx.fillText(`维度 ${dim}  ·  ${useSine ? 'sin' : 'cos'}(频率=${baseFreq.toFixed(3)})`, 40, 24);
+  }
+
+  function updateAll() {
+    document.getElementById('posDimVal').textContent = dimSlider.value;
+    document.getElementById('posFreqVal').textContent = freqSlider.value + '×';
+    draw();
+  }
+
+  dimSlider.addEventListener('input', updateAll);
+  freqSlider.addEventListener('input', updateAll);
+  toggleBtn.addEventListener('click', () => {
+    useSine = !useSine;
+    toggleBtn.textContent = useSine ? '切换到余弦' : '切换到正弦';
+    draw();
+  });
+
+  window.addEventListener('resize', () => { resize(); draw(); });
+  resize();
+  draw();
+})();
+
+/* ═══════════════════════════════════════════════════════════
+   DEMO 6: Architecture Stepper
+   ═══════════════════════════════════════════════════════════ */
+(function() {
+  const stepDescs = [
+    '输入文本被切分为 Token，每个 Token 通过 Embedding 矩阵映射为一个稠密向量（维度=512）。',
+    '为每个 Token 加上位置编码向量。现在模型既知道词的含义，也知道词的顺序。',
+    'Self-Attention：每个词计算与所有其他词的相关性，收集上下文信息。这是 Encoder 的核心运算。',
+    '残差连接将 Attention 的输入加到输出上（防止信息丢失），Layer Norm 将结果归一化到稳定范围。',
+    'FFN：每个位置独立经过两层全连接网络（512→2048→512），学习更复杂的特征变换。',
+    '再次 Add & Layer Norm。至此一个 Encoder 层完成。整个流程重复 6 次（N=6）。',
+    'Decoder 接收已生成的部分输出序列（训练时是目标序列右移一位），同样先做 Embedding。',
+    '为 Decoder 输入加上位置编码。',
+    'Masked Self-Attention：和 Encoder 一样做自注意力，但用 Mask 遮住未来位置（不能偷看还没生成的词）。',
+    'Add & Layer Norm 稳定数值。',
+    'Cross-Attention：Q 来自 Decoder，K 和 V 来自 Encoder 的输出。这是 Encoder 和 Decoder 之间的桥梁 —— Decoder "查询" Encoder 理解了哪些信息。',
+    'Add & Layer Norm。',
+    '经过 FFN（同 Encoder），然后通过 Linear 层将向量映射到词汇表大小（如 30000），Softmax 转换为概率分布，取概率最高的词作为输出。',
+  ];
+
+  let currentStep = 1;
+  const totalSteps = 13;
+  const counterEl = document.getElementById('archCounter');
+  const descEl = document.getElementById('archDesc');
+  const prevBtn = document.getElementById('archPrev');
+  const nextBtn = document.getElementById('archNext');
+
+  function updateStep() {
+    counterEl.textContent = `步骤 ${currentStep} / ${totalSteps}`;
+    descEl.textContent = stepDescs[currentStep - 1];
+
+    document.querySelectorAll('.arch-step').forEach(el => {
+      el.classList.toggle('active-step', parseInt(el.dataset.step) === currentStep);
+    });
+
+    prevBtn.style.opacity = currentStep === 1 ? '0.4' : '1';
+    nextBtn.style.opacity = currentStep === totalSteps ? '0.4' : '1';
+  }
+
+  prevBtn.addEventListener('click', () => {
+    if (currentStep > 1) { currentStep--; updateStep(); }
+  });
+  nextBtn.addEventListener('click', () => {
+    if (currentStep < totalSteps) { currentStep++; updateStep(); }
+  });
+
+  // Keyboard navigation
+  document.addEventListener('keydown', (e) => {
+    const demo = document.getElementById('demoArch');
+    const rect = demo.getBoundingClientRect();
+    const inView = rect.top < window.innerHeight && rect.bottom > 0;
+    if (!inView) return;
+    if (e.key === 'ArrowRight') { e.preventDefault(); if (currentStep < totalSteps) { currentStep++; updateStep(); } }
+    if (e.key === 'ArrowLeft')  { e.preventDefault(); if (currentStep > 1) { currentStep--; updateStep(); } }
+  });
+
+  updateStep();
+})();
+
+/* ═══════════════════════════════════════════════════════════
+   DEMO 7: Token Prediction Simulator
+   ═══════════════════════════════════════════════════════════ */
+(function() {
+  // ══════════════════════════════════════════════════════════════
+  // CONTEXT → NEXT-TOKEN DISTRIBUTION MAP (177 contexts, ~1789 tokens)
+  // ══════════════════════════════════════════════════════════════
+  const contextMap = {
+    "人工智能": [{token:"技术",prob:22},{token:"的",prob:18},{token:"正在",prob:14},{token:"是",prob:12},{token:"领域",prob:9},{token:"发展",prob:8},{token:"与",prob:6},{token:"将",prob:5},{token:"已经",prob:4},{token:"在",prob:2}],
+    "人工智能正在": [{token:"改变",prob:20},{token:"深刻",prob:14},{token:"推动",prob:12},{token:"重塑",prob:10},{token:"影响",prob:9},{token:"快速",prob:8},{token:"逐步",prob:7},{token:"彻底",prob:6},{token:"持续",prob:5},{token:"加速",prob:4},{token:"广泛",prob:3},{token:"不断",prob:2}],
+    "人工智能正在改变": [{token:"世界",prob:18},{token:"我们",prob:14},{token:"人类",prob:10},{token:"未来",prob:9},{token:"社会",prob:8},{token:"生活",prob:7},{token:"产业",prob:7},{token:"行业",prob:6},{token:"一切",prob:5},{token:"格局",prob:4},{token:"传统",prob:4},{token:"医疗",prob:3},{token:"教育",prob:3},{token:"金融",prob:2}],
+    "机器学习": [{token:"是",prob:16},{token:"的",prob:14},{token:"模型",prob:12},{token:"算法",prob:10},{token:"技术",prob:9},{token:"通过",prob:8},{token:"可以",prob:7},{token:"在",prob:6},{token:"已经",prob:5},{token:"让",prob:5},{token:"正在",prob:4},{token:"需要",prob:4}],
+    "深度学习": [{token:"模型",prob:18},{token:"是",prob:14},{token:"的",prob:12},{token:"可以",prob:10},{token:"技术",prob:9},{token:"通过",prob:8},{token:"在",prob:7},{token:"能够",prob:7},{token:"网络",prob:6},{token:"需要",prob:5},{token:"使用",prob:4}],
+    "强化学习": [{token:"是",prob:18},{token:"通过",prob:14},{token:"算法",prob:12},{token:"的",prob:10},{token:"让",prob:9},{token:"可以",prob:8},{token:"在",prob:7},{token:"使用",prob:7},{token:"能够",prob:6},{token:"训练",prob:5},{token:"实现",prob:4}],
+    "监督学习": [{token:"是",prob:20},{token:"的",prob:16},{token:"需要",prob:14},{token:"通过",prob:12},{token:"算法",prob:10},{token:"使用",prob:9},{token:"数据",prob:7},{token:"模型",prob:6},{token:"训练",prob:6}],
+    "无监督学习": [{token:"是",prob:20},{token:"不需要",prob:16},{token:"的",prob:14},{token:"通过",prob:12},{token:"可以",prob:10},{token:"算法",prob:9},{token:"从",prob:7},{token:"发现",prob:6},{token:"数据中",prob:6}],
+    "迁移学习": [{token:"是",prob:22},{token:"可以",prob:16},{token:"的",prob:14},{token:"将",prob:12},{token:"通过",prob:10},{token:"模型",prob:9},{token:"方法",prob:7},{token:"利用",prob:5},{token:"让",prob:5}],
+    "卷积神经网络": [{token:"是",prob:16},{token:"的",prob:14},{token:"在",prob:12},{token:"用于",prob:11},{token:"通过",prob:10},{token:"可以",prob:9},{token:"提取",prob:8},{token:"处理",prob:7},{token:"模型",prob:7},{token:"擅长",prob:6}],
+    "循环神经网络": [{token:"是",prob:18},{token:"的",prob:14},{token:"用于",prob:12},{token:"可以",prob:10},{token:"处理",prob:9},{token:"在",prob:8},{token:"通过",prob:7},{token:"擅长",prob:7},{token:"模型",prob:6},{token:"适合",prob:5},{token:"能够",prob:4}],
+    "生成对抗网络": [{token:"是",prob:20},{token:"的",prob:16},{token:"由",prob:14},{token:"通过",prob:12},{token:"可以",prob:10},{token:"用于",prob:9},{token:"模型",prob:8},{token:"在",prob:6},{token:"能",prob:5}],
+    "扩散模型": [{token:"是",prob:22},{token:"的",prob:16},{token:"通过",prob:14},{token:"可以",prob:12},{token:"在",prob:10},{token:"生成",prob:9},{token:"图像",prob:7},{token:"一种",prob:5},{token:"能够",prob:5}],
+    "梯度下降": [{token:"算法",prob:24},{token:"是",prob:16},{token:"的",prob:12},{token:"通过",prob:11},{token:"用于",prob:10},{token:"优化",prob:8},{token:"方法",prob:7},{token:"在",prob:6},{token:"可以",prob:6}],
+    "损失函数": [{token:"是",prob:22},{token:"用于",prob:16},{token:"的",prob:14},{token:"衡量",prob:12},{token:"计算",prob:10},{token:"来",prob:8},{token:"在",prob:7},{token:"通过",prob:6},{token:"评估",prob:5}],
+    "反向传播": [{token:"算法",prob:26},{token:"是",prob:18},{token:"的",prob:14},{token:"通过",prob:12},{token:"计算",prob:10},{token:"梯度",prob:8},{token:"在",prob:6},{token:"用于",prob:6}],
+    "激活函数": [{token:"是",prob:20},{token:"的",prob:16},{token:"用于",prob:14},{token:"包括",prob:10},{token:"有",prob:9},{token:"在",prob:8},{token:"使用",prob:7},{token:"引入",prob:6},{token:"可以",prob:5},{token:"常见",prob:5}],
+    "过拟合": [{token:"是",prob:24},{token:"问题",prob:16},{token:"的",prob:14},{token:"指",prob:12},{token:"通常",prob:10},{token:"可以",prob:8},{token:"发生在",prob:6},{token:"通过",prob:5},{token:"防止",prob:5}],
+    "正则化": [{token:"是",prob:22},{token:"的",prob:16},{token:"方法",prob:14},{token:"可以",prob:12},{token:"用于",prob:10},{token:"防止",prob:9},{token:"通过",prob:8},{token:"技术",prob:5},{token:"帮助",prob:4}],
+    "预训练": [{token:"模型",prob:24},{token:"是",prob:16},{token:"的",prob:14},{token:"在",prob:12},{token:"通过",prob:10},{token:"可以",prob:8},{token:"阶段",prob:7},{token:"使用",prob:5},{token:"过程",prob:4}],
+    "微调": [{token:"是",prob:18},{token:"模型",prob:16},{token:"的",prob:14},{token:"可以",prob:12},{token:"在",prob:10},{token:"通过",prob:9},{token:"让",prob:7},{token:"方法",prob:6},{token:"使用",prob:5},{token:"过程",prob:3}],
+    "注意力机制": [{token:"是",prob:22},{token:"可以",prob:15},{token:"的",prob:12},{token:"让",prob:10},{token:"能够",prob:9},{token:"通过",prob:8},{token:"在",prob:7},{token:"帮助",prob:7},{token:"计算",prob:5},{token:"允许",prob:5}],
+    "Transformer": [{token:"架构",prob:20},{token:"模型",prob:16},{token:"是",prob:12},{token:"的",prob:10},{token:"在",prob:9},{token:"通过",prob:8},{token:"使用",prob:7},{token:"可以",prob:7},{token:"由",prob:6},{token:"采用",prob:5}],
+    "BERT": [{token:"是",prob:22},{token:"模型",prob:18},{token:"的",prob:14},{token:"由",prob:12},{token:"使用",prob:10},{token:"在",prob:8},{token:"通过",prob:7},{token:"可以",prob:5},{token:"提出",prob:4}],
+    "GPT": [{token:"模型",prob:20},{token:"是",prob:16},{token:"的",prob:14},{token:"系列",prob:12},{token:"由",prob:10},{token:"在",prob:8},{token:"使用",prob:7},{token:"可以",prob:6},{token:"基于",prob:4},{token:"通过",prob:3}],
+    "ChatGPT": [{token:"是",prob:22},{token:"由",prob:16},{token:"的",prob:14},{token:"基于",prob:12},{token:"可以",prob:10},{token:"在",prob:8},{token:"使用",prob:7},{token:"通过",prob:6},{token:"推出",prob:5}],
+    "自然语言": [{token:"处理",prob:30},{token:"理解",prob:15},{token:"生成",prob:12},{token:"的",prob:10},{token:"技术",prob:8},{token:"模型",prob:7},{token:"是",prob:6},{token:"领域",prob:5},{token:"任务",prob:4},{token:"应用",prob:3}],
+    "自然语言处理": [{token:"是",prob:20},{token:"的",prob:16},{token:"技术",prob:14},{token:"领域",prob:12},{token:"在",prob:10},{token:"包括",prob:9},{token:"可以",prob:8},{token:"通过",prob:6},{token:"应用",prob:5}],
+    "计算机视觉": [{token:"领域",prob:20},{token:"任务",prob:14},{token:"中",prob:12},{token:"的",prob:10},{token:"模型",prob:9},{token:"技术",prob:8},{token:"是",prob:7},{token:"可以",prob:7},{token:"在",prob:7},{token:"通过",prob:6}],
+    "神经网络": [{token:"的",prob:18},{token:"可以",prob:14},{token:"模型",prob:12},{token:"是",prob:10},{token:"通过",prob:9},{token:"在",prob:8},{token:"能够",prob:7},{token:"需要",prob:7},{token:"具有",prob:6},{token:"使用",prob:5},{token:"学习",prob:4}],
+    "大语言模型": [{token:"的",prob:16},{token:"可以",prob:14},{token:"是",prob:12},{token:"在",prob:10},{token:"能够",prob:9},{token:"通过",prob:8},{token:"已经",prob:7},{token:"具有",prob:7},{token:"正在",prob:6},{token:"需要",prob:6},{token:"展现",prob:5}],
+    "自我注意力": [{token:"机制",prob:28},{token:"是",prob:16},{token:"的",prob:12},{token:"可以",prob:10},{token:"让",prob:8},{token:"计算",prob:7},{token:"通过",prob:6},{token:"在",prob:5},{token:"能够",prob:4},{token:"帮助",prob:4}],
+    "词向量": [{token:"是",prob:22},{token:"的",prob:18},{token:"可以",prob:14},{token:"表示",prob:12},{token:"通过",prob:10},{token:"在",prob:8},{token:"将",prob:7},{token:"模型",prob:5},{token:"方法",prob:4}],
+    "嵌入": [{token:"层",prob:20},{token:"的",prob:16},{token:"是",prob:14},{token:"向量",prob:12},{token:"表示",prob:10},{token:"在",prob:9},{token:"可以",prob:8},{token:"空间",prob:6},{token:"将",prob:5}],
+    "训练": [{token:"的",prob:16},{token:"模型",prob:14},{token:"过程",prob:12},{token:"数据",prob:10},{token:"需要",prob:9},{token:"中",prob:8},{token:"时间",prob:7},{token:"完成",prob:5},{token:"方法",prob:5},{token:"效果",prob:4},{token:"速度",prob:4},{token:"成本",prob:3},{token:"技巧",prob:3}],
+    "推理": [{token:"过程",prob:18},{token:"阶段",prob:16},{token:"时",prob:14},{token:"速度",prob:12},{token:"的",prob:10},{token:"需要",prob:8},{token:"可以",prob:7},{token:"效率",prob:6},{token:"能力",prob:5},{token:"结果",prob:4}],
+    "数据": [{token:"的",prob:16},{token:"集",prob:12},{token:"中",prob:10},{token:"来",prob:8},{token:"进行",prob:7},{token:"训练",prob:7},{token:"分析",prob:6},{token:"处理",prob:5},{token:"和",prob:5},{token:"量",prob:4},{token:"驱动",prob:3}],
+    "模型": [{token:"的",prob:20},{token:"训练",prob:14},{token:"可以",prob:12},{token:"在",prob:10},{token:"需要",prob:9},{token:"通过",prob:8},{token:"参数",prob:7},{token:"性能",prob:6},{token:"效果",prob:5},{token:"部署",prob:4},{token:"结构",prob:3},{token:"大小",prob:2}],
+    "算法": [{token:"的",prob:18},{token:"是",prob:14},{token:"可以",prob:12},{token:"通过",prob:10},{token:"设计",prob:9},{token:"实现",prob:8},{token:"复杂度",prob:7},{token:"效率",prob:6},{token:"优化",prob:5},{token:"需要",prob:4},{token:"选择",prob:4},{token:"性能",prob:3}],
+    "编程语言": [{token:"有",prob:18},{token:"的",prob:15},{token:"是",prob:13},{token:"包括",prob:10},{token:"如",prob:9},{token:"中",prob:8},{token:"发展",prob:7},{token:"可以",prob:6},{token:"选择",prob:5},{token:"比如",prob:5},{token:"很多",prob:4}],
+    "Python": [{token:"是",prob:18},{token:"的",prob:15},{token:"在",prob:13},{token:"语言",prob:12},{token:"可以",prob:10},{token:"中",prob:8},{token:"代码",prob:7},{token:"编程",prob:6},{token:"使用",prob:5},{token:"作为",prob:4},{token:"拥有",prob:2}],
+    "JavaScript": [{token:"是",prob:18},{token:"的",prob:16},{token:"在",prob:12},{token:"用于",prob:11},{token:"可以",prob:10},{token:"中",prob:8},{token:"开发",prob:7},{token:"语言",prob:7},{token:"前端",prob:6},{token:"运行",prob:5}],
+    "React": [{token:"是",prob:20},{token:"的",prob:16},{token:"框架",prob:14},{token:"用于",prob:12},{token:"可以",prob:10},{token:"在",prob:9},{token:"使用",prob:8},{token:"开发",prob:6},{token:"组件",prob:5}],
+    "Vue": [{token:"是",prob:20},{token:"框架",prob:16},{token:"的",prob:14},{token:"用于",prob:12},{token:"可以",prob:10},{token:"在",prob:9},{token:"使用",prob:8},{token:"开发",prob:6},{token:"轻量",prob:5}],
+    "Docker": [{token:"是",prob:20},{token:"容器",prob:16},{token:"的",prob:14},{token:"可以",prob:12},{token:"用于",prob:10},{token:"镜像",prob:9},{token:"部署",prob:8},{token:"使用",prob:6},{token:"通过",prob:5}],
+    "Git": [{token:"是",prob:18},{token:"的",prob:16},{token:"用于",prob:14},{token:"可以",prob:12},{token:"版本",prob:10},{token:"管理",prob:9},{token:"代码",prob:8},{token:"使用",prob:7},{token:"工具",prob:6}],
+    "Linux": [{token:"系统",prob:18},{token:"是",prob:16},{token:"的",prob:14},{token:"在",prob:12},{token:"中",prob:10},{token:"可以",prob:9},{token:"使用",prob:8},{token:"命令",prob:7},{token:"服务器",prob:6}],
+    "SQL": [{token:"语句",prob:20},{token:"查询",prob:18},{token:"是",prob:16},{token:"的",prob:14},{token:"可以",prob:12},{token:"数据库",prob:10},{token:"使用",prob:6},{token:"语言",prob:4}],
+    "CSS": [{token:"是",prob:18},{token:"的",prob:16},{token:"用于",prob:14},{token:"样式",prob:12},{token:"可以",prob:10},{token:"在",prob:9},{token:"布局",prob:8},{token:"设计",prob:7},{token:"属性",prob:6}],
+    "HTML": [{token:"是",prob:20},{token:"的",prob:16},{token:"用于",prob:14},{token:"页面",prob:12},{token:"可以",prob:10},{token:"在",prob:9},{token:"结构",prob:8},{token:"标签",prob:6},{token:"语言",prob:5}],
+    "代码": [{token:"的",prob:16},{token:"来",prob:12},{token:"实现",prob:10},{token:"中",prob:9},{token:"编写",prob:8},{token:"是",prob:7},{token:"进行",prob:7},{token:"可以",prob:6},{token:"生成",prob:5},{token:"需要",prob:5},{token:"优化",prob:4},{token:"执行",prob:4},{token:"测试",prob:4},{token:"审查",prob:3}],
+    "数据库": [{token:"的",prob:18},{token:"中",prob:16},{token:"系统",prob:14},{token:"是",prob:12},{token:"查询",prob:10},{token:"可以",prob:8},{token:"使用",prob:7},{token:"存储",prob:6},{token:"管理",prob:5},{token:"设计",prob:4}],
+    "API": [{token:"接口",prob:24},{token:"的",prob:16},{token:"是",prob:14},{token:"调用",prob:12},{token:"可以",prob:10},{token:"返回",prob:8},{token:"提供",prob:6},{token:"请求",prob:5},{token:"使用",prob:5}],
+    "服务器": [{token:"的",prob:18},{token:"上",prob:14},{token:"可以",prob:12},{token:"是",prob:10},{token:"端",prob:9},{token:"运行",prob:8},{token:"需要",prob:7},{token:"部署",prob:6},{token:"在",prob:6},{token:"配置",prob:5},{token:"处理",prob:5}],
+    "前端开发": [{token:"需要",prob:18},{token:"的",prob:15},{token:"包括",prob:13},{token:"主要",prob:11},{token:"涉及",prob:10},{token:"使用",prob:9},{token:"是",prob:8},{token:"可以",prob:6},{token:"框架",prob:5},{token:"技术",prob:5}],
+    "后端开发": [{token:"需要",prob:18},{token:"的",prob:15},{token:"涉及",prob:13},{token:"包括",prob:11},{token:"主要",prob:10},{token:"使用",prob:9},{token:"是",prob:8},{token:"处理",prob:7},{token:"负责",prob:5},{token:"框架",prob:4}],
+    "微服务": [{token:"架构",prob:24},{token:"是",prob:18},{token:"的",prob:16},{token:"可以",prob:12},{token:"在",prob:10},{token:"通过",prob:8},{token:"使用",prob:6},{token:"部署",prob:6}],
+    "云计算": [{token:"是",prob:20},{token:"的",prob:16},{token:"可以",prob:14},{token:"通过",prob:12},{token:"提供",prob:10},{token:"服务",prob:9},{token:"平台",prob:8},{token:"在",prob:6},{token:"使用",prob:5}],
+    "区块链": [{token:"技术",prob:22},{token:"是",prob:18},{token:"的",prob:16},{token:"可以",prob:12},{token:"在",prob:10},{token:"通过",prob:8},{token:"用于",prob:7},{token:"实现",prob:4},{token:"应用",prob:3}],
+    "物联网": [{token:"设备",prob:22},{token:"是",prob:16},{token:"的",prob:14},{token:"可以",prob:12},{token:"通过",prob:10},{token:"在",prob:9},{token:"连接",prob:8},{token:"技术",prob:5},{token:"实现",prob:4}],
+    "自动驾驶": [{token:"技术",prob:24},{token:"是",prob:16},{token:"的",prob:14},{token:"可以",prob:12},{token:"通过",prob:10},{token:"在",prob:8},{token:"实现",prob:7},{token:"需要",prob:5},{token:"使用",prob:4}],
+    "量子计算": [{token:"机",prob:22},{token:"是",prob:14},{token:"将",prob:13},{token:"可以",prob:11},{token:"技术",prob:9},{token:"的",prob:8},{token:"能够",prob:7},{token:"领域",prob:6},{token:"在",prob:5},{token:"有望",prob:5}],
+    "Redis": [{token:"是",prob:20},{token:"的",prob:16},{token:"缓存",prob:14},{token:"可以",prob:12},{token:"用于",prob:10},{token:"使用",prob:9},{token:"数据",prob:8},{token:"支持",prob:6},{token:"存储",prob:5}],
+    "Kubernetes": [{token:"是",prob:20},{token:"的",prob:16},{token:"容器",prob:14},{token:"可以",prob:12},{token:"用于",prob:10},{token:"管理",prob:9},{token:"集群",prob:8},{token:"部署",prob:6},{token:"编排",prob:5}],
+    "今天天气": [{token:"很好",prob:22},{token:"不错",prob:16},{token:"真",prob:12},{token:"怎么",prob:10},{token:"非常",prob:9},{token:"晴朗",prob:8},{token:"预报",prob:7},{token:"有点",prob:6},{token:"还",prob:5},{token:"特别",prob:5}],
+    "明天天气": [{token:"怎么",prob:22},{token:"预报",prob:18},{token:"会",prob:14},{token:"应该",prob:10},{token:"可能",prob:9},{token:"据说",prob:7},{token:"怎么样",prob:6},{token:"好像",prob:5},{token:"看起来",prob:5},{token:"还",prob:4}],
+    "天气预报": [{token:"说",prob:24},{token:"显示",prob:18},{token:"今天",prob:15},{token:"明天",prob:14},{token:"不准",prob:8},{token:"很",prob:7},{token:"准",prob:6},{token:"还挺",prob:4},{token:"比较",prob:4}],
+    "下雨": [{token:"了",prob:24},{token:"天",prob:16},{token:"的",prob:12},{token:"了没",prob:10},{token:"记得",prob:8},{token:"天气",prob:7},{token:"出门",prob:6},{token:"要",prob:5},{token:"带伞",prob:5},{token:"啦",prob:4},{token:"可能",prob:3}],
+    "下雪": [{token:"了",prob:26},{token:"天",prob:16},{token:"的",prob:14},{token:"好美",prob:10},{token:"了没",prob:8},{token:"真好",prob:7},{token:"了太",prob:6},{token:"天气",prob:5},{token:"啦",prob:4},{token:"记得",prob:4}],
+    "太阳": [{token:"出来",prob:18},{token:"很",prob:14},{token:"晒",prob:12},{token:"太",prob:10},{token:"好",prob:9},{token:"的",prob:8},{token:"大",prob:7},{token:"终于",prob:5},{token:"光",prob:4},{token:"暖暖",prob:4},{token:"落山",prob:3}],
+    "刮风": [{token:"了",prob:24},{token:"的",prob:14},{token:"很大",prob:12},{token:"天气",prob:10},{token:"下雨",prob:9},{token:"降温",prob:8},{token:"好大",prob:7},{token:"真",prob:6},{token:"好像",prob:5},{token:"要",prob:5}],
+    "太热": [{token:"了",prob:28},{token:"啦",prob:16},{token:"的",prob:14},{token:"天气",prob:12},{token:"难受",prob:10},{token:"开空调",prob:8},{token:"真的",prob:6},{token:"受不了",prob:6}],
+    "太冷": [{token:"了",prob:28},{token:"啦",prob:16},{token:"的",prob:14},{token:"天气",prob:12},{token:"不想",prob:10},{token:"出门",prob:8},{token:"真的",prob:6},{token:"多穿",prob:6}],
+    "你好": [{token:"，",prob:30},{token:"！",prob:16},{token:"吗",prob:12},{token:"我是",prob:10},{token:"请问",prob:8},{token:"啊",prob:7},{token:"世界",prob:5},{token:"今天",prob:4},{token:"好久",prob:4},{token:"最近",prob:4}],
+    "早上好": [{token:"！",prob:28},{token:"，",prob:22},{token:"今天",prob:16},{token:"啊",prob:10},{token:"吃",prob:8},{token:"昨晚",prob:6},{token:"新的一天",prob:5}],
+    "晚上好": [{token:"！",prob:28},{token:"，",prob:22},{token:"今天",prob:14},{token:"吃",prob:10},{token:"辛苦了",prob:8},{token:"休息",prob:7},{token:"晚安",prob:6},{token:"早点",prob:5}],
+    "好久不见": [{token:"！",prob:30},{token:"，",prob:22},{token:"你",prob:16},{token:"最近",prob:14},{token:"怎么样",prob:10},{token:"了",prob:4},{token:"啊",prob:4}],
+    "最近": [{token:"怎么样",prob:18},{token:"在",prob:14},{token:"很",prob:12},{token:"忙",prob:10},{token:"还好",prob:8},{token:"天气",prob:7},{token:"工作",prob:6},{token:"学习",prob:5},{token:"有",prob:5},{token:"没",prob:4},{token:"状态",prob:3},{token:"挺",prob:3},{token:"一直在",prob:3},{token:"事情",prob:2}],
+    "我喜欢": [{token:"吃",prob:18},{token:"你",prob:14},{token:"看书",prob:9},{token:"音乐",prob:8},{token:"编程",prob:7},{token:"跑步",prob:6},{token:"旅行",prob:6},{token:"猫",prob:5},{token:"咖啡",prob:5},{token:"这个",prob:4},{token:"在",prob:4},{token:"学习",prob:4},{token:"打",prob:3},{token:"听",prob:3},{token:"看电影",prob:2},{token:"睡觉",prob:2}],
+    "我不喜欢": [{token:"吃",prob:16},{token:"这种",prob:12},{token:"被",prob:10},{token:"排队",prob:7},{token:"下雨",prob:6},{token:"吵闹",prob:5},{token:"早起",prob:5},{token:"等待",prob:5},{token:"复杂",prob:4},{token:"热",prob:4},{token:"冷",prob:3}],
+    "我觉得": [{token:"这",prob:18},{token:"很",prob:16},{token:"应该",prob:12},{token:"需要",prob:10},{token:"可以",prob:9},{token:"不",prob:8},{token:"还是",prob:7},{token:"可能",prob:7},{token:"自己",prob:6},{token:"比较",prob:4},{token:"已经",prob:3}],
+    "我很开心": [{token:"因为",prob:22},{token:"！",prob:18},{token:"今天",prob:14},{token:"能",prob:12},{token:"看到",prob:10},{token:"终于",prob:8},{token:"和",prob:6},{token:"可以",prob:5},{token:"认识",prob:5}],
+    "我很难过": [{token:"因为",prob:24},{token:"，",prob:20},{token:"今天",prob:14},{token:"失去",prob:10},{token:"没有",prob:8},{token:"考试",prob:6},{token:"和",prob:5},{token:"但",prob:5},{token:"不过",prob:4},{token:"还是",prob:4}],
+    "我很生气": [{token:"因为",prob:24},{token:"！",prob:18},{token:"真的",prob:14},{token:"今天",prob:10},{token:"被",prob:9},{token:"太",prob:8},{token:"了",prob:7},{token:"为什么",prob:5},{token:"怎么",prob:5}],
+    "我很惊讶": [{token:"！",prob:22},{token:"因为",prob:18},{token:"居然",prob:16},{token:"看到",prob:14},{token:"没想到",prob:12},{token:"会",prob:8},{token:"发现",prob:6},{token:"听到",prob:4}],
+    "无聊": [{token:"的",prob:18},{token:"死了",prob:14},{token:"了",prob:12},{token:"的时候",prob:10},{token:"可以",prob:9},{token:"至极",prob:7},{token:"会议",prob:6},{token:"透顶",prob:5},{token:"到",prob:5},{token:"怎么办",prob:4},{token:"没事",prob:3},{token:"就",prob:3},{token:"想",prob:4}],
+    "累了": [{token:"就",prob:22},{token:"休息",prob:18},{token:"吧",prob:16},{token:"早点",prob:14},{token:"的",prob:10},{token:"一天",prob:8},{token:"睡吧",prob:6},{token:"不想",prob:6}],
+    "我想吃": [{token:"火锅",prob:16},{token:"烧烤",prob:10},{token:"披萨",prob:8},{token:"面条",prob:7},{token:"饺子",prob:6},{token:"寿司",prob:6},{token:"炸鸡",prob:5},{token:"蛋糕",prob:5},{token:"冰淇淋",prob:4},{token:"麻辣烫",prob:4},{token:"汉堡",prob:3},{token:"水煮鱼",prob:3},{token:"小龙虾",prob:2},{token:"饭",prob:5},{token:"水果",prob:4},{token:"巧克力",prob:3},{token:"螺蛳粉",prob:2},{token:"烤鱼",prob:2}],
+    "我想喝": [{token:"咖啡",prob:16},{token:"奶茶",prob:14},{token:"水",prob:10},{token:"啤酒",prob:8},{token:"可乐",prob:7},{token:"茶",prob:7},{token:"果汁",prob:6},{token:"牛奶",prob:5},{token:"豆浆",prob:4},{token:"柠檬水",prob:4},{token:"红酒",prob:3},{token:"酸奶",prob:3},{token:"气泡水",prob:3},{token:"绿豆汤",prob:2},{token:"冰美式",prob:2}],
+    "早饭": [{token:"吃",prob:26},{token:"了",prob:18},{token:"没",prob:14},{token:"吃什么",prob:12},{token:"还没",prob:10},{token:"准备",prob:8},{token:"很",prob:6},{token:"时间",prob:6}],
+    "午饭": [{token:"吃",prob:26},{token:"了",prob:16},{token:"什么",prob:14},{token:"时间",prob:12},{token:"还没",prob:10},{token:"准备",prob:8},{token:"外卖",prob:7},{token:"食堂",prob:7}],
+    "晚饭": [{token:"吃",prob:26},{token:"了",prob:16},{token:"什么",prob:14},{token:"还没",prob:10},{token:"准备",prob:9},{token:"约",prob:8},{token:"时间",prob:7},{token:"出去",prob:5},{token:"在家",prob:5}],
+    "做饭": [{token:"的",prob:16},{token:"了",prob:14},{token:"很",prob:12},{token:"太",prob:10},{token:"好",prob:8},{token:"真",prob:7},{token:"需要",prob:6},{token:"水平",prob:5},{token:"还是",prob:5},{token:"不如",prob:4},{token:"技巧",prob:4},{token:"的时候",prob:3},{token:"食材",prob:3},{token:"时间",prob:3}],
+    "点外卖": [{token:"吧",prob:22},{token:"的",prob:16},{token:"太",prob:14},{token:"方便",prob:12},{token:"了",prob:10},{token:"经常",prob:8},{token:"比",prob:7},{token:"选",prob:6},{token:"不如",prob:5}],
+    "外卖": [{token:"平台",prob:16},{token:"小哥",prob:12},{token:"到了",prob:10},{token:"点",prob:9},{token:"送",prob:8},{token:"的",prob:7},{token:"很",prob:6},{token:"还",prob:5},{token:"费",prob:5},{token:"迟",prob:4},{token:"比",prob:3},{token:"太慢",prob:3},{token:"真",prob:3},{token:"贵",prob:3}],
+    "火锅": [{token:"店",prob:18},{token:"的",prob:14},{token:"底料",prob:12},{token:"太",prob:10},{token:"吃",prob:9},{token:"好",prob:8},{token:"最爱",prob:7},{token:"麻辣",prob:6},{token:"真",prob:5},{token:"一周",prob:3},{token:"推荐",prob:4},{token:"还是",prob:4}],
+    "奶茶": [{token:"店",prob:18},{token:"的",prob:14},{token:"太",prob:12},{token:"喝",prob:10},{token:"好喝",prob:9},{token:"一杯",prob:8},{token:"还是",prob:7},{token:"品牌",prob:6},{token:"甜",prob:5},{token:"控糖",prob:4},{token:"少糖",prob:4},{token:"推荐",prob:3}],
+    "咖啡": [{token:"店",prob:18},{token:"的",prob:14},{token:"因",prob:12},{token:"太",prob:10},{token:"一杯",prob:9},{token:"喝",prob:8},{token:"早晨",prob:7},{token:"提神",prob:6},{token:"还是",prob:5},{token:"苦",prob:4},{token:"豆",prob:3},{token:"推荐",prob:4}],
+    "我想去": [{token:"旅行",prob:14},{token:"北京",prob:10},{token:"上海",prob:9},{token:"日本",prob:8},{token:"海边",prob:7},{token:"看看",prob:7},{token:"那里",prob:6},{token:"巴黎",prob:5},{token:"西藏",prob:5},{token:"爬山",prob:4},{token:"游泳",prob:4},{token:"大理",prob:3},{token:"云南",prob:3},{token:"泰国",prob:3},{token:"欧洲",prob:3},{token:"睡觉",prob:3},{token:"逛",prob:2},{token:"散步",prob:2}],
+    "坐飞机": [{token:"去",prob:20},{token:"的",prob:16},{token:"可以",prob:14},{token:"比",prob:10},{token:"要",prob:9},{token:"需要",prob:8},{token:"从",prob:7},{token:"太",prob:6},{token:"很快",prob:5},{token:"到",prob:5}],
+    "坐高铁": [{token:"去",prob:20},{token:"的",prob:16},{token:"可以",prob:14},{token:"比",prob:10},{token:"很方便",prob:10},{token:"从",prob:8},{token:"到",prob:7},{token:"需要",prob:6},{token:"只要",prob:5},{token:"大概",prob:4}],
+    "地铁": [{token:"站",prob:18},{token:"上",prob:14},{token:"里",prob:12},{token:"很",prob:10},{token:"人",prob:9},{token:"太",prob:8},{token:"拥挤",prob:7},{token:"到",prob:6},{token:"方便",prob:5},{token:"快",prob:4},{token:"号线",prob:4},{token:"高峰期",prob:3}],
+    "公交": [{token:"车",prob:22},{token:"站",prob:16},{token:"上",prob:14},{token:"很",prob:10},{token:"太",prob:9},{token:"慢",prob:8},{token:"方便",prob:7},{token:"等",prob:6},{token:"到",prob:4},{token:"不如",prob:4}],
+    "打车": [{token:"去",prob:22},{token:"的",prob:16},{token:"太",prob:14},{token:"贵",prob:10},{token:"吧",prob:9},{token:"方便",prob:8},{token:"到",prob:7},{token:"还是",prob:6},{token:"比较",prob:4},{token:"不如",prob:4}],
+    "堵车": [{token:"了",prob:28},{token:"严重",prob:18},{token:"迟到",prob:14},{token:"真",prob:12},{token:"好",prob:10},{token:"的",prob:8},{token:"路上",prob:6},{token:"烦",prob:4}],
+    "旅游": [{token:"的",prob:18},{token:"景点",prob:14},{token:"攻略",prob:12},{token:"是一种",prob:10},{token:"可以",prob:9},{token:"很",prob:8},{token:"去",prob:7},{token:"最好",prob:6},{token:"季节",prob:5},{token:"让人",prob:4},{token:"计划",prob:4},{token:"地方",prob:3}],
+    "今天中午": [{token:"吃",prob:30},{token:"有",prob:12},{token:"要",prob:10},{token:"去",prob:8},{token:"休息",prob:7},{token:"开会",prob:6},{token:"我",prob:5},{token:"不",prob:5},{token:"打算",prob:4},{token:"的",prob:4},{token:"外卖",prob:4},{token:"食堂",prob:3}],
+    "今天晚上": [{token:"有",prob:18},{token:"吃",prob:16},{token:"去",prob:12},{token:"要",prob:10},{token:"想",prob:8},{token:"打算",prob:7},{token:"看",prob:6},{token:"加班",prob:5},{token:"聚会",prob:4},{token:"出去",prob:4},{token:"运动",prob:3},{token:"约会",prob:3}],
+    "周末": [{token:"打算",prob:16},{token:"去",prob:14},{token:"想",prob:12},{token:"可以",prob:11},{token:"要",prob:10},{token:"准备",prob:8},{token:"好好",prob:7},{token:"在家",prob:6},{token:"和朋友",prob:5},{token:"终于",prob:4},{token:"应该",prob:4},{token:"天气",prob:3}],
+    "上班": [{token:"的",prob:16},{token:"时间",prob:14},{token:"很",prob:12},{token:"真",prob:10},{token:"太",prob:8},{token:"好",prob:7},{token:"比较",prob:6},{token:"的时候",prob:5},{token:"累",prob:5},{token:"辛苦",prob:4},{token:"路上",prob:4},{token:"迟到",prob:3}],
+    "下班": [{token:"后",prob:22},{token:"了",prob:18},{token:"回家",prob:14},{token:"去",prob:12},{token:"就",prob:10},{token:"可以",prob:8},{token:"准备",prob:6},{token:"和",prob:5},{token:"约",prob:5}],
+    "加班": [{token:"到",prob:22},{token:"了",prob:18},{token:"很",prob:14},{token:"真",prob:12},{token:"太",prob:10},{token:"严重",prob:8},{token:"的",prob:7},{token:"没有",prob:5},{token:"费",prob:4}],
+    "开会": [{token:"的",prob:18},{token:"了",prob:16},{token:"中",prob:14},{token:"时间",prob:12},{token:"讨论",prob:10},{token:"很",prob:8},{token:"的时候",prob:7},{token:"太",prob:5},{token:"真是",prob:4},{token:"效率",prob:3},{token:"内容",prob:3}],
+    "老板": [{token:"说",prob:20},{token:"让我",prob:12},{token:"很",prob:10},{token:"要求",prob:9},{token:"今天",prob:8},{token:"对",prob:7},{token:"人",prob:6},{token:"给我",prob:5},{token:"又",prob:5},{token:"觉得",prob:4},{token:"希望",prob:4},{token:"的",prob:4},{token:"安排",prob:3},{token:"不在",prob:3}],
+    "同事": [{token:"们",prob:16},{token:"很",prob:14},{token:"关系",prob:12},{token:"之间",prob:10},{token:"说",prob:9},{token:"都",prob:8},{token:"聚餐",prob:7},{token:"帮助",prob:6},{token:"不错",prob:5},{token:"工作",prob:5},{token:"一起",prob:4},{token:"人",prob:4}],
+    "面试": [{token:"的",prob:18},{token:"官",prob:14},{token:"了",prob:12},{token:"准备",prob:10},{token:"通过",prob:9},{token:"技巧",prob:8},{token:"问题",prob:7},{token:"结果",prob:6},{token:"有点",prob:5},{token:"很",prob:4},{token:"经验",prob:4},{token:"失败",prob:3}],
+    "简历": [{token:"投",prob:18},{token:"的",prob:16},{token:"修改",prob:14},{token:"怎么写",prob:12},{token:"没有",prob:10},{token:"石沉大海",prob:8},{token:"被拒",prob:7},{token:"优化",prob:6},{token:"漂亮",prob:5},{token:"过了",prob:4}],
+    "跳槽": [{token:"的",prob:20},{token:"到",prob:16},{token:"准备",prob:14},{token:"时机",prob:12},{token:"涨薪",prob:10},{token:"面试",prob:9},{token:"考虑",prob:8},{token:"了",prob:6},{token:"建议",prob:5}],
+    "年终奖": [{token:"发了",prob:22},{token:"多少",prob:18},{token:"还没",prob:14},{token:"据说",prob:12},{token:"很少",prob:10},{token:"终于",prob:9},{token:"比",prob:8},{token:"期待",prob:7}],
+    "考试": [{token:"了",prob:18},{token:"成绩",prob:14},{token:"的",prob:12},{token:"明天",prob:10},{token:"准备",prob:9},{token:"结束",prob:7},{token:"复习",prob:7},{token:"很难",prob:6},{token:"终于",prob:5},{token:"通过",prob:4},{token:"题目",prob:4},{token:"还有",prob:4}],
+    "作业": [{token:"了",prob:20},{token:"还",prob:16},{token:"太多",prob:14},{token:"好难",prob:10},{token:"写完",prob:8},{token:"没有",prob:7},{token:"已经",prob:6},{token:"明天",prob:5},{token:"今晚",prob:5},{token:"真的",prob:4},{token:"又",prob:3},{token:"要",prob:2}],
+    "上课": [{token:"的",prob:18},{token:"时间",prob:16},{token:"的时候",prob:14},{token:"很",prob:12},{token:"老师",prob:10},{token:"认真",prob:8},{token:"学",prob:7},{token:"走神",prob:5},{token:"听不懂",prob:4},{token:"真",prob:3},{token:"内容",prob:3}],
+    "读研": [{token:"的",prob:20},{token:"还是",prob:16},{token:"很",prob:14},{token:"期间",prob:12},{token:"导师",prob:10},{token:"方向",prob:9},{token:"选择",prob:8},{token:"辛苦",prob:6},{token:"值得",prob:5}],
+    "论文": [{token:"的",prob:18},{token:"写",prob:16},{token:"答辩",prob:12},{token:"还没",prob:10},{token:"题目",prob:9},{token:"进度",prob:8},{token:"好难",prob:7},{token:"终于",prob:6},{token:"发表",prob:5},{token:"查重",prob:4},{token:"导师",prob:3},{token:"改",prob:2}],
+    "答辩": [{token:"通过",prob:24},{token:"了",prob:20},{token:"准备",prob:16},{token:"很",prob:12},{token:"顺利",prob:10},{token:"紧张",prob:8},{token:"问题",prob:6},{token:"终于",prob:4}],
+    "学习": [{token:"的",prob:16},{token:"方法",prob:12},{token:"效率",prob:10},{token:"很",prob:9},{token:"可以",prob:8},{token:"需要",prob:7},{token:"过程",prob:6},{token:"时间",prob:5},{token:"能力",prob:5},{token:"资料",prob:4},{token:"计划",prob:4},{token:"动力",prob:3},{token:"习惯",prob:3},{token:"新",prob:3},{token:"曲线",prob:2}],
+    "买东西": [{token:"的",prob:16},{token:"了",prob:14},{token:"去",prob:12},{token:"要",prob:10},{token:"的时候",prob:9},{token:"花了",prob:8},{token:"之前",prob:7},{token:"需要",prob:6},{token:"先",prob:5},{token:"比较",prob:4},{token:"便宜",prob:4},{token:"太多",prob:3}],
+    "多少钱": [{token:"？",prob:30},{token:"啊",prob:18},{token:"一个",prob:14},{token:"合适",prob:8},{token:"才",prob:7},{token:"比较",prob:6},{token:"一斤",prob:5},{token:"可以",prob:4},{token:"能",prob:4},{token:"这个",prob:4}],
+    "便宜": [{token:"点",prob:18},{token:"的",prob:16},{token:"了",prob:14},{token:"很多",prob:12},{token:"一些",prob:10},{token:"货",prob:8},{token:"没好货",prob:6},{token:"还是",prob:5},{token:"东西",prob:4},{token:"质量",prob:4},{token:"可以",prob:3}],
+    "网购": [{token:"的",prob:18},{token:"方便",prob:16},{token:"太",prob:14},{token:"东西",prob:12},{token:"平台",prob:10},{token:"退货",prob:8},{token:"比",prob:7},{token:"便宜",prob:6},{token:"省",prob:5},{token:"会上瘾",prob:4}],
+    "快递": [{token:"到了",prob:22},{token:"小哥",prob:16},{token:"的",prob:14},{token:"还没",prob:12},{token:"太慢",prob:10},{token:"很快",prob:9},{token:"送货",prob:8},{token:"在",prob:5},{token:"丢了",prob:4}],
+    "身体": [{token:"健康",prob:24},{token:"的",prob:16},{token:"状况",prob:14},{token:"很",prob:12},{token:"不舒服",prob:8},{token:"需要",prob:7},{token:"锻炼",prob:6},{token:"是",prob:5},{token:"重要",prob:4},{token:"检查",prob:4}],
+    "感冒": [{token:"了",prob:26},{token:"药",prob:14},{token:"的症状",prob:10},{token:"很难受",prob:8},{token:"多喝水",prob:8},{token:"请假",prob:7},{token:"发烧",prob:6},{token:"咳嗽",prob:5},{token:"一直",prob:4},{token:"还没",prob:4},{token:"好",prob:4},{token:"需要",prob:4}],
+    "发烧": [{token:"了",prob:28},{token:"退烧",prob:16},{token:"很高",prob:14},{token:"去医院",prob:12},{token:"难受",prob:10},{token:"药",prob:8},{token:"请假",prob:6},{token:"一直",prob:6}],
+    "锻炼": [{token:"身体",prob:22},{token:"的",prob:16},{token:"可以",prob:14},{token:"对",prob:12},{token:"能",prob:10},{token:"是",prob:8},{token:"有助于",prob:7},{token:"需要",prob:6},{token:"很重要",prob:5}],
+    "跑步": [{token:"可以",prob:22},{token:"是",prob:16},{token:"能",prob:14},{token:"对",prob:10},{token:"锻炼",prob:9},{token:"有助",prob:8},{token:"让",prob:7},{token:"的人",prob:5},{token:"坚持",prob:4},{token:"每天",prob:3},{token:"很",prob:2}],
+    "健身": [{token:"可以",prob:22},{token:"是",prob:16},{token:"的",prob:14},{token:"对",prob:12},{token:"能",prob:10},{token:"让",prob:9},{token:"锻炼",prob:8},{token:"需要",prob:5},{token:"坚持",prob:4}],
+    "吃药": [{token:"的",prob:18},{token:"时间",prob:16},{token:"了",prob:14},{token:"没",prob:12},{token:"要",prob:10},{token:"记得",prob:9},{token:"副作用",prob:7},{token:"不能",prob:5},{token:"按时",prob:5},{token:"效果",prob:4}],
+    "看病": [{token:"排队",prob:22},{token:"难",prob:16},{token:"贵",prob:14},{token:"的",prob:12},{token:"需要",prob:10},{token:"挂号",prob:8},{token:"要",prob:7},{token:"真是",prob:6},{token:"麻烦",prob:5}],
+    "挂号": [{token:"难",prob:24},{token:"排队",prob:20},{token:"要",prob:16},{token:"提前",prob:14},{token:"网上",prob:10},{token:"预约",prob:9},{token:"太难",prob:7}],
+    "跟朋友": [{token:"一起",prob:24},{token:"聊天",prob:14},{token:"出去玩",prob:12},{token:"吃饭",prob:11},{token:"约",prob:9},{token:"聚会",prob:7},{token:"见面",prob:6},{token:"去",prob:5},{token:"说",prob:4},{token:"打",prob:4},{token:"喝酒",prob:4}],
+    "聊天": [{token:"的",prob:16},{token:"很",prob:14},{token:"的时候",prob:12},{token:"中",prob:10},{token:"机器人",prob:9},{token:"记录",prob:7},{token:"软件",prob:6},{token:"内容",prob:6},{token:"真",prob:5},{token:"太",prob:4},{token:"让我",prob:4},{token:"发现",prob:3}],
+    "聚会": [{token:"的",prob:18},{token:"很",prob:16},{token:"一起",prob:14},{token:"开心",prob:12},{token:"时间",prob:10},{token:"安排",prob:9},{token:"大家",prob:8},{token:"活动",prob:7},{token:"地点",prob:6}],
+    "谈恋爱": [{token:"是",prob:18},{token:"的",prob:16},{token:"很",prob:14},{token:"需要",prob:12},{token:"真",prob:10},{token:"太",prob:9},{token:"感觉",prob:8},{token:"一种",prob:7},{token:"让人",prob:6}],
+    "分手": [{token:"了",prob:26},{token:"后",prob:18},{token:"很",prob:16},{token:"的",prob:12},{token:"难过",prob:10},{token:"原因",prob:8},{token:"痛苦",prob:6},{token:"复合",prob:4}],
+    "看电影": [{token:"的",prob:18},{token:"是",prob:14},{token:"可以",prob:12},{token:"去",prob:10},{token:"推荐",prob:10},{token:"最近",prob:9},{token:"在家",prob:8},{token:"很",prob:7},{token:"是一种",prob:6},{token:"氛围",prob:6}],
+    "听音乐": [{token:"可以",prob:22},{token:"的",prob:16},{token:"是",prob:14},{token:"让",prob:12},{token:"放松",prob:10},{token:"心情",prob:9},{token:"很",prob:8},{token:"一种",prob:5},{token:"治愈",prob:4}],
+    "打游戏": [{token:"的",prob:18},{token:"可以",prob:16},{token:"太",prob:14},{token:"很",prob:12},{token:"容易",prob:10},{token:"是",prob:9},{token:"时间",prob:7},{token:"上瘾",prob:6},{token:"放松",prob:4},{token:"不如",prob:4}],
+    "追剧": [{token:"的",prob:18},{token:"可以",prob:16},{token:"太",prob:14},{token:"熬夜",prob:12},{token:"上瘾",prob:10},{token:"推荐",prob:9},{token:"到",prob:8},{token:"好",prob:7},{token:"停不下来",prob:6}],
+    "看书": [{token:"的",prob:18},{token:"可以",prob:16},{token:"是",prob:14},{token:"让",prob:12},{token:"很",prob:10},{token:"增长",prob:9},{token:"习惯",prob:8},{token:"一种",prob:7},{token:"知识",prob:6}],
+    "中国经济": [{token:"发展",prob:20},{token:"增长",prob:14},{token:"的",prob:13},{token:"正在",prob:10},{token:"持续",prob:9},{token:"将",prob:8},{token:"在",prob:7},{token:"面临",prob:6},{token:"保持",prob:5},{token:"稳步",prob:4},{token:"快速",prob:4}],
+    "全球经济": [{token:"形势",prob:18},{token:"的",prob:16},{token:"正在",prob:14},{token:"增长",prob:12},{token:"面临",prob:9},{token:"复苏",prob:8},{token:"放缓",prob:7},{token:"不确定性",prob:6},{token:"格局",prob:5},{token:"前景",prob:5}],
+    "全球变暖": [{token:"是",prob:22},{token:"导致",prob:16},{token:"的",prob:14},{token:"正在",prob:12},{token:"对",prob:10},{token:"引起",prob:8},{token:"造成",prob:7},{token:"影响",prob:6},{token:"加剧",prob:5}],
+    "环境保护": [{token:"是",prob:20},{token:"的",prob:16},{token:"需要",prob:14},{token:"对于",prob:12},{token:"和",prob:10},{token:"刻不容缓",prob:7},{token:"很重要",prob:6},{token:"工作",prob:5},{token:"意识",prob:5},{token:"应该",prob:5}],
+    "新能源汽车": [{token:"的",prob:20},{token:"发展",prob:18},{token:"市场",prob:14},{token:"是",prob:12},{token:"正在",prob:10},{token:"销量",prob:8},{token:"技术",prob:7},{token:"越来越",prob:6},{token:"补贴",prob:5}],
+    "房价": [{token:"太",prob:22},{token:"又",prob:16},{token:"上涨",prob:14},{token:"下跌",prob:12},{token:"调控",prob:10},{token:"问题",prob:9},{token:"一直",prob:8},{token:"不",prob:5},{token:"趋势",prob:4}],
+    "股票": [{token:"市场",prob:20},{token:"的",prob:16},{token:"投资",prob:14},{token:"最近",prob:12},{token:"基金",prob:10},{token:"涨",prob:9},{token:"跌",prob:8},{token:"交易",prob:6},{token:"风险",prob:5}],
+    "理财": [{token:"产品",prob:20},{token:"的",prob:18},{token:"方式",prob:16},{token:"方法",prob:14},{token:"收益",prob:12},{token:"规划",prob:10},{token:"投资",prob:5},{token:"建议",prob:5}],
+    "保险": [{token:"的",prob:18},{token:"公司",prob:16},{token:"产品",prob:14},{token:"理赔",prob:12},{token:"购买",prob:10},{token:"是",prob:9},{token:"必要",prob:7},{token:"费用",prob:6},{token:"推荐",prob:4},{token:"种类",prob:4}],
+    "通货膨胀": [{token:"导致",prob:22},{token:"的",prob:18},{token:"影响",prob:16},{token:"严重",prob:14},{token:"加剧",prob:12},{token:"央行",prob:8},{token:"让",prob:6},{token:"持续",prob:4}],
+    "就业": [{token:"市场",prob:22},{token:"形势",prob:18},{token:"压力",prob:16},{token:"困难",prob:14},{token:"问题",prob:12},{token:"前景",prob:10},{token:"率",prob:5},{token:"机会",prob:3}],
+    "创业": [{token:"的",prob:18},{token:"公司",prob:14},{token:"项目",prob:12},{token:"需要",prob:10},{token:"成功",prob:9},{token:"风险",prob:8},{token:"团队",prob:7},{token:"经历",prob:6},{token:"方向",prob:5},{token:"难度",prob:4},{token:"失败",prob:4},{token:"融资",prob:3}],
+    "篮球": [{token:"比赛",prob:18},{token:"的",prob:14},{token:"是",prob:12},{token:"和",prob:10},{token:"可以",prob:9},{token:"运动",prob:8},{token:"很",prob:7},{token:"打",prob:6},{token:"明星",prob:5},{token:"爱好者",prob:4},{token:"场",prob:4},{token:"鞋",prob:3}],
+    "足球": [{token:"比赛",prob:18},{token:"是",prob:14},{token:"的",prob:12},{token:"世界",prob:10},{token:"运动",prob:9},{token:"很",prob:8},{token:"踢",prob:7},{token:"和",prob:6},{token:"最爱",prob:5},{token:"联赛",prob:4},{token:"明星",prob:4},{token:"迷",prob:3}],
+    "游泳": [{token:"可以",prob:22},{token:"是",prob:18},{token:"的",prob:16},{token:"锻炼",prob:14},{token:"对",prob:12},{token:"很",prob:8},{token:"运动",prob:5},{token:"全身",prob:5}],
+    "瑜伽": [{token:"可以",prob:22},{token:"是",prob:18},{token:"的",prob:16},{token:"对",prob:14},{token:"锻炼",prob:12},{token:"放松",prob:8},{token:"有助于",prob:6},{token:"身心",prob:4}],
+    "洗衣服": [{token:"的",prob:18},{token:"机",prob:16},{token:"很",prob:14},{token:"太",prob:12},{token:"麻烦",prob:10},{token:"了",prob:9},{token:"还没",prob:8},{token:"忘记",prob:7},{token:"今天",prob:6}],
+    "打扫": [{token:"卫生",prob:24},{token:"房间",prob:20},{token:"的",prob:16},{token:"很",prob:12},{token:"太",prob:10},{token:"今天",prob:8},{token:"每周",prob:6},{token:"干净",prob:4}],
+    "搬家": [{token:"的",prob:18},{token:"很",prob:16},{token:"太",prob:14},{token:"累",prob:12},{token:"公司",prob:10},{token:"费用",prob:9},{token:"几次",prob:7},{token:"辛苦了",prob:6},{token:"真",prob:5},{token:"帮忙",prob:3}],
+    "租房": [{token:"的",prob:18},{token:"太",prob:16},{token:"贵",prob:14},{token:"难",prob:12},{token:"合同",prob:10},{token:"经历",prob:9},{token:"信息",prob:7},{token:"平台",prob:6},{token:"中介",prob:5},{token:"体验",prob:3}],
+    "买房": [{token:"的",prob:18},{token:"压力",prob:16},{token:"贷款",prob:14},{token:"首付",prob:12},{token:"太难",prob:10},{token:"还是",prob:9},{token:"需要",prob:8},{token:"考虑",prob:7},{token:"计划",prob:6}],
+    "还贷": [{token:"压力",prob:26},{token:"日",prob:18},{token:"的",prob:16},{token:"好",prob:14},{token:"每月",prob:12},{token:"沉重",prob:8},{token:"准时",prob:6}],
+    "信用卡": [{token:"的",prob:18},{token:"额度",prob:16},{token:"还款",prob:14},{token:"账单",prob:12},{token:"积分",prob:10},{token:"使用",prob:9},{token:"透支",prob:7},{token:"申请",prob:6},{token:"太多",prob:5},{token:"忘记还",prob:3}],
+    "宠物": [{token:"的",prob:18},{token:"猫",prob:14},{token:"狗",prob:14},{token:"很",prob:12},{token:"可爱",prob:10},{token:"养",prob:9},{token:"陪伴",prob:8},{token:"需要",prob:7},{token:"照顾",prob:5},{token:"带来",prob:3}],
+    "养猫": [{token:"的",prob:20},{token:"很",prob:16},{token:"需要",prob:14},{token:"好处",prob:12},{token:"可以",prob:10},{token:"是",prob:9},{token:"体验",prob:8},{token:"日常",prob:6},{token:"麻烦",prob:5}],
+    "养狗": [{token:"的",prob:20},{token:"很",prob:16},{token:"需要",prob:14},{token:"每天",prob:12},{token:"遛",prob:10},{token:"是",prob:9},{token:"好处",prob:8},{token:"责任",prob:6},{token:"麻烦",prob:5}],
+    "植物": [{token:"的",prob:18},{token:"可以",prob:16},{token:"是",prob:14},{token:"生长",prob:12},{token:"需要",prob:10},{token:"很",prob:9},{token:"养",prob:8},{token:"浇水",prob:7},{token:"光照",prob:6}]
+  };
+
+  // ── Last-char hints (42 chars) ──
+  const lastCharHints = {
+    "术": [{token:"领域",prob:10},{token:"的",prob:9},{token:"发展",prob:7},{token:"是",prob:6},{token:"和",prob:5},{token:"在",prob:5},{token:"方面",prob:4},{token:"难题",prob:3}],
+    "型": [{token:"可以",prob:12},{token:"的",prob:10},{token:"是",prob:8},{token:"在",prob:7},{token:"能",prob:6},{token:"具有",prob:5},{token:"通常",prob:4},{token:"结构",prob:3}],
+    "机": [{token:"学习",prob:12},{token:"器",prob:8},{token:"的",prob:7},{token:"是",prob:6},{token:"可以",prob:6},{token:"翻译",prob:5},{token:"会",prob:4},{token:"视觉",prob:3}],
+    "器": [{token:"人",prob:10},{token:"学习",prob:8},{token:"的",prob:7},{token:"翻译",prob:6},{token:"是",prob:5},{token:"设备",prob:4},{token:"件",prob:3}],
+    "码": [{token:"的",prob:12},{token:"编写",prob:8},{token:"实现",prob:7},{token:"中",prob:6},{token:"是",prob:5},{token:"来",prob:5},{token:"质量",prob:4},{token:"审查",prob:3}],
+    "法": [{token:"的",prob:12},{token:"是",prob:10},{token:"则",prob:7},{token:"可以",prob:6},{token:"解决",prob:6},{token:"设计",prob:5},{token:"优化",prob:4},{token:"实现",prob:4}],
+    "络": [{token:"的",prob:14},{token:"结构",prob:10},{token:"中",prob:9},{token:"可以",prob:8},{token:"是",prob:7},{token:"模型",prob:7},{token:"层",prob:5},{token:"连接",prob:4}],
+    "数": [{token:"据",prob:22},{token:"的",prob:12},{token:"量",prob:10},{token:"学",prob:8},{token:"值",prob:6},{token:"据库",prob:5},{token:"字",prob:4}],
+    "据": [{token:"的",prob:14},{token:"集",prob:10},{token:"库",prob:9},{token:"中",prob:8},{token:"结构",prob:7},{token:"分析",prob:6},{token:"处理",prob:5},{token:"来看",prob:4},{token:"显示",prob:4},{token:"表明",prob:3}],
+    "人": [{token:"工智能",prob:8},{token:"们",prob:7},{token:"的",prob:6},{token:"类",prob:5},{token:"生",prob:4},{token:"才",prob:3},{token:"员",prob:3},{token:"群",prob:2}],
+    "的": [{token:"发展",prob:6},{token:"应用",prob:5},{token:"未来",prob:5},{token:"技术",prob:4},{token:"影响",prob:4},{token:"模型",prob:4},{token:"作用",prob:3},{token:"潜力",prob:3},{token:"重要性",prob:2}],
+    "了": [{token:"很多",prob:8},{token:"巨大",prob:6},{token:"显著",prob:5},{token:"我们",prob:5},{token:"传统",prob:4},{token:"广泛",prob:4}],
+    "在": [{token:"各个",prob:8},{token:"很多",prob:7},{token:"不断",prob:6},{token:"这",prob:5},{token:"许多",prob:5},{token:"多个",prob:4},{token:"努力",prob:3},{token:"慢慢",prob:2}],
+    "是": [{token:"一种",prob:10},{token:"目前",prob:7},{token:"当今",prob:6},{token:"非常",prob:5},{token:"一个",prob:5},{token:"怎么",prob:4},{token:"什么",prob:3},{token:"因为",prob:3}],
+    "变": [{token:"得",prob:12},{token:"化",prob:8},{token:"革",prob:6},{token:"了",prob:5},{token:"成",prob:4},{token:"量",prob:3},{token:"换",prob:2}],
+    "展": [{token:"迅速",prob:8},{token:"趋势",prob:6},{token:"方向",prob:5},{token:"前景",prob:4},{token:"的",prob:4},{token:"空间",prob:3},{token:"潜力",prob:2}],
+    "好": [{token:"地",prob:8},{token:"的",prob:6},{token:"学习",prob:5},{token:"理解",prob:4},{token:"用",prob:3},{token:"奇",prob:3},{token:"像",prob:3},{token:"吃",prob:2}],
+    "能": [{token:"够",prob:14},{token:"力",prob:6},{token:"解决",prob:5},{token:"处理",prob:4},{token:"做到",prob:3},{token:"源",prob:3},{token:"量",prob:2}],
+    "理": [{token:"解",prob:12},{token:"论",prob:6},{token:"的",prob:5},{token:"和",prob:4},{token:"方面",prob:3},{token:"念",prob:3},{token:"想",prob:2}],
+    "用": [{token:"于",prob:10},{token:"户",prob:5},{token:"来",prob:5},{token:"它",prob:4},{token:"到",prob:4},{token:"途",prob:3},{token:"处",prob:2}],
+    "化": [{token:"的",prob:8},{token:"了",prob:6},{token:"学习",prob:5},{token:"学",prob:4},{token:"为",prob:3},{token:"石",prob:2},{token:"解",prob:2}],
+    "界": [{token:"产生",prob:8},{token:"各地",prob:6},{token:"范围",prob:5},{token:"的",prob:4},{token:"带来",prob:3},{token:"上",prob:3},{token:"级",prob:2}],
+    "生": [{token:"活",prob:14},{token:"的",prob:8},{token:"物",prob:6},{token:"态",prob:5},{token:"命",prob:4},{token:"产",prob:4},{token:"成",prob:3}],
+    "学": [{token:"习",prob:22},{token:"的",prob:10},{token:"生",prob:8},{token:"校",prob:6},{token:"科",prob:5},{token:"会",prob:4},{token:"术",prob:3}],
+    "天": [{token:"气",prob:18},{token:"的",prob:10},{token:"都",prob:8},{token:"很",prob:7},{token:"预报",prob:6},{token:"晚上",prob:5},{token:"空",prob:4},{token:"啊",prob:3}],
+    "吃": [{token:"了",prob:18},{token:"饭",prob:14},{token:"的",prob:10},{token:"什么",prob:8},{token:"完",prob:6},{token:"过",prob:5},{token:"火锅",prob:4},{token:"烧烤",prob:3}],
+    "去": [{token:"了",prob:14},{token:"年",prob:10},{token:"的",prob:8},{token:"过",prob:7},{token:"玩",prob:6},{token:"看",prob:5},{token:"旅行",prob:5},{token:"做",prob:4}],
+    "看": [{token:"到",prob:12},{token:"了",prob:10},{token:"书",prob:8},{token:"电影",prob:7},{token:"着",prob:6},{token:"起来",prob:5},{token:"看",prob:4},{token:"完",prob:3}],
+    "说": [{token:"了",prob:14},{token:"的",prob:10},{token:"话",prob:8},{token:"明",prob:7},{token:"法",prob:6},{token:"是",prob:5},{token:"道",prob:4},{token:"出",prob:3}],
+    "做": [{token:"到",prob:12},{token:"的",prob:10},{token:"了",prob:8},{token:"好",prob:7},{token:"完",prob:6},{token:"出",prob:5},{token:"法",prob:4},{token:"得",prob:3}],
+    "想": [{token:"法",prob:12},{token:"要",prob:10},{token:"到",prob:8},{token:"象",prob:6},{token:"了",prob:6},{token:"做",prob:5},{token:"起",prob:4},{token:"象力",prob:3}],
+    "行": [{token:"的",prob:10},{token:"业",prob:8},{token:"为",prob:7},{token:"动",prob:6},{token:"了",prob:5},{token:"走",prob:4},{token:"程",prob:3}],
+    "来": [{token:"越",prob:14},{token:"说",prob:10},{token:"的",prob:8},{token:"了",prob:7},{token:"到",prob:6},{token:"自",prob:4},{token:"看",prob:3}],
+    "到": [{token:"了",prob:16},{token:"的",prob:12},{token:"底",prob:8},{token:"来",prob:7},{token:"达",prob:5},{token:"处",prob:4},{token:"位",prob:3}],
+    "吗": [{token:"？",prob:50},{token:"！",prob:14},{token:"的",prob:8},{token:"呢",prob:6},{token:"吧",prob:5},{token:"可以",prob:5},{token:"能",prob:4}],
+    "呢": [{token:"？",prob:50},{token:"！",prob:12},{token:"的",prob:8},{token:"吧",prob:6},{token:"可以",prob:5},{token:"吗",prob:4},{token:"能",prob:4}],
+    "吧": [{token:"！",prob:30},{token:"。",prob:22},{token:"？",prob:10},{token:"的",prob:8},{token:"我觉得",prob:5},{token:"这样",prob:4}],
+    "啊": [{token:"！",prob:40},{token:"？",prob:14},{token:"。",prob:12},{token:"的",prob:8},{token:"真",prob:6},{token:"好",prob:5},{token:"太",prob:5},{token:"怎么",prob:4}],
+    "啦": [{token:"！",prob:40},{token:"。",prob:16},{token:"～",prob:12},{token:"的",prob:8},{token:"哈哈",prob:5},{token:"终于",prob:4},{token:"开心",prob:3}],
+    "力": [{token:"的",prob:14},{token:"很",prob:10},{token:"量",prob:8},{token:"度",prob:7},{token:"强",prob:6},{token:"大",prob:5},{token:"学习",prob:4},{token:"气",prob:3}],
+    "点": [{token:"的",prob:12},{token:"了",prob:10},{token:"多",prob:8},{token:"时间",prob:7},{token:"意见",prob:6},{token:"建议",prob:5},{token:"问题",prob:5},{token:"看法",prob:4}],
+    "🐱": [{token:"喵",prob:30},{token:"猫",prob:16},{token:"可爱",prob:14},{token:"猫咪",prob:12},{token:"太",prob:10},{token:"喜欢",prob:9},{token:"好",prob:6},{token:"超级",prob:3}]
+  };
+
+  const defaultTokens = [
+    { token: '的', prob: 12 }, { token: '是', prob: 10 }, { token: '在', prob: 8 },
+    { token: '了', prob: 7 }, { token: '和', prob: 6 }, { token: '一个', prob: 5 },
+    { token: '有', prob: 5 }, { token: '可以', prob: 4 }, { token: '这个', prob: 3 },
+    { token: '我', prob: 3 }, { token: '与', prob: 3 }, { token: '也', prob: 3 },
+    { token: '不', prob: 3 }, { token: '都', prob: 2 }, { token: '它', prob: 2 },
+  ];
+
+  const predInput = document.getElementById('predInput');
+  const predBtn = document.getElementById('predBtn');
+  const tempSlider = document.getElementById('predTemp');
+  const tempVal = document.getElementById('predTempVal');
+  const distEl = document.getElementById('predDistribution');
+  const explEl = document.getElementById('predExplanation');
+
+  let clickCounter = 0;
+
+  function getDistribution(input) {
+    const trimmed = input.trim();
+    if (!trimmed) return { tokens: defaultTokens, matchType: 'empty' };
+
+    // 1. Exact context match
+    if (contextMap[trimmed]) {
+      return { tokens: contextMap[trimmed], matchType: 'exact', matchKey: trimmed };
+    }
+
+    // 2. Suffix match — prefer longest context key that is a SUFFIX of the input
+    const keys = Object.keys(contextMap).sort((a, b) => b.length - a.length);
+    for (const key of keys) {
+      if (trimmed.endsWith(key)) {
+        return { tokens: contextMap[key], matchType: 'suffix', matchKey: key };
+      }
+    }
+
+    // 3. Substring match (anywhere) — longest first
+    for (const key of keys) {
+      if (trimmed.includes(key)) {
+        return { tokens: contextMap[key], matchType: 'substring', matchKey: key };
+      }
+    }
+
+    // 4. Last-character hint
+    const lastChar = trimmed[trimmed.length - 1];
+    if (lastCharHints[lastChar]) {
+      return { tokens: lastCharHints[lastChar], matchType: 'char-hint', matchKey: lastChar };
+    }
+
+    // 5. Generic fallback
+    return { tokens: defaultTokens, matchType: 'fallback' };
+  }
+
+  function applyTemperature(tokens, temperature) {
+    // temperature < 1 → sharpen (amplify differences)
+    // temperature > 1 → flatten (reduce differences)
+    // Apply softmax with temperature: exp(logit / T) where logit ≈ prob
+    const t = Math.max(0.2, Math.min(2.0, temperature));
+    return tokens.map(d => ({
+      token: d.token,
+      prob: Math.pow(d.prob, 1 / t)
+    }));
+  }
+
+  function mulberry32(seed) {
+    return function() {
+      seed |= 0; seed = seed + 0x6D2B79F5 | 0;
+      var t = Math.imul(seed ^ seed >>> 15, 1 | seed);
+      t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t;
+      return ((t ^ t >>> 14) >>> 0) / 4294967296;
+    };
+  }
+
+  function applyJitter(tokens, seed, strength) {
+    const rand = mulberry32(seed);
+    return tokens.map(d => ({
+      token: d.token,
+      prob: d.prob * (1 - strength * 0.5 + rand() * strength)
+    }));
+  }
+
+  function renderDistribution(rawTokens, matchInfo, temperature) {
+    const temp = parseFloat(temperature);
+    let processed = applyTemperature(rawTokens, temp);
+    processed = applyJitter(processed, clickCounter * 7919 + rawTokens.length * 137, 0.35);
+
+    // Normalize
+    const total = processed.reduce((s, d) => s + d.prob, 0);
+    const normalized = processed
+      .map(d => ({ token: d.token, prob: d.prob / total }))
+      .sort((a, b) => b.prob - a.prob);
+
+    const top10 = normalized.slice(0, 10);
+
+    const colors = [
+      'oklch(0.46 0.19 268)', 'oklch(0.48 0.16 280)', 'oklch(0.50 0.13 290)',
+      'oklch(0.48 0.12 300)', 'oklch(0.45 0.10 310)', 'oklch(0.42 0.08 320)',
+      'oklch(0.40 0.06 330)', 'oklch(0.38 0.05 340)', 'oklch(0.36 0.04 350)',
+      'oklch(0.34 0.03 0)',
+    ];
+
+    // Collapse existing bars for visible transition
+    const existingBars = distEl.querySelectorAll('.pred-bar');
+    if (existingBars.length > 0) {
+      existingBars.forEach(b => { b.style.height = '2px'; });
+    }
+
+    setTimeout(() => {
+      distEl.innerHTML = '';
+
+      top10.forEach((d, i) => {
+        const wrap = document.createElement('div');
+        wrap.className = 'pred-bar-wrap';
+        wrap.title = `点击将「${d.token}」追加到输入`;
+        wrap.addEventListener('click', () => {
+          const current = predInput.value;
+          predInput.value = current + d.token;
+          predInput.focus();
+          clickCounter++;
+          predict();
+        });
+
+        const bar = document.createElement('div');
+        bar.className = 'pred-bar';
+        bar.style.height = Math.max(4, d.prob * 180) + 'px';
+        bar.style.background = colors[i];
+        bar.style.width = Math.max(32, 40 + (1 - i * 0.07) * 18) + 'px';
+
+        const val = document.createElement('span');
+        val.className = 'pred-bar-value';
+        val.textContent = Math.round(d.prob * 100) + '%';
+
+        const label = document.createElement('span');
+        label.className = 'pred-bar-label';
+        label.textContent = d.token;
+
+        bar.appendChild(val);
+        wrap.appendChild(bar);
+        wrap.appendChild(label);
+        distEl.appendChild(wrap);
+      });
+
+      // Smart explanation
+      const top = top10[0];
+      const runnerUp = top10[1];
+      let matchDesc = '';
+      if (matchInfo.matchType === 'exact') matchDesc = `基于上文「${matchInfo.matchKey}」的精确匹配`;
+      else if (matchInfo.matchType === 'suffix') matchDesc = `匹配到上文末尾「${matchInfo.matchKey}」的统计模式`;
+      else if (matchInfo.matchType === 'substring') matchDesc = `根据上文中的「${matchInfo.matchKey}」推断`;
+      else if (matchInfo.matchType === 'char-hint') matchDesc = `根据最后一个字「${matchInfo.matchKey}」推测常见搭配`;
+      else if (matchInfo.matchType === 'fallback') matchDesc = '使用通用中文高频词分布';
+      else matchDesc = '等待输入';
+
+      explEl.innerHTML = `
+        <strong style="color:var(--c-accent)">「${top.token}」</strong> ${Math.round(top.prob*100)}%  ·
+        其次「${runnerUp.token}」${Math.round(runnerUp.prob*100)}%
+        <br><span style="font-size:0.78rem; color:var(--c-text-muted);">${matchDesc}  ·
+        Temperature = ${temp.toFixed(1)}  ·
+        点击任意预测词可<strong>链式追加</strong>继续预测</span>
+      `;
+    }, 100);
+  }
+
+  function predict() {
+    clickCounter++;
+    const input = predInput.value.trim() || predInput.placeholder;
+    const { tokens, matchType, matchKey } = getDistribution(input);
+    const temp = parseFloat(tempSlider.value);
+
+    // Button feedback
+    predBtn.style.transform = 'scale(0.95)';
+    predBtn.style.background = 'var(--c-accent-hover)';
+    setTimeout(() => {
+      predBtn.style.transform = '';
+      predBtn.style.background = '';
+    }, 150);
+
+    renderDistribution(tokens, { matchType, matchKey }, temp);
+  }
+
+  // Events
+  predBtn.addEventListener('click', predict);
+  predInput.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') { e.preventDefault(); predict(); }
+  });
+
+  let typeTimer;
+  predInput.addEventListener('input', () => {
+    clearTimeout(typeTimer);
+    typeTimer = setTimeout(predict, 350);
+  });
+
+  tempSlider.addEventListener('input', () => {
+    tempVal.textContent = parseFloat(tempSlider.value).toFixed(1);
+    predict();
+  });
+
+  // Initial
+  predict();
+})();
+
+/* ═══════════════════════════════════════════════════════════
+   EMBEDDING SVG visualization
+   ═══════════════════════════════════════════════════════════ */
+(function() {
+  const svg = document.getElementById('embeddingSvg');
+  const pointsGroup = document.getElementById('embeddingPoints');
+  const labelsGroup = document.getElementById('embeddingLabels');
+
+  // Simulated 2D embedding clusters
+  const animalWords = [
+    { word: '猫', x: 320, y: 140 },
+    { word: '狗', x: 345, y: 155 },
+    { word: '鱼', x: 310, y: 170 },
+    { word: '鸟', x: 335, y: 130 },
+  ];
+  const foodWords = [
+    { word: '披萨', x: 160, y: 260 },
+    { word: '苹果', x: 180, y: 240 },
+    { word: '面包', x: 150, y: 275 },
+  ];
+  const techWords = [
+    { word: '电脑', x: 380, y: 80 },
+    { word: '手机', x: 400, y: 95 },
+    { word: 'AI', x: 370, y: 65 },
+  ];
+  const allWords = [...animalWords, ...foodWords, ...techWords];
+
+  // Draw cluster ellipses
+  function drawCluster(cx, cy, rx, ry, color) {
+    const ellipse = document.createElementNS('http://www.w3.org/2000/svg', 'ellipse');
+    ellipse.setAttribute('cx', cx);
+    ellipse.setAttribute('cy', cy);
+    ellipse.setAttribute('rx', rx);
+    ellipse.setAttribute('ry', ry);
+    ellipse.setAttribute('fill', color);
+    ellipse.setAttribute('opacity', '0.12');
+    pointsGroup.appendChild(ellipse);
+  }
+
+  drawCluster(328, 148, 50, 40, 'oklch(0.46 0.19 268)');
+  drawCluster(163, 258, 45, 35, 'oklch(0.52 0.16 58)');
+  drawCluster(383, 80, 45, 35, 'oklch(0.48 0.12 195)');
+
+  // Draw points
+  allWords.forEach(d => {
+    const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+    circle.setAttribute('cx', d.x);
+    circle.setAttribute('cy', d.y);
+    circle.setAttribute('r', '7');
+    circle.setAttribute('fill', 'oklch(0.46 0.19 268)');
+    circle.setAttribute('opacity', '0.7');
+    circle.setAttribute('cursor', 'pointer');
+    circle.style.transition = 'all 0.2s ease-out';
+
+    circle.addEventListener('mouseenter', () => {
+      circle.setAttribute('r', '10');
+      circle.setAttribute('opacity', '1');
+      // Highlight label
+      const label = labelsGroup.querySelector(`[data-word="${d.word}"]`);
+      if (label) label.setAttribute('fill', 'var(--c-ink)');
+    });
+    circle.addEventListener('mouseleave', () => {
+      circle.setAttribute('r', '7');
+      circle.setAttribute('opacity', '0.7');
+      const label = labelsGroup.querySelector(`[data-word="${d.word}"]`);
+      if (label) label.setAttribute('fill', 'var(--c-text-dim)');
+    });
+
+    pointsGroup.appendChild(circle);
+  });
+
+  // Draw labels
+  allWords.forEach(d => {
+    const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+    text.setAttribute('x', d.x + 12);
+    text.setAttribute('y', d.y + 4);
+    text.setAttribute('fill', 'var(--c-text-dim)');
+    text.setAttribute('font-size', '12');
+    text.setAttribute('font-family', 'system-ui, sans-serif');
+    text.setAttribute('data-word', d.word);
+    text.textContent = d.word;
+    labelsGroup.appendChild(text);
+  });
+})();
+</script>
+
+</body>
+</html>

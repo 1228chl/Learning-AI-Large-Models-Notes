@@ -12,5 +12,7 @@
   "catppuccin-icon-styles@@ctp-icon-hide": false,
   "catppuccin-pdf@@ctp-pdf-darken": false,
   "catppuccin-pdf@@ctp-pdf-blend": false,
-  "catppuccin-pdf@@ctp-seamless-pdf": false
+  "catppuccin-pdf@@ctp-seamless-pdf": false,
+  "minimal-style@@image-grid-fit": "cover",
+  "minimal-advanced@@cursor": "default"
 }

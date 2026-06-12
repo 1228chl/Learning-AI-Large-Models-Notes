@@ -1,0 +1,7 @@
+/* 让所有图片在阅读和编辑模式下都居中 */
+.markdown-preview-view img,
+.markdown-source-view img {
+    display: block;
+    margin-left: auto !important;
+    margin-right: auto !important;
+}
