@@ -1,6 +1,6 @@
 <mxfile host="Electron">
   <diagram name="第 1 页" id="437v_mQhFh7NNOhAUWYh">
-    <mxGraphModel dx="1444" dy="2310" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+    <mxGraphModel dx="879" dy="1864" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -254,7 +254,7 @@
         <mxCell id="909sckNY7mUYLJeAv3rq-81" edge="1" parent="1" source="909sckNY7mUYLJeAv3rq-82" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" target="909sckNY7mUYLJeAv3rq-94">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="909sckNY7mUYLJeAv3rq-82" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FCE0E1;" value="输入词向量" vertex="1">
+        <mxCell id="909sckNY7mUYLJeAv3rq-82" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FCE0E1;" value="源文本嵌入" vertex="1">
           <mxGeometry height="40" width="120" x="730" y="550" as="geometry" />
         </mxCell>
         <mxCell id="909sckNY7mUYLJeAv3rq-83" edge="1" parent="1" source="909sckNY7mUYLJeAv3rq-84" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;endArrow=none;endFill=0;" target="909sckNY7mUYLJeAv3rq-87">
@@ -333,7 +333,7 @@
         <mxCell id="909sckNY7mUYLJeAv3rq-100" edge="1" parent="1" source="909sckNY7mUYLJeAv3rq-101" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" target="909sckNY7mUYLJeAv3rq-113">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="909sckNY7mUYLJeAv3rq-101" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=light-dark(#FCE0E1,#EDEFBD);" value="输出词向量" vertex="1">
+        <mxCell id="909sckNY7mUYLJeAv3rq-101" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=light-dark(#FCE0E1,#EDEFBD);" value="目标文本嵌入" vertex="1">
           <mxGeometry height="40" width="120" x="909.97" y="550" as="geometry" />
         </mxCell>
         <mxCell id="909sckNY7mUYLJeAv3rq-102" edge="1" parent="1" source="909sckNY7mUYLJeAv3rq-103" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;endArrow=none;endFill=0;" target="909sckNY7mUYLJeAv3rq-106">
