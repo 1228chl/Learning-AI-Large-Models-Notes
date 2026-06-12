@@ -1,0 +1,23 @@
+/* ========== 浅色模式 ========== */
+.theme-light .HyperMD-quote,
+.theme-light .markdown-preview-view blockquote {
+    background-color: #eaf9ea !important;
+    border-left: 3px solid #6bb86b;
+}
+
+.theme-light .markdown-preview-view blockquote {
+    padding: 0.75em 1.25em;
+    border-radius: 6px;
+}
+
+/* ========== 深色模式 ========== */
+.theme-dark .HyperMD-quote,
+.theme-dark .markdown-preview-view blockquote {
+    background-color: #1e2a1e !important;
+    border-left: 3px solid #6bb86b;
+}
+
+.theme-dark .markdown-preview-view blockquote {
+    padding: 0.75em 1.25em;
+    border-radius: 6px;
+}

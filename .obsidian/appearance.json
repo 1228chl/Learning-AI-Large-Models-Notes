@@ -9,7 +9,8 @@
   "enabledCssSnippets": [
     "mathlive-light-fix",
     "image-center",
-    "inline-code"
+    "inline-code",
+    "blockquote-color"
   ],
   "textFontFamily": "Times New Roman,霞鹜新致宋＋",
   "interfaceFontFamily": "Times New Roman,霞鹜新致宋＋",
