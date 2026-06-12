@@ -1281,7 +1281,7 @@ var MyPlugin = class extends import_obsidian.Plugin {
             return;
         }
 
-        // 获取整个文档的标题树（用于计算每个位置的目标路径）
+        // 获取标题结构
         const cache = this.app.metadataCache.getFileCache(file);
         const headings = cache?.headings;
         if (!headings || headings.length === 0) {
@@ -1289,7 +1289,7 @@ var MyPlugin = class extends import_obsidian.Plugin {
             return;
         }
 
-        // 辅助函数：根据行号获取该行所属的标题绝对路径（如 "1.1.3"）
+        // 根据行号获取标题层级路径
         const getHeadingPathAtLine = (lineNumber) => {
             let currentHeading = null;
             for (let i = headings.length - 1; i >= 0; i--) {
@@ -1317,30 +1317,25 @@ var MyPlugin = class extends import_obsidian.Plugin {
             return parts.slice(0, maxDepth).join('.');
         };
 
-        // --- 核心修复：解析每个图片链接，完整提取远程路径 ---
+        // 解析所有图片链接，获取完整信息
         const imageInfos = [];
         for (const link of links) {
             const url = this.extractUrlFromFullMatch(link.fullMatch);
             if (!url) continue;
-
             let fullRemotePath = '';
             let repoOwner = this.settings.githubUser;
             let repoName = this.settings.repoName;
             let branch = this.settings.branchName;
-            let type = 'raw'; // default
+            let type = 'raw';
             let extension = 'png';
-
-            // 1. 尝试匹配 Raw 链接（用正则捕获并组合路径，确保完整性）
             const rawMatch = url.match(/https?:\/\/raw\.githubusercontent\.com\/([^\/]+)\/([^\/]+)\/([^\/]+)\/(.+)$/);
             if (rawMatch) {
                 repoOwner = decodeURIComponent(rawMatch[1]);
                 repoName = decodeURIComponent(rawMatch[2]);
                 branch = decodeURIComponent(rawMatch[3]);
-                // 关键修复：单独提取原始URL中分支之后的所有内容作为完整远程路径
                 fullRemotePath = decodeURIComponent(rawMatch[4]);
                 type = 'raw';
             } else {
-                // 2. 尝试匹配 CDN 链接
                 const cdnMatch = url.match(/https?:\/\/cdn\.jsdelivr\.net\/gh\/([^\/]+)\/([^@]+)@([^\/]+)\/(.+)$/);
                 if (cdnMatch) {
                     repoOwner = decodeURIComponent(cdnMatch[1]);
@@ -1353,20 +1348,12 @@ var MyPlugin = class extends import_obsidian.Plugin {
                     continue;
                 }
             }
-
-            // 提取扩展名
             const extMatch = fullRemotePath.match(/\.(\w+)$/);
             if (extMatch) extension = extMatch[1];
-
-            // 计算行号与层级
             const matchIndex = content.indexOf(link.fullMatch);
             if (matchIndex === -1) continue;
             const lineNumber = content.substring(0, matchIndex).split('\n').length - 1;
             const hierarchy = getHeadingPathAtLine(lineNumber);
-            
-            // 调试：确认提取到的远程路径是否包含文件名
-            console.log(`解析 URL: ${url}\n提取的完整路径: ${fullRemotePath}`);
-            
             imageInfos.push({
                 fullMatch: link.fullMatch,
                 url: url,
@@ -1393,69 +1380,128 @@ var MyPlugin = class extends import_obsidian.Plugin {
             groups.get(info.hierarchy).push(info);
         }
 
-        const confirmModal = new ConfirmationModal(this.app, "重新整理图片序号",
-            `将根据当前笔记的标题结构重新整理所有图片的序号，使每个标题层级下的图片序号从1开始连续。\n这会导致图片被重新上传，笔记链接将被更新。确定继续吗？`);
-        const confirmed = await confirmModal.open();
-        if (!confirmed) return;
-
         const token = await this.getToken();
         if (!token) {
             new import_obsidian.Notice("无法获取 GitHub Token。");
             return;
         }
 
-        let totalSuccess = 0, totalSkipped = 0;
-        const notice = new import_obsidian.Notice("正在整理图片序号...", 0);
-        const replacements = new Map();
-        const newMaxMap = new Map();
-        const deletions = [];
-
+        // 智能检测：对每个层级，检查是否需要重排
+        const layersToReorder = [];
         for (const [hierarchy, infos] of groups.entries()) {
+            // 按行号排序（笔记中的顺序）
             infos.sort((a, b) => a.lineNumber - b.lineNumber);
+            const noteCount = infos.length;
+            // 获取远程目录路径
+            const remoteDir = infos[0].remotePath.substring(0, infos[0].remotePath.lastIndexOf('/') + 1);
+            const prefix = `${hierarchy}-`;
+            // 列出远程所有匹配前缀的文件
+            let remoteFiles = [];
+            try {
+                remoteFiles = await this.listRemoteDirectoryContents(
+                    infos[0].owner, infos[0].repo, infos[0].branch, remoteDir, token
+                );
+                remoteFiles = remoteFiles.filter(f => f.path.split('/').pop().startsWith(prefix));
+            } catch (err) {
+                console.warn(`无法列出远程目录 ${remoteDir}，将进行全量重排`, err);
+                remoteFiles = [];
+            }
+            // 解析远程文件的编号
+            const remoteNumbers = new Set();
+            for (const rf of remoteFiles) {
+                const fileName = rf.path.split('/').pop();
+                const match = fileName.match(new RegExp(`^${escapeRegex(prefix)}(\\d+)\\.`));
+                if (match) remoteNumbers.add(parseInt(match[1], 10));
+            }
+            // 检查是否完全匹配：数量相同且笔记中的每个图片的当前编号恰好等于其顺序索引+1
+            let needReorder = false;
+            if (remoteFiles.length !== noteCount) {
+                needReorder = true;
+                console.log(`层级 ${hierarchy}: 远程文件数 ${remoteFiles.length} 与笔记图片数 ${noteCount} 不一致，需要重排`);
+            } else {
+                // 对每个图片，从其当前 remotePath 中提取编号，检查是否等于 i+1
+                for (let i = 0; i < infos.length; i++) {
+                    const info = infos[i];
+                    const fileName = info.remotePath.split('/').pop();
+                    const match = fileName.match(new RegExp(`^${escapeRegex(prefix)}(\\d+)\\.`));
+                    const currentNumber = match ? parseInt(match[1], 10) : -1;
+                    const expectedNumber = i + 1;
+                    if (currentNumber !== expectedNumber) {
+                        needReorder = true;
+                        console.log(`层级 ${hierarchy}: 图片 ${fileName} 当前编号 ${currentNumber} 应为 ${expectedNumber}，需要重排`);
+                        break;
+                    }
+                }
+            }
+            if (needReorder) {
+                layersToReorder.push({ hierarchy, infos, remoteDir, prefix });
+            } else {
+                console.log(`层级 ${hierarchy}: 已完美连续，跳过`);
+            }
+        }
+
+        if (layersToReorder.length === 0) {
+            new import_obsidian.Notice("所有图片序号已经连续且正确，无需整理。");
+            return;
+        }
+
+        // 提示用户需要重排的层级
+        let msg = `需要重排 ${layersToReorder.length} 个图片组（共 ${layersToReorder.reduce((sum, l) => sum + l.infos.length, 0)} 张图片）。\n这将清空旧文件并按顺序重新上传（编号从1开始）。确定继续吗？`;
+        const confirmModal = new ConfirmationModal(this.app, "重新整理图片序号", msg);
+        const confirmed = await confirmModal.open();
+        if (!confirmed) return;
+
+        let totalSuccess = 0, totalSkipped = 0;
+        const notice = new import_obsidian.Notice("正在重新整理图片序号...", 0);
+        const replacements = new Map();
+
+        for (const { hierarchy, infos, remoteDir, prefix } of layersToReorder) {
+            notice.setMessage(`处理层级 ${hierarchy}：下载 ${infos.length} 张图片...`);
+            // 1. 下载所有原图数据到内存
+            const imageDataList = [];
+            let downloadFailed = false;
+            for (let i = 0; i < infos.length; i++) {
+                const info = infos[i];
+                const encodedPath = this.encodeRemotePath(info.remotePath);
+                const downloadUrl = `https://api.github.com/repos/${info.owner}/${info.repo}/contents/${encodedPath}?ref=${encodeURIComponent(info.branch)}`;
+                try {
+                    const resp = await fetch(downloadUrl, {
+                        headers: { "Authorization": `token ${token}`, "Accept": "application/vnd.github.v3.raw" }
+                    });
+                    if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+                    const data = await resp.arrayBuffer();
+                    imageDataList.push(data);
+                } catch (err) {
+                    console.error(`下载失败: ${info.remotePath}`, err);
+                    new import_obsidian.Notice(`下载 ${info.remotePath.split('/').pop()} 失败，终止该层级处理。`);
+                    downloadFailed = true;
+                    break;
+                }
+            }
+            if (downloadFailed) {
+                totalSkipped += infos.length;
+                continue;
+            }
+
+            // 2. 删除该层级下所有以 `${hierarchy}-` 开头的旧文件
+            notice.setMessage(`层级 ${hierarchy}：删除旧文件...`);
+            try {
+                await this.deleteRemoteFilesWithPrefix(
+                    infos[0].owner, infos[0].repo, infos[0].branch, remoteDir, prefix, token
+                );
+            } catch (err) {
+                console.warn(`删除旧文件时出错: ${err.message}`);
+            }
+
+            // 3. 按顺序上传新文件（编号从1开始）
+            let successCount = 0;
             for (let i = 0; i < infos.length; i++) {
                 const info = infos[i];
                 const newNumber = i + 1;
                 const newFilename = `${hierarchy}-${newNumber}.${info.ext}`;
-                const lastSlash = info.remotePath.lastIndexOf('/');
-                const remoteDir = lastSlash !== -1 ? info.remotePath.substring(0, lastSlash + 1) : '';
                 const newRemotePath = remoteDir + newFilename;
-                const oldFilename = info.remotePath.split('/').pop();
-
-                if (oldFilename === newFilename) {
-                    const curMax = newMaxMap.get(hierarchy) || 0;
-                    if (newNumber > curMax) newMaxMap.set(hierarchy, newNumber);
-                    continue;
-                }
-
-                notice.setMessage(`处理: ${oldFilename} -> ${newFilename}`);
-
-                // 1. 下载原图（路径编码）
-                const encodedOldPath = this.encodeRemotePath(info.remotePath);
-                const downloadUrl = `https://api.github.com/repos/${info.owner}/${info.repo}/contents/${encodedOldPath}?ref=${encodeURIComponent(info.branch)}`;
-                const downloadResp = await fetch(downloadUrl, {
-                    headers: { "Authorization": `token ${token}`, "Accept": "application/vnd.github.v3.raw" }
-                });
-                if (!downloadResp.ok) {
-                    console.error("下载失败:", info.url);
-                    totalSkipped++;
-                    continue;
-                }
-                const imageData = await downloadResp.arrayBuffer();
-
-                // 2. 检查新文件是否存在
+                const base64Data = arrayBufferToBase64(imageDataList[i]);
                 const encodedNewPath = this.encodeRemotePath(newRemotePath);
-                const existsUrl = `https://api.github.com/repos/${info.owner}/${info.repo}/contents/${encodedNewPath}?ref=${encodeURIComponent(info.branch)}`;
-                const existsResp = await fetch(existsUrl, {
-                    headers: { "Authorization": `token ${token}`, "Accept": "application/vnd.github.v3+json" }
-                });
-                if (existsResp.ok) {
-                    console.warn("目标文件已存在，跳过:", newRemotePath);
-                    totalSkipped++;
-                    continue;
-                }
-
-                // 3. 上传新文件
-                const base64Data = arrayBufferToBase64(imageData);
                 const uploadUrl = `https://api.github.com/repos/${info.owner}/${info.repo}/contents/${encodedNewPath}`;
                 const uploadResp = await fetch(uploadUrl, {
                     method: "PUT",
@@ -1467,21 +1513,18 @@ var MyPlugin = class extends import_obsidian.Plugin {
                     })
                 });
                 if (!uploadResp.ok) {
-                    console.error("上传失败:", newRemotePath);
-                    totalSkipped++;
+                    console.error(`上传失败: ${newRemotePath}`);
                     continue;
                 }
-
-                deletions.push(info.remotePath);
                 const newUrl = info.type === 'raw'
                     ? `https://raw.githubusercontent.com/${info.owner}/${info.repo}/${info.branch}/${newRemotePath}`
                     : `https://cdn.jsdelivr.net/gh/${info.owner}/${info.repo}@${info.branch}/${newRemotePath}`;
                 const newFullMatch = info.fullMatch.replace(info.url, newUrl);
                 replacements.set(info.fullMatch, newFullMatch);
-                totalSuccess++;
-                const curMax = newMaxMap.get(hierarchy) || 0;
-                if (newNumber > curMax) newMaxMap.set(hierarchy, newNumber);
+                successCount++;
             }
+            totalSuccess += successCount;
+            if (successCount < infos.length) totalSkipped += (infos.length - successCount);
         }
 
         // 更新笔记内容
@@ -1491,43 +1534,25 @@ var MyPlugin = class extends import_obsidian.Plugin {
                 newContent = newContent.replace(oldMatch, newMatch);
             }
             await this.app.vault.modify(file, newContent);
+            new import_obsidian.Notice(`已更新 ${replacements.size} 个图片链接。`);
         }
 
-        // 删除旧文件（询问用户）
-        if (deletions.length > 0) {
-            const confirmDelete = await new ConfirmationModal(this.app, "删除旧图片",
-                `新图片已上传并更新链接。是否删除 GitHub 上的 ${deletions.length} 个旧文件？`).open();
-            if (confirmDelete) {
-                let deleted = 0;
-                for (const oldPath of deletions) {
-                    const ok = await this.deleteFileFromGitHub(oldPath);
-                    if (ok) deleted++;
-                }
-                new import_obsidian.Notice(`已删除 ${deleted} 个旧文件。`);
-            } else {
-                new import_obsidian.Notice(`旧文件未删除，您可以稍后手动清理。`);
+        // 重置计数器（每个层级的新最大序号 = 图片数量）
+        const notePath = file.path;
+        let countersUpdated = 0;
+        for (const { hierarchy, infos } of layersToReorder) {
+            const key = `${notePath}|${hierarchy}`;
+            const newMax = infos.length;
+            if (this.settings.imageCounters[key] !== newMax) {
+                this.settings.imageCounters[key] = newMax;
+                this.imageCounterMap.set(key, newMax);
+                countersUpdated++;
             }
         }
-
-        // 更新计数器
-        if (newMaxMap.size > 0) {
-            const notePath = file.path;
-            let countersUpdated = 0;
-            for (const [hierarchy, maxNum] of newMaxMap.entries()) {
-                const key = `${notePath}|${hierarchy}`;
-                if (!this.settings.imageCounters) this.settings.imageCounters = {};
-                if (this.settings.imageCounters[key] !== maxNum) {
-                    this.settings.imageCounters[key] = maxNum;
-                    this.imageCounterMap.set(key, maxNum);
-                    countersUpdated++;
-                }
-            }
-            if (countersUpdated > 0) await this.saveSettings();
-            new import_obsidian.Notice(`已更新 ${countersUpdated} 个层级的图片计数器。`);
-        }
+        if (countersUpdated > 0) await this.saveSettings();
 
         notice.hide();
-        new import_obsidian.Notice(`序号整理完成！成功处理 ${totalSuccess} 个文件，跳过 ${totalSkipped} 个。`);
+        new import_obsidian.Notice(`序号整理完成！成功处理 ${totalSuccess} 个图片，跳过 ${totalSkipped} 个。`);
     }
 
     // ---------- 提取笔记中的 NotePix 图片链接 ----------
@@ -1679,6 +1704,55 @@ var MyPlugin = class extends import_obsidian.Plugin {
             new import_obsidian.Notice(`删除失败: ${err.message}`);
             return false;
         }
+    }
+
+    /**
+     * 列出 GitHub 仓库中指定目录下的所有文件（仅文件，不递归子目录）
+     * @param {string} owner 仓库所有者
+     * @param {string} repo 仓库名
+     * @param {string} branch 分支名
+     * @param {string} dirPath 目录路径（相对于仓库根目录，以 '/' 结尾或不以 '/' 结尾都可以）
+     * @param {string} token GitHub Token
+     * @returns {Promise<Array<{path: string, sha: string}>>}
+     */
+    async listRemoteDirectoryContents(owner, repo, branch, dirPath, token) {
+        const normalizedDir = dirPath.replace(/\/+$/, '') + '/';
+        const encodedDir = this.encodeRemotePath(normalizedDir);
+        const url = `https://api.github.com/repos/${owner}/${repo}/contents/${encodedDir}?ref=${encodeURIComponent(branch)}`;
+        const response = await fetch(url, {
+            headers: { "Authorization": `token ${token}`, "Accept": "application/vnd.github.v3+json" }
+        });
+        if (!response.ok) {
+            if (response.status === 404) return []; // 目录不存在，返回空
+            throw new Error(`列出目录失败: ${response.statusText}`);
+        }
+        const data = await response.json();
+        if (!Array.isArray(data)) return [];
+        return data
+            .filter(item => item.type === 'file')
+            .map(item => ({ path: item.path, sha: item.sha }));
+    }
+
+    /**
+     * 删除远程目录下所有匹配指定前缀的文件
+     * @param {string} owner 仓库所有者
+     * @param {string} repo 仓库名
+     * @param {string} branch 分支名
+     * @param {string} dirPath 目录路径
+     * @param {string} prefix 文件名前缀（如 "1.2.1.3-"）
+     * @param {string} token GitHub Token
+     * @returns {Promise<number>} 删除的文件数量
+     */
+    async deleteRemoteFilesWithPrefix(owner, repo, branch, dirPath, prefix, token) {
+        const files = await this.listRemoteDirectoryContents(owner, repo, branch, dirPath, token);
+        const toDelete = files.filter(f => f.path.split('/').pop().startsWith(prefix));
+        if (toDelete.length === 0) return 0;
+        let deletedCount = 0;
+        for (const file of toDelete) {
+            const success = await this.deleteFileFromGitHub(file.path);
+            if (success) deletedCount++;
+        }
+        return deletedCount;
     }
 
         // ---------- 仓库隐私检测 ----------

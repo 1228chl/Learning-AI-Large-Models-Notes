@@ -13,13 +13,13 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "AI-Large-Modlels-Notes/NLP/06-Transformer.md",
+                "file": "AI-Large-Modlels-Notes/Draft/aaa.md",
                 "mode": "source",
                 "source": false,
                 "backlinks": false
               },
               "icon": "lucide-file",
-              "title": "06-Transformer"
+              "title": "aaa"
             }
           },
           {
@@ -136,13 +136,13 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "AI-Large-Modlels-Notes/NLP/06-Transformer.md",
+                "file": "AI-Large-Modlels-Notes/Draft/aaa.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "06-Transformer 的大纲"
+              "title": "aaa 的大纲"
             }
           },
           {
@@ -178,6 +178,54 @@
               "icon": "spreadsheet",
               "title": "Advanced Tables"
             }
+          },
+          {
+            "id": "520425fbd4714ed6",
+            "type": "leaf",
+            "state": {
+              "type": "backlink",
+              "state": {
+                "file": "AI-Large-Modlels-Notes/Draft/aaa.md",
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical",
+                "showSearch": false,
+                "searchQuery": "",
+                "backlinkCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-coming-in",
+              "title": "aaa 的反向链接列表"
+            }
+          },
+          {
+            "id": "d1ba20f50f3e6e7d",
+            "type": "leaf",
+            "state": {
+              "type": "outgoing-link",
+              "state": {
+                "file": "AI-Large-Modlels-Notes/Draft/aaa.md",
+                "linksCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-going-out",
+              "title": "aaa 的出链列表"
+            }
+          },
+          {
+            "id": "dbc379cff9ec1d04",
+            "type": "leaf",
+            "state": {
+              "type": "tag",
+              "state": {
+                "sortOrder": "frequency",
+                "useHierarchy": true,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-tags",
+              "title": "标签"
+            }
           }
         ],
         "currentTab": 1
@@ -197,32 +245,36 @@
       "bases:新建数据库": true,
       "obsidian-git:Open Git source control": true,
       "templater-obsidian:Templater": true,
-      "table-editor-obsidian:Advanced Tables Toolbar": false,
-      "omnisearch:Omnisearch": false
+      "table-editor-obsidian:Advanced Tables Toolbar": false
     }
   },
   "active": "578d1628917aa920",
   "lastOpenFiles": [
-    "AI-Large-Modlels-Notes/NLP/06-Transformer.md",
+    "Assets/Image/AI-Large-Modlels-Notes/Draft/aaa/1.4.3-3.png",
+    "Assets/Image/AI-Large-Modlels-Notes/Draft/aaa/1.4.3-2.png",
+    "Assets/Image/AI-Large-Modlels-Notes/Draft/aaa/1.4.3-1.png",
+    "Assets/Image/AI-Large-Modlels-Notes/Draft/aaa",
+    "Assets/Image/AI-Large-Modlels-Notes/Draft",
     "AI-Large-Modlels-Notes/Markdown语法.md",
+    "AI-Large-Modlels-Notes/Draft/aaa.md",
     "AI-Large-Modlels-Notes/NLP/07-Bert系列模型.md",
+    "AI-Large-Modlels-Notes/NLP/05-注意力机制和Seq2Seq介绍.md",
+    "Assets/Image/AI-Large-Modlels-Notes/NLP/05-注意力机制和Seq2Seq介绍/1.2.1.3-2.png",
+    "Assets/Image/AI-Large-Modlels-Notes/NLP/05-注意力机制和Seq2Seq介绍/1.2.1.3-1.png",
+    "Assets/Image/AI-Large-Modlels-Notes/NLP/05-注意力机制和Seq2Seq介绍/1.2.1.4-1.png",
+    "Assets/Image/AI-Large-Modlels-Notes/NLP/05-注意力机制和Seq2Seq介绍/1.2.1.2-1.png",
+    "Assets/Image/AI-Large-Modlels-Notes/NLP/05-注意力机制和Seq2Seq介绍",
+    "AI-Large-Modlels-Notes/NLP/06-Transformer.md",
     "AI-Large-Modlels-Notes/NLP/08-Transformers库和Bert应用.md",
     "Assets/Image/AI-Large-Modlels-Notes/NLP/07-Bert系列模型/1.3.3.3-1.png",
     "Assets/Image/AI-Large-Modlels-Notes/NLP/07-Bert系列模型/1.3.3.2-2.png",
     "Assets/Image/AI-Large-Modlels-Notes/NLP/07-Bert系列模型/1.3.3.2-1.png",
     "Assets/Image/AI-Large-Modlels-Notes/NLP/07-Bert系列模型/1.3.3.1-1.png",
-    "Assets/Image/AI-Large-Modlels-Notes/NLP/07-Bert系列模型/1.3.2.1-1.png",
-    "Assets/Image/AI-Large-Modlels-Notes/NLP/07-Bert系列模型/1.3.2.2-1.png",
-    "Assets/Image/AI-Large-Modlels-Notes/NLP/07-Bert系列模型/1.2.2-1.png",
-    "Assets/Image/AI-Large-Modlels-Notes/NLP/07-Bert系列模型/1.1.2.3-1.png",
-    "Assets/Image/AI-Large-Modlels-Notes/NLP/07-Bert系列模型/1.1.2.2-1.png",
     "AI-Large-Modlels-Notes/NLP/transformer-explained.html",
-    "Assets/Image/AI-Large-Modlels-Notes/NLP/07-Bert系列模型/1.1.2.1-1.png",
     "Assets/Image/AI-Large-Modlels-Notes/NLP/07-Bert系列模型",
     "Assets/Image/AI-Large-Modlels-Notes/NLP",
     "AI-Large-Modlels-Notes/NLP/Transformer架构图.drawio",
     "README.md",
-    "AI-Large-Modlels-Notes/NLP/05-注意力机制和Seq2Seq介绍.md",
     "AI-Large-Modlels-Notes/Draft/Seq2Seq和注意力机制.md",
     "AI-Large-Modlels-Notes/NLP/04-RNN及其变体.md",
     "AI-Large-Modlels-Notes/DL/ANN/手机价格预测基础版.md",
@@ -242,13 +294,8 @@
     "AI-Large-Modlels-Notes/NLP",
     "AI-Large-Modlels-Notes/DL/ANN/ANN完整拓展+.md",
     "AI-Large-Modlels-Notes/DL/ANN/完整的模型训练流程.md",
-    "AI-Large-Modlels-Notes/DL/RNN",
     "AI-Large-Modlels-Notes/DL/ANN/手机价格预测进阶版.md",
     "AI-Large-Modlels-Notes/Conda/Conda基础命令.md",
-    "AI-Large-Modlels-Notes/DL/CNN",
-    "AI-Large-Modlels-Notes/DL/ANN/ANN完整拓展+.pdf",
-    "AI-Large-Modlels-Notes/DL/基础/01深度学习概述.md",
-    "AI-Large-Modlels-Notes/Draft/ANN笔记草稿1.md",
     "未命名.canvas"
   ]
 }
