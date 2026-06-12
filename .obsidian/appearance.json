@@ -8,7 +8,8 @@
   "showViewHeader": true,
   "enabledCssSnippets": [
     "mathlive-light-fix",
-    "image-center"
+    "image-center",
+    "inline-code"
   ],
   "textFontFamily": "霞鹜新致宋＋",
   "interfaceFontFamily": "霞鹜新致宋＋",

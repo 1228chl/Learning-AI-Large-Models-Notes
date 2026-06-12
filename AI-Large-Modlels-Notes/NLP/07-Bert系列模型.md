@@ -356,6 +356,8 @@ ELMo 是**第一个支持动态词向量的预训练模型**，在 NLP 技术发
 
 ELMo 宏观上分为**三个主要模块**（从下至上）：
 
+![](https://raw.githubusercontent.com/1228chl/Learning-AI-Large-Models-Notes/master/Assets/Image/AI-Large-Modlels-Notes/NLP/07-Bert系列模型/1.2.2-1.png)
+
 1. **底层 Embedding 模块**（黄色标记）—— 生成静态词向量（字符级 CNN）
 2. **中间层双向双层 LSTM 模块**（蓝色标记）—— 提取上下文特征
 3. **最上层词向量表征模块**（绿色标记）—— 合成最终词向量
@@ -657,7 +659,9 @@ GPT 采用了 Transformer 的 **Decoder 部分**，但与原始 Transformer 中�
 - **前馈全连接网络（FFN）**
 - 每个子层后有残差连接和层归一化
 
-**结构图示**（文本描述）：
+**结构图示**（文本与图片描述）：
+
+![200](https://raw.githubusercontent.com/1228chl/Learning-AI-Large-Models-Notes/master/Assets/Image/AI-Large-Modlels-Notes/NLP/07-Bert系列模型/1.3.2.1-1.png)
 
 ```python
 输入（token序列） → Token Embedding + Position Embedding
@@ -683,6 +687,8 @@ GPT 采用了 Transformer 的 **Decoder 部分**，但与原始 Transformer 中�
 
 **对比图**（左：无掩码自注意力，可看到右侧；右：带掩码，只能看到左侧）：
 
+![](https://raw.githubusercontent.com/1228chl/Learning-AI-Large-Models-Notes/master/Assets/Image/AI-Large-Modlels-Notes/NLP/07-Bert系列模型/1.3.2.2-1.png)
+
 - 无掩码时，`i` 可以关注 `j > i`（未来）。
 - 带掩码时，`i` 只能关注 `j <= i`（过去和当前）。
 
@@ -698,13 +704,15 @@ GPT 使用**可学习的位置编码**（与 BERT 相同），而非原始 Trans
 
 ### 3.3 GPT 的数据处理流程（以 GPT-2 为例）
 
-根据 PPT 内容，GPT 模型处理文本的完整流程分为**三个阶段**：数据输入前、模型处理中、模型输出后。
+GPT 模型处理文本的完整流程分为**三个阶段**：数据输入前、模型处理中、模型输出后。
 
 ---
 
 #### 3.3.1 阶段 1：数据送入 GPT 模型前 —— 文本张量化
 
 原始文本（如一段话）需要转换为模型可处理的张量：
+
+![](https://raw.githubusercontent.com/1228chl/Learning-AI-Large-Models-Notes/master/Assets/Image/AI-Large-Modlels-Notes/NLP/07-Bert系列模型/1.3.3.1-1.png)
 
 1. **文本 → 数值化**：使用分词器（如 Byte Pair Encoding，BPE）将文本切分为子词 token，每个 token 映射为整数索引。
 2. **数值化 → 词向量**：通过可学习的嵌入矩阵 `E`（形状 `vocab_size × d_model`）查表，得到每个 token 的初始向量。
@@ -726,14 +734,18 @@ input_tensor = token_emb + pos_emb
 
 输入张量依次经过 **N 个解码器模块**（GPT-1 为 12 层，GPT-2 为 12/24/36 层，GPT-3 为 96 层）。每个模块内部：
 
+![600](https://raw.githubusercontent.com/1228chl/Learning-AI-Large-Models-Notes/master/Assets/Image/AI-Large-Modlels-Notes/NLP/07-Bert系列模型/1.3.3.2-1.png)
+
+![600](https://raw.githubusercontent.com/1228chl/Learning-AI-Large-Models-Notes/master/Assets/Image/AI-Large-Modlels-Notes/NLP/07-Bert系列模型/1.3.3.2-2.png)
+
 1. **掩码自注意力层**：
-   - 计算每个单词与其他单词（仅过去及自身）的注意力权重：`attention_weights = softmax(Q * K^T / sqrt(d_k) + mask)`
-   - 计算加权输出：`attention_output = attention_weights * V`
+   - 计算每个单词与其他单词（仅过去及自身）的注意力权重： $attention_{weights} = softmax(Q * K^T / sqrt(d_k) + mask)$
+   - 计算加权输出： $attention_{output} = attention_{weights} * V$
    - 每个层维护自己的权重矩阵（Q、K、V 的投影矩阵）。
 
 1. **前馈网络层**：两层全连接，中间用 GELU 激活（GPT 使用 GELU 而非 ReLU）。
 
-2. **残差连接和层归一化**：每个子层输出后都进行 `x + sublayer(LayerNorm(x))`（Pre-LN 风格，训练更稳定）。
+2. **残差连接和层归一化**：每个子层输出后都进行 `x + sublayer(LayerNorm(x))` （Pre-LN 风格，训练更稳定）。
 
 最终，最后一个解码器模块输出一个张量 `(batch, seq_len, d_model)`，其中每个位置的向量包含了该位置及其之前所有位置的信息。
 
@@ -741,16 +753,16 @@ input_tensor = token_emb + pos_emb
 
 #### 3.3.3 阶段 3：GPT 模型的输出 —— 生成下一个词
 
+![600](https://raw.githubusercontent.com/1228chl/Learning-AI-Large-Models-Notes/master/Assets/Image/AI-Large-Modlels-Notes/NLP/07-Bert系列模型/1.3.3.3-1.png)
+
 1. **词向量映射到词汇表概率**：
-   - 取最后一个位置的输出向量（表示当前序列的上下文），形状 `(d_model,)`。
+   - 取最后一个位置的输出向量（表示当前序列的上下文），形状 $(d_model,)$。
    - 与词向量矩阵 `E`（形状 `vocab_size × d_model`）做矩阵乘法（或使用独立的输出投影层）：
 
-$
-
-     \text{logits} = E \cdot h_{\text{last}} \quad (\text{形状 } vocab\_size)
-
 $$
- 
+\text{logits} = E \cdot h_{\text{last}} \quad (\text{形状 } vocab\_size)
+$$
+
   - 可选：只保留概率最高的 top-k（如 40 个）单词，避免全词汇表计算。
 
 2. **选择输出单词**：
@@ -769,7 +781,7 @@ $$
 
 ### 3.4 GPT 的自回归生成细节
 
-GPT 生成文本时，采用**自回归（autoregressive）**方式。以生成句子“The thing”为例：
+GPT 生成文本时，采用**自回归 (autoregressive)** 方式。以生成句子“The thing”为例：
 
 **步骤 1**：输入起始 token `[SOS]`（有的实现用 `[CLS]` 或直接给第一个词的部分）。模型只看到 `[SOS]`，预测第一个词。输出概率最高的词可能是“The”。
 
@@ -778,6 +790,7 @@ GPT 生成文本时，采用**自回归（autoregressive）**方式。以生成�
 **步骤 3**：输入 `[SOS] The thing`，预测下一个词，以此类推。
 
 **关键特性**：
+
 - 每个新词的生成**依赖之前的所有词**，但模型不会因为新词而重新解释之前已经生成的词（之前词的表示是固定的，尽管在每层自注意力中会相互作用）。
 - 这种自回归特性使 GPT 能生成长篇连贯文本，但也导致**生成速度慢**（串行）和**无法回头修改**。
 
@@ -790,18 +803,19 @@ GPT 生成文本时，采用**自回归（autoregressive）**方式。以生成�
 GPT 的预训练是标准的**自回归语言建模**：在大规模无监督文本语料上，最大化给定前文时下一个词的似然。
 
 **训练目标**：
+
 $$
-
 \mathcal{L} = -\sum_{i=1}^{N} \log P(w_i | w_1, ..., w_{i-1})
-
 $$
 
 **数据集**：
+
 - GPT-1：BookCorpus（约 8000 本书，未标注文本）
 - GPT-2：WebText（从 Reddit 抓取的优质外链，约 40GB）
 - GPT-3：Common Crawl、WebText2、Books1/2、Wikipedia 等（约 45TB 原始数据，过滤后 570GB）
 
 ---
+
 #### 3.5.2 微调阶段
 
 对于下游任务（如分类、问答），GPT 可以微调。微调时会在输入序列后添加一个特殊的结束符或任务标记，并将最后一个位置的输出送入一个任务相关的线性层。
@@ -834,14 +848,17 @@ $$
 ### 3.7 三者优缺点总结
 
 #### ELMo
+
 - **优点**：上下文动态词向量，解决多义词；字符级 CNN 处理 OOV；模型轻量。
 - **缺点**：LSTM 特征提取弱；双向只是拼接；效果被 BERT 全面超越。
 
 #### GPT
+
 - **优点**：生成能力强，适合对话、续写、代码生成等；自回归语言模型训练简单高效；通过提示工程实现零样本/少样本学习。
 - **缺点**：单向，不能利用下文信息，在需要完整理解上下文的任务（如情感分类）上弱于 BERT；生成速度慢。
 
 #### BERT
+
 - **优点**：深度双向，对语义理解最充分；统一架构适应多种 NLU 任务；预训练效果好。
 - **缺点**：不适合生成任务；预训练中 `[MASK]` 的引入导致微调不一致；模型较大，推理成本高。
 
