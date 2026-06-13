@@ -10,7 +10,7 @@
 
 ### 1.1 什么是 Huggingface Transformers？
 
-**Transformers 库**是由**Huggingface** 公司开发并开源的、基于 Transformer 模型结构的**预训练语言模型库**。它提供了 NLP 领域大量**最先进（State-of-the-Art，SOTA）**的预训练语言模型和统一的调用框架。
+**Transformers 库**是由 **Huggingface** 公司开发并开源的、基于 Transformer 模型结构的**预训练语言模型库**。它提供了 NLP 领域大量**最先进（State-of-the-Art，SOTA）** 的预训练语言模型和统一的调用框架。
 
 **Huggingface 公司背景**：
 
@@ -62,7 +62,7 @@ Transformers 库提供了大量 SOTA 预训练模型，包括但不限于：
 
 ### 1.4 安装 Transformers 库
 
-建议使用 **conda **或** pip** 在指定的 Python 虚拟环境中安装。
+建议使用 **conda** 或 **pip** 在指定的 Python 虚拟环境中安装。
 
 **步骤**：
 
@@ -618,7 +618,7 @@ print(result['pooler_output'].shape)      # (1, 768)
 
 **关键参数说明**：
 
-- `max_length=10`：限制序列最大长度（包括 `[CLS]` 和 `[SEP]`）。原始 `"我爱你"` 分词后为 `['[CLS]', '我', '爱', '你', '[SEP]'`，长度 5，未超过 10，故填充到10。
+- `max_length=10`：限制序列最大长度（包括 `[CLS]` 和 `[SEP]`）。原始 `"我爱你"` 分词后为 `['[CLS]', '我', '爱', '你', '[SEP]'`，长度 5，未超过 10，故填充到 10。
 - `truncation=True`：如果文本分词后超过 `max_length`，则截断。
 - `pad_to_max_length=True`：将序列填充到 `max_length`（此处为 10）。填充 token 是 `[PAD]`（索引 0）。
 - `return_tensors='pt'`：返回 PyTorch 张量。若需要 TensorFlow 张量则用 `'tf'`，NumPy 数组用 `'np'`。
