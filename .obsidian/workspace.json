@@ -13,13 +13,13 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "AI-Large-Modlels-Notes/Project/SubmitAFullScoreProject/RandomForest.md",
+                "file": "AI-Large-Modlels-Notes/Project/SubmitAFullScoreProject/ModelCompression.md",
                 "mode": "source",
                 "source": false,
                 "backlinks": false
               },
               "icon": "lucide-file",
-              "title": "RandomForest"
+              "title": "ModelCompression"
             }
           },
           {
@@ -38,13 +38,28 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "AI-Large-Modlels-Notes/Project/SubmitAFullScoreProject/ModelCompression.md",
+                "file": "AI-Large-Modlels-Notes/Project/SubmitAFullScoreProject/FeedBack.md",
                 "mode": "source",
                 "source": false,
                 "backlinks": false
               },
               "icon": "lucide-file",
-              "title": "ModelCompression"
+              "title": "FeedBack"
+            }
+          },
+          {
+            "id": "c01b774543e14e18",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "AI-Large-Modlels-Notes/NLP/07-Bert系列模型.md",
+                "mode": "source",
+                "source": false,
+                "backlinks": false
+              },
+              "icon": "lucide-file",
+              "title": "07-Bert系列模型"
             }
           }
         ],
@@ -236,14 +251,17 @@
   },
   "active": "3864981e86728f8d",
   "lastOpenFiles": [
-    "AI-Large-Modlels-Notes/Project/SubmitAFullScoreProject/SubmitAFullSocreProject.md",
-    "AI-Large-Modlels-Notes/Project/SubmitAFullScoreProject/ModelCompression.md",
-    "AI-Large-Modlels-Notes/NLP/08-Transformers库和Bert应用.md",
     "AI-Large-Modlels-Notes/NLP/07-Bert系列模型.md",
-    "AI-Large-Modlels-Notes/Conda/Conda基础命令.md",
+    "AI-Large-Modlels-Notes/Project/SubmitAFullScoreProject/FeedBack.md",
     "AI-Large-Modlels-Notes/Project/SubmitAFullScoreProject/RandomForest.md",
-    "AI-Large-Modlels-Notes/Project/SubmitAFullScoreProject/FastText.md",
+    "AI-Large-Modlels-Notes/Project/SubmitAFullScoreProject/ModelCompression.md",
+    "AI-Large-Modlels-Notes/Project/SubmitAFullScoreProject/SubmitAFullSocreProject.md",
+    "AI-Large-Modlels-Notes/Agent/各种提示词/笔记模板提示词.md",
     "AI-Large-Modlels-Notes/Agent/各种提示词/精简笔记提示词.md",
+    "AI-Large-Modlels-Notes/NLP/01-自然语言处理概述.md",
+    "AI-Large-Modlels-Notes/NLP/08-Transformers库和Bert应用.md",
+    "AI-Large-Modlels-Notes/Conda/Conda基础命令.md",
+    "AI-Large-Modlels-Notes/Project/SubmitAFullScoreProject/FastText.md",
     "AI-Large-Modlels-Notes/Agent/Dify/05Rag和知识库的三种索引方式（重点扩展）.md",
     "AI-Large-Modlels-Notes/Agent/Dify/04Dify.md",
     "AI-Large-Modlels-Notes/ML/基础/02机器学习基础.md",
@@ -264,12 +282,10 @@
     "AI-Large-Modlels-Notes/Markdown语法.md",
     "AI-Large-Modlels-Notes/Draft/aaa.md",
     "Assets/Image/AI-Large-Modlels-Notes/Draft/aaa/1.4.3-2.png",
-    "AI-Large-Modlels-Notes/Draft/ANN笔记草稿1.md",
     "Assets/Image/AI-Large-Modlels-Notes/Draft/aaa/1.4.3-3.png",
     "Assets/Image/AI-Large-Modlels-Notes/Draft/aaa/1.4.3-1.png",
     "Assets/Image/AI-Large-Modlels-Notes/Draft/aaa",
     "Assets/Image/AI-Large-Modlels-Notes/Draft",
-    "AI-Large-Modlels-Notes/NLP/05-注意力机制和Seq2Seq介绍.md",
     "Assets/Image/AI-Large-Modlels-Notes/NLP/05-注意力机制和Seq2Seq介绍/1.2.1.3-2.png",
     "Assets/Image/AI-Large-Modlels-Notes/NLP/05-注意力机制和Seq2Seq介绍/1.2.1.3-1.png",
     "Assets/Image/AI-Large-Modlels-Notes/NLP/05-注意力机制和Seq2Seq介绍/1.2.1.4-1.png",
@@ -281,7 +297,6 @@
     "AI-Large-Modlels-Notes/NLP/transformer-explained.html",
     "Assets/Image/AI-Large-Modlels-Notes/NLP/07-Bert系列模型",
     "Assets/Image/AI-Large-Modlels-Notes/NLP",
-    "README.md",
     "未命名.canvas"
   ]
 }
