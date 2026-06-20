@@ -5,8 +5,7 @@
     "replacement": "const p={'【':'【$0】','（':'（$0）','《':'《$0》','「':'「$0」','『':'『$0』','“':'“$0”','”':'“$0”','‘':'‘$0’','’':'‘$0’','《':'《$0》'}; return p[leftMatches[0]];",
     "options": "rF",
     "priority": 10,
-    "description": "输入全角括号/引号时自动补全配对",
-    "enabled": false
+    "description": "输入全角括号/引号时自动补全配对"
   },
   {
     "id": "builtin-autopair-jump",
@@ -24,8 +23,7 @@
     "replacement": "const p={'【':'】','（':'）','《':'》','「':'」','『':'』','“':'”','‘':'’'}; return p[leftMatches[0]]===rightMatches[0] ? '' : undefined;",
     "options": "drF",
     "priority": 10,
-    "description": "删除全角括号/引号时同时删除配对",
-    "enabled": false
+    "description": "删除全角括号/引号时同时删除配对"
   },
   {
     "id": "builtin-conv-backtick",
@@ -86,8 +84,7 @@
     "replacement": "",
     "options": "d",
     "priority": 30,
-    "description": "删除行内公式 $...$ 配对",
-    "enabled": false
+    "description": "删除行内公式 $...$ 配对"
   },
   {
     "id": "builtin-del-highlight",
@@ -96,8 +93,7 @@
     "replacement": "",
     "options": "d",
     "priority": 30,
-    "description": "删除高亮 ==...== 配对",
-    "enabled": false
+    "description": "删除高亮 ==...== 配对"
   },
   {
     "id": "builtin-del-block-formula",
@@ -106,8 +102,7 @@
     "replacement": "",
     "options": "d",
     "priority": 30,
-    "description": "删除块级公式 $$...$$ 配对",
-    "enabled": false
+    "description": "删除块级公式 $$...$$ 配对"
   },
   {
     "id": "builtin-del-codeblock",
@@ -116,8 +111,7 @@
     "replacement": "[[1]]",
     "options": "dr",
     "priority": 30,
-    "description": "快速删除空代码块",
-    "enabled": false
+    "description": "快速删除空代码块"
   },
   {
     "id": "builtin-del-wikilink",
@@ -125,8 +119,7 @@
     "replacement": "",
     "options": "dr",
     "priority": 30,
-    "description": "快速删除双链及嵌入（![[]]）",
-    "enabled": false
+    "description": "快速删除双链及嵌入（![[]]）"
   },
   {
     "id": "builtin-sel-wrap-backtick",

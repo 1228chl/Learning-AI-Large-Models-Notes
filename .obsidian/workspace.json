@@ -13,13 +13,13 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "AI-Large-Modlels-Notes/Agent/各种提示词/精简笔记提示词.md",
+                "file": "AI-Large-Modlels-Notes/Project/SubmitAFullScoreProject/RandomForest.md",
                 "mode": "source",
                 "source": false,
                 "backlinks": false
               },
               "icon": "lucide-file",
-              "title": "精简笔记提示词"
+              "title": "RandomForest"
             }
           },
           {
@@ -82,7 +82,7 @@
               "state": {
                 "query": "",
                 "matchingCase": false,
-                "explainSearch": false,
+                "explainSearch": true,
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical"
@@ -105,7 +105,8 @@
       }
     ],
     "direction": "horizontal",
-    "width": 319.5
+    "width": 319.5,
+    "collapsed": true
   },
   "right": {
     "id": "f07a0c5b7e11463b",
@@ -121,13 +122,13 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "AI-Large-Modlels-Notes/Draft/aaa.md",
+                "file": "AI-Large-Modlels-Notes/Project/SubmitAFullScoreProject/SubmitAFullSocreProject.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "aaa 的大纲"
+              "title": "SubmitAFullSocreProject 的大纲"
             }
           },
           {
@@ -178,6 +179,39 @@
               "icon": "lucide-tags",
               "title": "标签"
             }
+          },
+          {
+            "id": "141dba0e9c7af13a",
+            "type": "leaf",
+            "state": {
+              "type": "backlink",
+              "state": {
+                "file": "AI-Large-Modlels-Notes/Project/SubmitAFullScoreProject/SubmitAFullSocreProject.md",
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical",
+                "showSearch": false,
+                "searchQuery": "",
+                "backlinkCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-coming-in",
+              "title": "SubmitAFullSocreProject 的反向链接列表"
+            }
+          },
+          {
+            "id": "3bec1e4fb9829b08",
+            "type": "leaf",
+            "state": {
+              "type": "outgoing-link",
+              "state": {
+                "file": "AI-Large-Modlels-Notes/Project/SubmitAFullScoreProject/SubmitAFullSocreProject.md",
+                "linksCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-going-out",
+              "title": "SubmitAFullSocreProject 的出链列表"
+            }
           }
         ],
         "currentTab": 1
@@ -202,8 +236,18 @@
   },
   "active": "3864981e86728f8d",
   "lastOpenFiles": [
+    "AI-Large-Modlels-Notes/NLP/07-Bert系列模型.md",
+    "AI-Large-Modlels-Notes/Project/SubmitAFullScoreProject/SubmitAFullSocreProject.md",
+    "AI-Large-Modlels-Notes/Conda/Conda基础命令.md",
+    "AI-Large-Modlels-Notes/Project/SubmitAFullScoreProject/RandomForest.md",
+    "AI-Large-Modlels-Notes/Project/SubmitAFullScoreProject/FastText.md",
     "AI-Large-Modlels-Notes/Agent/各种提示词/精简笔记提示词.md",
-    "AI-Large-Modlels-Notes/Project/投满分项目",
+    "AI-Large-Modlels-Notes/Agent/Dify/05Rag和知识库的三种索引方式（重点扩展）.md",
+    "AI-Large-Modlels-Notes/Agent/Dify/04Dify.md",
+    "AI-Large-Modlels-Notes/ML/基础/02机器学习基础.md",
+    "AI-Large-Modlels-Notes/NLP/02-文本预处理-分词-张量.md",
+    "AI-Large-Modlels-Notes/NLP/08-Transformers库和Bert应用.md",
+    "AI-Large-Modlels-Notes/Project/SubmitAFullScoreProject",
     "AI-Large-Modlels-Notes/Project",
     "AI-Large-Modlels-Notes/NLP/精简版/01-自然语言处理概述精简版.md",
     "AI-Large-Modlels-Notes/Agent/各种提示词",
@@ -215,9 +259,6 @@
     "AI-Large-Modlels-Notes/NLP/精简版/07-Bert系列模型精简版.md",
     "AI-Large-Modlels-Notes/NLP/精简版/08-Transformers库和Bert应用精简版.md",
     "AI-Large-Modlels-Notes/NLP/06-Transformer.md",
-    "AI-Large-Modlels-Notes/NLP/08-Transformers库和Bert应用.md",
-    "AI-Large-Modlels-Notes/NLP/02-文本预处理-分词-张量.md",
-    "AI-Large-Modlels-Notes/NLP/07-Bert系列模型.md",
     "AI-Large-Modlels-Notes/NLP/精简版",
     "AI-Large-Modlels-Notes/Markdown语法.md",
     "AI-Large-Modlels-Notes/Draft/aaa.md",
@@ -241,12 +282,6 @@
     "Assets/Image/AI-Large-Modlels-Notes/NLP",
     "README.md",
     "AI-Large-Modlels-Notes/Draft/Seq2Seq和注意力机制.md",
-    "AI-Large-Modlels-Notes/NLP/04-RNN及其变体.md",
-    "AI-Large-Modlels-Notes/DL/ANN/手机价格预测基础版.md",
-    "AI-Large-Modlels-Notes/NLP/NLP-大纲概括.md",
-    "AI-Large-Modlels-Notes/NLP/03-FastText分类任务.md",
-    "AI-Large-Modlels-Notes/NLP/01-自然语言处理概述.md",
-    "AI-Large-Modlels-Notes/DL/RNN/RNN.md",
     "未命名.canvas"
   ]
 }
