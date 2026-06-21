@@ -62,8 +62,7 @@
               "title": "07-Bert系列模型"
             }
           }
-        ],
-        "currentTab": 2
+        ]
       }
     ],
     "direction": "vertical"
@@ -249,12 +248,12 @@
       "table-editor-obsidian:Advanced Tables Toolbar": false
     }
   },
-  "active": "3864981e86728f8d",
+  "active": "24f1f100576ee05b",
   "lastOpenFiles": [
-    "AI-Large-Modlels-Notes/NLP/07-Bert系列模型.md",
     "AI-Large-Modlels-Notes/Project/SubmitAFullScoreProject/FeedBack.md",
-    "AI-Large-Modlels-Notes/Project/SubmitAFullScoreProject/RandomForest.md",
     "AI-Large-Modlels-Notes/Project/SubmitAFullScoreProject/ModelCompression.md",
+    "AI-Large-Modlels-Notes/NLP/07-Bert系列模型.md",
+    "AI-Large-Modlels-Notes/Project/SubmitAFullScoreProject/RandomForest.md",
     "AI-Large-Modlels-Notes/Project/SubmitAFullScoreProject/SubmitAFullSocreProject.md",
     "AI-Large-Modlels-Notes/Agent/各种提示词/笔记模板提示词.md",
     "AI-Large-Modlels-Notes/Agent/各种提示词/精简笔记提示词.md",
