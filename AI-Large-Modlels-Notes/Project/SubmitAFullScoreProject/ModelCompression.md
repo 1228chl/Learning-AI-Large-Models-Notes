@@ -111,7 +111,7 @@ torch.quantization.quantize_dynamic(
 
 #### 2.5.1 配置文件修改
 
-`config.py`在原有配置基础上，增加量化模型的存储路径，并将 `device` 强制设为 `'cpu'`：
+`config.py` 在原有配置基础上，增加量化模型的存储路径，并将 `device` 强制设为 `'cpu'`：
 
 ```python
 import torch
@@ -147,7 +147,7 @@ class Config(object):
 
 #### 2.5.2 量化主脚本
 
-`bert_model_quantization.py`代码完整实现如下，关键步骤已用注释标注：
+`bert_model_quantization.py` 代码完整实现如下，关键步骤已用注释标注：
 
 ```python
 from bert_classifer_model import BertClassifier
@@ -353,12 +353,227 @@ if __name__ == '__main__':
 一句话**教师是本源，学生是目标，硬标签定方向，软标签传思想，中间层递细节**。
 
 ### 3.2 知识蒸馏架构
+
 #### 3.2.1 三种蒸馏方式
-- 硬标签蒸馏
+
+- **硬标签蒸馏**
 	- 学生模型直接学习教师模型硬标签，即教师模型预测的具体类别作为学生的的 label。
 	- 损失函数：交叉熵损失
-- 软标签蒸馏
+- **软标签蒸馏**
 	- 学生模型学习真实的标签和教师模型软标签，将两种 loss 进行相加来更新学生模型的参数。
-- 中间层蒸馏
+- **中间层蒸馏**
 	- 教师模型中间层的特征表达方式，让学生具备更相似的“思考过程”。
 ![](https://raw.githubusercontent.com/1228chl/Learning-AI-Large-Models-Notes/master/Assets/Image/AI-Large-Modlels-Notes/Project/SubmitAFullScoreProject/ModelCompression/1.3.2.1-1.png)
+
+---
+
+#### 3.2.2 KL 散度损失
+
+##### 3.2.2.1 KL 散度的定义
+
+KL 散度（Kullback-Leibler divergence）是一种用于衡量两个概率分布之间差异的非对称度量，在机器学习中常作为损失函数使用。
+
+**简单来说**：KL 散度就是“我们用一个分布去模仿另一个分布，结果差多少”的一个衡量方式。
+
+KL 散度定义两个概率分布 P(x)和 Q(x)之间的“差距”为：
+
+$$
+D_{KL}\left(P\Vert{Q}\right)=\sum_{x}^{}P\left(x\right)\log_{}\frac{P\left(x\right)}{Q\left(x\right)}
+$$
+
+KL 散度越小，说明 Q 越接近 P。**当且仅当 P = Q 时，KL 散度为 0**。
+
+---
+
+##### 3.2.2.2 KL 散度的解释
+
+$$
+D_{KL}\left(P\Vert{Q}\right)=\sum_{x}^{}P\left(x\right)\log_{}\frac{P\left(x\right)}{Q\left(x\right)}
+$$
+
+$$
+D_{KL}\left(P\Vert Q\right)=H\left(P,Q\right)-H\left(P\right)
+$$
+
+---
+
+###### 信息熵 H(P)
+
+是从**真实分布 P(x)** 的角度，看它自己有多“混乱”：
+
+$$
+H\left(P\right)=-\sum_{x}^{}P\left(x\right)\log_{}P\left(x\right)
+$$
+
+它表示我们在 P(x)下编码一个样本所需的**最小信息量**（期望的 bits 数）。
+
+---
+
+###### 交叉熵 H(P,Q)
+
+是我们用分布 Q(x)来编码样本，但样本的真实分布其实是 P(x)时，所消耗的信息量：
+
+$$
+H\left(P,Q\right)=-\sum_{x}^{}P\left(x\right)\log_{}Q\left(x\right)
+$$
+
+**以下是交叉熵与熵和相对熵(KL 散度)的关系**：
+
+>  熵 = 交叉熵 - 相对熵（KL 散度）
+>  相对熵 = 交叉熵 - 熵
+>  交叉熵 = 熵 + 相对熵
+
+---
+
+###### KL 散度的直观含义
+
+我们用分布 Q 来模仿 P，那么代价多大？
+
+$$
+\begin{flalign}
+D_{KL}\left(P\left|\right|Q\right)&=\sum_{x}^{}P\left(x\right)\log_{}\frac{P\left(x\right)}{Q\left(x\right)}&\\
+&=\sum_{x}^{}P\left(x\right)\left\lbrack\log_{}P\left(x\right)-\log_{}Q\left(x\right)\right\rbrack&\\
+&=-\sum_{x}^{}P\left(x\right)\log_{}Q\left(x\right)+\sum_{x}^{}P\left(x\right)\log_{}P\left(x\right)&\\
+&=H\left(P,Q\right)-H\left(P\right)&\\
+\end{flalign}
+$$
+
+KL 散度就是你比最优编码（信息熵）多花了多少啊信息量（交叉熵）
+
+**为什么硬编码只需要算交叉熵？**
+
+因为硬编码信息熵为 0。
+
+---
+
+##### 3.2.2.3 举例理解
+
+盲猜彩票数字（预测 vs 现实）
+
+场景：
+
+- 彩票的真实中奖概率是：P = [红 70%，蓝 30%]（这是现实，也就是 P）
+- 你不知道，瞎猜它是平均的：Q = [红 50%，蓝 50%]
+- 你天天根据 Q 去猜，结果常常猜错
+
+| 项目         | 对应公式     | 含义                        |
+| ---------- | -------- | ------------------------- |
+| 信息熵 H(P)   | 最小需要的信息量 | 理想情况下，你知道 P，自然能更好预测（最省信息） |
+| 交叉熵 H(P,Q) | 实际花掉的信息量 | 你不知道真相，用 Q 来猜，浪费了信息       |
+| KL 散度      | 差距或损失    | 你不懂 P，结果多浪费了信息量（或猜错更多）    |
+
+---
+
+##### 3.2.2.4 KL 散度损失计算举例
+
+假设我们有两个概率分布：
+
+- **真实分布(P)**：你想要的目标
+- P = [0.7,0.2,0.1]
+- **预测分布(Q)**：模型给出的预测
+- Q = [0.6,0.3,0.1]
+我们现在计算：
+
+$$
+D_{KL}\left(P\left|\right|Q\right)=\sum_{i}^{}P\left(i\right)\log_{}\frac{P\left(i\right)}{Q\left(i\right)}
+$$
+
+**逐项计算**
+
+- 第一项： $0.7\cdot\log_{}\frac{0.7}{0.6}=0.7\cdot\log_{}\left(1.1667\right)\approx0.7\cdot0.154=0.1078$
+- 第二项： $\displaylines{0.2\cdot\frac{0.2}{0.3}=0.2\cdot\left(0.6667\right)}\approx0.2\cdot\left(-0.176\right)=-0.0352$
+- 第三项： $0.1\cdot\log_{}\frac{0.1}{0.1}=0.1\cdot\log_{}\left(1\right)=0$
+**逐项相加**
+
+$$
+D_{KL}\left(P\Vert Q\right)\approx0.1078+\left(-0.0352\right)+0=0.0726
+$$
+
+这就是模型预测分布 Q 与真实分布 P 之间的 KL 散度损失
+
+---
+
+#### 3.2.3 软标签蒸馏的两个超参数
+
+##### 3.2.3.1 两个关键参数
+
+软标签蒸馏（Knowledge Distillation，知识蒸馏）中的两个关键参数：
+
+- $\alpha$ （权重系数）
+- $T$ （温度）
+
+---
+
+##### 3.2.3.2 T（温度）
+
+温度 $T$ 可以控制**软标签**的软硬程度，用于**调节 teacher 模型输出 softmax 的平滑程度**，让学生模型学习 teacher 的“潜在知识”。
+
+**普通 softmax 是**：
+
+$$
+P_{i}=\frac{e^{z_{i}}}{\sum_{j}^{}e^{z_{j}}}
+$$
+
+加入温度后的 softmax：
+
+$$
+P_{i}^{\left(T\right)}=\frac{e^{\frac{z_{i}}{T}}}{\sum_{j}^{}e^{\frac{z_{j}}{T}}}
+$$
+
+- 如果 $T = 1$ ：就是普通 softmax。
+- 如果 $T>1$ ：输出变得更平滑，**弱类别概率也变大**，学生能学到更多“细节”。
+- 如果 $T$ 趋近于 $0$ ：softmax 趋近 one-hot，更像硬标签。
+- 如果 $T$ 趋近于无穷大：softmax 趋近于均匀的分布。
+
+> 把 teacher 模型的输出看作“专家的信心”。
+> 温度越高，专家越“谦虚”，告诉学生：“其实 B 类也有点可能”
+> 温度越低，专家越“武断”：“就是 A，别问！”
+
+一般 $T$ 选 2 到 5 之间，太高或太低都可能让学生难以学习。
+
+---
+
+##### 3.2.3.3 $\alpha$ （权重系数）
+
+$\alpha$ 可以平衡自主学习和老师学习的重要性。
+
+$\alpha$ 控制总损失中**蒸馏损失(软标签)** 与**普通交叉熵(硬标签)** 的权重比例。
+
+总损失函数一般是这样的：
+
+$$
+\mathcal{L} = (1 - \alpha) \cdot \text{CE}(y_{\text{hard}}, p_s) + \alpha \cdot T^2 \cdot \text{KL}(p_t^{(T)} \| p_s^{(T)})
+$$
+
+- $CE$ ：交叉熵损失，硬标签。
+- $KL$ ：KL 散度损失，蒸馏用的软标签。
+- $p_t$ ：teacher 模型的软输出。
+- $p_s$ ：student 模型的软输出。
+
+**α起什么作用？**
+- $\alpha$ 趋近 1：更重视 teacher 的软标签（偏向模仿老师）
+- $\alpha$ 趋近 0：更重视 ground truth 的硬标签（偏向传统训练）
+一般 $\alpha$ 设置在 0.5 到 0.9 之间。
+
+---
+
+##### 3.2.3.4 乘以 $T^2$ 的原因
+
+乘以 $T^2$ 的主要目的是**保持梯度的量级与温度无关**。具体推导如下：
+
+- 原始 KL 散度的梯度是 $O(\frac{1}{T})$ 量级。
+- 乘以 $T^2$ 后，梯度变为：
+
+$$
+\frac{\partial (T^2 \cdot \text{KL})}{\partial z_s} = T(p_s^{(T)} - p_t^{(T)})
+$$
+
+	这样，梯度量级从 $O(\frac{1}{T})$ 调整为 $O(T)$ ，与温度 $T$ 线性相关。
+
+在原始论文（Hinton et al.，2015）中，作者发现：
+
+- 当温度 $T$ 较高时，KL 散度的梯度会非常小，导致知识蒸馏的效果不明显。
+- 乘以 $T^2$ 可以抵消温度对梯度的影响，使得在高温时蒸馏仍然有效。
+
+---
+ 
