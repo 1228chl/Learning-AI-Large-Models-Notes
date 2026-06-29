@@ -217,7 +217,8 @@
       }
     ],
     "direction": "horizontal",
-    "width": 408.5
+    "width": 408.5,
+    "collapsed": true
   },
   "left-ribbon": {
     "hiddenItems": {
@@ -235,22 +236,26 @@
   },
   "active": "24f1f100576ee05b",
   "lastOpenFiles": [
+    "Assets/Image/AI-Large-Modlels-Notes/Agent/RAG/LangChain框架/1.2.5.2-1.png",
+    "Assets/Image/AI-Large-Modlels-Notes/Agent/RAG/LangChain框架/1.2.5.1-1.png",
+    "Assets/Image/AI-Large-Modlels-Notes/Agent/RAG/LangChain框架/1.2.4-4.png",
+    "Assets/Image/AI-Large-Modlels-Notes/Agent/RAG/LangChain框架/1.2.4-3.png",
+    "Assets/Image/AI-Large-Modlels-Notes/Agent/RAG/LangChain框架/1.2.4-2.png",
+    "Assets/Image/AI-Large-Modlels-Notes/Agent/RAG/LangChain框架/1.2.4-1.png",
+    "Assets/Image/AI-Large-Modlels-Notes/Agent/RAG/LangChain框架/1.2.3-1.png",
     "Assets/Image/AI-Large-Modlels-Notes/Agent/RAG/LangChain框架/1.2.2-2.png",
     "Assets/Image/AI-Large-Modlels-Notes/Agent/RAG/LangChain框架/1.2.2-1.png",
     "Assets/Image/AI-Large-Modlels-Notes/Agent/RAG/LangChain框架/1.2.1.3-1.png",
     "Assets/Image/AI-Large-Modlels-Notes/Agent/RAG/LangChain框架/1.2.1.2-1.png",
-    "Assets/Image/AI-Large-Modlels-Notes/Agent/RAG/LangChain框架/1.2-1.png",
     "Assets/Image/AI-Large-Modlels-Notes/Agent/RAG/LangChain框架",
     "Assets/Image/AI-Large-Modlels-Notes/Agent/RAG",
     "AI-Large-Modlels-Notes/Markdown语法.md",
     "AI-Large-Modlels-Notes/NLP/02-文本预处理-分词-张量.md",
     "AI-Large-Modlels-Notes/Agent/RAG/LangChain框架.md",
-    "Assets/LangChain组件图.drawio.png",
     "AI-Large-Modlels-Notes/Agent/RAG/LangChain组件图.drawio",
     "AI-Large-Modlels-Notes/Conda/Conda基础命令.md",
     "AI-Large-Modlels-Notes/Project/NLP-DangDangBookClassifier/Bert-Base.md",
     "AI-Large-Modlels-Notes/Agent/RAG",
-    "Assets/Image/AI-Large-Modlels-Notes/Agent/Coze/03Coze细节（课堂版）/1.7.7.1-2.png",
     "AI-Large-Modlels-Notes/Project/NLP-DangDangBookClassifier/自我介绍.md",
     "AI-Large-Modlels-Notes/Project/NLP-DangDangBookClassifier/学生准备答案.md",
     "AI-Large-Modlels-Notes/Project/NLP-DangDangBookClassifier/RandomForests.md",
@@ -272,15 +277,11 @@
     "AI-Large-Modlels-Notes/DL/RNN/RNN.md",
     "AI-Large-Modlels-Notes/ML/监督学习/集成学习/01随机森林完整版.md",
     "AI-Large-Modlels-Notes/Project/NLP-DangDangBookClassifier",
-    "Assets/Image/AI-Large-Modlels-Notes/Project/SubmitAFullScoreProject/ModelCompression/1.3.2.1-1.png",
     "Assets/Image/AI-Large-Modlels-Notes/Project/SubmitAFullScoreProject/ModelCompression",
     "Assets/Image/AI-Large-Modlels-Notes/Project/SubmitAFullScoreProject",
     "Assets/Image/AI-Large-Modlels-Notes/Project",
     "AI-Large-Modlels-Notes/Project/SubmitAFullScoreProject",
     "AI-Large-Modlels-Notes/Project",
-    "Assets/Image/AI-Large-Modlels-Notes/Draft/aaa/1.4.3-2.png",
-    "Assets/Image/AI-Large-Modlels-Notes/Draft/aaa/1.4.3-3.png",
-    "Assets/Image/AI-Large-Modlels-Notes/Draft/aaa/1.4.3-1.png",
     "未命名.canvas"
   ]
 }
