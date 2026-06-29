@@ -29,7 +29,7 @@ LangChain 由 Harrison Chase 创建于 2022 年 10 月，它是围绕 LLMs（大
 
 ---
 
-### 2.1 Models
+### 2.1 Models(模型)
 
 LangChain 目前支持三种类型的模型：`LLMs`、`Chat Models(聊天模型)` 、`Embeddings Models(嵌入模型)`。
 
@@ -161,7 +161,7 @@ LangChain 集成的文本嵌入模型有：
 
 ---
 
-### 2.2 Prompts
+### 2.2 Prompts(提示词)
 
 Prompt 是指用户输入给模型的提示词，这个提示词的形式可以是 `zero-shot` 或者 `few-shot`，目的是让模型能理解更加复杂的业务场景以便更好的解决问题。
 
@@ -254,5 +254,332 @@ print(llm.invoke(prompt_text))
 Result：
 
 ![](https://raw.githubusercontent.com/1228chl/Learning-AI-Large-Models-Notes/master/Assets/Image/AI-Large-Modlels-Notes/Agent/RAG/LangChain框架/1.2.2-2.png)
+
+---
+
+### 2.3 Chains(链)
+
+Chains 是**将 LLM 与其他组件结合起来完成一个应用程序的过程**。
+
+针对上一小节的提示模版例子，zero-shot 里面，我们可以用链来连接提示模版组件和模型，进而可以实现代码的更改：
+
+```python
+from langchain_core.prompts import PromptTemplate
+from langchain_openai import ChatOpenAI
+import os
+
+llm = ChatOpenAI(
+    api_key=os.getenv("API_KEY"),
+    model="qwen-max"
+    base_url=os.getenv("BASE_URL")
+)
+
+prompt = PromptTemplate(
+    template="我的邻居姓{lastname}，他生了个儿子，给他儿子起一个名字，起3个最好听的名字",
+    input_variables=["lastname"],
+)
+
+# chain = LLMChain(llm=llm, prompt=prompt)
+# print(chain.run("张))
+
+chain = prompt | llm
+print(chain.invoke({"lastname": "张"}).content)
+```
+
+下面看多个调用的例子：
+
+```python
+from langchain.chat_models import init_chat_model
+from langchain_core.prompts import PromptTemplate
+from langchain_core.output_parsers import StrOutputParser
+from langchain_openai import ChatOpenAI
+import os
+
+# llm = ChatOpenAI(
+#     api_key=os.getenv("API_KEY"),
+#     model="qwen3.5-flash",
+#     base_url=os.getenv("BASE_URL"),
+#     extra_body={"enable_thinking": False}
+# )
+
+llm = init_chat_model(
+    model="qwen3-max",
+    api_key=os.getenv('API_KEY'),
+    base_url=os.getenv("BASE_URL"),
+    model_provider="openai",
+)
+
+# 创建第一条链
+first_prompt = PromptTemplate.from_template("我的邻居姓{lastname}，他生了个儿子，给他儿子起个名字")
+
+# 创建第二条链
+second_prompt = PromptTemplate.from_template(
+    "邻居的儿子名字叫{child_name}，给他起一个小名，输出对应的大名和推荐的小名",
+)
+
+# 链接两条链
+chain = first_prompt | llm | second_prompt | llm | StrOutputParser()
+
+# 执行链，只需要传入第一个参数
+output = chain.invoke({"lastname": "孙"})
+print(output)
+# print(output.content)
+```
+
+Result：
+
+![](https://raw.githubusercontent.com/1228chl/Learning-AI-Large-Models-Notes/master/Assets/Image/AI-Large-Modlels-Notes/Agent/RAG/LangChain框架/1.2.3-1.png)
+
+---
+
+### 2.4 Agents (代理)
+
+Agents 也就是代理，它的核心思想是利用一个语言模型来选择一系列要执行的动作(工具)。
+
+在 LangChain 中 Agents 的作用就是根据用户的需求，来访问一些第三方工具(比如：搜索引擎或者数据库)，进而来解决相关需求问题。
+
+为什么要借助第三方库？
+
+- 因为大模型虽然非常强大，但是也具备一定的局限性，比如不能回答实时信息、处理数学逻辑问题仍然非常的初级等等。因此可以借助第三方工具来辅助大模型的应用。
+
+![大模型调用工具的原理|400](https://raw.githubusercontent.com/1228chl/Learning-AI-Large-Models-Notes/master/Assets/Image/AI-Large-Modlels-Notes/Agent/RAG/LangChain框架/1.2.4-1.png)
+
+现在我们实现一个使用代理的例子：假设我们想查询一下中国目前有多少人口？我们可以使用多个代理工具，让 Agents 选择执行。代码如下：
+
+```python
+# pip install duckduckgo-search
+
+import os
+from langchain_openai import ChatOpenAI
+from langchain.agents import create_agent
+# from langchain_core.prompts import ChatPromptTemplate, PromptTemplate
+from langchain_community.tools import DuckDuckGoSearchRun
+
+# 初始化工具
+ddg_search = DuckDuckGoSearchRun()
+
+# 实例化大模型
+llm = ChatOpenAI(
+    api_key=os.getenv("API_KEY"),
+    model="qwen3-max",
+    base_url=os.getenv("BASE_URL"),
+    extra_body={"enable_thinking": False}
+)
+
+agent = create_agent(
+    model=llm,
+    tools=[ddg_search],
+    system_prompt="""你是一个有用的个人助手，根据用户的输入内容选择对应的工具，解答用户的问题"""
+)
+
+print('agent', agent)
+
+# 代理Agent工作
+response = agent.invoke(
+    {"messages": [
+        {"role": "user", "content": "中国目前有多少人口"}
+    ]}
+)
+for msg in response["messages"]:
+    print(msg)
+
+# for chunk in agent.stream(
+#         {"messages": [
+#             {"role": "user", "content": "2025年中国目前有多少人口"}
+#         ]}
+# ):
+#     print(chunk)
+```
+
+Result：
+
+![](https://raw.githubusercontent.com/1228chl/Learning-AI-Large-Models-Notes/master/Assets/Image/AI-Large-Modlels-Notes/Agent/RAG/LangChain框架/1.2.4-2.png)
+
+![](https://raw.githubusercontent.com/1228chl/Learning-AI-Large-Models-Notes/master/Assets/Image/AI-Large-Modlels-Notes/Agent/RAG/LangChain框架/1.2.4-3.png)
+
+也可以调用自定义工具，使用装饰器的方法，用 tool 装饰在自定义的函数上，实现工具定义：
+
+```python
+from langchain.tools import tool
+from langchain_core.messages import HumanMessage
+from langchain_openai import ChatOpenAI
+import os
+from langchain.agents import create_agent
+import requests
+
+
+@tool
+def write_file(file_path: str, content: str):
+    """
+	把content写入文件路径file_path
+	"""
+	with open(file_path, "w") as writer:
+        writer.write(content)
+
+    print(f"写入文件{file_path} 成功")
+
+
+@tool
+def read_file(file_path):
+    """
+	读取本地文件，返回文件里的内容
+    """
+	with open(file_path) as reader:
+        return reader.read()
+
+
+@tool
+def multiply(a: int, b: int) -> int:
+    """用于计算两个整数的乘积。"""
+	print(f"正在执行乘法: {a} * {b}")
+    return a * b
+
+
+@tool
+def add(a: int, b: int) -> int:
+    """用于计算两个整数的乘积。"""
+	print(f"正在执行加法: {a} + {b}")
+    return a + b
+
+
+llm = ChatOpenAI(
+    model="qwen3-max",
+    api_key=os.getenv('API_KEY'),
+    base_url=os.getenv("BASE_URL"),
+)
+
+
+@tool
+def get_weather(city: str):
+    """查询城市天气"""
+    # 13adb1710d764d2abc30a5b234923a6f
+	url = "https://m459fcyb7c.re.qweatherapi.com/v7/weather/now"
+    city_code_map = {
+        "上海": "101020100",
+        "北京": "101010100",
+        "广州": "101280101",
+        "深圳": "101280601",
+    }
+    response = requests.get(url, params={
+        "location": city_code_map.get(city, "101280601"),
+    }, headers={"X-QW-Api-Key": os.getenv("WEATHER_KEY")})
+    # return f"{city} 当前天气：晴天 25℃"  # 模拟
+    return response.json()
+
+
+tools = [get_weather, add, multiply, write_file, read_file]
+
+agent = create_agent(
+    model=llm,
+    tools=tools,
+    system_prompt="你是系统助手，需要根据用户的输入决定是否调用工具完成任务"
+)
+
+# messages = agent.invoke({"messages": messages})
+# for each in messages["messages"]:
+#     print(each)
+
+# print(agent.invoke({"messages": HumanMessage(content="详细介绍下什么是langchain框架，写入本地文件，名字自己起一个")}))
+
+messages = [{"role": "user", "content": "帮我算 5 * 6，然后查一下深圳的天气"}]
+# messages = [{"role": "user", "content": "详细介绍下注意力机制，写入到本地文件，格式为markdown"}]
+# messages = [{"role": "user", "content": "帮我算 5 加 6，然后读取本地的 _01_agent_search.py，总结下读取文件里面的内容"}]
+
+# 工具的流式返回
+for chunk in agent.stream({"messages": messages}):
+    print(chunk)
+```
+
+Result：
+
+![](https://raw.githubusercontent.com/1228chl/Learning-AI-Large-Models-Notes/master/Assets/Image/AI-Large-Modlels-Notes/Agent/RAG/LangChain框架/1.2.4-4.png)
+
+---
+
+### 2.5 Memory(记忆)
+
+大模型本身不具备上下文的概念，它并不保存上次交互的内容，ChatGPT 之所以能够和人正常沟通对话，因为它进行了一层封装，将历史记录回传给了模型。
+
+因此 LangChain 也提供了 Memory 组件, Memory 分为两种类型：**短期记忆和长期记忆**。短期记忆一般指单一会话时传递数据，长期记忆则是处理多个会话时获取和更新信息，**通常长期记忆需要把用户的问答数据存放到数据库中，根据用户的 id 或者会话 id 或者最近的对话历史。**
+
+#### 2.5.1 使用 ChatMessageHistory
+
+目前的 Memory 组件只需要考虑 ChatMessageHistory。举例分析：
+
+```python
+from langchain_community.chat_message_histories import ChatMessageHistory
+from langchain_openai import ChatOpenAI
+import os
+
+llm = ChatOpenAI(
+    model="qwen-max",
+    api_key=os.getenv('API_KEY'),
+    base_url=os.getenv("BASE_URL"),
+)
+
+history = ChatMessageHistory()
+history.add_user_message("你能做什么")
+history.add_ai_message("你好，我能做的事情很多")
+history.add_user_message("小明有3个苹果和4个李子，他一共有几个水果")
+history.add_ai_message("小明一共有7个水果")
+history.add_user_message("我一共问了几个问题了")
+print(history.messages)
+
+# print(llm.invoke(history.messages))
+# content='到目前为止，您一共问了3个问题。第一个问题是关于我能做什么，第二个问题是关于小明有多少个水果，第三个就是当前这个问题，询问您一共问了多少个问题。'
+```
+
+Result：
+
+![](https://raw.githubusercontent.com/1228chl/Learning-AI-Large-Models-Notes/master/Assets/Image/AI-Large-Modlels-Notes/Agent/RAG/LangChain框架/1.2.5.1-1.png)
+
+---
+
+#### 2.5.2 messages 列表
+
+直接手写 messages 列表，完成多轮对话
+
+```python
+from langchain.messages import HumanMessage, AIMessage
+from langchain_openai import ChatOpenAI
+import os
+
+llm = ChatOpenAI(
+    model="qwen3-max",
+    api_key=os.getenv('API_KEY'),
+    base_url=os.getenv("BASE_URL"),
+    extra_body={"enable_thinking": False}
+)
+
+messages = [
+    HumanMessage(content="你好"),
+    AIMessage(content="你好，有什么可以帮你？"),
+    HumanMessage(content="LangChain 是什么？"),
+    AIMessage(content="LangChain 是一个开源的 LLM 应用开发框架，用于构建 LLM 应用。"),
+    HumanMessage(content="我问了几个问题了？"),
+]
+
+response = llm.invoke(messages)
+print(response.content)
+# messages = []
+# while True:
+#     messages.append(
+#         HumanMessage(content=input("[请输入问题]"))
+#     )
+#     response = llm.invoke(messages)
+#     print("[大模型回答]\n", response.content)
+#     messages.append(AIMessage(content=response.content))
+#
+#     if len(messages) > 5:
+#         messages = messages[-5:]
+#
+#     print("\n当前历史对话：")
+#     for msg in messages:
+#         print(f"{msg.content}")
+```
+
+Result：
+
+![](https://raw.githubusercontent.com/1228chl/Learning-AI-Large-Models-Notes/master/Assets/Image/AI-Large-Modlels-Notes/Agent/RAG/LangChain框架/1.2.5.2-1.png)
 
 ---
