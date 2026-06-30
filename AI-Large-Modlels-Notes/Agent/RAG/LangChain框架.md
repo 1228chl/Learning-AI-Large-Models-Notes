@@ -16,7 +16,7 @@ LangChain 由 Harrison Chase 创建于 2022 年 10 月，它是围绕 LLMs（大
 
 ## 二、LangChain 主要组件
 
-![600](https://raw.githubusercontent.com/1228chl/Learning-AI-Large-Models-Notes/master/Assets/Image/AI-Large-Modlels-Notes/Agent/RAG/LangChain框架/1.2-1.png)
+
 
 一个 LangChain 的应用是需要多个组件共同实现的，LangChain 主要支持 6 种组件：
 
@@ -121,7 +121,7 @@ print(response.content)
 
 Result：
 
-![](https://raw.githubusercontent.com/1228chl/Learning-AI-Large-Models-Notes/master/Assets/Image/AI-Large-Modlels-Notes/Agent/RAG/LangChain框架/1.2.1.2-1.png)
+
 
 ---
 
@@ -148,7 +148,7 @@ print(embedding_model.embed_documents(["AI好啊，得学啊", "hello world"]))
 
 Result：
 
-![](https://raw.githubusercontent.com/1228chl/Learning-AI-Large-Models-Notes/master/Assets/Image/AI-Large-Modlels-Notes/Agent/RAG/LangChain框架/1.2.1.3-1.png)
+
 
 以上代码中，分别使用了两种方法进行向量化，其中的不同点在于：
 
@@ -191,7 +191,7 @@ print(llm.invoke(prompt_text))
 
 Result：
 
-![](https://raw.githubusercontent.com/1228chl/Learning-AI-Large-Models-Notes/master/Assets/Image/AI-Large-Modlels-Notes/Agent/RAG/LangChain框架/1.2.2-1.png)
+
 
 - few-shot 提示方式：
 
@@ -253,7 +253,7 @@ print(llm.invoke(prompt_text))
 
 Result：
 
-![](https://raw.githubusercontent.com/1228chl/Learning-AI-Large-Models-Notes/master/Assets/Image/AI-Large-Modlels-Notes/Agent/RAG/LangChain框架/1.2.2-2.png)
+
 
 ---
 
@@ -328,7 +328,7 @@ print(output)
 
 Result：
 
-![](https://raw.githubusercontent.com/1228chl/Learning-AI-Large-Models-Notes/master/Assets/Image/AI-Large-Modlels-Notes/Agent/RAG/LangChain框架/1.2.3-1.png)
+
 
 ---
 
@@ -342,7 +342,7 @@ Agents 也就是代理，它的核心思想是利用一个语言模型来选择�
 
 - 因为大模型虽然非常强大，但是也具备一定的局限性，比如不能回答实时信息、处理数学逻辑问题仍然非常的初级等等。因此可以借助第三方工具来辅助大模型的应用。
 
-![大模型调用工具的原理|400](https://raw.githubusercontent.com/1228chl/Learning-AI-Large-Models-Notes/master/Assets/Image/AI-Large-Modlels-Notes/Agent/RAG/LangChain框架/1.2.4-1.png)
+
 
 现在我们实现一个使用代理的例子：假设我们想查询一下中国目前有多少人口？我们可以使用多个代理工具，让 Agents 选择执行。代码如下：
 
@@ -393,9 +393,9 @@ for msg in response["messages"]:
 
 Result：
 
-![](https://raw.githubusercontent.com/1228chl/Learning-AI-Large-Models-Notes/master/Assets/Image/AI-Large-Modlels-Notes/Agent/RAG/LangChain框架/1.2.4-2.png)
 
-![](https://raw.githubusercontent.com/1228chl/Learning-AI-Large-Models-Notes/master/Assets/Image/AI-Large-Modlels-Notes/Agent/RAG/LangChain框架/1.2.4-3.png)
+
+
 
 也可以调用自定义工具，使用装饰器的方法，用 tool 装饰在自定义的函数上，实现工具定义：
 
@@ -492,7 +492,7 @@ for chunk in agent.stream({"messages": messages}):
 
 Result：
 
-![](https://raw.githubusercontent.com/1228chl/Learning-AI-Large-Models-Notes/master/Assets/Image/AI-Large-Modlels-Notes/Agent/RAG/LangChain框架/1.2.4-4.png)
+
 
 ---
 
@@ -531,7 +531,7 @@ print(history.messages)
 
 Result：
 
-![](https://raw.githubusercontent.com/1228chl/Learning-AI-Large-Models-Notes/master/Assets/Image/AI-Large-Modlels-Notes/Agent/RAG/LangChain框架/1.2.5.1-1.png)
+
 
 ---
 
@@ -580,7 +580,7 @@ print(response.content)
 
 Result：
 
-![](https://raw.githubusercontent.com/1228chl/Learning-AI-Large-Models-Notes/master/Assets/Image/AI-Large-Modlels-Notes/Agent/RAG/LangChain框架/1.2.5.2-1.png)
+
 
 ---
 
@@ -621,6 +621,352 @@ print(result['messages'][-1].content)
 
 Result：
 
-![](https://raw.githubusercontent.com/1228chl/Learning-AI-Large-Models-Notes/master/Assets/Image/AI-Large-Modlels-Notes/Agent/RAG/LangChain框架/1.2.5.3-1.png)
+
 
 ---
+#### 2.5.4 使用 MySQL 实现长期记忆
+```python
+from langchain.agents import create_agent
+from langgraph.checkpoint.mysql.pymysql import PyMySQLSaver
+from langchain_openai import ChatOpenAI
+import os
+import uuid  # 模拟创建用户id
+
+llm = ChatOpenAI(
+    model="qwen-max",
+    api_key=os.getenv('API_KEY'),
+    base_url=os.getenv("BASE_URL"),
+)
+
+# 注意：这里使用的是 pymysql 驱动
+# http://baidu.com
+DB_URI = f"mysql+pymysql://root:{os.getenv("PASSWORD")}@localhost:3306/langchain_db" # ORM
+
+# 使用上下文管理器初始化 MySQL 连接
+# MySQLSaver 通常会自动处理表的创建，或者你可以显式调用 setup 方法（取决于具体版本）
+with PyMySQLSaver.from_conn_string(DB_URI) as checkpointer:
+    # 确保数据库表已创建 (视版本而定，部分版本自动创建)
+    checkpointer.setup()
+
+    agent = create_agent(
+        llm,
+        tools=[],
+        checkpointer=checkpointer,  # 传入 MySQL 检查点实例
+    )
+
+    # 在这里调用 agent 进行测试
+    # agent.invoke(...)
+    print(agent)
+    config = {"configurable": {"thread_id": uuid.uuid4()}}
+    print(agent.invoke(
+        {"messages": [{"role": "user", "content": "你能做什么"}]},
+        config=config,
+    ))
+    print(agent.invoke(
+        {"messages": [{"role": "user", "content": "小明有3个苹果和4个李子，他一共有几个水果"}]},
+        config,
+    ))
+    result = agent.invoke(
+        {"messages": [{"role": "user", "content": "我问了几个问题了"}]},
+        config,
+    )
+    print(result['messages'][-1].content)
+```
+
+Result：
+
+---
+### 2.6 Indexes(索引)
+Indexes 组件的目的是让 LangChain 具备处理文档处理的能力，包括：文档加载、检索等。注意，这里的文档不局限于 txt、pdf 等文本类内容，还涵盖 email、区块链、图片等内容。
+
+Indexes 组件主要包含类型：
+
+- 文档加载器
+- 文本分割器
+- VectorStores
+- 检索器
+
+---
+#### 2.6.1 文档加载器
+文档加载器主要基于 `Unstructured` 包，`Unstructured` 是一个 python 包，可以把各种类型的文件转换成文本。
+
+文档加载器使用起来很简单，只需要引入相应的 loader 工具：
+
+```Python
+"""
+如果报错，检查安装包
+pip install en_core_web_sm-3.8.0-py3-none-any.whl
+"""
+# from langchain_community.document_loaders import UnstructuredFileLoader
+
+from langchain_unstructured import UnstructuredLoader
+
+# 创建一个加载器
+loader = UnstructuredLoader('../data/衣服属性.txt', encoding='utf8')
+# 加载
+docs = loader.load()  # 返回是列表 List[Document]
+print(docs)
+print(len(docs))
+first_01 = docs[0].page_content[:10]
+print(first_01)
+print('*' * 80)
+
+from langchain_community.document_loaders import TextLoader
+
+loader = TextLoader('../data/衣服属性.txt', encoding='utf8')
+docs = loader.load()  # 返回是列表 List[Document]
+print(docs)
+print(len(docs))
+first_01 = docs[0].page_content[:10]
+print(first_01)
+
+# 打印结果：
+'''
+[Document(page_content='身高：160-170cm， 体重：90-115斤，建议尺码M。\n身高：165-175cm， 体重：115-135斤，建议尺码L。\n身高：170-178cm， 体重：130-150斤，建议尺码XL。\n身高：175-182cm， 体重：145-165斤，建议尺码2XL。\n身高：178-185cm， 体重：160-180斤，建议尺码3XL。\n身高：180-190cm， 体重：180-210斤，建议尺码4XL。\n面料分类：其他\n图案：纯色\n领型：翻领\n衣门襟：单排扣\n颜色：黑色 卡其色 粉色 杏色\n袖型：收口袖\n适用季节：冬季\n袖长：长袖\n厚薄：厚款\n适用场景：其他休闲\n衣长：常规款\n版型：宽松型\n款式细节：假两件\n工艺处理：免烫处理\n适用对象：青年\n面料功能：保暖\n穿搭方式：外穿\n销售渠道类型：纯电商(只在线上销售)\n材质成分：棉100%', metadata={'source': '衣服属性.txt'})]
+1
+身高：1
+********************************************************************************
+[Document(page_content='身高：160-170cm， 体重：90-115斤，建议尺码M。\n\n身高：165-175cm， 体重：115-135斤，建议尺码L。\n\n身高：170-178cm， 体重：130-150斤，建议尺码XL。\n\n身高：175-182cm， 体重：145-165斤，建议尺码2XL。\n\n身高：178-185cm， 体重：160-180斤，建议尺码3XL。\n\n身高：180-190cm， 体重：180-210斤，建议尺码4XL。\n\n面料分类：其他\n\n图案：纯色\n\n领型：翻领\n\n衣门襟：单排扣\n\n颜色：黑色 卡其色 粉色 杏色\n\n袖型：收口袖\n\n适用季节：冬季\n\n袖长：长袖\n\n厚薄：厚款\n\n适用场景：其他休闲\n\n衣长：常规款\n\n版型：宽松型\n\n款式细节：假两件\n\n工艺处理：免烫处理\n\n适用对象：青年\n\n面料功能：保暖\n\n穿搭方式：外穿\n\n销售渠道类型：纯电商(只在线上销售)\n\n材质成分：棉100%', metadata={'source': '衣服属性.txt'})]
+1
+身高：1
+'''
+```
+LangChain 支持的文档加载器 (部分)：
+
+| 文档加载器                | 描述           |
+| -------------------- | ------------ |
+| CSV                  | CSV文件        |
+| JSON Files           | 加载JSON文件     |
+| Jupyter Notebook     | 加载notebook文件 |
+| Markdown             | 加载markdown文件 |
+| Microsoft PowerPoint | 加载ppt文件      |
+| PDF                  | 加载pdf文件      |
+| Images               | 加载图片         |
+| File Directory       | 加载目录下所有文件    |
+| HTML                 | 网页           |
+
+---
+#### 2.6.2 文档分割器
+由于模型对输入的字符长度有限制，我们在碰到很长的文本时，需要把文本分割成多个小的文本片段。
+
+文本分割最简单的方式是按照字符长度进行分割，但是这会带来很多问题，比如说如果文本是一段代码，一个函数被分割到两段之后就成了没有意义的字符，所以整体的原则是把语义相关的文本片段放在一起。
+
+LangChain 中最基本的文本分割器是 `CharacterTextSplitter` ，它按照指定的分隔符（默认“\n\n”）进行分割，并且考虑文本片段的最大长度。我们看个例子：
+
+```Python
+from langchain_text_splitters import CharacterTextSplitter, RecursiveCharacterTextSplitter
+
+text_splitter = CharacterTextSplitter(
+    separator=" ",  # 空格分割，但是空格也属于字符
+    chunk_size=5,
+    chunk_overlap=0,
+)
+
+# 一句分割
+a = text_splitter.split_text("a b c d e f")
+print(a)
+# ['a b c', 'd e f']
+
+# 多句话分割（文档分割）
+texts = text_splitter.create_documents(["a b c d e f", "e f g h"], )
+print(texts)
+# [Document(page_content='a b c'), Document(page_content='d e f'), Document(page_content='e f g'), Document(page_content='h')]
+text_splitter = CharacterTextSplitter(
+    chunk_size=50,
+    chunk_overlap=5,
+)
+recursive_text_splitter = RecursiveCharacterTextSplitter(chunk_size=50, chunk_overlap=5)
+text = """2023年以来，随着ChatGPT的火爆，使得LLM成为研究和应用的热点，但是市面上大部分LLM都存在一个共同的问题：
+模型都是基于过去的经验数据进行训练完成，无法获取最新的知识，以及各企业私有的知识。因此很多企业为了处理私有的知识，
+主要借助一下两种手段来实现
+
+利用企业私有知识，基于开源大模型进行微调
+基于LangChain集成向量数据库以及LLM搭建本地知识库的问答（RAG）
+RAG（Retrieval-Augmented Generation）检索增强生成，在不改变模型权重的情况下，提升大模型生成能力。
+用户query 会从知识库中检索出相关文档，大模型依据文档生成用户的 query 回答。这样可以实现低成本提升大模型的回复能力。
+RAG 核心点在于知识库的构建和检索策略。
+
+索引阶段
+
+加载文件
+内容提取
+文本分割 ，形成chunk
+文本向量化
+存向量数据库
+检索阶段
+
+query向量化
+在文本向量中匹配出与问句向量相似的top_k个
+生成阶段
+匹配出的文本作为上下文和问题一起添加到prompt中
+提交给LLM生成答案：
+"""
+print("RecursiveCharacterTextSplitter", "==" * 50)
+for chunk in recursive_text_splitter.create_documents([text]):
+    print(f"[{len(chunk.page_content)}]", chunk.page_content)
+    print("======" * 10)
+
+print("CharacterTextSplitter", "==" * 50)
+for chunk in text_splitter.create_documents([text]):
+    print(f"[{len(chunk.page_content)}]", chunk.page_content)
+    print("======" * 10)
+```
+
+- CharacterTextSplitter：只能依据单个分隔符，无法保证chunk size小于指定大小
+
+除了CharacterTextSplitter分割器，LangChain还支持其他文档分割器 (部分)：
+
+| 文档加载器                  | 描述                           |
+| ---------------------- | ---------------------------- |
+| LatexTextSplitter      | 沿着Latex标题、标题、枚举等分割文本。        |
+| MarkdownTextSplitter   | 沿着Markdown的标题、代码块或水平规则来分割文本。 |
+| TokenTextSplitter      | 根据openAI的token数进行分割          |
+| PythonCodeTextSplitter | 沿着Python类和方法的定义分割文本。         |
+
+---
+#### 2.6.3 VectorStores
+VectorStores 是一种特殊类型的数据库，它的作用是存储由嵌入创建的向量，提供相似查询等功能。我们使用其中一个 `Chroma` 组件作为例子：
+
+代码的步骤：
+
+```Python
+from langchain_community.embeddings import DashScopeEmbeddings
+from langchain_text_splitters import CharacterTextSplitter
+from langchain_community.vectorstores import Chroma
+import os
+
+# pku.txt内容：<https://www.pku.edu.cn/about.html>
+# 1. 读取文档
+with open('../data/pku.txt') as f:
+    state_of_the_union = f.read()
+# 文档分割
+text_splitter = CharacterTextSplitter(chunk_size=100, chunk_overlap=0)
+
+texts = text_splitter.split_text(state_of_the_union)
+print(texts)
+
+# 3. 向量化，创建embedding模型
+embeddings = DashScopeEmbeddings(
+    model="text-embedding-v1",  # text-embedding-v3
+    dashscope_api_key=os.getenv('API_KEY')
+)
+
+# 4. 创建向量数据库
+docsearch = Chroma.from_texts(texts, embeddings, persist_directory="outputs/chroma.db")
+
+query = "1937年北京大学发生了什么？"
+docs = docsearch.similarity_search(query, k=2)
+print("长度为", len(docs), docs)
+
+'''
+[Document(page_content='1937年卢沟桥事变后，北京大学与清华大学、南开大学南迁长沙，共同组成国立长沙临时大学。1938年，临时大学又西迁昆明，更名为国立西南联合大学。抗日战争胜利后，北京大学于1946年10月在北平复员。'), Document(page_content='北京大学创办于1898年，是戊戌变法的产物，也是中华民族救亡图存、兴学图强的结果，初名京师大学堂，是中国近现代第一所国立综合性大学，辛亥革命后，于1912年改为现名。'), Document(page_content='在悠久的文明历程中，古代中国曾创立太学、国子学、国子监等国家最高学府，在中国和世界教育史上具有重要影响。北京大学“上承太学正统，下立大学祖庭”，既是中华文脉和教育传统的传承者，也标志着中国现代高等教育的开端。其创办之初也是国家最高教育行政机关，对建立中国现代学制作出重要历史贡献。'), Document(page_content='1917年，著名教育家蔡元培就任北京大学校长，他“循思想自由原则，取兼容并包主义”，对北京大学进行了卓有成效的改革，促进了思想解放和学术繁荣。陈独秀、李大钊、毛泽东以及鲁迅、胡适、李四光等一批杰出人士都曾在北京大学任教或任职。')]
+'''
+# 创建检索器
+retriever = docsearch.as_retriever(search_kwargs={"k": 2})
+print("长度为", len(docs), retriever.invoke(query))
+```
+
+LangChain支持的VectorStore如下：
+
+
+| VectorStore   | 描述                                          |
+| ------------- | ------------------------------------------- |
+| Chroma        | 一个开源嵌入式数据库                                  |
+| ElasticSearch | ElasticSearch                               |
+| Milvus        | 用于存储、索引和管理由深度神经网络和其他机器学习（ML）模型产生的大量嵌入向量的数据库 |
+| Redis         | 基于redis的检索器                                 |
+| FAISS         | Facebook AI相似性搜索服务                          |
+| Pinecone      | 一个具有广泛功能的向量数据库                              |
+
+---
+#### 2.6.4 检索器
+
+检索器是一种便于模型查询的存储数据的方式，LangChain 约定检索器组件至少有一个方法 `invoke`，这个方法接收查询字符串，返回一组文档。
+
+```Python
+from langchain_text_splitters import CharacterTextSplitter
+from langchain_community.vectorstores import Chroma
+from langchain_community.document_loaders import TextLoader
+from langchain_community.embeddings import DashScopeEmbeddings
+import os
+
+loader = TextLoader('../data/pku.txt')
+documents = loader.load()
+text_splitter = CharacterTextSplitter(chunk_size=100, chunk_overlap=0)
+texts = text_splitter.split_documents(documents)
+
+embeddings = DashScopeEmbeddings(
+    model="text-embedding-v1",  # text-embedding-v3
+    dashscope_api_key=os.getenv('API_KEY')
+)
+
+db = Chroma.from_documents(texts, embeddings, persist_directory="outputs/Chroma.db")
+retriever = db.as_retriever(search_kwargs={'k': 1})
+docs = retriever.invoke("北京大学什么时候成立的")
+print(docs)
+
+# 打印结果：
+'''
+[Document(metadata={'source': 'data/pku.txt'}, page_content='北京大学创办于1898年，是戊戌变法的产物，也是中华民族救亡图存、兴学图强的结果，初名京师大学堂，是中国近现代第一所国立综合性大学，辛亥革命后，于1912年改为现名。')]
+'''
+```
+
+---
+### 2.7 结构化输出
+
+LangChain 提供了 结构化输出（Structured Output） 的功能，允许你将大语言模型（LLM）的自由文本响应强制转换为预定义的结构（如 Pydantic 模型、JSON Schema 等），非常适合用于信息抽取、问答解析、API 调用等场景
+
+例如：**从用户输入文本中提取姓名、年龄和城市**
+
+```Python
+from langchain_openai import ChatOpenAI
+from typing import Optional
+from pydantic import BaseModel, Field  # 数据模型，数据结构。做数据类型类型校验，尤其是API接口
+from langchain.agents import create_agent
+import os
+
+
+# 第一步：定义你想要的输出结构（Pydantic 模型）
+class PersonInfo(BaseModel):
+    name: str = Field(description="人的姓名")
+    age: int = Field(description="人的年龄，单位：岁")
+    city: Optional[str] = Field(default=None, description="居住城市")
+
+
+# 第二步：初始化 LLM
+llm = ChatOpenAI(
+    model="qwen-max",
+    api_key=os.getenv("API_KEY"),
+    base_url=os.getenv("BASE_URL"),
+    temperature=0)
+
+# 第三步：绑定结构化输出格式
+agent = create_agent(
+    model=llm,
+    response_format=PersonInfo,  # 绑定结构化输出格式
+)
+
+# 第四步：调用
+user_input = "我叫李明，我喜欢打篮球，看NBA，我今年28岁，先谢谢谢谢，之前住在深圳，现在住在上海。"
+response = agent.invoke(
+    {"messages": [{"role": "user", "content": user_input}]}
+)
+
+# 输出结果
+print(response)
+result = response['structured_response']
+
+# 可以直接访问字段
+print(f"姓名: {result.name}, 年龄: {result.age}, 城市: {result.city}")
+```
+
+---
+## 三、LangChain 使用场景
+
+- 个人助手：siri，小爱同学
+- 基于文档的问答系统：RAG
+- 聊天机器人
+- Tabular 数据查询
+- API 交互
+- 信息提取
+- 文档总结
