@@ -217,8 +217,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 408.5,
-    "collapsed": true
+    "width": 408.5
   },
   "left-ribbon": {
     "hiddenItems": {
@@ -234,8 +233,9 @@
       "table-editor-obsidian:Advanced Tables Toolbar": false
     }
   },
-  "active": "24f1f100576ee05b",
+  "active": "a73ebf785a6e6ac6",
   "lastOpenFiles": [
+    "AI-Large-Modlels-Notes/Draft/LangChain框架.md",
     "AI-Large-Modlels-Notes/Markdown语法.md",
     "AI-Large-Modlels-Notes/Agent/RAG/LangChain框架.md",
     "AI-Large-Modlels-Notes/NLP/03-FastText分类任务.md",
