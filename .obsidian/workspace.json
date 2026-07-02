@@ -13,13 +13,13 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "AI-Large-Modlels-Notes/Agent/RAG/LangChain框架.md",
+                "file": "AI-Large-Modlels-Notes/Draft/📅 学习日报_LangGraph_Agent与RAG索引构建.md",
                 "mode": "source",
                 "source": false,
                 "backlinks": false
               },
               "icon": "lucide-file",
-              "title": "LangChain框架"
+              "title": "📅 学习日报_LangGraph_Agent与RAG索引构建"
             }
           },
           {
@@ -121,13 +121,13 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "AI-Large-Modlels-Notes/Agent/RAG/LangChain框架.md",
+                "file": "AI-Large-Modlels-Notes/Agent/RAG/📅 学习日报_LangGraph_Agent与RAG索引构建.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "LangChain框架 的大纲"
+              "title": "📅 学习日报_LangGraph_Agent与RAG索引构建 的大纲"
             }
           },
           {
@@ -217,7 +217,8 @@
       }
     ],
     "direction": "horizontal",
-    "width": 408.5
+    "width": 408.5,
+    "collapsed": true
   },
   "left-ribbon": {
     "hiddenItems": {
@@ -233,11 +234,13 @@
       "table-editor-obsidian:Advanced Tables Toolbar": false
     }
   },
-  "active": "a73ebf785a6e6ac6",
+  "active": "24f1f100576ee05b",
   "lastOpenFiles": [
+    "AI-Large-Modlels-Notes/Agent/RAG/LangChain框架.md",
+    "AI-Large-Modlels-Notes/Draft/📅 学习日报_LangGraph_Agent与RAG索引构建.md",
+    "AI-Large-Modlels-Notes/Project/EduRAG",
     "AI-Large-Modlels-Notes/Draft/LangChain框架.md",
     "AI-Large-Modlels-Notes/Markdown语法.md",
-    "AI-Large-Modlels-Notes/Agent/RAG/LangChain框架.md",
     "AI-Large-Modlels-Notes/NLP/03-FastText分类任务.md",
     "Assets/Image/AI-Large-Modlels-Notes/Agent/RAG/LangChain框架/1.2.5.3-1.png",
     "Assets/Image/AI-Large-Modlels-Notes/Agent/RAG/LangChain框架/1.2.5.2-1.png",
@@ -274,13 +277,11 @@
     "AI-Large-Modlels-Notes/DL/ANN/ANN完整拓展+.md",
     "AI-Large-Modlels-Notes/DL/CNN/CNN.md",
     "AI-Large-Modlels-Notes/DL/RNN/RNN.md",
-    "AI-Large-Modlels-Notes/ML/监督学习/集成学习/01随机森林完整版.md",
     "AI-Large-Modlels-Notes/Project/NLP-DangDangBookClassifier",
     "Assets/Image/AI-Large-Modlels-Notes/Project/SubmitAFullScoreProject/ModelCompression",
     "Assets/Image/AI-Large-Modlels-Notes/Project/SubmitAFullScoreProject",
     "Assets/Image/AI-Large-Modlels-Notes/Project",
     "AI-Large-Modlels-Notes/Project/SubmitAFullScoreProject",
-    "AI-Large-Modlels-Notes/Project",
     "未命名.canvas"
   ]
 }
