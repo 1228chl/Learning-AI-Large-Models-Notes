@@ -13,13 +13,13 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "AI-Large-Modlels-Notes/Draft/📅 学习日报_LangGraph_Agent与RAG索引构建.md",
+                "file": "AI-Large-Modlels-Notes/Agent/RAG/LangChain框架.md",
                 "mode": "source",
                 "source": false,
                 "backlinks": false
               },
               "icon": "lucide-file",
-              "title": "📅 学习日报_LangGraph_Agent与RAG索引构建"
+              "title": "LangChain框架"
             }
           },
           {
@@ -217,8 +217,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 408.5,
-    "collapsed": true
+    "width": 408.5
   },
   "left-ribbon": {
     "hiddenItems": {
@@ -236,6 +235,12 @@
   },
   "active": "24f1f100576ee05b",
   "lastOpenFiles": [
+    "AI-Large-Modlels-Notes/Agent/RAG/Edu-RAG流程图-笔记版.drawio",
+    "AI-Large-Modlels-Notes/Agent/RAG/Edu-RAG流程图-文字版.drawio",
+    "AI-Large-Modlels-Notes/Agent/RAG/Edu-RAG流程图 - 副本.drawio",
+    "AI-Large-Modlels-Notes/Agent/RAG/Edu-RAG流程图.drawio",
+    "AI-Large-Modlels-Notes/PackageManager/UV基础命令.md",
+    "AI-Large-Modlels-Notes/PackageManager/Conda基础命令.md",
     "AI-Large-Modlels-Notes/Agent/RAG/LangChain框架.md",
     "AI-Large-Modlels-Notes/Draft/📅 学习日报_LangGraph_Agent与RAG索引构建.md",
     "AI-Large-Modlels-Notes/Project/EduRAG",
@@ -256,7 +261,6 @@
     "Assets/Image/AI-Large-Modlels-Notes/Agent/RAG",
     "AI-Large-Modlels-Notes/NLP/02-文本预处理-分词-张量.md",
     "AI-Large-Modlels-Notes/Agent/RAG/LangChain组件图.drawio",
-    "AI-Large-Modlels-Notes/Conda/Conda基础命令.md",
     "AI-Large-Modlels-Notes/Project/NLP-DangDangBookClassifier/Bert-Base.md",
     "AI-Large-Modlels-Notes/Agent/RAG",
     "AI-Large-Modlels-Notes/Project/NLP-DangDangBookClassifier/自我介绍.md",
@@ -275,13 +279,8 @@
     "AI-Large-Modlels-Notes/NLP/06-Transformer.md",
     "AI-Large-Modlels-Notes/NLP/04-RNN及其变体.md",
     "AI-Large-Modlels-Notes/DL/ANN/ANN完整拓展+.md",
-    "AI-Large-Modlels-Notes/DL/CNN/CNN.md",
-    "AI-Large-Modlels-Notes/DL/RNN/RNN.md",
     "AI-Large-Modlels-Notes/Project/NLP-DangDangBookClassifier",
     "Assets/Image/AI-Large-Modlels-Notes/Project/SubmitAFullScoreProject/ModelCompression",
-    "Assets/Image/AI-Large-Modlels-Notes/Project/SubmitAFullScoreProject",
-    "Assets/Image/AI-Large-Modlels-Notes/Project",
-    "AI-Large-Modlels-Notes/Project/SubmitAFullScoreProject",
     "未命名.canvas"
   ]
 }
