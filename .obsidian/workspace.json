@@ -121,13 +121,13 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "AI-Large-Modlels-Notes/Agent/RAG/📅 学习日报_LangGraph_Agent与RAG索引构建.md",
+                "file": "AI-Large-Modlels-Notes/Agent/Coze/03Coze细节（课堂版）.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "📅 学习日报_LangGraph_Agent与RAG索引构建 的大纲"
+              "title": "03Coze细节（课堂版） 的大纲"
             }
           },
           {
@@ -217,7 +217,8 @@
       }
     ],
     "direction": "horizontal",
-    "width": 408.5
+    "width": 408.5,
+    "collapsed": true
   },
   "left-ribbon": {
     "hiddenItems": {
@@ -225,15 +226,15 @@
       "graph:查看关系图谱": false,
       "canvas:新建白板": true,
       "daily-notes:打开/创建今天的日记": true,
-      "templates:插入模板": true,
+      "templates:插入模板": false,
       "command-palette:打开命令面板": true,
-      "bases:新建数据库": true,
+      "bases:新建数据库": false,
       "obsidian-git:Open Git source control": true,
-      "templater-obsidian:Templater": true,
-      "table-editor-obsidian:Advanced Tables Toolbar": false
+      "table-editor-obsidian:Advanced Tables Toolbar": false,
+      "templater-obsidian:Templater": false
     }
   },
-  "active": "e83158f79f242826",
+  "active": "c1dd3dc106755721",
   "lastOpenFiles": [
     "AI-Large-Modlels-Notes/Project/SubmitAFullScoreProject/ModelCompression.md",
     "AI-Large-Modlels-Notes/NLP/07-Bert系列模型.md",
