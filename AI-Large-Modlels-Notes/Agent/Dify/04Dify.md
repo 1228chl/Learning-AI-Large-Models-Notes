@@ -21,22 +21,22 @@
 
 1. **解压虚拟机文件**  
    - 注意：解压路径中 **不要出现空格和中文**。  
-![](https://raw.githubusercontent.com/1228chl/Learning-AI-Large-Models-Notes/master/Assets/Image/AI-Large-Modlels-Notes/Agent/Dify/04Dify/1.1.1-1.png)
+![](../../../Assets/Image/AI-Large-Modlels-Notes/Agent/Dify/04Dify/1.1.1-1.png)
 
 2. **打开虚拟机**  
-  ![](https://raw.githubusercontent.com/1228chl/Learning-AI-Large-Models-Notes/master/Assets/Image/AI-Large-Modlels-Notes/Agent/Dify/04Dify/1.1.1-2.png)
+  ![](../../../Assets/Image/AI-Large-Modlels-Notes/Agent/Dify/04Dify/1.1.1-2.png)
 
 3. **设置内存为 8 GB**，开启虚拟机，并选择 **“我已复制该虚拟机”**  
-![](https://raw.githubusercontent.com/1228chl/Learning-AI-Large-Models-Notes/master/Assets/Image/AI-Large-Modlels-Notes/Agent/Dify/04Dify/1.1.1-4.png)
+![](../../../Assets/Image/AI-Large-Modlels-Notes/Agent/Dify/04Dify/1.1.1-4.png)
 
 
 4. **登录账号**  
    - 账号：`itheima`，密码：`123456`  
    - 或使用 root 账号：`root` / `123456`  
-   ![](https://raw.githubusercontent.com/1228chl/Learning-AI-Large-Models-Notes/master/Assets/Image/AI-Large-Modlels-Notes/Agent/Dify/04Dify/1.1.1-3.png)
+   ![](../../../Assets/Image/AI-Large-Modlels-Notes/Agent/Dify/04Dify/1.1.1-3.png)
 
 1. **使用快照 `dify 1.13` **  
-   ![](https://raw.githubusercontent.com/1228chl/Learning-AI-Large-Models-Notes/master/Assets/Image/AI-Large-Modlels-Notes/Agent/Dify/04Dify/1.1.1-5.png)
+   ![](../../../Assets/Image/AI-Large-Modlels-Notes/Agent/Dify/04Dify/1.1.1-5.png)
 
 2. **切换 root 用户**（如果登录的是普通用户）  
 
@@ -46,7 +46,7 @@
    123456
    ```
 
-   ![](https://raw.githubusercontent.com/1228chl/Learning-AI-Large-Models-Notes/master/Assets/Image/AI-Large-Modlels-Notes/Agent/Dify/04Dify/1.1.1-6.png)
+   ![](../../../Assets/Image/AI-Large-Modlels-Notes/Agent/Dify/04Dify/1.1.1-6.png)
 
 ### 1.2 启动 Dify 与 RAGFlow
 
@@ -66,7 +66,7 @@ docker compose up -d
 ```
 
 启动成功后，终端会显示所有容器运行状态（绿色 `Started`）。  
-![](https://raw.githubusercontent.com/1228chl/Learning-AI-Large-Models-Notes/master/Assets/Image/AI-Large-Modlels-Notes/Agent/Dify/04Dify/1.1.2-1.png)
+![](../../../Assets/Image/AI-Large-Modlels-Notes/Agent/Dify/04Dify/1.1.2-1.png)
 
 ### 1.3 登录与注册
 
@@ -89,11 +89,11 @@ docker compose up -d
 ### 2.1 配置模型
 
 进入 Dify 后台，首先配置模型提供商。  
-![](https://raw.githubusercontent.com/1228chl/Learning-AI-Large-Models-Notes/master/Assets/Image/AI-Large-Modlels-Notes/Agent/Dify/04Dify/1.2.1-1.png)
+![](../../../Assets/Image/AI-Large-Modlels-Notes/Agent/Dify/04Dify/1.2.1-1.png)
 
 若未显示待配置列表，请**刷新页面**。
 
-![](https://raw.githubusercontent.com/1228chl/Learning-AI-Large-Models-Notes/master/Assets/Image/AI-Large-Modlels-Notes/Agent/Dify/04Dify/1.2.1-2.png)
+![](../../../Assets/Image/AI-Large-Modlels-Notes/Agent/Dify/04Dify/1.2.1-2.png)
 
 可以配置**默认模型**：  
 
@@ -103,15 +103,15 @@ docker compose up -d
 - 语音转文本：`paraformer-realtime-v2`  
 - 文本转语音：`qwen3-tts-flash`  
 
-![](https://raw.githubusercontent.com/1228chl/Learning-AI-Large-Models-Notes/master/Assets/Image/AI-Large-Modlels-Notes/Agent/Dify/04Dify/1.2.1-3.png)
+![](../../../Assets/Image/AI-Large-Modlels-Notes/Agent/Dify/04Dify/1.2.1-3.png)
 
 ### 2.2 创建空白应用
 
-![](https://raw.githubusercontent.com/1228chl/Learning-AI-Large-Models-Notes/master/Assets/Image/AI-Large-Modlels-Notes/Agent/Dify/04Dify/1.2.2-1.png)
+![](../../../Assets/Image/AI-Large-Modlels-Notes/Agent/Dify/04Dify/1.2.2-1.png)
 
-![](https://raw.githubusercontent.com/1228chl/Learning-AI-Large-Models-Notes/master/Assets/Image/AI-Large-Modlels-Notes/Agent/Dify/04Dify/1.2.2-2.png)
+![](../../../Assets/Image/AI-Large-Modlels-Notes/Agent/Dify/04Dify/1.2.2-2.png)
 
-![](https://raw.githubusercontent.com/1228chl/Learning-AI-Large-Models-Notes/master/Assets/Image/AI-Large-Modlels-Notes/Agent/Dify/04Dify/1.2.2-3.png)
+![](../../../Assets/Image/AI-Large-Modlels-Notes/Agent/Dify/04Dify/1.2.2-3.png)
 
 ---
 
@@ -133,9 +133,9 @@ docker compose up -d
 ### 4.1 什么是微调
 
 微调前后，**相同的用户输入**，模型输出词的概率分布会发生变化。  
-![](https://raw.githubusercontent.com/1228chl/Learning-AI-Large-Models-Notes/master/Assets/Image/AI-Large-Modlels-Notes/Agent/Dify/04Dify/1.4.1-1.png)
+![](../../../Assets/Image/AI-Large-Modlels-Notes/Agent/Dify/04Dify/1.4.1-1.png)
 
-![](https://raw.githubusercontent.com/1228chl/Learning-AI-Large-Models-Notes/master/Assets/Image/AI-Large-Modlels-Notes/Agent/Dify/04Dify/1.4.1-2.png)
+![](../../../Assets/Image/AI-Large-Modlels-Notes/Agent/Dify/04Dify/1.4.1-2.png)
 
 ### 4.2 微调语料的基本形式
 
@@ -165,7 +165,7 @@ docker compose up -d
 全文检索的核心是 **倒排索引** 和 **BM 25 排序**。  
 `[此处插入图片：image16，全文检索示意图]`
 
-![](https://raw.githubusercontent.com/1228chl/Learning-AI-Large-Models-Notes/master/Assets/Image/AI-Large-Modlels-Notes/Agent/Dify/04Dify/1.5.1-1.png)
+![](../../../Assets/Image/AI-Large-Modlels-Notes/Agent/Dify/04Dify/1.5.1-1.png)
 
 #### 5.1.1 中文分词（jieba）
 
@@ -232,13 +232,13 @@ $$
 **BM 25 的优势**：通过分母中的抑制项，避免高频词和长文档得分过高，排序更合理。
 
 `[此处插入图片：image18，BM25 公式图示]`  
-![](https://raw.githubusercontent.com/1228chl/Learning-AI-Large-Models-Notes/master/Assets/Image/AI-Large-Modlels-Notes/Agent/Dify/04Dify/1.5.1.4-1.png)
+![](../../../Assets/Image/AI-Large-Modlels-Notes/Agent/Dify/04Dify/1.5.1.4-1.png)
 
 `[此处插入图片：image19，BM25 与 TF‑IDF 对比]`
 
-![](https://raw.githubusercontent.com/1228chl/Learning-AI-Large-Models-Notes/master/Assets/Image/AI-Large-Modlels-Notes/Agent/Dify/04Dify/1.5.1.4-2.png)
+![](../../../Assets/Image/AI-Large-Modlels-Notes/Agent/Dify/04Dify/1.5.1.4-2.png)
 
-![](https://raw.githubusercontent.com/1228chl/Learning-AI-Large-Models-Notes/master/Assets/Image/AI-Large-Modlels-Notes/Agent/Dify/04Dify/1.5.1.4-3.png)
+![](../../../Assets/Image/AI-Large-Modlels-Notes/Agent/Dify/04Dify/1.5.1.4-3.png)
 
 ---
 
@@ -254,11 +254,11 @@ $$
   - > 0.8：语义几乎相同
 
 `[此处插入图片：image20，向量空间示意]`  
-![](https://raw.githubusercontent.com/1228chl/Learning-AI-Large-Models-Notes/master/Assets/Image/AI-Large-Modlels-Notes/Agent/Dify/04Dify/1.5.2-1.png)
+![](../../../Assets/Image/AI-Large-Modlels-Notes/Agent/Dify/04Dify/1.5.2-1.png)
 
 `[此处插入图片：image21，二维向量示例（喜欢/睡觉维度）]`
 
-![](https://raw.githubusercontent.com/1228chl/Learning-AI-Large-Models-Notes/master/Assets/Image/AI-Large-Modlels-Notes/Agent/Dify/04Dify/1.5.2-2.png)
+![](../../../Assets/Image/AI-Large-Modlels-Notes/Agent/Dify/04Dify/1.5.2-2.png)
 
 > 语义检索能捕捉同义词、隐含意图，但无法精确匹配关键词。
 
@@ -275,7 +275,7 @@ $$
 
 `[此处插入图片：image22，混合检索流程图]`
 
-![](https://raw.githubusercontent.com/1228chl/Learning-AI-Large-Models-Notes/master/Assets/Image/AI-Large-Modlels-Notes/Agent/Dify/04Dify/1.5.3-1.png)
+![](../../../Assets/Image/AI-Large-Modlels-Notes/Agent/Dify/04Dify/1.5.3-1.png)
 
 **优点**：结合精确匹配与意图理解，兼顾召回率与准确率。
 
@@ -289,7 +289,7 @@ $$
 **知识库** = RAG 中的离线向量库。
 
 `[此处插入图片：image23，RAG 离线/在线架构]`
-![](https://raw.githubusercontent.com/1228chl/Learning-AI-Large-Models-Notes/master/Assets/Image/AI-Large-Modlels-Notes/Agent/Dify/04Dify/1.5.4-1.png)
+![](../../../Assets/Image/AI-Large-Modlels-Notes/Agent/Dify/04Dify/1.5.4-1.png)
 ---
 
 ## 第六部分：Dify 知识库构建
@@ -305,7 +305,7 @@ $$
 
 `[此处插入图片：image24，父子块切分示意图]`
 
-![](https://raw.githubusercontent.com/1228chl/Learning-AI-Large-Models-Notes/master/Assets/Image/AI-Large-Modlels-Notes/Agent/Dify/04Dify/1.6.1-1.png)
+![](../../../Assets/Image/AI-Large-Modlels-Notes/Agent/Dify/04Dify/1.6.1-1.png)
 
 ### 6.2 索引方式
 
@@ -339,22 +339,22 @@ Dify 内置三种检索类型：
 
 `[此处插入图片：image25，DeepDoc 处理示例]`
 
-![](https://raw.githubusercontent.com/1228chl/Learning-AI-Large-Models-Notes/master/Assets/Image/AI-Large-Modlels-Notes/Agent/Dify/04Dify/1.7.1-1.png)
+![](../../../Assets/Image/AI-Large-Modlels-Notes/Agent/Dify/04Dify/1.7.1-1.png)
 
 ### 7.2 构建知识库的参数设置
 
 1. 设置 PDF 文档解析器及切分方法  
    `[此处插入图片：image26，解析器设置界面]`
-![](https://raw.githubusercontent.com/1228chl/Learning-AI-Large-Models-Notes/master/Assets/Image/AI-Large-Modlels-Notes/Agent/Dify/04Dify/1.7.2-1.png)
+![](../../../Assets/Image/AI-Large-Modlels-Notes/Agent/Dify/04Dify/1.7.2-1.png)
 2. 召回增强：**RAPTOR 策略**（了解）  
    `[此处插入图片：image27，RAPTOR 设置]`
-![](https://raw.githubusercontent.com/1228chl/Learning-AI-Large-Models-Notes/master/Assets/Image/AI-Large-Modlels-Notes/Agent/Dify/04Dify/1.7.2-2.png)
+![](../../../Assets/Image/AI-Large-Modlels-Notes/Agent/Dify/04Dify/1.7.2-2.png)
 3. 知识图谱（了解）：
    - 实体类型、实体归一化、社区报告生成  
    `[此处插入图片：image28，知识图谱提取界面]`  
-![](https://raw.githubusercontent.com/1228chl/Learning-AI-Large-Models-Notes/master/Assets/Image/AI-Large-Modlels-Notes/Agent/Dify/04Dify/1.7.2-3.png)
+![](../../../Assets/Image/AI-Large-Modlels-Notes/Agent/Dify/04Dify/1.7.2-3.png)
    `[此处插入图片：image29，实体归一化与社区报告]`
-  ![](https://raw.githubusercontent.com/1228chl/Learning-AI-Large-Models-Notes/master/Assets/Image/AI-Large-Modlels-Notes/Agent/Dify/04Dify/1.7.2-4.png)
+  ![](../../../Assets/Image/AI-Large-Modlels-Notes/Agent/Dify/04Dify/1.7.2-4.png)
 
 ---
 
@@ -364,17 +364,17 @@ Dify 内置三种检索类型：
 
 1. **获取 RAGFlow 的 API Key 和服务器地址**  
    `[此处插入图片：image30，API Key 获取]`
-![](https://raw.githubusercontent.com/1228chl/Learning-AI-Large-Models-Notes/master/Assets/Image/AI-Large-Modlels-Notes/Agent/Dify/04Dify/1.8-1.png)
+![](../../../Assets/Image/AI-Large-Modlels-Notes/Agent/Dify/04Dify/1.8-1.png)
 2. **获取 RAGFlow 中知识库的 ID**  
    `[此处插入图片：image31，知识库 ID 位置]`
-![](https://raw.githubusercontent.com/1228chl/Learning-AI-Large-Models-Notes/master/Assets/Image/AI-Large-Modlels-Notes/Agent/Dify/04Dify/1.8-2.png)
+![](../../../Assets/Image/AI-Large-Modlels-Notes/Agent/Dify/04Dify/1.8-2.png)
 3. **在 Dify 中新建外部知识库**：
    - 虚拟机版 RAGFlow：地址 `http://192.168.88.100:8880/api/v1/dify`
    - WSL 版 RAGFlow：地址 `http://{本机 ip}:8880/api/v1/dify`（ip 用 `ipconfig` 查询）
-   ![](https://raw.githubusercontent.com/1228chl/Learning-AI-Large-Models-Notes/master/Assets/Image/AI-Large-Modlels-Notes/Agent/Dify/04Dify/1.8-3.png)
+   ![](../../../Assets/Image/AI-Large-Modlels-Notes/Agent/Dify/04Dify/1.8-3.png)
 1. **填入知识库 ID，连接**  
    `[此处插入图片：image33，连接成功界面]`
-![](https://raw.githubusercontent.com/1228chl/Learning-AI-Large-Models-Notes/master/Assets/Image/AI-Large-Modlels-Notes/Agent/Dify/04Dify/1.8-4.png)
+![](../../../Assets/Image/AI-Large-Modlels-Notes/Agent/Dify/04Dify/1.8-4.png)
 
 连接后，外部知识库的使用方式与 Dify 内置知识库完全相同。
 

@@ -363,7 +363,7 @@ if __name__ == '__main__':
 	- 学生模型学习真实的标签和教师模型软标签，将两种 loss 进行相加来更新学生模型的参数。
 - **中间层蒸馏**
 	- 教师模型中间层的特征表达方式，让学生具备更相似的“思考过程”。
-![](https://raw.githubusercontent.com/1228chl/Learning-AI-Large-Models-Notes/master/Assets/Image/AI-Large-Modlels-Notes/Project/SubmitAFullScoreProject/ModelCompression/1.3.2.1-1.png)
+![](../../../Assets/Image/AI-Large-Modlels-Notes/Project/SubmitAFullScoreProject/ModelCompression/1.3.2.1-1.png)
 
 ---
 

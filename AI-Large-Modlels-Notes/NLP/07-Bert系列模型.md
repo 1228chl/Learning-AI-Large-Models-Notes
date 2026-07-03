@@ -44,7 +44,7 @@ BERT 的出现被视为 NLP 发展史上的里程碑，其核心结构仍然是 
 
 #### 1.1.3 BERT、GPT、ELMo 的宏观对比
 
-![](https://raw.githubusercontent.com/1228chl/Learning-AI-Large-Models-Notes/master/Assets/Image/AI-Large-Modlels-Notes/NLP/07-Bert系列模型/1.1.1.3-1.png)
+![](../../Assets/Image/AI-Large-Modlels-Notes/NLP/07-Bert系列模型/1.1.1.3-1.png)
 
 | 模型 | 提出时间 | 提出机构 | 基础架构 | 特征提取方向 | 主要擅长任务 |
 | --- | --- | --- | --- | --- | --- |
@@ -60,7 +60,7 @@ BERT 的出现被视为 NLP 发展史上的里程碑，其核心结构仍然是 
 
 BERT 宏观上分为**三个主要模块**（从下至上）：
 
-![|300](https://raw.githubusercontent.com/1228chl/Learning-AI-Large-Models-Notes/master/Assets/Image/AI-Large-Modlels-Notes/NLP/07-Bert系列模型/1.1.2-1.png)
+![|300](../../Assets/Image/AI-Large-Modlels-Notes/NLP/07-Bert系列模型/1.1.2-1.png)
 
 1. **Embedding 模块**（底层，黄色标记）
 2. **Transformer 模块**（中间层，蓝色标记）
@@ -72,7 +72,7 @@ BERT 宏观上分为**三个主要模块**（从下至上）：
 
 BERT 的输入表示由**三种嵌入向量相加**构成：
 
-![](https://raw.githubusercontent.com/1228chl/Learning-AI-Large-Models-Notes/master/Assets/Image/AI-Large-Modlels-Notes/NLP/07-Bert系列模型/1.1.2.1-1.png)
+![](../../Assets/Image/AI-Large-Modlels-Notes/NLP/07-Bert系列模型/1.1.2.1-1.png)
 
 1. **Token Embeddings（词嵌入张量）**  
    将每个单词（token）映射为固定维度的向量。BERT 使用 **WordPiece** 分词（子词分词），词汇表大小通常为 30,000。第一个 token 始终是 `[CLS]`（分类标志），用于后续分类任务。
@@ -124,7 +124,7 @@ class BERTEmbeddings(nn.Module):
 
 BERT **只使用了 Transformer 架构中的 Encoder 部分**，完全舍弃了 Decoder。这是因为 BERT 的目标是**深度双向理解**，而非自回归生成。
 
-![|400](https://raw.githubusercontent.com/1228chl/Learning-AI-Large-Models-Notes/master/Assets/Image/AI-Large-Modlels-Notes/NLP/07-Bert系列模型/1.1.2.2-1.png)
+![|400](../../Assets/Image/AI-Large-Modlels-Notes/NLP/07-Bert系列模型/1.1.2.2-1.png)
 
 **特点**：
 
@@ -145,7 +145,7 @@ BERT **只使用了 Transformer 架构中的 Encoder 部分**，完全舍弃了 
 
 BERT 经过预训练后，最后一层的输出会根据**下游任务的不同**进行不同的调整，只需微调少量参数即可获得 SOTA 结果。常见的四类 NLP 微调任务架构如下：
 
-![|500](https://raw.githubusercontent.com/1228chl/Learning-AI-Large-Models-Notes/master/Assets/Image/AI-Large-Modlels-Notes/NLP/07-Bert系列模型/1.1.2.3-1.png)
+![|500](../../Assets/Image/AI-Large-Modlels-Notes/NLP/07-Bert系列模型/1.1.2.3-1.png)
 
 | 任务类型            | 图例  | 说明                                     | 微调方式                      |
 | --------------- | --- | -------------------------------------- | ------------------------- |
@@ -356,7 +356,7 @@ ELMo 是**第一个支持动态词向量的预训练模型**，在 NLP 技术发
 
 ELMo 宏观上分为**三个主要模块**（从下至上）：
 
-![](https://raw.githubusercontent.com/1228chl/Learning-AI-Large-Models-Notes/master/Assets/Image/AI-Large-Modlels-Notes/NLP/07-Bert系列模型/1.2.2-1.png)
+![](../../Assets/Image/AI-Large-Modlels-Notes/NLP/07-Bert系列模型/1.2.2-1.png)
 
 1. **底层 Embedding 模块**（黄色标记）—— 生成静态词向量（字符级 CNN）
 2. **中间层双向双层 LSTM 模块**（蓝色标记）—— 提取上下文特征
@@ -661,7 +661,7 @@ GPT 采用了 Transformer 的 **Decoder 部分**，但与原始 Transformer 中�
 
 **结构图示**（文本与图片描述）：
 
-![200](https://raw.githubusercontent.com/1228chl/Learning-AI-Large-Models-Notes/master/Assets/Image/AI-Large-Modlels-Notes/NLP/07-Bert系列模型/1.3.2.1-1.png)
+![200](../../Assets/Image/AI-Large-Modlels-Notes/NLP/07-Bert系列模型/1.3.2.1-1.png)
 
 ```python
 输入（token序列） → Token Embedding + Position Embedding
@@ -687,7 +687,7 @@ GPT 采用了 Transformer 的 **Decoder 部分**，但与原始 Transformer 中�
 
 **对比图**（左：无掩码自注意力，可看到右侧；右：带掩码，只能看到左侧）：
 
-![](https://raw.githubusercontent.com/1228chl/Learning-AI-Large-Models-Notes/master/Assets/Image/AI-Large-Modlels-Notes/NLP/07-Bert系列模型/1.3.2.2-1.png)
+![](../../Assets/Image/AI-Large-Modlels-Notes/NLP/07-Bert系列模型/1.3.2.2-1.png)
 
 - 无掩码时，`i` 可以关注 `j > i`（未来）。
 - 带掩码时，`i` 只能关注 `j <= i`（过去和当前）。
@@ -712,7 +712,7 @@ GPT 模型处理文本的完整流程分为**三个阶段**：数据输入前、
 
 原始文本（如一段话）需要转换为模型可处理的张量：
 
-![](https://raw.githubusercontent.com/1228chl/Learning-AI-Large-Models-Notes/master/Assets/Image/AI-Large-Modlels-Notes/NLP/07-Bert系列模型/1.3.3.1-1.png)
+![](../../Assets/Image/AI-Large-Modlels-Notes/NLP/07-Bert系列模型/1.3.3.1-1.png)
 
 1. **文本 → 数值化**：使用分词器（如 Byte Pair Encoding，BPE）将文本切分为子词 token，每个 token 映射为整数索引。
 2. **数值化 → 词向量**：通过可学习的嵌入矩阵 `E`（形状 `vocab_size × d_model`）查表，得到每个 token 的初始向量。
@@ -734,9 +734,9 @@ input_tensor = token_emb + pos_emb
 
 输入张量依次经过 **N 个解码器模块**（GPT-1 为 12 层，GPT-2 为 12/24/36 层，GPT-3 为 96 层）。每个模块内部：
 
-![600](https://raw.githubusercontent.com/1228chl/Learning-AI-Large-Models-Notes/master/Assets/Image/AI-Large-Modlels-Notes/NLP/07-Bert系列模型/1.3.3.2-1.png)
+![600](../../Assets/Image/AI-Large-Modlels-Notes/NLP/07-Bert系列模型/1.3.3.2-1.png)
 
-![600](https://raw.githubusercontent.com/1228chl/Learning-AI-Large-Models-Notes/master/Assets/Image/AI-Large-Modlels-Notes/NLP/07-Bert系列模型/1.3.3.2-2.png)
+![600](../../Assets/Image/AI-Large-Modlels-Notes/NLP/07-Bert系列模型/1.3.3.2-2.png)
 
 1. **掩码自注意力层**：
    - 计算每个单词与其他单词（仅过去及自身）的注意力权重： $attention_{weights} = softmax(Q * K^T / sqrt(d_k) + mask)$
@@ -753,7 +753,7 @@ input_tensor = token_emb + pos_emb
 
 #### 3.3.3 阶段 3：GPT 模型的输出 —— 生成下一个词
 
-![600](https://raw.githubusercontent.com/1228chl/Learning-AI-Large-Models-Notes/master/Assets/Image/AI-Large-Modlels-Notes/NLP/07-Bert系列模型/1.3.3.3-1.png)
+![600](../../Assets/Image/AI-Large-Modlels-Notes/NLP/07-Bert系列模型/1.3.3.3-1.png)
 
 1. **词向量映射到词汇表概率**：
    - 取最后一个位置的输出向量（表示当前序列的上下文），形状 $(d_model,)$。

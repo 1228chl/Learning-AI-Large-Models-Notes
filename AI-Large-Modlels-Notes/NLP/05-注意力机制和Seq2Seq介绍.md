@@ -199,7 +199,7 @@ print("输出:", output)        # 加权组合 V
 
 #### 2.1.2 Seq2Seq 的组成
 
-![500](https://raw.githubusercontent.com/1228chl/Learning-AI-Large-Models-Notes/master/Assets/Image/AI-Large-Modlels-Notes/NLP/05-注意力机制和Seq2Seq介绍/1.2.1.2-1.png)
+![500](../../Assets/Image/AI-Large-Modlels-Notes/NLP/05-注意力机制和Seq2Seq介绍/1.2.1.2-1.png)
 
 | 组件 | 作用 | 输入 | 输出 |
 | :--- | :--- | :--- | :--- |
@@ -211,7 +211,7 @@ print("输出:", output)        # 加权组合 V
 
 #### 2.1.3 编码器的工作流程
 
-![](https://raw.githubusercontent.com/1228chl/Learning-AI-Large-Models-Notes/master/Assets/Image/AI-Large-Modlels-Notes/NLP/05-注意力机制和Seq2Seq介绍/1.2.1.3-1.png)
+![](../../Assets/Image/AI-Large-Modlels-Notes/NLP/05-注意力机制和Seq2Seq介绍/1.2.1.3-1.png)
 
 1. 输入序列（如单词索引）经过词嵌入层，得到向量序列。
 2. 在每个时间步 $t$，RNN 单元接收当前词向量 $x_t$ 和上一时间步隐藏状态 $h_{t-1}$，输出当前隐藏状态 $h_t$。
@@ -228,7 +228,7 @@ $$
 
 #### 2.1.4 解码器的工作流程
 
-![](https://raw.githubusercontent.com/1228chl/Learning-AI-Large-Models-Notes/master/Assets/Image/AI-Large-Modlels-Notes/NLP/05-注意力机制和Seq2Seq介绍/1.2.1.4-1.png)
+![](../../Assets/Image/AI-Large-Modlels-Notes/NLP/05-注意力机制和Seq2Seq介绍/1.2.1.4-1.png)
 
 1. 将编码器输出的上下文向量 $C$ 作为解码器的初始隐藏状态 $s_0 = C$。
 2. 在每个时间步 $t$，解码器接收上一个时间步生成的目标词 $y_{t-1}$（训练时可用真实标签，推理时用自身输出），以及当前隐藏状态 $s_{t-1}$，输出当前隐藏状态 $s_t$，再通过一个输出层（如全连接+Softmax）预测下一个词 $y_t$。

@@ -176,7 +176,7 @@ plt.show()
 
 绘图：
 
-![797](https://raw.githubusercontent.com/1228chl/Learning-AI-Large-Models-Notes/master/Assets/Image/AI-Large-Modlels-Notes/DL/ANN/ANN完整拓展+/1.2.2.1-1.png)
+![797](../../../Assets/Image/AI-Large-Modlels-Notes/DL/ANN/ANN完整拓展+/1.2.2.1-1.png)
 
 ---
 
@@ -237,7 +237,7 @@ plt.show()
 
 **绘图**：
 
-![](https://raw.githubusercontent.com/1228chl/Learning-AI-Large-Models-Notes/master/Assets/Image/AI-Large-Modlels-Notes/DL/ANN/ANN完整拓展+/1.2.2.2-1.png)
+![](../../../Assets/Image/AI-Large-Modlels-Notes/DL/ANN/ANN完整拓展+/1.2.2.2-1.png)
 
 ---
 
@@ -310,7 +310,7 @@ plt.show()
 
 **绘图**：
 
-![](https://raw.githubusercontent.com/1228chl/Learning-AI-Large-Models-Notes/master/Assets/Image/AI-Large-Modlels-Notes/DL/ANN/ANN完整拓展+/1.2.2.3-1.png)
+![](../../../Assets/Image/AI-Large-Modlels-Notes/DL/ANN/ANN完整拓展+/1.2.2.3-1.png)
 
 ---
 
@@ -677,7 +677,7 @@ $$
 
 **图例**：
 
-![](https://raw.githubusercontent.com/1228chl/Learning-AI-Large-Models-Notes/master/Assets/Image/AI-Large-Modlels-Notes/DL/ANN/ANN完整拓展+/1.4.2.1-1.png)
+![](../../../Assets/Image/AI-Large-Modlels-Notes/DL/ANN/ANN完整拓展+/1.4.2.1-1.png)
 
 **例子**：上图中的交叉熵损失为：$-(0\log(0.10) + 1\log(0.7) + 0\log(0.2)) = -\log 0.7$。从概率角度理解，我们的目的是最小化正确类别所对应的预测概率的对数的负值（损失值最小）。
 
@@ -738,7 +738,7 @@ print(loss.item())
 
 **图例**：
 
-![](https://raw.githubusercontent.com/1228chl/Learning-AI-Large-Models-Notes/master/Assets/Image/AI-Large-Modlels-Notes/DL/ANN/ANN完整拓展+/1.4.2.2-1.png)
+![](../../../Assets/Image/AI-Large-Modlels-Notes/DL/ANN/ANN完整拓展+/1.4.2.2-1.png)
 
 **数值稳定的版本**：`nn.BCEWithLogitsLoss` 将 Sigmoid 和 BCE 合并，并在内部进行数值稳定处理，推荐使用。
 
@@ -787,7 +787,7 @@ print(loss.item())   # (|1-2| + |1-2| + |1.9-2|)/3 = (1+1+0.1)/3 = 0.7
 
 **图例**：
 
-![](https://raw.githubusercontent.com/1228chl/Learning-AI-Large-Models-Notes/master/Assets/Image/AI-Large-Modlels-Notes/DL/ANN/ANN完整拓展+/1.4.3.1-1.png)
+![](../../../Assets/Image/AI-Large-Modlels-Notes/DL/ANN/ANN完整拓展+/1.4.3.1-1.png)
 
 ---
 
@@ -817,7 +817,7 @@ print(loss.item())
 
 **图例**：
 
-![](https://raw.githubusercontent.com/1228chl/Learning-AI-Large-Models-Notes/master/Assets/Image/AI-Large-Modlels-Notes/DL/ANN/ANN完整拓展+/1.4.3.2-1.png)
+![](../../../Assets/Image/AI-Large-Modlels-Notes/DL/ANN/ANN完整拓展+/1.4.3.2-1.png)
 
 ---
 
@@ -851,7 +851,7 @@ print(loss.item())
 
 **图例**：
 
-![](https://raw.githubusercontent.com/1228chl/Learning-AI-Large-Models-Notes/master/Assets/Image/AI-Large-Modlels-Notes/DL/ANN/ANN完整拓展+/1.4.3.3-1.png)
+![](../../../Assets/Image/AI-Large-Modlels-Notes/DL/ANN/ANN完整拓展+/1.4.3.3-1.png)
 
 ---
 
@@ -891,7 +891,7 @@ print(loss.item())
 
 ### 1. 优化算法面临的问题
 
-![](https://raw.githubusercontent.com/1228chl/Learning-AI-Large-Models-Notes/master/Assets/Image/AI-Large-Modlels-Notes/DL/ANN/ANN完整拓展+/1.5.1-1.png)
+![](../../../Assets/Image/AI-Large-Modlels-Notes/DL/ANN/ANN完整拓展+/1.5.1-1.png)
 
 - **平缓区域（Plateau）**：梯度值很小，参数更新极慢。
 - **鞍点（Saddle Point）**：梯度为零，但既不是局部极小也不是极大，参数无法更新。
@@ -953,7 +953,7 @@ plt.show()
 
 从图中可见，β 越大（如 0.9），曲线越平滑，波动越小。
 
-![](https://raw.githubusercontent.com/1228chl/Learning-AI-Large-Models-Notes/master/Assets/Image/AI-Large-Modlels-Notes/DL/ANN/ANN完整拓展+/1.5.2-1.png)
+![](../../../Assets/Image/AI-Large-Modlels-Notes/DL/ANN/ANN完整拓展+/1.5.2-1.png)
 
 ---
 
@@ -1197,7 +1197,7 @@ scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=50, gamma=0.5)
 
 **图例**：
 
-![](https://raw.githubusercontent.com/1228chl/Learning-AI-Large-Models-Notes/master/Assets/Image/AI-Large-Modlels-Notes/DL/ANN/ANN完整拓展+/1.5.5.1-1.png)
+![](../../../Assets/Image/AI-Large-Modlels-Notes/DL/ANN/ANN完整拓展+/1.5.5.1-1.png)
 
 ---
 
@@ -1211,7 +1211,7 @@ scheduler = torch.optim.lr_scheduler.MultiStepLR(optimizer, milestones=[50,125,1
 
 **图例**：
 
-![](https://raw.githubusercontent.com/1228chl/Learning-AI-Large-Models-Notes/master/Assets/Image/AI-Large-Modlels-Notes/DL/ANN/ANN完整拓展+/1.5.5.2-1.png)
+![](../../../Assets/Image/AI-Large-Modlels-Notes/DL/ANN/ANN完整拓展+/1.5.5.2-1.png)
 
 ---
 
@@ -1225,7 +1225,7 @@ scheduler = torch.optim.lr_scheduler.ExponentialLR(optimizer, gamma=0.95)
 
 **图例**：
 
-![](https://raw.githubusercontent.com/1228chl/Learning-AI-Large-Models-Notes/master/Assets/Image/AI-Large-Modlels-Notes/DL/ANN/ANN完整拓展+/1.5.5.3-1.png)
+![](../../../Assets/Image/AI-Large-Modlels-Notes/DL/ANN/ANN完整拓展+/1.5.5.3-1.png)
 
 ---
 
@@ -1243,7 +1243,7 @@ scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max=50)
 
 **图例**：
 
-![](https://raw.githubusercontent.com/1228chl/Learning-AI-Large-Models-Notes/master/Assets/Image/AI-Large-Modlels-Notes/DL/ANN/ANN完整拓展+/1.5.5.4-1.png)
+![](../../../Assets/Image/AI-Large-Modlels-Notes/DL/ANN/ANN完整拓展+/1.5.5.4-1.png)
 
 ---
 
@@ -1259,7 +1259,7 @@ scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(optimizer, mode='min', pa
 
 **图例**：
 
-![](https://raw.githubusercontent.com/1228chl/Learning-AI-Large-Models-Notes/master/Assets/Image/AI-Large-Modlels-Notes/DL/ANN/ANN完整拓展+/1.5.5.5-1.png)
+![](../../../Assets/Image/AI-Large-Modlels-Notes/DL/ANN/ANN完整拓展+/1.5.5.5-1.png)
 
 ---
 
