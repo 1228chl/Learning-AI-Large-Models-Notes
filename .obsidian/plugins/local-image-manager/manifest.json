@@ -1,0 +1,9 @@
+{
+  "id": "local-image-manager",
+  "name": "Local Image Manager",
+  "version": "1.2.2",
+  "minAppVersion": "0.15.0",
+  "description": "粘贴图片时，按笔记路径存放，并按标题层级自动命名（如 1.2.3-1.png）。",
+  "author": "XunZong",
+  "isDesktopOnly": false
+}

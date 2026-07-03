@@ -6,10 +6,10 @@
   "templater-obsidian",
   "easy-typing-obsidian",
   "mathlive",
-  "notepix",
   "obsidian-pandoc",
   "obsidian-style-settings",
   "floating-toc",
   "table-editor-obsidian",
-  "obsidian-outliner"
+  "obsidian-outliner",
+  "local-image-manager"
 ]

@@ -1,0 +1,82 @@
+{
+  "transactions": [
+    {
+      "id": "1783050607138-hsy6186n",
+      "label": "重写活动笔记图片链接 LangChain框架",
+      "trigger": "settings-rewrite",
+      "scope": "single-note",
+      "status": "committed",
+      "createdAt": 1783050607138,
+      "entries": [
+        {
+          "kind": "text-snapshot",
+          "path": "AI-Large-Modlels-Notes/Agent/RAG/LangChain框架.md",
+          "snapshotPath": ".obsidian/plugins/note-image-manager/recovery/snapshots/1783050607138-hsy6186n-AI-Large-Modlels-Notes_Agent_RAG_LangChain--.md.txt"
+        }
+      ],
+      "afterState": {
+        "files": [
+          {
+            "path": "AI-Large-Modlels-Notes/Agent/RAG/LangChain框架.md",
+            "kind": "text",
+            "exists": true,
+            "snapshotPath": ".obsidian/plugins/note-image-manager/recovery/snapshots/1783050607138-hsy6186n-after-AI-Large-Modlels-Notes_Agent_RAG_LangChain--.md.txt"
+          }
+        ],
+        "folders": []
+      },
+      "beforeState": {
+        "files": [
+          {
+            "path": "AI-Large-Modlels-Notes/Agent/RAG/LangChain框架.md",
+            "kind": "text",
+            "exists": true,
+            "snapshotPath": ".obsidian/plugins/note-image-manager/recovery/snapshots/1783050607138-hsy6186n-AI-Large-Modlels-Notes_Agent_RAG_LangChain--.md.txt"
+          }
+        ],
+        "folders": []
+      },
+      "redoable": true,
+      "completedAt": 1783050607172
+    },
+    {
+      "id": "1783050623311-ufsmrb8b",
+      "label": "重写活动笔记图片链接 LangChain框架",
+      "trigger": "settings-rewrite",
+      "scope": "single-note",
+      "status": "committed",
+      "createdAt": 1783050623311,
+      "entries": [
+        {
+          "kind": "text-snapshot",
+          "path": "AI-Large-Modlels-Notes/Agent/RAG/LangChain框架.md",
+          "snapshotPath": ".obsidian/plugins/note-image-manager/recovery/snapshots/1783050623311-ufsmrb8b-AI-Large-Modlels-Notes_Agent_RAG_LangChain--.md.txt"
+        }
+      ],
+      "afterState": {
+        "files": [
+          {
+            "path": "AI-Large-Modlels-Notes/Agent/RAG/LangChain框架.md",
+            "kind": "text",
+            "exists": true,
+            "snapshotPath": ".obsidian/plugins/note-image-manager/recovery/snapshots/1783050623311-ufsmrb8b-after-AI-Large-Modlels-Notes_Agent_RAG_LangChain--.md.txt"
+          }
+        ],
+        "folders": []
+      },
+      "beforeState": {
+        "files": [
+          {
+            "path": "AI-Large-Modlels-Notes/Agent/RAG/LangChain框架.md",
+            "kind": "text",
+            "exists": true,
+            "snapshotPath": ".obsidian/plugins/note-image-manager/recovery/snapshots/1783050623311-ufsmrb8b-AI-Large-Modlels-Notes_Agent_RAG_LangChain--.md.txt"
+          }
+        ],
+        "folders": []
+      },
+      "redoable": true,
+      "completedAt": 1783050623337
+    }
+  ]
+}

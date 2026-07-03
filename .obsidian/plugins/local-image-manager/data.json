@@ -1,0 +1,14 @@
+{
+  "baseFolder": "Assets/Image",
+  "maxHeadingDepth": 6,
+  "uploadOnPaste": "always",
+  "linkFormat": "markdown",
+  "imageCounters": {
+    "AI-Large-Modlels-Notes/Draft/dafafaf.md|1.1.2.4": 2,
+    "AI-Large-Modlels-Notes/Draft/dafafaf.md|1.1.2.1": 1,
+    "AI-Large-Modlels-Notes/Draft/dafafaf.md|1.1": 1,
+    "AI-Large-Modlels-Notes/Draft/dafafaf.md|1.1.1": 1,
+    "AI-Large-Modlels-Notes/Draft/dafafaf.md|1.1.2.2": 1,
+    "AI-Large-Modlels-Notes/Draft/dafafaf.md|1.1.2.3": 1
+  }
+}
