@@ -28,11 +28,8 @@ class LocalImageManager extends Plugin {
             callback: () => this.convertNoteLinksFormat(),
         });
 
-        // 编辑器文本链接右键菜单（保留）
+        // 编辑器文本链接右键菜单（源码模式，稳定可靠）
         this.registerEvent(this.app.workspace.on('editor-menu', this.handleEditorMenu.bind(this)));
-
-        // 实时预览图片右键菜单（仅包含插件功能）
-        this.registerDomEvent(document, 'contextmenu', this.handleDocumentContextMenu.bind(this));
     }
 
     onunload() { }
@@ -50,7 +47,7 @@ class LocalImageManager extends Plugin {
     }
 
     // ========================================================================
-    // 右键菜单：编辑器文本链接（保留）
+    // 右键菜单：编辑器文本链接（源码模式）
     // ========================================================================
     handleEditorMenu(menu, editor, view) {
         const cursor = editor.getCursor();
@@ -77,7 +74,6 @@ class LocalImageManager extends Plugin {
                 .setIcon('sort-desc')
                 .onClick(() => this.reorderCurrentNoteImages());
         });
-
         menu.addItem((item) => {
             item.setTitle('删除此图片（文件与链接）')
                 .setIcon('trash')
@@ -95,81 +91,6 @@ class LocalImageManager extends Plugin {
                     await this.removeAllLinksToFileAndDelete(view, file);
                 });
         });
-    }
-
-    // ========================================================================
-    // 右键菜单：实时预览图片（仅包含插件特有功能）
-    // ========================================================================
-    handleDocumentContextMenu(evt) {
-        const target = evt.target;
-        if (!(target instanceof Element)) return;
-
-        const view = this.app.workspace.getActiveViewOfType(require('obsidian').MarkdownView);
-        if (!view) return;
-
-        const container = view.contentEl;
-        if (!container.contains(target)) return;
-
-        const img = target.closest('img');
-        if (!img) return;
-
-        let linkPath = img.getAttribute('data-href') || img.getAttribute('src');
-        if (!linkPath) return;
-
-        const noteFile = view.file;
-        if (!noteFile) return;
-
-        // 解析文件
-        let file = this.app.metadataCache.getFirstLinkpathDest(linkPath, noteFile.path);
-        if (!file) {
-            const fileName = linkPath.split('/').pop().split('?')[0];
-            if (fileName) {
-                const allFiles = this.app.vault.getFiles();
-                for (const f of allFiles) {
-                    if (f.name === fileName && /^\d+(?:\.\d+)*-\d+\.\w+$/.test(f.name)) {
-                        file = f;
-                        break;
-                    }
-                }
-            }
-        }
-        if (!file) return;
-
-        const nameRegex = /^\d+(?:\.\d+)*-\d+\.\w+$/;
-        if (!nameRegex.test(file.name)) return;
-
-        // 阻止默认菜单，显示自定义菜单
-        evt.preventDefault();
-        evt.stopPropagation();
-
-        const menu = new Menu();
-
-        // 只添加插件特有的功能
-        menu.addItem((item) => {
-            item.setTitle('重新整理本笔记图片序号')
-                .setIcon('sort-desc')
-                .onClick(() => this.reorderCurrentNoteImages());
-        });
-
-        menu.addItem((item) => {
-            item.setTitle('删除此图片（文件与链接）')
-                .setIcon('trash')
-                .onClick(async () => {
-                    const confirmModal = new ConfirmationModal(
-                        this.app,
-                        '确认删除',
-                        `确定要删除图片 "${file.name}" 并从笔记中移除所有链接吗？\n此操作会将文件移至回收站。`
-                    );
-                    const confirmed = await new Promise(resolve => {
-                        confirmModal.open();
-                        confirmModal.onClose = () => resolve(confirmModal.confirmed);
-                    });
-                    if (!confirmed) return;
-                    await this.removeAllLinksToFileAndDelete(view, file);
-                });
-        });
-
-        menu.showAtMouseEvent(evt);
     }
 
     // ========================================================================
