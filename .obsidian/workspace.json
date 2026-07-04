@@ -38,13 +38,13 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "New-Notes/10-RAG/01-RAG概述.md",
+                "file": "New-Notes/Atomic-Cards/01-机器学习定义.md",
                 "mode": "source",
                 "source": false,
                 "backlinks": false
               },
               "icon": "lucide-file",
-              "title": "01-RAG概述"
+              "title": "01-机器学习定义"
             }
           }
         ],
@@ -234,8 +234,12 @@
       "templater-obsidian:Templater": false
     }
   },
-  "active": "adda6ef9daebf8bb",
+  "active": "e83158f79f242826",
   "lastOpenFiles": [
+    "New-Notes/知识体系总表.md",
+    "New-Notes/04-深度学习/01-深度学习概述.md",
+    "New-Notes/10-RAG/02-LangChain基础.md",
+    "New-Notes/10-RAG/01-RAG概述.md",
     "New-Notes/09-Python/01-面向对象编程.md",
     "New-Notes/03-机器学习/03-特征工程.md",
     "New-Notes/03-机器学习/02-算法分类.md",
@@ -259,10 +263,6 @@
     "New-Notes/08-数学/01-线性代数.md",
     "New-Notes/05-NLP/04-Transformer架构.md",
     "New-Notes/05-NLP/03-注意力机制.md",
-    "New-Notes/05-NLP/02-词嵌入技术.md",
-    "New-Notes/05-NLP/01-NLP概述.md",
-    "New-Notes/03-机器学习/08-随机森林.md",
-    "New-Notes/03-机器学习/07-决策树.md",
     "New-Notes/10-RAG",
     "New-Notes/09-Python",
     "New-Notes/08-数学",
