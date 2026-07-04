@@ -38,13 +38,13 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "AI-Large-Modlels-Notes/Project/EduRAG/01-LangChain框架介绍.md",
+                "file": "New-Notes/04-深度学习基础.md",
                 "mode": "source",
                 "source": false,
                 "backlinks": false
               },
               "icon": "lucide-file",
-              "title": "01-LangChain框架介绍"
+              "title": "04-深度学习基础"
             }
           }
         ],
@@ -105,8 +105,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 319.5,
-    "collapsed": true
+    "width": 319.5
   },
   "right": {
     "id": "f07a0c5b7e11463b",
@@ -237,6 +236,10 @@
   },
   "active": "c1dd3dc106755721",
   "lastOpenFiles": [
+    "New-Notes/03-监督学习算法.md",
+    "New-Notes/02-机器学习基础.md",
+    "New-Notes/01-Markdown与LaTeX语法.md",
+    "AI-Large-Modlels-Notes/Project/EduRAG/01-LangChain框架介绍.md",
     "New-Notes/README.md",
     "New-Notes/10-RAG与LangChain.md",
     "New-Notes/09-Python进阶.md",
@@ -245,9 +248,6 @@
     "New-Notes/06-数据分析基础.md",
     "New-Notes/05-NLP自然语言处理.md",
     "New-Notes/04-深度学习基础.md",
-    "New-Notes/03-监督学习算法.md",
-    "New-Notes/02-机器学习基础.md",
-    "New-Notes/01-Markdown与LaTeX语法.md",
     "New-Notes",
     "新建文件夹",
     "AI-Large-Modlels-Notes/Agent/Coze/03Coze细节（课堂版）.md",
@@ -265,7 +265,6 @@
     "Assets/Image/AI-Large-Modlels-Notes/Draft/dfadfafa/dfadfafa-20260703T120712.png",
     "Assets/Image/AI-Large-Modlels-Notes/Draft/dfadfafa",
     "AI-Large-Modlels-Notes/Markdown语法.md",
-    "AI-Large-Modlels-Notes/Project/EduRAG/01-LangChain框架介绍.md",
     "AI-Large-Modlels-Notes/Agent/RAG/LangChain框架.md",
     "AI-Large-Modlels-Notes/Project/EduRAG/README.md",
     "AI-Large-Modlels-Notes/Project/EduRAG/10-补充知识点（混合检索重排序父子块策略选择）.md",
