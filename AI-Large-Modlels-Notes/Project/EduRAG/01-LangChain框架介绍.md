@@ -225,7 +225,7 @@ print(few_shot_prompt.format(input="大"))
 # 反义词:
 ```
 
-**原理**：利用LLM的**上下文学习（In-Context Learning）**能力。模型从示例中自动学习"输入→输出"的映射模式。
+**原理**：利用LLM的**上下文学习（In-Context Learning）** 能力。模型从示例中自动学习"输入→输出"的映射模式。
 
 ### 3.3 PromptTemplate的工程价值
 
