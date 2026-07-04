@@ -210,6 +210,8 @@
   },
   "active": "e5c6004f44c0e722",
   "lastOpenFiles": [
+    "Full-Knowledge/03-深度模型/02-RNN与LSTM.md",
+    "Full-Knowledge/03-深度模型/01-CNN.md",
     "Full-Knowledge/02-模型基础/02-神经网络与反向传播.md",
     "Full-Knowledge/02-模型基础/01-线性回归与逻辑回归.md",
     "Full-Knowledge/01-编程实现/02-PyTorch基础.md",
@@ -244,8 +246,6 @@
     "New-Notes/Atomic-Cards/10-RAG检索增强生成.md",
     "New-Notes/Atomic-Cards/09-注意力机制.md",
     "New-Notes/Atomic-Cards/08-过拟合与欠拟合.md",
-    "New-Notes/Atomic-Cards/07-BERT.md",
-    "New-Notes/Atomic-Cards/06-Transformer.md",
     "Assets/Image/AI-Large-Modlels-Notes/ML/监督学习/线性回归/02线性回归(改进版)/5.2.2-2.png",
     "Assets/Image/AI-Large-Modlels-Notes/ML/监督学习/线性回归/02线性回归(改进版)/5.2.2-1-1.png",
     "Assets/Image/AI-Large-Modlels-Notes/ML/监督学习/线性回归/02线性回归(改进版)/5.2.1-1.png",
