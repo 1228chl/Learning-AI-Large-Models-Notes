@@ -237,6 +237,8 @@
   },
   "active": "c1dd3dc106755721",
   "lastOpenFiles": [
+    "New-Notes",
+    "新建文件夹",
     "AI-Large-Modlels-Notes/Agent/Coze/03Coze细节（课堂版）.md",
     "AI-Large-Modlels-Notes/Project/SubmitAFullScoreProject/ModelCompression.md",
     "AI-Large-Modlels-Notes/NLP/07-Bert系列模型.md",
@@ -273,7 +275,6 @@
     "Assets/Image/AI-Large-Modlels-Notes/Draft/dafafaf/1.1.2.1-1.png",
     "Assets/Image/AI-Large-Modlels-Notes/Draft/dafafaf/1.1.2.4-2.png",
     "Assets/Image/AI-Large-Modlels-Notes/Draft/dafafaf/1.1.1-1.png",
-    "AI-Large-Modlels-Notes/Draft/ANN笔记草稿2.md",
     "Assets/Image/AI-Large-Modlels-Notes/Draft/dafafaf",
     "Assets/Image/AI-Large-Modlels-Notes/Draft",
     "AI-Large-Modlels-Notes/Agent/RAG/Edu-RAG流程图-笔记版.drawio",
@@ -282,7 +283,6 @@
     "AI-Large-Modlels-Notes/Agent/RAG/Edu-RAG流程图.drawio",
     "AI-Large-Modlels-Notes/Project/EduRAG",
     "Assets/Image/AI-Large-Modlels-Notes/Agent/RAG/LangChain框架",
-    "Assets/Image/AI-Large-Modlels-Notes/Agent/RAG",
     "未命名.canvas"
   ]
 }
