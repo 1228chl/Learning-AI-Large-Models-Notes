@@ -26,10 +26,10 @@ GPT（Generative Pre-trained Transformer）是基于Transformer解码器的自�
 ### 核心公式
 
 **自回归语言模型**：
-$$P(x_t | x_1, ..., x_{t-1}) = \text{softmax}(W_e h_t)$$
+$$P(x_t \vert x_1, ..., x_{t-1}) = \text{softmax}(W_e h_t)$$
 
 **训练目标**：
-$$\mathcal{L} = -\sum_{t=1}^T \log P(x_t | x_1, ..., x_{t-1})$$
+$$\mathcal{L} = -\sum_{t=1}^T \log P(x_t \vert x_1, ..., x_{t-1})$$
 
 ---
 

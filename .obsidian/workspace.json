@@ -13,13 +13,23 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Full-Knowledge/00-数学地基/03-概率统计.md",
+                "file": "Full-Knowledge/01-编程实现/02-PyTorch基础.md",
                 "mode": "source",
                 "source": false,
                 "backlinks": false
               },
               "icon": "lucide-file",
-              "title": "03-概率统计"
+              "title": "02-PyTorch基础"
+            }
+          },
+          {
+            "id": "00bd6a9d0008064d",
+            "type": "leaf",
+            "state": {
+              "type": "graph",
+              "state": {},
+              "icon": "lucide-git-fork",
+              "title": "关系图谱"
             }
           }
         ]
@@ -210,16 +220,23 @@
   },
   "active": "e5c6004f44c0e722",
   "lastOpenFiles": [
+    "Full-Knowledge/01-编程实现/01-Python与NumPy.md",
+    "Full-Knowledge/00-数学地基/01-向量与线性代数.md",
+    "矩阵运算.md",
+    "Full-Knowledge/04-NLP应用/01-BERT.md",
+    "Full-Knowledge/README.md",
+    "Full-Knowledge/06-连接词与追问树/02-面试追问树.md",
+    "Full-Knowledge/06-连接词与追问树/01-连接词索引.md",
+    "Full-Knowledge/05-工程应用/02-AI-Agent.md",
+    "Full-Knowledge/05-工程应用/01-RAG检索增强生成.md",
+    "Full-Knowledge/00-数学地基/03-概率统计.md",
     "Full-Knowledge/03-深度模型/02-RNN与LSTM.md",
     "Full-Knowledge/03-深度模型/01-CNN.md",
     "Full-Knowledge/02-模型基础/02-神经网络与反向传播.md",
     "Full-Knowledge/02-模型基础/01-线性回归与逻辑回归.md",
     "Full-Knowledge/01-编程实现/02-PyTorch基础.md",
-    "Full-Knowledge/01-编程实现/01-Python与NumPy.md",
     "Full-Knowledge/00-数学地基/04-微积分与优化.md",
     "Full-Knowledge/00-数学地基/02-矩阵运算.md",
-    "Full-Knowledge/00-数学地基/03-概率统计.md",
-    "Full-Knowledge/00-数学地基/01-向量与线性代数.md",
     "New-Notes/Deep-Knowledge/01-数学地基/02-线性代数-矩阵.md",
     "Full-Knowledge/核心依赖链.md",
     "Full-Knowledge/06-连接词与追问树",
@@ -237,15 +254,8 @@
     "New-Notes/Deep-Knowledge/03-模型基础/02-神经网络与反向传播.md",
     "New-Notes/Deep-Knowledge/03-模型基础/01-线性回归.md",
     "New-Notes/Deep-Knowledge/01-数学地基/04-微积分.md",
-    "New-Notes/Deep-Knowledge/核心依赖链.md",
-    "New-Notes/Deep-Knowledge/README.md",
     "New-Notes/Deep-Knowledge/06-工程应用",
     "New-Notes/Deep-Knowledge/07-连接词与追问树",
-    "AI-Large-Modlels-Notes/Agent/Coze/03Coze细节（课堂版）.md",
-    "New-Notes/Atomic-Cards/README.md",
-    "New-Notes/Atomic-Cards/10-RAG检索增强生成.md",
-    "New-Notes/Atomic-Cards/09-注意力机制.md",
-    "New-Notes/Atomic-Cards/08-过拟合与欠拟合.md",
     "Assets/Image/AI-Large-Modlels-Notes/ML/监督学习/线性回归/02线性回归(改进版)/5.2.2-2.png",
     "Assets/Image/AI-Large-Modlels-Notes/ML/监督学习/线性回归/02线性回归(改进版)/5.2.2-1-1.png",
     "Assets/Image/AI-Large-Modlels-Notes/ML/监督学习/线性回归/02线性回归(改进版)/5.2.1-1.png",
