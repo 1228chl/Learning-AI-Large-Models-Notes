@@ -13,13 +13,13 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Full-Knowledge/01-编程实现/02-PyTorch基础.md",
+                "file": "Full-Knowledge/02-模型基础/02-神经网络与反向传播.md",
                 "mode": "source",
                 "source": false,
                 "backlinks": false
               },
               "icon": "lucide-file",
-              "title": "02-PyTorch基础"
+              "title": "02-神经网络与反向传播"
             }
           },
           {
@@ -220,6 +220,8 @@
   },
   "active": "e5c6004f44c0e722",
   "lastOpenFiles": [
+    "Full-Knowledge/02-模型基础/01-线性回归与逻辑回归.md",
+    "Full-Knowledge/01-编程实现/02-PyTorch基础.md",
     "Full-Knowledge/01-编程实现/01-Python与NumPy.md",
     "Full-Knowledge/00-数学地基/01-向量与线性代数.md",
     "矩阵运算.md",
@@ -233,8 +235,6 @@
     "Full-Knowledge/03-深度模型/02-RNN与LSTM.md",
     "Full-Knowledge/03-深度模型/01-CNN.md",
     "Full-Knowledge/02-模型基础/02-神经网络与反向传播.md",
-    "Full-Knowledge/02-模型基础/01-线性回归与逻辑回归.md",
-    "Full-Knowledge/01-编程实现/02-PyTorch基础.md",
     "Full-Knowledge/00-数学地基/04-微积分与优化.md",
     "Full-Knowledge/00-数学地基/02-矩阵运算.md",
     "New-Notes/Deep-Knowledge/01-数学地基/02-线性代数-矩阵.md",
