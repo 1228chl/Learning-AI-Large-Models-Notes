@@ -34,7 +34,27 @@
 
 ---
 
-### 1.3 LangChain 与 LLM 的关系
+### 1.3 核心设计理念
+
+LangChain 的核心理念围绕**模块化**与**可扩展性**展开，架构分为四层：
+
+- **基础层**：LLM/ChatAPI 封装
+- **工具层**：功能扩展
+- **链式层**：逻辑编排
+- **应用层**：场景实现
+
+这种分层设计使开发者能够像“搭积木”一样组合功能。
+
+---
+1.4 LangChain 技术生态
+LangChain 生态包含多个相关项目：
+- LangChain：核心框架
+- LangGraph：用于构建复杂决策逻辑的工作流框架
+- LangServe：模型部署工具
+- LangSmith：调试与调优平台
+
+---
+### 1.5 LangChain 与 LLM 的关系
 
 ```mermaid
 graph TB
