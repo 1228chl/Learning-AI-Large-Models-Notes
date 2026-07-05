@@ -105,13 +105,13 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "AI-Large-Modlels-Notes/Agent/Coze/03Coze细节（课堂版）.md",
+                "file": "AI-Large-Modlels-Notes/Agent/RAG/LangChain框架.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "03Coze细节（课堂版） 的大纲"
+              "title": "LangChain框架 的大纲"
             }
           },
           {
@@ -169,7 +169,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "AI-Large-Modlels-Notes/Project/SubmitAFullScoreProject/SubmitAFullSocreProject.md",
+                "file": "AI-Large-Modlels-Notes/Agent/RAG/LangChain框架.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -179,7 +179,7 @@
                 "unlinkedCollapsed": true
               },
               "icon": "links-coming-in",
-              "title": "SubmitAFullSocreProject 的反向链接列表"
+              "title": "LangChain框架 的反向链接列表"
             }
           },
           {
@@ -188,12 +188,12 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "AI-Large-Modlels-Notes/Project/SubmitAFullScoreProject/SubmitAFullSocreProject.md",
+                "file": "AI-Large-Modlels-Notes/Agent/RAG/LangChain框架.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               },
               "icon": "links-going-out",
-              "title": "SubmitAFullSocreProject 的出链列表"
+              "title": "LangChain框架 的出链列表"
             }
           }
         ],
