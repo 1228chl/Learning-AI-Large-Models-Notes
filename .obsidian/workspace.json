@@ -13,13 +13,13 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Atomic-Cards/AI-Agent/11-模型压缩量化剪枝蒸馏.md",
+                "file": "Atomic-Cards/包管理/01-Conda环境管理.md",
                 "mode": "source",
                 "source": false,
                 "backlinks": false
               },
               "icon": "lucide-file",
-              "title": "11-模型压缩量化剪枝蒸馏"
+              "title": "01-Conda环境管理"
             }
           },
           {
@@ -105,13 +105,13 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "Atomic-Cards/AI-Agent/11-模型压缩量化剪枝蒸馏.md",
+                "file": "Atomic-Cards/包管理/01-Conda环境管理.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "11-模型压缩量化剪枝蒸馏 的大纲"
+              "title": "01-Conda环境管理 的大纲"
             }
           },
           {
@@ -169,7 +169,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "Atomic-Cards/AI-Agent/11-模型压缩量化剪枝蒸馏.md",
+                "file": "Atomic-Cards/包管理/01-Conda环境管理.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -179,7 +179,7 @@
                 "unlinkedCollapsed": true
               },
               "icon": "links-coming-in",
-              "title": "11-模型压缩量化剪枝蒸馏 的反向链接列表"
+              "title": "01-Conda环境管理 的反向链接列表"
             }
           },
           {
@@ -188,16 +188,16 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "Atomic-Cards/AI-Agent/11-模型压缩量化剪枝蒸馏.md",
+                "file": "Atomic-Cards/包管理/01-Conda环境管理.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               },
               "icon": "links-going-out",
-              "title": "11-模型压缩量化剪枝蒸馏 的出链列表"
+              "title": "01-Conda环境管理 的出链列表"
             }
           }
         ],
-        "currentTab": 6
+        "currentTab": 1
       }
     ],
     "direction": "horizontal",
@@ -218,44 +218,44 @@
       "templater-obsidian:Templater": false
     }
   },
-  "active": "e5c6004f44c0e722",
+  "active": "e83158f79f242826",
   "lastOpenFiles": [
-    "Atomic-Cards/AI-Agent/14-面试追问树.md",
-    "Atomic-Cards/AI-Agent/14-面试追问树.md.tmp.14120.32d4aa198141",
-    "Atomic-Cards/AI-Agent/09-Docker基础与容器化.md",
-    "Atomic-Cards/AI-Agent/13-核心依赖链与学习路径.md",
-    "Atomic-Cards/AI-Agent/11-模型压缩量化剪枝蒸馏.md",
-    "Atomic-Cards/AI-Agent/12-文本分类全流程.md",
-    "Atomic-Cards/AI-Agent/12-文本分类全流程.md.tmp.14120.d3ed509dd739",
-    "Atomic-Cards/AI-Agent/03-文档切分策略.md",
-    "Atomic-Cards/AI-Agent/10-RAG系统双架构.md",
-    "Atomic-Cards/AI-Agent/10-RAG系统双架构.md.tmp.14120.29469561a941",
-    "Atomic-Cards/AI-Agent/09-Docker基础与容器化.md.tmp.14120.f36c54c86b42",
-    "Atomic-Cards/AI-Agent/04-LangChain六大组件.md",
-    "Atomic-Cards/AI-Agent/08-Dify平台.md",
-    "Atomic-Cards/AI-Agent/08-Dify平台.md.tmp.14120.3204cd39a28a",
-    "Atomic-Cards/AI-Agent/07-Coze平台.md",
-    "Atomic-Cards/数据库/08-Milvus核心概念.md",
-    "Atomic-Cards/AI-Agent/06-提示词工程核心原则.md",
-    "Atomic-Cards/AI-Agent/06-提示词工程核心原则.md.tmp.14120.5557063e9b1e",
-    "Atomic-Cards/AI-Agent/05-BM25算法.md",
-    "Atomic-Cards/AI-Agent/05-BM25算法.md.tmp.14120.efefbed716a8",
+    "Atomic-Cards/AI-Agent/23-RAG系统完整实现.md",
+    "Atomic-Cards/AI-Agent/23-RAG系统完整实现.md.tmp.14120.357514f5cd32",
+    "Atomic-Cards/AI-Agent/22-LangChain组件操作指南.md",
+    "Atomic-Cards/AI-Agent/22-LangChain组件操作指南.md.tmp.14120.45598fa8d76f",
+    "Atomic-Cards/数据库/22-LangChain组件操作指南.md",
+    "Atomic-Cards/数据库/22-LangChain组件操作指南.md.tmp.14120.8c9579a78269",
+    "Atomic-Cards/数据库/08-Milvus核心概念.md.tmp.14120.9d19d86abf08",
     "Atomic-Cards/数据库/09-嵌入与向量化.md",
     "Atomic-Cards/数据库/10-混合检索与重排序.md",
-    "Atomic-Cards/数据库/03-MySQL高级特性.md",
-    "Atomic-Cards/数据库/02-MySQL核心操作.md",
-    "Atomic-Cards/NLP/10-BERT与MLM预训练.md",
-    "Atomic-Cards/AI-Agent/02-RAG三阶段流程.md",
-    "Atomic-Cards/AI-Agent/02-RAG三阶段流程.md.tmp.14120.19a318f23666",
-    "Atomic-Cards/AI-Agent/01-Agent定义与核心公式.md",
-    "Atomic-Cards/AI-Agent/01-Agent定义与核心公式.md.tmp.14120.645d67cd778f",
-    "Atomic-Cards/AI-Agent",
-    "Atomic-Cards/数据分析/04-Matplotlib与数据可视化.md",
-    "Atomic-Cards/数据分析/03-Pandas与DataFrame.md",
-    "Atomic-Cards/数据分析/02-广播机制.md",
-    "Atomic-Cards/NLP/11-GPT与自回归生成.md",
-    "Atomic-Cards/数据分析/01-NumPy与ndarray.md",
+    "Atomic-Cards/数据库/08-Milvus核心概念.md",
+    "Atomic-Cards/深度学习/14-知识蒸馏详解.md",
+    "Atomic-Cards/线性代数/13-点积与余弦相似度.md",
+    "Atomic-Cards/AI-Agent/21-HTTP基础与API设计.md",
+    "Atomic-Cards/AI-Agent/21-HTTP基础与API设计.md.tmp.14120.8f91fc0b1c19",
+    "Atomic-Cards/Python/10-协程与asyncio.md",
+    "Atomic-Cards/Python/10-协程与asyncio.md.tmp.14120.feabbb17732a",
+    "Atomic-Cards/NLP/04-Seq2Seq与Encoder-Decoder.md",
+    "Atomic-Cards/AI-Agent/20-LLM API调用与ChatBot.md",
+    "Atomic-Cards/AI-Agent/20-LLM API调用与ChatBot.md.tmp.14120.4d853802816f",
+    "Atomic-Cards/AI-Agent/19-Ollama与本地LLM部署.md",
+    "Atomic-Cards/AI-Agent/19-Ollama与本地LLM部署.md.tmp.14120.97687f0da35c",
     "Atomic-Cards/NLP/05-注意力机制.md",
+    "Atomic-Cards/NLP/06-自注意力与Transformer.md",
+    "Atomic-Cards/NLP/07-多头注意力.md",
+    "Atomic-Cards/NLP/08-位置编码.md",
+    "Atomic-Cards/NLP/09-残差连接与LayerNorm.md",
+    "Atomic-Cards/NLP/10-BERT与MLM预训练.md",
+    "Atomic-Cards/NLP/11-GPT与自回归生成.md",
+    "Atomic-Cards/深度学习/14-知识蒸馏详解.md.tmp.14120.427402347d9e",
+    "Atomic-Cards/NLP/12-HuggingFace Transformers库.md",
+    "Atomic-Cards/AI-Agent/18-模型保存格式.md",
+    "Atomic-Cards/AI-Agent/18-模型保存格式.md.tmp.14120.0e53313f793d",
+    "Atomic-Cards/AI-Agent/17-Flask与FastAPI模型部署.md",
+    "Atomic-Cards/AI-Agent/16-Git版本控制.md",
+    "Atomic-Cards/AI-Agent/11-模型压缩量化剪枝蒸馏.md",
+    "Atomic-Cards/AI-Agent/15-GPU并行与混合精度.md",
     "Assets/Image/AI-Large-Modlels-Notes/ML/监督学习/线性回归/02线性回归(改进版)/5.2.2-2.png",
     "Assets/Image/AI-Large-Modlels-Notes/ML/监督学习/线性回归/02线性回归(改进版)/5.2.2-1-1.png",
     "Assets/Image/AI-Large-Modlels-Notes/ML/监督学习/线性回归/02线性回归(改进版)/5.2.1-1.png",
