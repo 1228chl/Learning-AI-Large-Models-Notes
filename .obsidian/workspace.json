@@ -13,13 +13,13 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "AI-Large-Modlels-Notes/Project/EduRAG/Redis数据库简介与使用.md",
+                "file": "AI-Large-Modlels-Notes/Project/EduRAG/Milvus 的加权排序器.md",
                 "mode": "source",
                 "source": false,
                 "backlinks": false
               },
               "icon": "lucide-file",
-              "title": "Redis数据库简介与使用"
+              "title": "Milvus 的加权排序器"
             }
           },
           {
@@ -37,8 +37,7 @@
               "title": "03-数组与链表"
             }
           }
-        ],
-        "currentTab": 1
+        ]
       }
     ],
     "direction": "vertical"
@@ -95,8 +94,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 319.5,
-    "collapsed": true
+    "width": 319.5
   },
   "right": {
     "id": "f07a0c5b7e11463b",
@@ -225,14 +223,15 @@
       "templater-obsidian:Templater": false
     }
   },
-  "active": "add985ffc0a03d7e",
+  "active": "e5c6004f44c0e722",
   "lastOpenFiles": [
-    "AI-Large-Modlels-Notes/Algorithm/01-算法复杂度分析.md",
-    "AI-Large-Modlels-Notes/Algorithm/03-数组与链表.md",
+    "AI-Large-Modlels-Notes/Project/EduRAG/BM25算法简介与应用.md",
     "AI-Large-Modlels-Notes/Project/EduRAG/Redis数据库简介与使用.md",
-    "AI-Large-Modlels-Notes/Algorithm/02-数据结构.md",
     "AI-Large-Modlels-Notes/Project/EduRAG/Python日志介绍与应用.md",
     "AI-Large-Modlels-Notes/Project/EduRAG/Milvus 的加权排序器.md",
+    "AI-Large-Modlels-Notes/Algorithm/03-数组与链表.md",
+    "AI-Large-Modlels-Notes/Algorithm/01-算法复杂度分析.md",
+    "AI-Large-Modlels-Notes/Algorithm/02-数据结构.md",
     "AI-Large-Modlels-Notes/Algorithm",
     "AI-Large-Modlels-Notes/Agent/RAG/基于MySQL库的问答系统.md",
     "AI-Large-Modlels-Notes/Project/EduRAG/demo/01-LangChain框架介绍.md",
@@ -254,7 +253,6 @@
     "Full-Knowledge/05-工程应用/02-AI-Agent.md",
     "Full-Knowledge/05-工程应用/01-RAG检索增强生成.md",
     "Full-Knowledge/00-数学地基/03-概率统计.md",
-    "Full-Knowledge/03-深度模型/02-RNN与LSTM.md",
     "Full-Knowledge/06-连接词与追问树",
     "Full-Knowledge/05-工程应用",
     "Full-Knowledge/04-NLP应用",
