@@ -13,32 +13,31 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "AI-Large-Modlels-Notes/Project/EduRAG/BM25算法简介与应用.md",
+                "file": "AI-Large-Modlels-Notes/Agent/提示词工程/提示词工程.md",
                 "mode": "source",
                 "source": false,
                 "backlinks": false
               },
               "icon": "lucide-file",
-              "title": "BM25算法简介与应用"
+              "title": "提示词工程"
             }
           },
           {
-            "id": "add985ffc0a03d7e",
+            "id": "e0db82b90e8c0155",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Templates/Note_Templater.md",
+                "file": "AI-Large-Modlels-Notes/Agent/提示词工程/提示词工程1.md",
                 "mode": "source",
                 "source": false,
                 "backlinks": false
               },
               "icon": "lucide-file",
-              "title": "Note_Templater"
+              "title": "提示词工程1"
             }
           }
-        ],
-        "currentTab": 1
+        ]
       }
     ],
     "direction": "vertical"
@@ -111,13 +110,13 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "Templates/Note_Templater.md",
+                "file": "AI-Large-Modlels-Notes/Agent/提示词工程/提示词工程.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "Note_Templater 的大纲"
+              "title": "提示词工程 的大纲"
             }
           },
           {
@@ -175,7 +174,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "Templates/Note_Templater.md",
+                "file": "AI-Large-Modlels-Notes/Agent/提示词工程/提示词工程.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -185,7 +184,7 @@
                 "unlinkedCollapsed": true
               },
               "icon": "links-coming-in",
-              "title": "Note_Templater 的反向链接列表"
+              "title": "提示词工程 的反向链接列表"
             }
           },
           {
@@ -194,12 +193,12 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "Templates/Note_Templater.md",
+                "file": "AI-Large-Modlels-Notes/Agent/提示词工程/提示词工程.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               },
               "icon": "links-going-out",
-              "title": "Note_Templater 的出链列表"
+              "title": "提示词工程 的出链列表"
             }
           }
         ],
@@ -224,14 +223,19 @@
       "templater-obsidian:Templater": false
     }
   },
-  "active": "add985ffc0a03d7e",
+  "active": "e5c6004f44c0e722",
   "lastOpenFiles": [
+    "AI-Large-Modlels-Notes/Agent/提示词工程/提示词工程1.md",
+    "AI-Large-Modlels-Notes/Agent/提示词工程/提示词工程.md",
+    "AI-Large-Modlels-Notes/Agent/各种提示词/笔记模板提示词.md",
+    "AI-Large-Modlels-Notes/Agent/各种提示词/精简笔记提示词.md",
+    "AI-Large-Modlels-Notes/Draft/aaa.md",
+    "AI-Large-Modlels-Notes/Draft/aa.md",
+    "AI-Large-Modlels-Notes/Project/EduRAG/BM25算法简介与应用.md",
+    "Templates/Note_Templater.md",
     "AI-Large-Modlels-Notes/Algorithm/03-数组与链表.md",
     "New-Notes/Atomic-Cards/01-机器学习定义.md",
-    "AI-Large-Modlels-Notes/Draft/aaa.md",
-    "Templates/Note_Templater.md",
     "New-Notes/05-NLP/01-NLP概述.md",
-    "AI-Large-Modlels-Notes/Project/EduRAG/BM25算法简介与应用.md",
     "AI-Large-Modlels-Notes/Project/EduRAG/demo/05-BM25算法与Redis缓存.md",
     "New-Notes/Atomic-Cards/03-梯度下降.md",
     "AI-Large-Modlels-Notes/ML/基础/02机器学习基础.md",
@@ -247,11 +251,6 @@
     "Full-Knowledge/00-数学地基/01-向量与线性代数.md",
     "New-Notes/02-机器学习基础.md",
     "AI-Large-Modlels-Notes/NLP/02-文本预处理-分词-张量.md",
-    "AI-Large-Modlels-Notes/Project/EduRAG/Redis数据库简介与使用.md",
-    "AI-Large-Modlels-Notes/Project/EduRAG/Python日志介绍与应用.md",
-    "AI-Large-Modlels-Notes/Project/EduRAG/Milvus 的加权排序器.md",
-    "AI-Large-Modlels-Notes/Algorithm/01-算法复杂度分析.md",
-    "AI-Large-Modlels-Notes/Algorithm/02-数据结构.md",
     "AI-Large-Modlels-Notes/Algorithm",
     "AI-Large-Modlels-Notes/Project/EduRAG/demo",
     "Full-Knowledge/06-连接词与追问树",
