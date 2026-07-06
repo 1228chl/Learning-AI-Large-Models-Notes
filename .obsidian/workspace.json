@@ -23,16 +23,22 @@
             }
           },
           {
-            "id": "00bd6a9d0008064d",
+            "id": "afc1a7521a970a46",
             "type": "leaf",
             "state": {
-              "type": "graph",
-              "state": {},
-              "icon": "lucide-git-fork",
-              "title": "关系图谱"
+              "type": "markdown",
+              "state": {
+                "file": "AI-Large-Modlels-Notes/Agent/RAG/基于MySQL库的问答系统.md",
+                "mode": "source",
+                "source": false,
+                "backlinks": false
+              },
+              "icon": "lucide-file",
+              "title": "基于MySQL库的问答系统"
             }
           }
-        ]
+        ],
+        "currentTab": 1
       }
     ],
     "direction": "vertical"
@@ -219,9 +225,11 @@
       "templater-obsidian:Templater": false
     }
   },
-  "active": "e5c6004f44c0e722",
+  "active": "afc1a7521a970a46",
   "lastOpenFiles": [
     "AI-Large-Modlels-Notes/Agent/RAG/Milvus.md",
+    "AI-Large-Modlels-Notes/Agent/RAG/基于MySQL库的问答系统.md",
+    "AI-Large-Modlels-Notes/Project/EduRAG/Milvus 的加权排序器.md",
     "AI-Large-Modlels-Notes/Agent/RAG/LangChain框架.md",
     "Full-Knowledge/02-模型基础/02-神经网络与反向传播.md",
     "Full-Knowledge/02-模型基础/01-线性回归与逻辑回归.md",
@@ -253,8 +261,6 @@
     "New-Notes/Deep-Knowledge/01-数学地基/01-线性代数-向量.md",
     "New-Notes/Deep-Knowledge/01-数学地基/03-概率统计.md",
     "New-Notes/Deep-Knowledge/07-连接词与追问树/01-连接词索引.md",
-    "New-Notes/Deep-Knowledge/07-连接词与追问树/02-面试追问树.md",
-    "New-Notes/Deep-Knowledge/03-模型基础/02-神经网络与反向传播.md",
     "New-Notes/Deep-Knowledge/06-工程应用",
     "New-Notes/Deep-Knowledge/07-连接词与追问树",
     "Assets/Image/AI-Large-Modlels-Notes/ML/监督学习/线性回归/02线性回归(改进版)/5.2.2-2.png",
