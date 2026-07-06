@@ -2,7 +2,7 @@
 
 ---
 
-# Milvus 的加权排序器
+# Milvus 的加权排序器笔记
 
 我们更深入地探讨一下 Milvus 的加权排序器（WeightedRanker）。
 
