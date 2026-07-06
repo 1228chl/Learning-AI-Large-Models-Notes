@@ -37,7 +37,8 @@
               "title": "02-数据结构"
             }
           }
-        ]
+        ],
+        "currentTab": 1
       }
     ],
     "direction": "vertical"
@@ -224,14 +225,14 @@
       "templater-obsidian:Templater": false
     }
   },
-  "active": "e5c6004f44c0e722",
+  "active": "afc1a7521a970a46",
   "lastOpenFiles": [
+    "AI-Large-Modlels-Notes/Project/EduRAG/Redis数据库简介与使用.md",
     "AI-Large-Modlels-Notes/Project/EduRAG/Python日志介绍与应用.md",
     "AI-Large-Modlels-Notes/Algorithm/02-数据结构.md",
     "AI-Large-Modlels-Notes/Algorithm/01-算法复杂度分析.md",
     "AI-Large-Modlels-Notes/Project/EduRAG/Milvus 的加权排序器.md",
     "AI-Large-Modlels-Notes/Algorithm",
-    "AI-Large-Modlels-Notes/Project/EduRAG/Redis数据库简介与使用.md",
     "AI-Large-Modlels-Notes/Agent/RAG/基于MySQL库的问答系统.md",
     "AI-Large-Modlels-Notes/Project/EduRAG/demo/01-LangChain框架介绍.md",
     "AI-Large-Modlels-Notes/Project/EduRAG/demo/02-RAG系统架构与原理.md",
