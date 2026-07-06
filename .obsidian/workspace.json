@@ -13,13 +13,13 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Atomic-Cards/深度学习/04-反向传播算法.md",
+                "file": "Atomic-Cards/原子化生成提示词.md",
                 "mode": "source",
                 "source": false,
                 "backlinks": false
               },
               "icon": "lucide-file",
-              "title": "04-反向传播算法"
+              "title": "原子化生成提示词"
             }
           },
           {
@@ -105,13 +105,13 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "Atomic-Cards/深度学习/04-反向传播算法.md",
+                "file": "Atomic-Cards/原子化生成提示词.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "04-反向传播算法 的大纲"
+              "title": "原子化生成提示词 的大纲"
             }
           },
           {
@@ -169,7 +169,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "Atomic-Cards/深度学习/04-反向传播算法.md",
+                "file": "Atomic-Cards/原子化生成提示词.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -179,7 +179,7 @@
                 "unlinkedCollapsed": true
               },
               "icon": "links-coming-in",
-              "title": "04-反向传播算法 的反向链接列表"
+              "title": "原子化生成提示词 的反向链接列表"
             }
           },
           {
@@ -188,12 +188,12 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "Atomic-Cards/深度学习/04-反向传播算法.md",
+                "file": "Atomic-Cards/原子化生成提示词.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               },
               "icon": "links-going-out",
-              "title": "04-反向传播算法 的出链列表"
+              "title": "原子化生成提示词 的出链列表"
             }
           }
         ],
@@ -220,12 +220,15 @@
   },
   "active": "e5c6004f44c0e722",
   "lastOpenFiles": [
+    "Full-Knowledge/00-数学地基/03-概率统计.md",
+    "Full-Knowledge/00-数学地基/01-向量与线性代数.md",
+    "Atomic-Cards/原子化生成提示词.md",
+    "Atomic-Cards/深度学习/04-反向传播算法.md",
     "Atomic-Cards/深度学习/02-激活函数.md",
     "Atomic-Cards/概率统计/06-极大似然估计.md",
     "Atomic-Cards/概率统计/04-期望与方差.md",
     "Atomic-Cards/概率统计/05-协方差与相关系数.md",
     "Atomic-Cards/包管理/02-Conda包管理与配置.md",
-    "Atomic-Cards/原子化生成提示词.md",
     "Atomic-Cards/原子化生成提示词.md.tmp.14120.0efe84c51096",
     "Atomic-Cards/工程实践/02-GPU并行与混合精度.md",
     "Atomic-Cards/原子化生成提示词.md.tmp.14120.e89f823df3e2",
@@ -252,10 +255,7 @@
     "Atomic-Cards/AI-Agent/23-RAG系统完整实现.md",
     "Atomic-Cards/AI-Agent/23-RAG系统完整实现.md.tmp.14120.357514f5cd32",
     "Atomic-Cards/AI-Agent/22-LangChain组件操作指南.md.tmp.14120.45598fa8d76f",
-    "Atomic-Cards/数据库/22-LangChain组件操作指南.md",
     "Atomic-Cards/数据库/22-LangChain组件操作指南.md.tmp.14120.8c9579a78269",
-    "Atomic-Cards/数据库/09-嵌入与向量化.md",
-    "Atomic-Cards/数据库/10-混合检索与重排序.md",
     "Assets/Image/AI-Large-Modlels-Notes/ML/监督学习/线性回归/02线性回归(改进版)/5.2.2-2.png",
     "Assets/Image/AI-Large-Modlels-Notes/ML/监督学习/线性回归/02线性回归(改进版)/5.2.2-1-1.png",
     "Assets/Image/AI-Large-Modlels-Notes/ML/监督学习/线性回归/02线性回归(改进版)/5.2.1-1.png",
