@@ -1,4 +1,3 @@
-
 **标签：** #RAG
 
 ---
@@ -42,7 +41,7 @@ Redis（**RE**mote **DI**ctionary **S**erver）是一个高性能的**键值对�
 
 ### 2.1 项目结构
 
-```
+```python
 redis_lesson/
 ├── redis_client.py      # Redis 客户端封装模块
 ├── base.py              # 配置文件 + 日志配置
@@ -139,6 +138,7 @@ class RedisClient:
 ```
 
 **设计亮点**：
+
 - 使用 `json.dumps/loads` 支持任意 Python 对象的存储
 - `decode_responses=True` 统一处理字符串编码
 - 完善的异常捕获，防止单点故障影响主业务
@@ -182,7 +182,7 @@ if __name__ == "__main__":
 
 ### 2.5 依赖文件（requirements.txt）
 
-```
+```python
 redis>=4.0.0
 ```
 
@@ -192,7 +192,7 @@ redis>=4.0.0
 
 ### 3.1 运行 main.py
 
-```
+```python
 2025-05-12 10:00:01,123 - INFO - Redis 连接成功
 2025-05-12 10:00:01,124 - INFO - 存储数据到 Redis: user:1
 2025-05-12 10:00:01,125 - INFO - 查询结果: {'name': 'Alice', 'age': 25}
@@ -237,17 +237,21 @@ flowchart LR
 ## 五、最佳实践与注意事项
 
 ### 5.1 键命名规范
-```
+
+```python
 [项目名]:[业务域]:[标识符]
 例如：edurag:answer:如何学习Python
 ```
+
 好处：便于管理、监控和按前缀批量操作。
 
 ### 5.2 设置过期时间
+
 ```python
 # 为缓存键设置 1 小时过期
 self.client.setex(key, 3600, json.dumps(value))
 ```
+
 避免缓存无限膨胀。
 
 ### 5.3 缓存穿透/击穿/雪崩防护
