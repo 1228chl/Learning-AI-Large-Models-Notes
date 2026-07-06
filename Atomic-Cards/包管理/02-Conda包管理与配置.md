@@ -79,4 +79,13 @@ conda install pytorch torchvision torchaudio cpuonly -c pytorch
 
 > **mamba**：Conda 的 C++ 重写版，依赖解析速度提升数十倍，命令完全兼容（`mamba install` = `conda install`）。
 
+## ML 中的 Conda 实践
+
+| 场景 | 命令 | 说明 |
+|------|------|------|
+| **安装 PyTorch（GPU）** | `conda install pytorch torchvision cudatoolkit=11.8 -c pytorch` | 自动处理 CUDA 依赖 |
+| **可复现环境** | `conda env export > environment.yml` | 论文实验的精确复现 |
+| **多项目隔离** | `conda create -n proj_a python=3.10 && conda activate proj_a` | 各项目独立环境，避免依赖冲突 |
+| **Jupyter 内核** | `python -m ipykernel install --user --name my_env` | 将 Conda 环境注册为 Jupyter 内核 |
+
 > 参见 [[01-Conda环境管理]]、[[03-UV包管理器]]

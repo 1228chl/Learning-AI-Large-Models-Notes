@@ -13,13 +13,13 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Atomic-Cards/机器学习/19-模型选择与超参数调优.md",
+                "file": "Atomic-Cards/AI-Agent/11-模型压缩量化剪枝蒸馏.md",
                 "mode": "source",
                 "source": false,
                 "backlinks": false
               },
               "icon": "lucide-file",
-              "title": "19-模型选择与超参数调优"
+              "title": "11-模型压缩量化剪枝蒸馏"
             }
           },
           {
@@ -105,13 +105,13 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "Atomic-Cards/机器学习/19-模型选择与超参数调优.md",
+                "file": "Atomic-Cards/AI-Agent/11-模型压缩量化剪枝蒸馏.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "19-模型选择与超参数调优 的大纲"
+              "title": "11-模型压缩量化剪枝蒸馏 的大纲"
             }
           },
           {
@@ -169,7 +169,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "Atomic-Cards/机器学习/19-模型选择与超参数调优.md",
+                "file": "Atomic-Cards/AI-Agent/11-模型压缩量化剪枝蒸馏.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -179,7 +179,7 @@
                 "unlinkedCollapsed": true
               },
               "icon": "links-coming-in",
-              "title": "19-模型选择与超参数调优 的反向链接列表"
+              "title": "11-模型压缩量化剪枝蒸馏 的反向链接列表"
             }
           },
           {
@@ -188,12 +188,12 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "Atomic-Cards/机器学习/19-模型选择与超参数调优.md",
+                "file": "Atomic-Cards/AI-Agent/11-模型压缩量化剪枝蒸馏.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               },
               "icon": "links-going-out",
-              "title": "19-模型选择与超参数调优 的出链列表"
+              "title": "11-模型压缩量化剪枝蒸馏 的出链列表"
             }
           }
         ],
@@ -220,42 +220,42 @@
   },
   "active": "e5c6004f44c0e722",
   "lastOpenFiles": [
-    "Atomic-Cards/机器学习/20-正则化.md",
-    "Atomic-Cards/原子化生成提示词.md",
-    "Atomic-Cards/机器学习/19-模型选择与超参数调优.md",
-    "Atomic-Cards/机器学习/18-特征工程.md",
-    "Atomic-Cards/机器学习/17-PCA与降维.md",
-    "Atomic-Cards/机器学习/16-层次聚类与DBSCAN.md",
-    "Atomic-Cards/机器学习/15-K-means聚类.md",
-    "Atomic-Cards/机器学习/14-梯度提升机.md",
-    "Atomic-Cards/机器学习/20-正则化.md.tmp.14120.e82207eb03ce",
-    "Atomic-Cards/机器学习/13-随机森林.md",
-    "Atomic-Cards/机器学习/19-模型选择与超参数调优.md.tmp.14120.17a64c08fb81",
-    "Atomic-Cards/机器学习/12-集成学习.md",
-    "Atomic-Cards/机器学习/18-特征工程.md.tmp.14120.59bb4747de49",
-    "Atomic-Cards/机器学习/11-决策树.md",
-    "Atomic-Cards/机器学习/17-PCA与降维.md.tmp.14120.bcb36e272d45",
-    "Atomic-Cards/机器学习/10-支持向量机.md",
-    "Atomic-Cards/机器学习/16-层次聚类与DBSCAN.md.tmp.14120.05e2373b4fd1",
-    "Atomic-Cards/机器学习/09-朴素贝叶斯.md",
-    "Atomic-Cards/机器学习/15-K-means聚类.md.tmp.14120.024934d492d8",
-    "Atomic-Cards/机器学习/08-KNN算法.md",
-    "Atomic-Cards/机器学习/14-梯度提升机.md.tmp.14120.e632a4a9a372",
-    "Atomic-Cards/机器学习/07-逻辑回归.md",
-    "Atomic-Cards/机器学习/11-决策树.md.tmp.14120.24267eb80934",
-    "Atomic-Cards/机器学习/06-线性回归.md",
-    "Atomic-Cards/机器学习/05-过拟合与欠拟合.md",
-    "Atomic-Cards/机器学习/09-朴素贝叶斯.md.tmp.14120.4b849d7b2f81",
-    "Atomic-Cards/机器学习/08-KNN算法.md.tmp.14120.a907a692d3f0",
-    "Atomic-Cards/机器学习/04-评估指标.md",
-    "Atomic-Cards/机器学习/03-数据集划分与交叉验证.md",
-    "Atomic-Cards/机器学习/02-监督学习与非监督学习.md",
-    "Atomic-Cards/机器学习/01-机器学习概述.md",
-    "Atomic-Cards/数据结构与算法/05-队列.md",
-    "Atomic-Cards/数据结构与算法/04-栈.md",
-    "Atomic-Cards/数据结构与算法/03-链表.md",
-    "Atomic-Cards/数据结构与算法/02-数组与动态数组.md",
-    "Atomic-Cards/数据结构与算法/01-算法复杂度分析.md",
+    "Atomic-Cards/AI-Agent/14-面试追问树.md",
+    "Atomic-Cards/AI-Agent/14-面试追问树.md.tmp.14120.32d4aa198141",
+    "Atomic-Cards/AI-Agent/09-Docker基础与容器化.md",
+    "Atomic-Cards/AI-Agent/13-核心依赖链与学习路径.md",
+    "Atomic-Cards/AI-Agent/11-模型压缩量化剪枝蒸馏.md",
+    "Atomic-Cards/AI-Agent/12-文本分类全流程.md",
+    "Atomic-Cards/AI-Agent/12-文本分类全流程.md.tmp.14120.d3ed509dd739",
+    "Atomic-Cards/AI-Agent/03-文档切分策略.md",
+    "Atomic-Cards/AI-Agent/10-RAG系统双架构.md",
+    "Atomic-Cards/AI-Agent/10-RAG系统双架构.md.tmp.14120.29469561a941",
+    "Atomic-Cards/AI-Agent/09-Docker基础与容器化.md.tmp.14120.f36c54c86b42",
+    "Atomic-Cards/AI-Agent/04-LangChain六大组件.md",
+    "Atomic-Cards/AI-Agent/08-Dify平台.md",
+    "Atomic-Cards/AI-Agent/08-Dify平台.md.tmp.14120.3204cd39a28a",
+    "Atomic-Cards/AI-Agent/07-Coze平台.md",
+    "Atomic-Cards/数据库/08-Milvus核心概念.md",
+    "Atomic-Cards/AI-Agent/06-提示词工程核心原则.md",
+    "Atomic-Cards/AI-Agent/06-提示词工程核心原则.md.tmp.14120.5557063e9b1e",
+    "Atomic-Cards/AI-Agent/05-BM25算法.md",
+    "Atomic-Cards/AI-Agent/05-BM25算法.md.tmp.14120.efefbed716a8",
+    "Atomic-Cards/数据库/09-嵌入与向量化.md",
+    "Atomic-Cards/数据库/10-混合检索与重排序.md",
+    "Atomic-Cards/数据库/03-MySQL高级特性.md",
+    "Atomic-Cards/数据库/02-MySQL核心操作.md",
+    "Atomic-Cards/NLP/10-BERT与MLM预训练.md",
+    "Atomic-Cards/AI-Agent/02-RAG三阶段流程.md",
+    "Atomic-Cards/AI-Agent/02-RAG三阶段流程.md.tmp.14120.19a318f23666",
+    "Atomic-Cards/AI-Agent/01-Agent定义与核心公式.md",
+    "Atomic-Cards/AI-Agent/01-Agent定义与核心公式.md.tmp.14120.645d67cd778f",
+    "Atomic-Cards/AI-Agent",
+    "Atomic-Cards/数据分析/04-Matplotlib与数据可视化.md",
+    "Atomic-Cards/数据分析/03-Pandas与DataFrame.md",
+    "Atomic-Cards/数据分析/02-广播机制.md",
+    "Atomic-Cards/NLP/11-GPT与自回归生成.md",
+    "Atomic-Cards/数据分析/01-NumPy与ndarray.md",
+    "Atomic-Cards/NLP/05-注意力机制.md",
     "Assets/Image/AI-Large-Modlels-Notes/ML/监督学习/线性回归/02线性回归(改进版)/5.2.2-2.png",
     "Assets/Image/AI-Large-Modlels-Notes/ML/监督学习/线性回归/02线性回归(改进版)/5.2.2-1-1.png",
     "Assets/Image/AI-Large-Modlels-Notes/ML/监督学习/线性回归/02线性回归(改进版)/5.2.1-1.png",
