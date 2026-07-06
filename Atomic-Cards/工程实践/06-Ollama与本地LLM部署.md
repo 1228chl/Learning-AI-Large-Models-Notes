@@ -107,3 +107,17 @@ print(response.choices[0].message.content)
 | **API 替代方案** | 替代 OpenAI API 进行开发调试 |
 
 > 参见 [[07-LLM API调用与ChatBot]]、[[06-提示词工程核心原则]]
+
+> **面试追问**
+>
+> Q1（基础）：Ollama 是什么？它的核心功能和设计理念是什么？
+> 回答要点：Ollama 是本地运行大模型的命令行工具，封装模型下载、管理和推理；提供 OpenAI 兼容 API 方便替换；支持 CPU 和 GPU 推理，轻量易用，适合开发测试和私有化部署。
+>
+> Q2（深挖）：Ollama 内部是如何实现模型管理和推理的？和直接使用 Transformers 库有何不同？
+> 回答要点：Ollama 用 Go 语言编写底层集成 llama.cpp，以 GGUF 格式存储量化模型；自动管理模型版本和缓存，自动选择合适的 GPU 后端；相比 Transformers 库，牺牲部分灵活性换取开箱即用的便利性。
+>
+> Q3（实战）：你在项目中将 Ollama 用于 RAG 或 API 替代方案时，如何处理并发请求和长上下文？
+> 回答要点：Ollama 单模型实例默认串行处理，高并发需多实例 + 负载均衡；长上下文可通过 `num_ctx` 参数控制窗口大小但会增大显存；推荐搭配 LangChain/LlamaIndex 使用，用向量库缓解上下文长度限制。
+>
+> Q4（边界）：Ollama 在生产环境部署中有哪些局限性？何时应选择云 API 或 vLLM 等替代方案？
+> 回答要点：Ollama 缺乏高级批处理（动态 batching）和 PagedAttention 等优化，高并发吞吐不如 vLLM/TGI；大模型（70B+）在消费级 GPU 无法运行；无内置监控和鉴权（需自行反代）；生产级推荐 vLLM + Kubernetes，云场景选 OpenAI API。

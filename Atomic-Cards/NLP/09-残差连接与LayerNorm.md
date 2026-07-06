@@ -79,3 +79,17 @@ Pre-LN（更稳定，LLaMA 等）: x → LN → MHA → Add → LN → FFN → A
 | **Stable Diffusion** | 残差 + GroupNorm | U-Net 中的 CN 层 |
 
 > 参见 [[06-自注意力与Transformer]]、[[07-多头注意力]]
+
+> **面试追问**
+>
+> Q1（基础）：残差连接（Residual Connection）解决了深层网络中的什么问题？数学上它是如何做到的？
+> 回答要点：解决深度网络中的梯度消失和退化问题；输出 = x + Sublayer(x)，梯度可以从输出无损直通到输入；使深层网络至少不差于浅层（恒等映射选项）。
+>
+> Q2（深挖）：LayerNorm 和 BatchNorm 有什么本质区别？为什么 Transformer 选择 LayerNorm 而非 BatchNorm？
+> 回答要点：LayerNorm 对每个样本的特征维度做归一化，BatchNorm 对每个特征维度在整个 batch 上做归一化；LayerNorm 不依赖 batch size、对变长序列友好、训练推理行为一致；BatchNorm 在序列长度变化和小 batch 时表现不稳定。
+>
+> Q3（实战）：你在训练 Transformer 时遇到训练不稳定的情况，选择 Post-LN（原始）还是 Pre-LN 结构更可靠？实际项目中你如何取舍？
+> 回答要点：Post-LN 需要精细的 warmup 策略，否则易梯度爆炸；Pre-LN 更稳定，无需 warmup，收敛更快；现代实践（BERT、GPT、LLaMA）普遍采用 Pre-LN，是更安全的选择。
+>
+> Q4（边界）：LLaMA 使用 RMS Norm 替代标准的 LayerNorm，动机是什么？它牺牲了什么？
+> 回答要点：RMS Norm 去掉了均值归零步骤，只保留 RMS 缩放；计算更简单、参数量更少；实验表明在 Transformer 中性能与标准 LayerNorm 相当；已成为大多数开源 LLM 的标准归一化方案。

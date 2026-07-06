@@ -72,3 +72,17 @@ model = GPT2LMHeadModel.from_pretrained('gpt2')
 | **代码生成** | Codex / Copilot | 自然语言→代码 |
 
 > 参见 [[10-BERT与MLM预训练]]、[[06-自注意力与Transformer]]、[[12-HuggingFace Transformers库]]
+
+> **面试追问**
+>
+> Q1（基础）：自回归语言模型是如何工作的？为什么它被称为"自回归"？
+> 回答要点：逐 token 从左到右预测下一个 token，即 $P(y) = \prod P(y_t \mid y_{<t})$；当前输出依赖于之前的所有输出，与时间序列中的自回归模型类比；使用掩码自注意力防止看到未来位置的信息。
+>
+> Q2（深挖）：GPT-3 的上下文学习（In-Context Learning）能力与 BERT 的微调范式相比有什么本质不同？各自适合什么场景？
+> 回答要点：ICL 无需更新参数，仅通过 prompt 中的示例就能执行任务；微调需要标注数据和梯度更新；ICL 适合通用任务和快速原型，微调在特定任务上效果更好且更稳定；ICL 需要大模型（>=10B）才能涌现。
+>
+> Q3（实战）：在生产环境中部署文本生成模型时，你遇到过哪些输出质量问题？你是如何通过解码策略来改善的？
+> 回答要点：重复生成 → repetition penalty 或 no_repeat_ngram_size；缺乏多样性 → top-k + top-p 采样而非贪心解码；需要确定性输出 → temperature 趋近 0 + 固定随机种子；生成长度不可控 → max_new_tokens + early stopping。
+>
+> Q4（边界）：自回归生成的根本性局限是什么？为什么说它存在 Exposure Bias 和误差累积问题？
+> 回答要点：训练时 Teacher Forcing 使用真实输入，推理时只能使用自己之前的预测 → 训练/推理分布不一致（Exposure Bias）；长序列生成中早期错误会不断累积放大；单向约束（只能看左侧）使模型无法全局规划输出内容；改进方向包括扩散语言模型、迭代精炼等非自回归方案。

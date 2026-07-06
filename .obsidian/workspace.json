@@ -13,13 +13,13 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Atomic-Cards/原子化生成提示词.md",
+                "file": "Atomic-Cards/包管理/03-UV包管理器.md",
                 "mode": "source",
                 "source": false,
                 "backlinks": false
               },
               "icon": "lucide-file",
-              "title": "原子化生成提示词"
+              "title": "03-UV包管理器"
             }
           },
           {
@@ -105,13 +105,13 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "Atomic-Cards/原子化生成提示词.md",
+                "file": "Atomic-Cards/包管理/03-UV包管理器.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "原子化生成提示词 的大纲"
+              "title": "03-UV包管理器 的大纲"
             }
           },
           {
@@ -169,7 +169,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "Atomic-Cards/原子化生成提示词.md",
+                "file": "Atomic-Cards/包管理/03-UV包管理器.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -179,7 +179,7 @@
                 "unlinkedCollapsed": true
               },
               "icon": "links-coming-in",
-              "title": "原子化生成提示词 的反向链接列表"
+              "title": "03-UV包管理器 的反向链接列表"
             }
           },
           {
@@ -188,12 +188,12 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "Atomic-Cards/原子化生成提示词.md",
+                "file": "Atomic-Cards/包管理/03-UV包管理器.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               },
               "icon": "links-going-out",
-              "title": "原子化生成提示词 的出链列表"
+              "title": "03-UV包管理器 的出链列表"
             }
           }
         ],
@@ -218,24 +218,32 @@
       "templater-obsidian:Templater": false
     }
   },
-  "active": "e5c6004f44c0e722",
+  "active": "e83158f79f242826",
   "lastOpenFiles": [
+    "Atomic-Cards/线性代数/15-正交与投影.md.tmp.14120.f089bc201be6",
+    "Atomic-Cards/数据结构与算法/15-贪心算法.md.tmp.14120.e2ea148959f3",
+    "Atomic-Cards/AI-Agent/23-RAG系统完整实现.md.tmp.14120.1bf034232e38",
+    "Atomic-Cards/包管理/02-Conda包管理与配置.md",
+    "Atomic-Cards/包管理/01-Conda环境管理.md",
+    "Atomic-Cards/深度学习/13-GRU.md.tmp.14120.4827ff94d2f6",
+    "Atomic-Cards/机器学习/19-模型选择与超参数调优.md.tmp.14120.7a379d773456",
+    "Atomic-Cards/AI-Agent/10-RAG系统双架构.md.tmp.14120.31e8de390e0a",
+    "Atomic-Cards/NLP/12-HuggingFace Transformers库.md.tmp.14120.964ac68a2808",
+    "Atomic-Cards/线性代数/10-特征值分解.md.tmp.14120.b7cc908608d6",
+    "Atomic-Cards/NLP/11-GPT与自回归生成.md.tmp.14120.a6014cc7b5f8",
+    "Atomic-Cards/深度学习/11-RNN与序列建模.md.tmp.14120.4df0aef050f2",
+    "Atomic-Cards/机器学习/17-PCA与降维.md.tmp.14120.5d17847027d1",
+    "Atomic-Cards/原子化生成提示词.md",
     "Full-Knowledge/00-数学地基/03-概率统计.md",
     "Full-Knowledge/00-数学地基/01-向量与线性代数.md",
-    "Atomic-Cards/原子化生成提示词.md",
     "Atomic-Cards/深度学习/04-反向传播算法.md",
     "Atomic-Cards/深度学习/02-激活函数.md",
     "Atomic-Cards/概率统计/06-极大似然估计.md",
     "Atomic-Cards/概率统计/04-期望与方差.md",
     "Atomic-Cards/概率统计/05-协方差与相关系数.md",
-    "Atomic-Cards/包管理/02-Conda包管理与配置.md",
-    "Atomic-Cards/原子化生成提示词.md.tmp.14120.0efe84c51096",
     "Atomic-Cards/工程实践/02-GPU并行与混合精度.md",
-    "Atomic-Cards/原子化生成提示词.md.tmp.14120.e89f823df3e2",
-    "Atomic-Cards/原子化生成提示词.md.tmp.14120.9755e0f385e5",
     "Atomic-Cards/知识体系/01-核心依赖链与学习路径.md",
     "Atomic-Cards/知识体系/02-面试追问树.md",
-    "Atomic-Cards/数据结构与算法/04-栈.md.tmp.14120.29fad2180794",
     "Atomic-Cards/AI-Agent/22-LangChain组件操作指南.md",
     "Atomic-Cards/工程实践/08-HTTP基础与API设计.md",
     "Atomic-Cards/工程实践/07-LLM API调用与ChatBot.md",
@@ -245,17 +253,9 @@
     "Atomic-Cards/工程实践/03-Git版本控制.md",
     "Atomic-Cards/工程实践/01-Docker基础与容器化.md",
     "Atomic-Cards/深度学习/15-模型压缩量化剪枝蒸馏.md",
-    "Atomic-Cards/知识体系",
-    "Atomic-Cards/工程实践",
     "Atomic-Cards/AI-Agent/21-HTTP基础与API设计.md",
     "Atomic-Cards/AI-Agent/24-BM25完整实现.md",
-    "Atomic-Cards/包管理/01-Conda环境管理.md",
     "Atomic-Cards/数据库/22-BM25完整实现.md",
-    "Atomic-Cards/数据库/22-BM25完整实现.md.tmp.14120.b2f041b2f200",
-    "Atomic-Cards/AI-Agent/23-RAG系统完整实现.md",
-    "Atomic-Cards/AI-Agent/23-RAG系统完整实现.md.tmp.14120.357514f5cd32",
-    "Atomic-Cards/AI-Agent/22-LangChain组件操作指南.md.tmp.14120.45598fa8d76f",
-    "Atomic-Cards/数据库/22-LangChain组件操作指南.md.tmp.14120.8c9579a78269",
     "Assets/Image/AI-Large-Modlels-Notes/ML/监督学习/线性回归/02线性回归(改进版)/5.2.2-2.png",
     "Assets/Image/AI-Large-Modlels-Notes/ML/监督学习/线性回归/02线性回归(改进版)/5.2.2-1-1.png",
     "Assets/Image/AI-Large-Modlels-Notes/ML/监督学习/线性回归/02线性回归(改进版)/5.2.1-1.png",
