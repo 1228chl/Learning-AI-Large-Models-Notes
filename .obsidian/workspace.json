@@ -201,8 +201,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 408.5,
-    "collapsed": true
+    "width": 408.5
   },
   "left-ribbon": {
     "hiddenItems": {
@@ -218,8 +217,9 @@
       "templater-obsidian:Templater": false
     }
   },
-  "active": "e83158f79f242826",
+  "active": "e5c6004f44c0e722",
   "lastOpenFiles": [
+    "Atomic-Cards/原子化生成提示词.md.tmp.14120.0d12b7e45b63",
     "Atomic-Cards/线性代数/15-正交与投影.md.tmp.14120.f089bc201be6",
     "Atomic-Cards/数据结构与算法/15-贪心算法.md.tmp.14120.e2ea148959f3",
     "Atomic-Cards/AI-Agent/23-RAG系统完整实现.md.tmp.14120.1bf034232e38",
@@ -232,7 +232,6 @@
     "Atomic-Cards/线性代数/10-特征值分解.md.tmp.14120.b7cc908608d6",
     "Atomic-Cards/NLP/11-GPT与自回归生成.md.tmp.14120.a6014cc7b5f8",
     "Atomic-Cards/深度学习/11-RNN与序列建模.md.tmp.14120.4df0aef050f2",
-    "Atomic-Cards/机器学习/17-PCA与降维.md.tmp.14120.5d17847027d1",
     "Atomic-Cards/原子化生成提示词.md",
     "Full-Knowledge/00-数学地基/03-概率统计.md",
     "Full-Knowledge/00-数学地基/01-向量与线性代数.md",

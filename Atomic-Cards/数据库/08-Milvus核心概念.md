@@ -76,21 +76,20 @@ results = collection.search(
 | `IP`（内积） | $dot = \sum x_i y_i$ | 越相似 | 未归一化向量 |
 | `COSINE`（余弦） | $cos = \frac{\sum x_i y_i}{\Vert x\Vert \Vert y\Vert}$ | 越相似 | 文本语义搜索 |
 
-> 参见 [[07-向量数据库概述]]、[[09-嵌入与向量化]]、[[10-混合检索与重排序]]、[[13-点积与余弦相似度]]
 
-> **面试追问**
->
-> Q1（基础）：Milvus中的Collection、Field、Entity、Index、Partition分别对应MySQL中的什么概念？它们的关系是什么？
-> 回答要点：① Collection ≈ 表（Table），Field ≈ 列（Column），Entity ≈ 行（Row），Index ≈ 索引，Partition ≈ 分区表。② Collection包含多个Field（主键、向量字段、标量字段）。③ Partition按标签分割数据，可缩小搜索范围。④ Index是加速向量检索的数据结构，创建索引后才能进行高效的相似度搜索。
->
-> Q2（深挖）：IVF_FLAT、IVF_SQ8、IVF_PQ和HNSW这几种Milvus索引的原理和适用规模有何不同？如何选型？
-> 回答要点：① IVF_FLAT：倒排文件+精确距离计算，百万级，精度高但内存消耗大。② IVF_SQ8：标量量化8bit压缩，千万级，内存减少75%，速度提升但精度略有损失。③ IVF_PQ：乘积量化，亿级，极致压缩，精度损失最大。④ HNSW：分层导航小世界图，百万级，查询速度最快但内存消耗大，适合对延迟敏感的场景。⑤ 选型：数据量小用FLAT/IVF_FLAT，大并追求速度用IVF_SQ8，超大且可接受精度损失用IVF_PQ，低延迟场景用HNSW。
->
-> Q3（实战）：在Milvus中如何实现稠密向量和稀疏向量的混合检索？请写出核心代码流程。
-> 回答要点：① Schema需要分别定义dense_vector（FLOAT_VECTOR）和sparse_vector（SPARSE_FLOAT_VECTOR）两个字段，各自创建独立索引。② 使用BGEM3EmbeddingFunction同时生成稠密和稀疏向量。③ 创建两个AnnSearchRequest分别对应稠密和稀疏检索，再用WeightedRanker（如稠密0.7+稀疏0.3）融合结果。④ 混合检索比单一检索能同时覆盖语义匹配和精确关键词匹配。
->
-> Q4（边界）：在十亿级向量规模下，Milvus可能遇到哪些性能和内存瓶颈？如何应对？
-> 回答要点：① 全量数据在内存中加载的成本极高，需要用DISKANN磁盘索引或分片部署降低单机内存压力。② 索引构建时间长，需使用增量构建或分批构建索引。③ 查询延迟随数据量上升而增加，需要通过分区（Partition）、标量过滤预筛和读写分离架构控制延迟。④ 网络和CPU资源在高并发场景下成为瓶颈，需水平扩展Coordinator/DataNode/QueryNode节点。
+## 面试追问
+
+**Q1（基础）**：Milvus中的Collection、Field、Entity、Index、Partition分别对应MySQL中的什么概念？它们的关系是什么？
+回答要点：① Collection ≈ 表（Table），Field ≈ 列（Column），Entity ≈ 行（Row），Index ≈ 索引，Partition ≈ 分区表。② Collection包含多个Field（主键、向量字段、标量字段）。③ Partition按标签分割数据，可缩小搜索范围。④ Index是加速向量检索的数据结构，创建索引后才能进行高效的相似度搜索。
+
+**Q2（深挖）**：IVF_FLAT、IVF_SQ8、IVF_PQ和HNSW这几种Milvus索引的原理和适用规模有何不同？如何选型？
+回答要点：① IVF_FLAT：倒排文件+精确距离计算，百万级，精度高但内存消耗大。② IVF_SQ8：标量量化8bit压缩，千万级，内存减少75%，速度提升但精度略有损失。③ IVF_PQ：乘积量化，亿级，极致压缩，精度损失最大。④ HNSW：分层导航小世界图，百万级，查询速度最快但内存消耗大，适合对延迟敏感的场景。⑤ 选型：数据量小用FLAT/IVF_FLAT，大并追求速度用IVF_SQ8，超大且可接受精度损失用IVF_PQ，低延迟场景用HNSW。
+
+**Q3（实战）**：在Milvus中如何实现稠密向量和稀疏向量的混合检索？请写出核心代码流程。
+回答要点：① Schema需要分别定义dense_vector（FLOAT_VECTOR）和sparse_vector（SPARSE_FLOAT_VECTOR）两个字段，各自创建独立索引。② 使用BGEM3EmbeddingFunction同时生成稠密和稀疏向量。③ 创建两个AnnSearchRequest分别对应稠密和稀疏检索，再用WeightedRanker（如稠密0.7+稀疏0.3）融合结果。④ 混合检索比单一检索能同时覆盖语义匹配和精确关键词匹配。
+
+**Q4（边界）**：在十亿级向量规模下，Milvus可能遇到哪些性能和内存瓶颈？如何应对？
+回答要点：① 全量数据在内存中加载的成本极高，需要用DISKANN磁盘索引或分片部署降低单机内存压力。② 索引构建时间长，需使用增量构建或分批构建索引。③ 查询延迟随数据量上升而增加，需要通过分区（Partition）、标量过滤预筛和读写分离架构控制延迟。④ 网络和CPU资源在高并发场景下成为瓶颈，需水平扩展Coordinator/DataNode/QueryNode节点。
 
 ---
 
@@ -248,3 +247,5 @@ client.delete("knowledge_base", filter="source == 'old_data'")
 # 删除 Collection
 client.drop_collection("knowledge_base")
 ```
+
+> 参见 [[07-向量数据库概述]]、[[09-嵌入与向量化]]、[[10-混合检索与重排序]]、[[13-点积与余弦相似度]]

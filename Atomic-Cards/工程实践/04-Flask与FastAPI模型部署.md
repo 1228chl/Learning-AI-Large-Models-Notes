@@ -127,18 +127,19 @@ curl -X POST http://localhost:8000/predict \
 | **批量推理** | FastAPI + Batch 端点 | 多请求合并处理 |
 | **Docker 部署** | FastAPI + Docker | 容器化一键部署 |
 
-> 参见 [[01-Docker基础与容器化]]、[[15-模型压缩量化剪枝蒸馏]]
 
-> **面试追问**
->
-> Q1（基础）：FastAPI 相比 Flask 在模型部署场景中的核心优势是什么？
-> 回答要点：原生异步支持（async/await），高并发下性能更好；Pydantic 自动请求验证减少样板代码；自动生成 Swagger/ReDoc 文档方便调试；Starlette 底层性能对标 Node.js 和 Go。
->
-> Q2（深挖）：FastAPI 的异步机制是如何工作的？为什么能比 Flask 处理更多并发请求？
-> 回答要点：FastAPI 基于 Starlette + ASGI（异步服务器网关接口），单进程事件循环处理 I/O 操作；Flask 基于 WSGI，每个请求阻塞线程；异步下等待 I/O 时可切换处理其他请求，提高吞吐量。
->
-> Q3（实战）：生产环境中部署模型推理 API 需要考虑哪些问题？如何保证高可用？
-> 回答要点：模型预加载避免首次请求冷启动；设置超时和重试机制防止请求卡死；Docker + 多副本负载均衡；健康检查端点 `/health` 和预热（warm-up）请求；使用 Nginx/ Traefik 反向代理限流。
->
-> Q4（边界）：FastAPI 在什么场景下不适合作为模型部署方案？是否有更好的替代？
-> 回答要点：实时流式视频/音频处理推荐 gRPC（协议效率更高）；需要 GPU 批处理时可用 Triton Inference Server 或 TorchServe；Python GIL 限制 CPU 密集推理（多进程/多副本解决）；边缘端部署推荐 ONNX Runtime 或 TensorRT。
+## 面试追问
+
+**Q1（基础）**：FastAPI 相比 Flask 在模型部署场景中的核心优势是什么？
+回答要点：原生异步支持（async/await），高并发下性能更好；Pydantic 自动请求验证减少样板代码；自动生成 Swagger/ReDoc 文档方便调试；Starlette 底层性能对标 Node.js 和 Go。
+
+**Q2（深挖）**：FastAPI 的异步机制是如何工作的？为什么能比 Flask 处理更多并发请求？
+回答要点：FastAPI 基于 Starlette + ASGI（异步服务器网关接口），单进程事件循环处理 I/O 操作；Flask 基于 WSGI，每个请求阻塞线程；异步下等待 I/O 时可切换处理其他请求，提高吞吐量。
+
+**Q3（实战）**：生产环境中部署模型推理 API 需要考虑哪些问题？如何保证高可用？
+回答要点：模型预加载避免首次请求冷启动；设置超时和重试机制防止请求卡死；Docker + 多副本负载均衡；健康检查端点 `/health` 和预热（warm-up）请求；使用 Nginx/ Traefik 反向代理限流。
+
+**Q4（边界）**：FastAPI 在什么场景下不适合作为模型部署方案？是否有更好的替代？
+回答要点：实时流式视频/音频处理推荐 gRPC（协议效率更高）；需要 GPU 批处理时可用 Triton Inference Server 或 TorchServe；Python GIL 限制 CPU 密集推理（多进程/多副本解决）；边缘端部署推荐 ONNX Runtime 或 TensorRT。
+
+> 参见 [[01-Docker基础与容器化]]、[[15-模型压缩量化剪枝蒸馏]]

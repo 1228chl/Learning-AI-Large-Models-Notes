@@ -88,18 +88,18 @@ conda install pytorch torchvision torchaudio cpuonly -c pytorch
 | **多项目隔离** | `conda create -n proj_a python=3.10 && conda activate proj_a` | 各项目独立环境，避免依赖冲突 |
 | **Jupyter 内核** | `python -m ipykernel install --user --name my_env` | 将 Conda 环境注册为 Jupyter 内核 |
 
-> **面试追问**
-> 
-> Q1（基础）：Conda 的频道（Channel）是什么？为什么需要配置 conda-forge？
-> 回答要点：频道是 Conda 包的来源仓库（类似 apt 源）。conda-forge 是社区维护的最大 Conda 频道，包最全、更新最快；默认频道（defaults）包数量少且更新滞后。配置 conda-forge 可避免 PackagesNotFoundError。
-> 
-> Q2（深挖）：`channel_priority` 的 strict（严格）与 flexible（灵活）模式有何区别？什么场景下应该使用 strict？
-> 回答要点：strict 模式下 Conda 不允许跨频道混装，即某包已在优先级更高的频道中存在时，不会从低优先级频道安装；flexible 允许回退。strict 适合对依赖确定性要求高的场景（如生产环境复现），但有时会导致 "无法满足依赖" 错误，此时需降级为 flexible。
-> 
-> Q3（实战）：`Solving environment` 长时间卡死如何解决？mamba 的工作原理优势是什么？
-> 回答要点：卡死原因是 Conda 的 SAT 求解器是纯 Python 实现，依赖复杂时搜索空间爆炸。解决方法：使用 mamba（C++ 重写的依赖解析器），命令完全兼容，速度提升数十倍；或拆分安装命令，分批安装包减少求解复杂度。
-> 
-> Q4（边界）：Conda 换国内源后仍然存在哪些问题？如何进一步优化包管理体验？
-> 回答要点：镜像源同步有延迟（新包/新版本可能滞后 1-3 天）；清华源等可能因流量过大限速；部分 conda-forge 包因镜像不完全而缺失。优化方向：关键包用 conda-forge 或官方源 + 代理加速，非关键依赖用 pip 替代，或迁移至更现代的 UV 项目管理器。
-> 
+## 面试追问
+
+**Q1（基础）**：Conda 的频道（Channel）是什么？为什么需要配置 conda-forge？
+回答要点：频道是 Conda 包的来源仓库（类似 apt 源）。conda-forge 是社区维护的最大 Conda 频道，包最全、更新最快；默认频道（defaults）包数量少且更新滞后。配置 conda-forge 可避免 PackagesNotFoundError。
+
+**Q2（深挖）**：`channel_priority` 的 strict（严格）与 flexible（灵活）模式有何区别？什么场景下应该使用 strict？
+回答要点：strict 模式下 Conda 不允许跨频道混装，即某包已在优先级更高的频道中存在时，不会从低优先级频道安装；flexible 允许回退。strict 适合对依赖确定性要求高的场景（如生产环境复现），但有时会导致 "无法满足依赖" 错误，此时需降级为 flexible。
+
+**Q3（实战）**：`Solving environment` 长时间卡死如何解决？mamba 的工作原理优势是什么？
+回答要点：卡死原因是 Conda 的 SAT 求解器是纯 Python 实现，依赖复杂时搜索空间爆炸。解决方法：使用 mamba（C++ 重写的依赖解析器），命令完全兼容，速度提升数十倍；或拆分安装命令，分批安装包减少求解复杂度。
+
+**Q4（边界）**：Conda 换国内源后仍然存在哪些问题？如何进一步优化包管理体验？
+回答要点：镜像源同步有延迟（新包/新版本可能滞后 1-3 天）；清华源等可能因流量过大限速；部分 conda-forge 包因镜像不完全而缺失。优化方向：关键包用 conda-forge 或官方源 + 代理加速，非关键依赖用 pip 替代，或迁移至更现代的 UV 项目管理器。
+
 > 参见 [[01-Conda环境管理]]、[[03-UV包管理器]]
