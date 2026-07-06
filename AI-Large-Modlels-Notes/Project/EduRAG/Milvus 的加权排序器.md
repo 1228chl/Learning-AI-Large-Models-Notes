@@ -49,7 +49,7 @@
 
 ## 如何使用？
 
-使用 `WeightedRanker` 非常简单。核心是确保你传入的**权重数量**与你发起的 ** `AnnSearchRequest` 搜索请求数量**完全一致。
+使用 `WeightedRanker` 非常简单。核心是确保你传入的**权重数量**与你发起的 **`AnnSearchRequest` 搜索请求数量**完全一致。
 
 **代码示例 (PyMilvus)**：
 
