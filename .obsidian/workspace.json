@@ -13,13 +13,13 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Atomic-Cards/包管理/01-Conda环境管理.md",
+                "file": "Atomic-Cards/深度学习/04-反向传播算法.md",
                 "mode": "source",
                 "source": false,
                 "backlinks": false
               },
               "icon": "lucide-file",
-              "title": "01-Conda环境管理"
+              "title": "04-反向传播算法"
             }
           },
           {
@@ -105,13 +105,13 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "Atomic-Cards/包管理/01-Conda环境管理.md",
+                "file": "Atomic-Cards/深度学习/04-反向传播算法.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "01-Conda环境管理 的大纲"
+              "title": "04-反向传播算法 的大纲"
             }
           },
           {
@@ -169,7 +169,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "Atomic-Cards/包管理/01-Conda环境管理.md",
+                "file": "Atomic-Cards/深度学习/04-反向传播算法.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -179,7 +179,7 @@
                 "unlinkedCollapsed": true
               },
               "icon": "links-coming-in",
-              "title": "01-Conda环境管理 的反向链接列表"
+              "title": "04-反向传播算法 的反向链接列表"
             }
           },
           {
@@ -188,12 +188,12 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "Atomic-Cards/包管理/01-Conda环境管理.md",
+                "file": "Atomic-Cards/深度学习/04-反向传播算法.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               },
               "icon": "links-going-out",
-              "title": "01-Conda环境管理 的出链列表"
+              "title": "04-反向传播算法 的出链列表"
             }
           }
         ],
@@ -218,44 +218,44 @@
       "templater-obsidian:Templater": false
     }
   },
-  "active": "e83158f79f242826",
+  "active": "e5c6004f44c0e722",
   "lastOpenFiles": [
+    "Atomic-Cards/深度学习/02-激活函数.md",
+    "Atomic-Cards/概率统计/06-极大似然估计.md",
+    "Atomic-Cards/概率统计/04-期望与方差.md",
+    "Atomic-Cards/概率统计/05-协方差与相关系数.md",
+    "Atomic-Cards/包管理/02-Conda包管理与配置.md",
+    "Atomic-Cards/原子化生成提示词.md",
+    "Atomic-Cards/原子化生成提示词.md.tmp.14120.0efe84c51096",
+    "Atomic-Cards/工程实践/02-GPU并行与混合精度.md",
+    "Atomic-Cards/原子化生成提示词.md.tmp.14120.e89f823df3e2",
+    "Atomic-Cards/原子化生成提示词.md.tmp.14120.9755e0f385e5",
+    "Atomic-Cards/知识体系/01-核心依赖链与学习路径.md",
+    "Atomic-Cards/知识体系/02-面试追问树.md",
+    "Atomic-Cards/数据结构与算法/04-栈.md.tmp.14120.29fad2180794",
+    "Atomic-Cards/AI-Agent/22-LangChain组件操作指南.md",
+    "Atomic-Cards/工程实践/08-HTTP基础与API设计.md",
+    "Atomic-Cards/工程实践/07-LLM API调用与ChatBot.md",
+    "Atomic-Cards/工程实践/06-Ollama与本地LLM部署.md",
+    "Atomic-Cards/工程实践/05-模型保存格式.md",
+    "Atomic-Cards/工程实践/04-Flask与FastAPI模型部署.md",
+    "Atomic-Cards/工程实践/03-Git版本控制.md",
+    "Atomic-Cards/工程实践/01-Docker基础与容器化.md",
+    "Atomic-Cards/深度学习/15-模型压缩量化剪枝蒸馏.md",
+    "Atomic-Cards/知识体系",
+    "Atomic-Cards/工程实践",
+    "Atomic-Cards/AI-Agent/21-HTTP基础与API设计.md",
+    "Atomic-Cards/AI-Agent/24-BM25完整实现.md",
+    "Atomic-Cards/包管理/01-Conda环境管理.md",
+    "Atomic-Cards/数据库/22-BM25完整实现.md",
+    "Atomic-Cards/数据库/22-BM25完整实现.md.tmp.14120.b2f041b2f200",
     "Atomic-Cards/AI-Agent/23-RAG系统完整实现.md",
     "Atomic-Cards/AI-Agent/23-RAG系统完整实现.md.tmp.14120.357514f5cd32",
-    "Atomic-Cards/AI-Agent/22-LangChain组件操作指南.md",
     "Atomic-Cards/AI-Agent/22-LangChain组件操作指南.md.tmp.14120.45598fa8d76f",
     "Atomic-Cards/数据库/22-LangChain组件操作指南.md",
     "Atomic-Cards/数据库/22-LangChain组件操作指南.md.tmp.14120.8c9579a78269",
-    "Atomic-Cards/数据库/08-Milvus核心概念.md.tmp.14120.9d19d86abf08",
     "Atomic-Cards/数据库/09-嵌入与向量化.md",
     "Atomic-Cards/数据库/10-混合检索与重排序.md",
-    "Atomic-Cards/数据库/08-Milvus核心概念.md",
-    "Atomic-Cards/深度学习/14-知识蒸馏详解.md",
-    "Atomic-Cards/线性代数/13-点积与余弦相似度.md",
-    "Atomic-Cards/AI-Agent/21-HTTP基础与API设计.md",
-    "Atomic-Cards/AI-Agent/21-HTTP基础与API设计.md.tmp.14120.8f91fc0b1c19",
-    "Atomic-Cards/Python/10-协程与asyncio.md",
-    "Atomic-Cards/Python/10-协程与asyncio.md.tmp.14120.feabbb17732a",
-    "Atomic-Cards/NLP/04-Seq2Seq与Encoder-Decoder.md",
-    "Atomic-Cards/AI-Agent/20-LLM API调用与ChatBot.md",
-    "Atomic-Cards/AI-Agent/20-LLM API调用与ChatBot.md.tmp.14120.4d853802816f",
-    "Atomic-Cards/AI-Agent/19-Ollama与本地LLM部署.md",
-    "Atomic-Cards/AI-Agent/19-Ollama与本地LLM部署.md.tmp.14120.97687f0da35c",
-    "Atomic-Cards/NLP/05-注意力机制.md",
-    "Atomic-Cards/NLP/06-自注意力与Transformer.md",
-    "Atomic-Cards/NLP/07-多头注意力.md",
-    "Atomic-Cards/NLP/08-位置编码.md",
-    "Atomic-Cards/NLP/09-残差连接与LayerNorm.md",
-    "Atomic-Cards/NLP/10-BERT与MLM预训练.md",
-    "Atomic-Cards/NLP/11-GPT与自回归生成.md",
-    "Atomic-Cards/深度学习/14-知识蒸馏详解.md.tmp.14120.427402347d9e",
-    "Atomic-Cards/NLP/12-HuggingFace Transformers库.md",
-    "Atomic-Cards/AI-Agent/18-模型保存格式.md",
-    "Atomic-Cards/AI-Agent/18-模型保存格式.md.tmp.14120.0e53313f793d",
-    "Atomic-Cards/AI-Agent/17-Flask与FastAPI模型部署.md",
-    "Atomic-Cards/AI-Agent/16-Git版本控制.md",
-    "Atomic-Cards/AI-Agent/11-模型压缩量化剪枝蒸馏.md",
-    "Atomic-Cards/AI-Agent/15-GPU并行与混合精度.md",
     "Assets/Image/AI-Large-Modlels-Notes/ML/监督学习/线性回归/02线性回归(改进版)/5.2.2-2.png",
     "Assets/Image/AI-Large-Modlels-Notes/ML/监督学习/线性回归/02线性回归(改进版)/5.2.2-1-1.png",
     "Assets/Image/AI-Large-Modlels-Notes/ML/监督学习/线性回归/02线性回归(改进版)/5.2.1-1.png",

@@ -107,4 +107,4 @@ GET  /api/v1/health           # 健康检查
 | 流式对话 | POST + SSE | `POST /chat`（`Accept: text/event-stream`）|
 | 健康检查 | GET | `GET /health` |
 
-> 参见 [[17-Flask与FastAPI模型部署]]、[[20-LLM API调用与ChatBot]]、[[09-Socket网络编程]]
+> 参见 [[04-Flask与FastAPI模型部署]]、[[07-LLM API调用与ChatBot]]、[[09-Socket网络编程]]

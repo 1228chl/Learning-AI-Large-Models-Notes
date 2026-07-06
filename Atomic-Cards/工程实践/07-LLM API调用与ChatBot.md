@@ -138,4 +138,4 @@ async def chat(message: str):
 | **温度调参** | `temperature=0.7` | 控制创造力（0=确定，1=随机） |
 | **系统提示词** | system message | 固定角色和行为 |
 
-> 参见 [[19-Ollama与本地LLM部署]]、[[06-提示词工程核心原则]]
+> 参见 [[06-Ollama与本地LLM部署]]、[[06-提示词工程核心原则]]

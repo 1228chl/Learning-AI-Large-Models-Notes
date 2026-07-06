@@ -106,4 +106,4 @@ print(response.choices[0].message.content)
 | **无网环境部署** | 下载模型后离线使用 |
 | **API 替代方案** | 替代 OpenAI API 进行开发调试 |
 
-> 参见 [[20-LLM API调用与ChatBot]]、[[06-提示词工程核心原则]]
+> 参见 [[07-LLM API调用与ChatBot]]、[[06-提示词工程核心原则]]

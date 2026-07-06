@@ -127,4 +127,4 @@ curl -X POST http://localhost:8000/predict \
 | **批量推理** | FastAPI + Batch 端点 | 多请求合并处理 |
 | **Docker 部署** | FastAPI + Docker | 容器化一键部署 |
 
-> 参见 [[09-Docker基础与容器化]]、[[11-模型压缩量化剪枝蒸馏]]
+> 参见 [[01-Docker基础与容器化]]、[[15-模型压缩量化剪枝蒸馏]]
