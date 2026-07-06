@@ -13,13 +13,13 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Atomic-Cards/线性代数/12-向量范数.md",
+                "file": "Atomic-Cards/Linux/02-文件与目录操作.md",
                 "mode": "source",
                 "source": false,
                 "backlinks": false
               },
               "icon": "lucide-file",
-              "title": "12-向量范数"
+              "title": "02-文件与目录操作"
             }
           },
           {
@@ -105,13 +105,13 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "Atomic-Cards/线性代数/12-向量范数.md",
+                "file": "Atomic-Cards/Linux/02-文件与目录操作.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "12-向量范数 的大纲"
+              "title": "02-文件与目录操作 的大纲"
             }
           },
           {
@@ -169,7 +169,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "Atomic-Cards/线性代数/12-向量范数.md",
+                "file": "Atomic-Cards/Linux/02-文件与目录操作.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -179,7 +179,7 @@
                 "unlinkedCollapsed": true
               },
               "icon": "links-coming-in",
-              "title": "12-向量范数 的反向链接列表"
+              "title": "02-文件与目录操作 的反向链接列表"
             }
           },
           {
@@ -188,12 +188,12 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "Atomic-Cards/线性代数/12-向量范数.md",
+                "file": "Atomic-Cards/Linux/02-文件与目录操作.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               },
               "icon": "links-going-out",
-              "title": "12-向量范数 的出链列表"
+              "title": "02-文件与目录操作 的出链列表"
             }
           }
         ],
@@ -220,42 +220,42 @@
   },
   "active": "e83158f79f242826",
   "lastOpenFiles": [
-    "Atomic-Cards/概率统计/07-贝叶斯推断.md",
-    "Atomic-Cards/概率统计/07-贝叶斯推断.md.tmp.14120.36ac99f5bacf",
-    "Atomic-Cards/概率统计/06-极大似然估计.md",
-    "Atomic-Cards/概率统计/06-极大似然估计.md.tmp.14120.60ffbc06e724",
-    "Atomic-Cards/概率统计/05-协方差与相关系数.md",
-    "Atomic-Cards/概率统计/05-协方差与相关系数.md.tmp.14120.c9a601edd8a0",
-    "Atomic-Cards/概率统计/04-期望与方差.md",
-    "Atomic-Cards/概率统计/04-期望与方差.md.tmp.14120.caf7c455cefc",
-    "Atomic-Cards/概率统计/03-随机变量与概率分布.md",
-    "Atomic-Cards/概率统计/03-随机变量与概率分布.md.tmp.14120.1bee51a517aa",
-    "Atomic-Cards/概率统计/02-条件概率与贝叶斯公式.md",
-    "Atomic-Cards/概率统计/02-条件概率与贝叶斯公式.md.tmp.14120.7b3fa92ca7a1",
-    "Atomic-Cards/概率统计/01-概率空间与事件运算.md",
-    "Atomic-Cards/微积分与优化/06-凸优化基础.md",
-    "Atomic-Cards/微积分与优化/05-梯度下降算法.md",
-    "Atomic-Cards/微积分与优化/05-梯度下降算法.md.tmp.14120.ea67995e8336",
-    "Atomic-Cards/微积分与优化/04-Hessian矩阵与二阶导.md",
-    "Atomic-Cards/微积分与优化/04-Hessian矩阵与二阶导.md.tmp.14120.f74aacf07ae7",
-    "Atomic-Cards/微积分与优化/03-梯度与方向导数.md",
-    "Atomic-Cards/微积分与优化/02-链式法则.md",
-    "Atomic-Cards/微积分与优化/01-导数与偏导数.md",
-    "Atomic-Cards/微积分与优化/01-导数与偏导数.md.tmp.14120.df2c1da17401",
-    "Atomic-Cards/概率统计",
-    "Atomic-Cards/原子化生成提示词.md",
-    "Atomic-Cards/线性代数/13-点积与余弦相似度.md",
+    "Atomic-Cards/包管理/03-UV包管理器.md",
+    "Atomic-Cards/包管理/03-UV包管理器.md.tmp.14120.69335a80e379",
+    "Atomic-Cards/包管理/02-Conda包管理与配置.md",
+    "Atomic-Cards/包管理/02-Conda包管理与配置.md.tmp.14120.0710e7df6502",
+    "Atomic-Cards/包管理/01-Conda环境管理.md",
+    "Atomic-Cards/包管理/01-Conda环境管理.md.tmp.14120.37683e02de64",
+    "Atomic-Cards/包管理",
+    "Atomic-Cards/数据库/10-混合检索与重排序.md",
+    "Atomic-Cards/数据库/10-混合检索与重排序.md.tmp.14120.e161e7448641",
+    "Atomic-Cards/数据库/09-嵌入与向量化.md",
+    "Atomic-Cards/数据库/09-嵌入与向量化.md.tmp.14120.219b0d17b774",
+    "Atomic-Cards/数据库/08-Milvus核心概念.md",
+    "Atomic-Cards/数据库/07-向量数据库概述.md",
+    "Atomic-Cards/数据库/07-向量数据库概述.md.tmp.14120.97819fc6715e",
+    "Atomic-Cards/数据库/06-Redis高级应用.md",
+    "Atomic-Cards/数据库/06-Redis高级应用.md.tmp.14120.773102a92b1b",
+    "Atomic-Cards/数据库/05-Redis核心数据结构.md",
+    "Atomic-Cards/数据库/05-Redis核心数据结构.md.tmp.14120.7ff477d8fce2",
+    "Atomic-Cards/数据库/04-PyMySQL模块.md",
+    "Atomic-Cards/数据库/04-PyMySQL模块.md.tmp.14120.6d340ea0ad8b",
+    "Atomic-Cards/数据库/03-MySQL高级特性.md",
+    "Atomic-Cards/数据库/02-MySQL核心操作.md",
+    "Atomic-Cards/数据库/01-SQL基础与数据库设计.md",
+    "Atomic-Cards/Linux/08-网络与系统监控.md",
+    "Atomic-Cards/Linux/07-文件查看与编辑.md",
+    "Atomic-Cards/Linux/01-Linux基础与哲学.md",
+    "Atomic-Cards/Linux/06-Shell脚本基础.md",
+    "Atomic-Cards/Python/02-继承与多态.md",
+    "Atomic-Cards/Python/01-类与对象.md",
+    "Atomic-Cards/Linux/05-进程管理.md",
+    "Atomic-Cards/Python/06-进程与线程.md",
+    "Atomic-Cards/Linux/04-权限管理.md",
     "Atomic-Cards/线性代数/12-向量范数.md",
-    "Atomic-Cards/线性代数/01-向量基础.md",
-    "Atomic-Cards/线性代数/向量空间与线性空间.md",
-    "Atomic-Cards/线性代数/矩阵基础.md",
-    "Atomic-Cards/线性代数/矩阵乘法.md",
-    "Atomic-Cards/线性代数/向量基础.md",
-    "Atomic-Cards/线性代数/04-矩阵乘法.md",
-    "Atomic-Cards/线性代数/03-矩阵基础.md",
-    "Atomic-Cards/线性代数/02-向量空间与线性空间.md",
-    "Atomic-Cards/线性代数/10-特征值分解.md",
-    "特征值与特征向量.md",
+    "Atomic-Cards/Linux/03-文本处理三剑客.md",
+    "Atomic-Cards/Linux/02-文件与目录操作.md",
+    "Atomic-Cards/Python/09-Socket网络编程.md",
     "Assets/Image/AI-Large-Modlels-Notes/ML/监督学习/线性回归/02线性回归(改进版)/5.2.2-2.png",
     "Assets/Image/AI-Large-Modlels-Notes/ML/监督学习/线性回归/02线性回归(改进版)/5.2.2-1-1.png",
     "Assets/Image/AI-Large-Modlels-Notes/ML/监督学习/线性回归/02线性回归(改进版)/5.2.1-1.png",
