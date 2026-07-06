@@ -90,7 +90,7 @@ console = logging.StreamHandler()
 console.setLevel(logging.INFO)
 
 # 文件处理器（输出 DEBUG 及以上）
-file_handler = logging.FileHandler('app.log', mode='a', encoding='utf-)
+file_handler = logging.FileHandler('app.log', mode='a', encoding='utf-8')
 file_handler.setLevel(logging.DEBUG)
 
 # 统一格式
@@ -135,7 +135,7 @@ def setup_logger(name, log_file='logs/app.log'):
     console = logging.StreamHandler()
     console.setLevel(logging.INFO)
 
-    file_handler = logging.FileHandler(log_file, mode='a')
+    file_handler = logging.FileHandler(log_file, mode='a', encoding='utf-8')
     file_handler.setLevel(logging.DEBUG)
 
     formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(name)s - %(message)s')
