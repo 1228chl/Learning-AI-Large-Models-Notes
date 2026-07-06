@@ -307,13 +307,24 @@ prompt_text = few_shot_prompt.format(input="夯")
 
 ---
 #### 2.2.5 Output Parsers(输出解析器)—Prompt 的延伸
+虽然算作独立模块，但通常与 Prompts 搭配使用，将模型的**自然语言输出**强制转化为**结构化数据（Pydantic JSON）**：
+```python
+from langchain_core.output_parsers import PydanticOutputParser
+from pydantic import BaseModel, Field
 
+class Joke(BaseModel):
+    setup: str = Field(description="笑话的开头")
+    punchline: str = Field(description="笑话的结尾")
+
+parser = PydanticOutputParser(pydantic_object=Joke)
+format_instructions = parser.get_format_instructions()  # 自动生成 JSON 格式说明注入到 Prompt 中
+```
 
 ---
 
 ### 2.3 Chains（链）
 
-**Chain 的本质**：将多个组件串联起来，形成一个完整的处理流程。
+**Chain 的本质**：Chain 是将 Models、Prompts、Memory 甚至其他 Chain 组合成**线性或路由执行顺序**的容器。**LCEL（LangChain 表达式语言）** 是目前构建 Chain 的唯一标准，使用管道符 `|` 传递数据。
 
 ---
 
@@ -396,8 +407,9 @@ result = chain.invoke({"lastname": "孙"})
 
 ### 2.4 Agents（代理）
 
-**Agent 的核心思想**：让 LLM 自主选择需要使用的工具（Tools），完成复杂任务。
+**Agent 的核心思想**：Agents 是 LangChain 中最具颠覆性的设计。它不再是被动执行固定流水线，而是**主动思考（Reasoning）→ 调用工具（Acting）→ 观察结果（Observing）**，直到完成任务（ReAct 范式）。
 
+---
 #### 2.4.1 为什么需要 Agent？
 
 | 纯 LLM 的限制     | Agent 解决方案      |
@@ -654,11 +666,23 @@ with PyMySQLSaver.from_conn_string(DB_URI) as checkpointer:
 | MySQLSaver | 生产环境 | 持久化、可扩展 | 需要数据库 |
 | RedisSaver | 高并发场景 | 高性能 | 需要 Redis |
 
+#### 2.5.5 核心存储策略对比
+| 记忆类型        | 实现类                              | 机制                    | 适用场景                    |
+| ----------- | -------------------------------- | --------------------- | ----------------------- |
+| **对话缓冲区**   | `ConversationBufferMemory`       | 存储完整的原始对话列表           | 短对话，上下文不长               |
+| **窗口滑动缓冲区** | `ConversationBufferWindowMemory` | 只保留最近的 K 轮对话          | 防止 Token 溢出，聚焦当前话题      |
+| **对话摘要**    | `ConversationSummaryMemory`      | 调用 LLM 对历史进行实时摘要压缩    | 超长对话，保留宏观主线             |
+| **向量存储记忆**  | `VectorStoreRetrieverMemory`     | 将历史记忆向量化，按语义相似度检索相关记忆 | 海量长期记忆，类似“终生记忆”         |
+| **实体记忆**    | `ConversationEntityMemory`       | 提取并存储对话中提及的特定实体信息     | 需记住“用户叫什么名字”、“上次买的什么产品” |
+
 ---
 
 ### 2.6 Indexes（索引）
 
 **Indexes 组件**：让 LangChain 具备处理文档的能力，是实现 RAG 的基础。
+
+Indexes 是 RAG（检索增强生成）的基石，负责将非结构化数据（PDF、网页、数据库）转化为模型可检索的向量知识库。
+
 
 ---
 
@@ -729,6 +753,8 @@ docs = loader.load()
 - LLM 有 token 限制（如 GPT-4 支持 128K tokens）
 - 长文档需要切分成块
 - 需要保持语义完整性
+
+**核心矛盾**：块太大 → 丢失细节且易超 Token；块太小 → 丢失上下文语义。
 
 ```python
 from langchain_text_splitters import CharacterTextSplitter, RecursiveCharacterTextSplitter

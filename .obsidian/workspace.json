@@ -13,13 +13,13 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "AI-Large-Modlels-Notes/Agent/RAG/LangChain框架.md",
+                "file": "AI-Large-Modlels-Notes/Agent/RAG/Milvus.md",
                 "mode": "source",
                 "source": false,
                 "backlinks": false
               },
               "icon": "lucide-file",
-              "title": "LangChain框架"
+              "title": "Milvus"
             }
           },
           {
@@ -221,6 +221,8 @@
   },
   "active": "e5c6004f44c0e722",
   "lastOpenFiles": [
+    "AI-Large-Modlels-Notes/Agent/RAG/Milvus.md",
+    "AI-Large-Modlels-Notes/Agent/RAG/LangChain框架.md",
     "Full-Knowledge/02-模型基础/02-神经网络与反向传播.md",
     "Full-Knowledge/02-模型基础/01-线性回归与逻辑回归.md",
     "Full-Knowledge/01-编程实现/02-PyTorch基础.md",
@@ -253,8 +255,6 @@
     "New-Notes/Deep-Knowledge/07-连接词与追问树/01-连接词索引.md",
     "New-Notes/Deep-Knowledge/07-连接词与追问树/02-面试追问树.md",
     "New-Notes/Deep-Knowledge/03-模型基础/02-神经网络与反向传播.md",
-    "New-Notes/Deep-Knowledge/03-模型基础/01-线性回归.md",
-    "New-Notes/Deep-Knowledge/01-数学地基/04-微积分.md",
     "New-Notes/Deep-Knowledge/06-工程应用",
     "New-Notes/Deep-Knowledge/07-连接词与追问树",
     "Assets/Image/AI-Large-Modlels-Notes/ML/监督学习/线性回归/02线性回归(改进版)/5.2.2-2.png",
