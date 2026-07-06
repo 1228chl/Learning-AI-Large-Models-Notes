@@ -106,16 +106,22 @@ llm = ChatOpenAI(
     model="qwen-max",
     api_key=os.getenv("TONGYI_API_KEY"),
     base_url=os.getenv('TONGYI_BASE_URL'),
-    temperature=0  # 0=确定性输出，1=创造性输出
+    temperature=0,  # 0=确定性输出，1=创造性输出
+    max_tokens=4096,      # 生成文本的最大长度（输入+输出总长度受上下文限制）
+    timeout=60,           # 请求超时时间
+    max_retries=3,        # 自动重试次数
+    stream=True           # 是否流式输出（配合回调处理器实现打字机效果）
 )
 
 # 方式1：同步调用
 response = llm.invoke("给我说说一夜暴富有哪些方法")
 print(response.content)
 
+
 # 方式2：流式输出（适合长文本）
 for chunk in llm.stream("你是什么模型"):
     print(chunk, end="", flush=True)
+# 对于流式： for chunk in model.stream("Hello"): print(chunk.content)
 ```
 
 **参数说明**：
@@ -245,8 +251,21 @@ prompt_text = prompt.format(lastname="王", count=3)
 ```
 
 ---
+#### 2.2.3 ChatPromptTemplate(对话消息模板) ⭐高频使用
+支持为不同角色设置独立的模板，极大地增强了多轮对话地构建能力：
+```python
+from langchain.prompts import ChatPromptTemplate, MessagesPlaceholder
 
-#### 2.2.3 FewShotPromptTemplate（少样本模板）
+chat_prompt = ChatPromptTemplate.from_messages([
+	("system", "你是{domain}领域地AI助手，你擅长用类比地方式解释复杂概念。"),
+	MessagesPlaceholder(variable_name="chat_history"), # 占位符，用于动态插入历史记忆，及其重要！
+	("human","{user_input}"),
+])
+# 链式调用时，直接传入字典即可自动填充
+```
+
+---
+#### 2.2.4 FewShotPromptTemplate（少样本模板）
 
 ```python
 from langchain_core.prompts import PromptTemplate, FewShotPromptTemplate
@@ -285,6 +304,10 @@ prompt_text = few_shot_prompt.format(input="夯")
 [examples]  ← 学习模式
 [suffix]    ← 真正的输入
 ```
+
+---
+#### 2.2.5 Output Parsers(输出解析器)—Prompt 的延伸
+
 
 ---
 
