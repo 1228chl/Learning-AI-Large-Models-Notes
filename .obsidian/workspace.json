@@ -13,28 +13,13 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "AI-Large-Modlels-Notes/Agent/提示词工程/提示词工程.md",
+                "file": "AI-Large-Modlels-Notes/Agent/Coze/01Coze基础入门.md",
                 "mode": "source",
                 "source": false,
                 "backlinks": false
               },
               "icon": "lucide-file",
-              "title": "提示词工程"
-            }
-          },
-          {
-            "id": "e0db82b90e8c0155",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "AI-Large-Modlels-Notes/Agent/提示词工程/提示词工程1.md",
-                "mode": "source",
-                "source": false,
-                "backlinks": false
-              },
-              "icon": "lucide-file",
-              "title": "提示词工程1"
+              "title": "01Coze基础入门"
             }
           }
         ]
@@ -110,13 +95,13 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "AI-Large-Modlels-Notes/Agent/提示词工程/提示词工程.md",
+                "file": "AI-Large-Modlels-Notes/Agent/Coze/01Coze基础入门.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "提示词工程 的大纲"
+              "title": "01Coze基础入门 的大纲"
             }
           },
           {
@@ -174,7 +159,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "AI-Large-Modlels-Notes/Agent/提示词工程/提示词工程.md",
+                "file": "AI-Large-Modlels-Notes/Agent/Coze/01Coze基础入门.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -184,7 +169,7 @@
                 "unlinkedCollapsed": true
               },
               "icon": "links-coming-in",
-              "title": "提示词工程 的反向链接列表"
+              "title": "01Coze基础入门 的反向链接列表"
             }
           },
           {
@@ -193,12 +178,12 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "AI-Large-Modlels-Notes/Agent/提示词工程/提示词工程.md",
+                "file": "AI-Large-Modlels-Notes/Agent/Coze/01Coze基础入门.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               },
               "icon": "links-going-out",
-              "title": "提示词工程 的出链列表"
+              "title": "01Coze基础入门 的出链列表"
             }
           }
         ],
@@ -225,8 +210,8 @@
   },
   "active": "e5c6004f44c0e722",
   "lastOpenFiles": [
-    "AI-Large-Modlels-Notes/Agent/提示词工程/提示词工程1.md",
     "AI-Large-Modlels-Notes/Agent/提示词工程/提示词工程.md",
+    "AI-Large-Modlels-Notes/Agent/提示词工程/提示词工程1.md",
     "AI-Large-Modlels-Notes/Agent/各种提示词/笔记模板提示词.md",
     "AI-Large-Modlels-Notes/Agent/各种提示词/精简笔记提示词.md",
     "AI-Large-Modlels-Notes/Draft/aaa.md",
