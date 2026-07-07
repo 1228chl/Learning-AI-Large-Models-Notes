@@ -2,95 +2,40 @@
 author: "XunZong"
 created: "2026-07-06"
 tags: ["NLP", "Transformer", "归一化"]
-aliases: ["残差连接", "LayerNorm", "Residual", "Layer Normalization"]
+aliases: ["残差连接与LayerNorm", "Residual and LayerNorm"]
 ---
 
 # 残差连接与 LayerNorm
+
+> 本文是 **残差连接** 与 **Layer Normalization** 的概览。两份概念的完整阐述已拆分为独立卡片，请点击下方链接查看。
+
+---
 
 ## 残差连接（Residual Connection）
 
 让输入直接绕过子层加到输出上，解决深层网络的**梯度消失**和**退化问题**：
 
-$$\text{Output} = x + \text{Sublayer}(x)$$
+$$ \text{Output} = x + \text{Sublayer}(x) $$
 
-```python
-# 残差连接的实现
-def residual_block(x, sublayer):
-    return x + sublayer(x)     # 梯度可以从输出直通到输入
-```
-
-**作用**：
-1. 梯度直通：$x$ 直接加到输出，梯度可无损反向传播
-2. 缓解退化：深层模型至少不差于浅层（恒等映射选项）
-3. Transformer 中每个子层后都接残差连接
+**要点**：梯度高速公路、恒等映射、Pre-LN vs Post-LN 两种放置方式。
 
 ## Layer Normalization
 
-对**每个样本的每个位置**独立做归一化，计算均值和方差：
+对**每个样本的每个位置**在特征维度上独立做归一化：
 
-$$\text{LayerNorm}(x) = \gamma \odot \frac{x - \mu}{\sigma + \epsilon} + \beta$$
+$$ \text{LayerNorm}(x) = \gamma \odot \frac{x - \mu}{\sigma + \epsilon} + \beta $$
 
-其中 $\mu = \frac{1}{d}\sum_{i=1}^d x_i$，$\sigma = \sqrt{\frac{1}{d}\sum_{i=1}^d (x_i - \mu)^2}$
+**要点**：LayerNorm vs BatchNorm、RMS Norm 简化变体。
 
-```python
-import torch.nn as nn
+---
 
-ln = nn.LayerNorm(512)              # 对 512 维特征做归一化
-x = torch.randn(2, 10, 512)        # (N, L, d)
-y = ln(x)                           # 每个 (N, L) 位置的 d 维向量独立归一化
-```
+## 关联卡片
 
-## LayerNorm vs BatchNorm
+| 概念 | 卡片 | 覆盖内容 |
+|:----:|:----:|:---------|
+| **残差连接** | [[13-残差连接(ResidualConnection)]] | 残差连接、梯度高速公路、Pre-LN vs Post-LN、ResNet/DenseNet |
+| **Layer Normalization** | [[14-Layer Normalization]] | LayerNorm vs BatchNorm、RMS Norm、Transformer/CV 归一化选择 |
 
-| 对比 | LayerNorm | BatchNorm |
-|:----:|:---------:|:---------:|
-| **归一化维度** | $\mu$ 在**特征维度**计算 | $\mu$ 在**批量维度**计算 |
-| **依赖 Batch** | ❌ 不依赖 | ✅ 依赖，小 batch 不稳定 |
-| **序列长度变化** | ✅ 灵活 | ❌ 固定 |
-| **训练/推理一致性** | ✅ 一致 | ❌ 训练用 batch，推理用全局 |
-| **Transformer 使用** | **标准配置** | 不适合（序列变长） |
+---
 
-```python
-# 关键区别
-# BN: 对某个特征维度，在所有样本上求均值和方差
-# LN: 对某个样本，在所有特征维度上求均值和方差
-```
-
-## Transformer 中的子层结构
-
-```
-Post-LN（原版 Transformer）: x → MHA → Add+LN → FFN → Add+LN
-Pre-LN（更稳定，LLaMA 等）: x → LN → MHA → Add → LN → FFN → Add
-```
-
-| 结构 | 训练稳定性 | 代表模型 |
-|:----:|:---------:|:---------|
-| **Post-LN** | 需 warmup，不稳定 | 原版 Transformer |
-| **Pre-LN** | 稳定，无需 warmup | BERT、GPT、LLaMA |
-
-## ML 中的残差与归一化
-
-| 模型 | 结构 | 说明 |
-|:----:|:----|------|
-| **ResNet** | Conv → BN → ReLU → Add（残差） | 首次引入残差连接，高达 152 层 |
-| **BERT** | Pre-LN + 残差 | 12/24 层 Transformer 编码器 |
-| **GPT** | Pre-LN + 残差 | 12-96 层 Transformer 解码器 |
-| **LLaMA** | Pre-LN（RMS Norm）+ 残差 | 使用更简单的 RMS Norm 替代 LayerNorm |
-| **Stable Diffusion** | 残差 + GroupNorm | U-Net 中的 CN 层 |
-
-
-## 面试追问
-
-**Q1（基础）**：残差连接（Residual Connection）解决了深层网络中的什么问题？数学上它是如何做到的？
-**回答要点**：解决深度网络中的梯度消失和退化问题；输出 = x + Sublayer(x)，梯度可以从输出无损直通到输入；使深层网络至少不差于浅层（恒等映射选项）。
-
-**Q2（深挖）**：LayerNorm 和 BatchNorm 有什么本质区别？为什么 Transformer 选择 LayerNorm 而非 BatchNorm？
-**回答要点**：LayerNorm 对每个样本的特征维度做归一化，BatchNorm 对每个特征维度在整个 batch 上做归一化；LayerNorm 不依赖 batch size、对变长序列友好、训练推理行为一致；BatchNorm 在序列长度变化和小 batch 时表现不稳定。
-
-**Q3（实战）**：你在训练 Transformer 时遇到训练不稳定的情况，选择 Post-LN（原始）还是 Pre-LN 结构更可靠？实际项目中你如何取舍？
-**回答要点**：Post-LN 需要精细的 warmup 策略，否则易梯度爆炸；Pre-LN 更稳定，无需 warmup，收敛更快；现代实践（BERT、GPT、LLaMA）普遍采用 Pre-LN，是更安全的选择。
-
-**Q4（边界）**：LLaMA 使用 RMS Norm 替代标准的 LayerNorm，动机是什么？它牺牲了什么？
-**回答要点**：RMS Norm 去掉了均值归零步骤，只保留 RMS 缩放；计算更简单、参数量更少；实验表明在 Transformer 中性能与标准 LayerNorm 相当；已成为大多数开源 LLM 的标准归一化方案。
-
-> 参见 [[06-自注意力与Transformer]]、[[07-多头注意力]]
+> 参见 [[13-残差连接(ResidualConnection)]]、[[14-Layer Normalization]]、[[06-自注意力与Transformer]]、[[07-多头注意力]]
