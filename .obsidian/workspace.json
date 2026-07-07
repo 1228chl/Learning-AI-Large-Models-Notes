@@ -23,28 +23,18 @@
             }
           },
           {
-            "id": "1f0974e6edccc6c0",
+            "id": "9dddde49a2d5eb85",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Atomic-Cards/机器学习/01-机器学习概述.md",
+                "file": "AI-Large-Modlels-Notes/Algorithm/1-两数之和.md",
                 "mode": "source",
                 "source": false,
                 "backlinks": false
               },
               "icon": "lucide-file",
-              "title": "01-机器学习概述"
-            }
-          },
-          {
-            "id": "9dddde49a2d5eb85",
-            "type": "leaf",
-            "state": {
-              "type": "graph",
-              "state": {},
-              "icon": "lucide-git-fork",
-              "title": "关系图谱"
+              "title": "1-两数之和"
             }
           }
         ],
@@ -101,7 +91,8 @@
               "title": "书签"
             }
           }
-        ]
+        ],
+        "currentTab": 1
       }
     ],
     "direction": "horizontal",
@@ -234,8 +225,13 @@
       "templater-obsidian:Templater": false
     }
   },
-  "active": "1f0974e6edccc6c0",
+  "active": "9dddde49a2d5eb85",
   "lastOpenFiles": [
+    "AI-Large-Modlels-Notes/Algorithm/03-数组与链表.md",
+    "AI-Large-Modlels-Notes/Algorithm/1-两数之和.md",
+    "AI-Large-Modlels-Notes/Algorithm/01-算法复杂度分析.md",
+    "AI-Large-Modlels-Notes/Algorithm/02-数据结构.md",
+    "Atomic-Cards/机器学习/01-机器学习概述.md",
     "Atomic-Cards/工程实践/08-HTTP基础与API设计.md",
     "Atomic-Cards/工程实践/07-LLM API调用与ChatBot.md",
     "Atomic-Cards/工程实践/06-Ollama与本地LLM部署.md",
@@ -257,11 +253,6 @@
     "AI-Large-Modlels-Notes/Agent/Coze/03Coze细节（课堂版）.md",
     "AI-Large-Modlels-Notes/Agent/Coze/02Coze进阶.md",
     "AI-Large-Modlels-Notes/Agent/Coze/01Coze基础入门.md",
-    "AI-Large-Modlels-Notes/Agent/提示词工程/提示词工程.md",
-    "AI-Large-Modlels-Notes/Agent/各种提示词/精简笔记提示词.md",
-    "Atomic-Cards/原子化生成提示词.md",
-    "Atomic-Cards/数据库/04-PyMySQL模块.md",
-    "Atomic-Cards/卡片总览.md",
     "Atomic-Cards/原子化生成提示词.md.tmp.6892.d07290b51192",
     "Atomic-Cards/卡片总览.md.tmp.17160.9b304bb77cc3",
     "Atomic-Cards/原子化生成提示词.md.tmp.17160.b220db876d41",
