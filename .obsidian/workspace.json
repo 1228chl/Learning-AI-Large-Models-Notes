@@ -95,8 +95,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 292.5,
-    "collapsed": true
+    "width": 292.5
   },
   "right": {
     "id": "f07a0c5b7e11463b",
@@ -227,8 +226,9 @@
   },
   "active": "9dddde49a2d5eb85",
   "lastOpenFiles": [
-    "AI-Large-Modlels-Notes/Algorithm/03-数组与链表.md",
+    "Atomic-Cards/卡片总览.md",
     "AI-Large-Modlels-Notes/Algorithm/1-两数之和.md",
+    "AI-Large-Modlels-Notes/Algorithm/03-数组与链表.md",
     "AI-Large-Modlels-Notes/Algorithm/01-算法复杂度分析.md",
     "AI-Large-Modlels-Notes/Algorithm/02-数据结构.md",
     "Atomic-Cards/机器学习/01-机器学习概述.md",
@@ -252,7 +252,6 @@
     "AI-Large-Modlels-Notes/Agent/各种提示词/笔记模板提示词.md",
     "AI-Large-Modlels-Notes/Agent/Coze/03Coze细节（课堂版）.md",
     "AI-Large-Modlels-Notes/Agent/Coze/02Coze进阶.md",
-    "AI-Large-Modlels-Notes/Agent/Coze/01Coze基础入门.md",
     "Atomic-Cards/原子化生成提示词.md.tmp.6892.d07290b51192",
     "Atomic-Cards/卡片总览.md.tmp.17160.9b304bb77cc3",
     "Atomic-Cards/原子化生成提示词.md.tmp.17160.b220db876d41",

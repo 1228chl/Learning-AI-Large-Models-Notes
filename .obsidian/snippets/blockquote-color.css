@@ -8,7 +8,7 @@
     color: #444 !important;
     font-size: 0.9em !important;
     background-color: transparent !important;
-    padding: 0 12px !important;
+    /* padding: 0 12px !important; */
 }
 
 .theme-light blockquote blockquote {
@@ -22,9 +22,10 @@
     color: #8b97a3 !important;
     font-size: 0.9em !important;
     background-color: transparent !important;
-    padding: 0 12px !important;
+    /* padding: 0 12px !important; */
 }
 
 .theme-dark blockquote blockquote {
     padding-right: 0;
 }
+

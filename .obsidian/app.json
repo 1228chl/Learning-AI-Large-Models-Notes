@@ -20,5 +20,7 @@
     "margin": "0",
     "downscalePercent": 100
   },
-  "showUnsupportedFiles": false
+  "showUnsupportedFiles": false,
+  "foldIndent": true,
+  "autoConvertHtml": true
 }
