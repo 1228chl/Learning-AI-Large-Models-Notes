@@ -12,7 +12,7 @@ let aliasInput = await tp.system.prompt("输入别名（多个用英文逗号分
 let aliases = aliasInput ? aliasInput.split(',').map(s => s.trim()).filter(Boolean) : [];
 
 // 4. 自动获取创建时间
-let created = moment(tp.file.creation_date()).format("YYYY-MM-DD HH:mm:ss");
+let created = moment(tp.file.creation_date()).format("YYYY-MM-DD");
 
 // 5. 固定作者
 let author = "XunZong";

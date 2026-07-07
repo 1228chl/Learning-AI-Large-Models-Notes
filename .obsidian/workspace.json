@@ -13,13 +13,13 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Atomic-Cards/深度学习/16-光滑损失函数.md",
+                "file": "Atomic-Cards/卡片总览.md",
                 "mode": "source",
                 "source": false,
                 "backlinks": false
               },
               "icon": "lucide-file",
-              "title": "16-光滑损失函数"
+              "title": "卡片总览"
             }
           },
           {
@@ -89,7 +89,8 @@
       }
     ],
     "direction": "horizontal",
-    "width": 319.5
+    "width": 319.5,
+    "collapsed": true
   },
   "right": {
     "id": "f07a0c5b7e11463b",
@@ -218,9 +219,13 @@
       "templater-obsidian:Templater": false
     }
   },
-  "active": "e83158f79f242826",
+  "active": "e5c6004f44c0e722",
   "lastOpenFiles": [
     "Atomic-Cards/卡片总览.md",
+    "Atomic-Cards/原子化生成提示词.md",
+    "Atomic-Cards/原子化生成提示词.md.tmp.6892.d07290b51192",
+    "Templates/Note_Templater.md",
+    "Atomic-Cards/深度学习/16-光滑损失函数.md",
     "Atomic-Cards/卡片总览.md.tmp.17160.9b304bb77cc3",
     "Atomic-Cards/原子化生成提示词.md.tmp.17160.b220db876d41",
     "Atomic-Cards/深度学习/15-模型压缩量化剪枝蒸馏.md.tmp.17160.7c9a4f34af82",
@@ -239,7 +244,6 @@
     "Atomic-Cards/深度学习/17-模型剪枝(Pruning).md",
     "Atomic-Cards/深度学习/17-模型剪枝(Pruning).md.tmp.17160.8ece3d408d3a",
     "Atomic-Cards/机器学习/27-Boosting.md",
-    "Atomic-Cards/机器学习/27-Boosting.md.tmp.17160.3411d098b99a",
     "Atomic-Cards/机器学习/26-Bagging.md",
     "Atomic-Cards/深度学习/16-模型量化(Quantization).md",
     "Atomic-Cards/机器学习/30-t-SNE与UMAP非线性降维.md",
@@ -252,10 +256,6 @@
     "Atomic-Cards/Python/12-继承与MRO.md",
     "Atomic-Cards/Python/11-封装(Encapsulation).md",
     "Atomic-Cards/机器学习/23-ElasticNet正则化.md",
-    "Atomic-Cards/机器学习/22-L1正则化(Lasso).md",
-    "Atomic-Cards/机器学习/21-L2正则化(Ridge).md",
-    "Atomic-Cards/深度学习/03-损失函数.md",
-    "Atomic-Cards/深度学习/16-光滑损失函数.md",
     "Assets/Image/AI-Large-Modlels-Notes/NLP/05-注意力机制和Seq2Seq介绍/1.2.1.4-1 1.png",
     "Assets/Image/AI-Large-Modlels-Notes/ML/监督学习/线性回归/02线性回归(改进版)/5.2.2-2.png",
     "Assets/Image/AI-Large-Modlels-Notes/ML/监督学习/线性回归/02线性回归(改进版)/5.2.2-1-1.png",
