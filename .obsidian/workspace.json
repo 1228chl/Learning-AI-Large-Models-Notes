@@ -29,7 +29,7 @@
               "type": "markdown",
               "state": {
                 "file": "AI-Large-Modlels-Notes/Algorithm/1-两数之和.md",
-                "mode": "preview",
+                "mode": "source",
                 "source": false,
                 "backlinks": false
               },
@@ -95,7 +95,8 @@
       }
     ],
     "direction": "horizontal",
-    "width": 292.5
+    "width": 292.5,
+    "collapsed": true
   },
   "right": {
     "id": "f07a0c5b7e11463b",
