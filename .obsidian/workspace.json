@@ -13,13 +13,13 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Atomic-Cards/AI-Agent/05-BM25算法.md",
+                "file": "Atomic-Cards/深度学习/16-光滑损失函数.md",
                 "mode": "source",
-                "source": true,
+                "source": false,
                 "backlinks": false
               },
               "icon": "lucide-file",
-              "title": "05-BM25算法"
+              "title": "16-光滑损失函数"
             }
           },
           {
@@ -85,8 +85,7 @@
               "title": "书签"
             }
           }
-        ],
-        "currentTab": 1
+        ]
       }
     ],
     "direction": "horizontal",
@@ -219,45 +218,45 @@
       "templater-obsidian:Templater": false
     }
   },
-  "active": "e5c6004f44c0e722",
+  "active": "e83158f79f242826",
   "lastOpenFiles": [
+    "Atomic-Cards/机器学习/24-DBSCAN密度聚类.md",
+    "Atomic-Cards/机器学习/24-DBSCAN密度聚类.md.tmp.17160.738ed8e96a7d",
+    "Atomic-Cards/原子化生成提示词.md.tmp.17160.94c7c5696d00",
+    "Atomic-Cards/Python/02-继承与多态.md.tmp.17160.f2c0b66ca81b",
+    "Atomic-Cards/Python/02-继承与多态.md.tmp.17160.7d8fee7b2a31",
+    "Atomic-Cards/Python/13-多态与鸭子类型.md",
+    "Atomic-Cards/Python/13-多态与鸭子类型.md.tmp.17160.7bedbcc620f9",
+    "Atomic-Cards/Python/12-继承与MRO.md",
+    "Atomic-Cards/Python/12-继承与MRO.md.tmp.17160.317b80ab140e",
+    "Atomic-Cards/Python/11-封装(Encapsulation).md",
+    "Atomic-Cards/Python/11-封装(Encapsulation).md.tmp.17160.8a24cb453e7c",
+    "Atomic-Cards/原子化生成提示词.md.tmp.17160.50aeb1e61e79",
+    "Atomic-Cards/机器学习/23-ElasticNet正则化.md",
+    "Atomic-Cards/机器学习/23-ElasticNet正则化.md.tmp.17160.53361662e8e1",
+    "Atomic-Cards/机器学习/22-L1正则化(Lasso).md",
+    "Atomic-Cards/机器学习/22-L1正则化(Lasso).md.tmp.17160.94e20510b1be",
+    "Atomic-Cards/机器学习/21-L2正则化(Ridge).md",
+    "Atomic-Cards/深度学习/03-损失函数.md",
+    "Atomic-Cards/深度学习/16-光滑损失函数.md",
+    "Atomic-Cards/AI-Agent/05-BM25算法.md",
     "Atomic-Cards/数据库/09-Milvus Python操作指南.md",
     "Atomic-Cards/数据库/08-Milvus核心概念.md",
     "Atomic-Cards/数据库/11-混合检索与重排序.md",
     "Atomic-Cards/数据库/10-嵌入与向量化.md",
-    "Atomic-Cards/数据库/09-Milvus Python操作指南.md.tmp.17160.bbde5f8ffe65",
     "Atomic-Cards/数据库/09-嵌入与向量化.md",
     "Atomic-Cards/原子化生成提示词.md",
     "Atomic-Cards/数据分析/02-广播机制.md",
     "Atomic-Cards/数据分析/01-NumPy与ndarray.md",
     "Atomic-Cards/包管理/03-UV包管理器.md",
     "Assets/Image/AI-Large-Modlels-Notes/NLP/05-注意力机制和Seq2Seq介绍/1.2.1.4-1 1.png",
-    "Atomic-Cards/原子化生成提示词.md.tmp.14120.0d12b7e45b63",
-    "Atomic-Cards/线性代数/15-正交与投影.md.tmp.14120.f089bc201be6",
-    "Atomic-Cards/数据结构与算法/15-贪心算法.md.tmp.14120.e2ea148959f3",
-    "Atomic-Cards/AI-Agent/23-RAG系统完整实现.md.tmp.14120.1bf034232e38",
     "Atomic-Cards/包管理/02-Conda包管理与配置.md",
     "Atomic-Cards/包管理/01-Conda环境管理.md",
-    "Atomic-Cards/深度学习/13-GRU.md.tmp.14120.4827ff94d2f6",
-    "Atomic-Cards/机器学习/19-模型选择与超参数调优.md.tmp.14120.7a379d773456",
-    "Atomic-Cards/AI-Agent/10-RAG系统双架构.md.tmp.14120.31e8de390e0a",
-    "Atomic-Cards/NLP/12-HuggingFace Transformers库.md.tmp.14120.964ac68a2808",
-    "Atomic-Cards/线性代数/10-特征值分解.md.tmp.14120.b7cc908608d6",
     "Full-Knowledge/00-数学地基/03-概率统计.md",
     "Full-Knowledge/00-数学地基/01-向量与线性代数.md",
     "Atomic-Cards/深度学习/04-反向传播算法.md",
     "Atomic-Cards/深度学习/02-激活函数.md",
     "Atomic-Cards/概率统计/06-极大似然估计.md",
-    "Atomic-Cards/概率统计/04-期望与方差.md",
-    "Atomic-Cards/概率统计/05-协方差与相关系数.md",
-    "Atomic-Cards/工程实践/02-GPU并行与混合精度.md",
-    "Atomic-Cards/知识体系/01-核心依赖链与学习路径.md",
-    "Atomic-Cards/知识体系/02-面试追问树.md",
-    "Atomic-Cards/AI-Agent/22-LangChain组件操作指南.md",
-    "Atomic-Cards/工程实践/08-HTTP基础与API设计.md",
-    "Atomic-Cards/工程实践/07-LLM API调用与ChatBot.md",
-    "Atomic-Cards/工程实践/06-Ollama与本地LLM部署.md",
-    "Atomic-Cards/工程实践/05-模型保存格式.md",
     "Assets/Image/AI-Large-Modlels-Notes/ML/监督学习/线性回归/02线性回归(改进版)/5.2.2-2.png",
     "Assets/Image/AI-Large-Modlels-Notes/ML/监督学习/线性回归/02线性回归(改进版)/5.2.2-1-1.png",
     "Assets/Image/AI-Large-Modlels-Notes/ML/监督学习/线性回归/02线性回归(改进版)/5.2.1-1.png",
