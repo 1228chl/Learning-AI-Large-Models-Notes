@@ -1,11 +1,11 @@
 {
   "promptDelete": false,
-  "autoPairMarkdown": false,
+  "autoPairMarkdown": true,
   "propertiesInDocument": "visible",
   "foldHeading": true,
-  "showLineNumber": false,
+  "showLineNumber": true,
   "rightToLeft": false,
-  "strictLineBreaks": false,
+  "strictLineBreaks": true,
   "useMarkdownLinks": true,
   "newLinkFormat": "relative",
   "alwaysUpdateLinks": true,
@@ -22,5 +22,6 @@
   },
   "showUnsupportedFiles": false,
   "foldIndent": true,
-  "autoConvertHtml": true
+  "autoConvertHtml": true,
+  "readableLineLength": true
 }
