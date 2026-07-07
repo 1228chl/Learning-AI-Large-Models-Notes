@@ -28,13 +28,13 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Atomic-Cards/概率统计/01-概率空间与事件运算.md",
+                "file": "Atomic-Cards/机器学习/01-机器学习概述.md",
                 "mode": "source",
                 "source": false,
                 "backlinks": false
               },
               "icon": "lucide-file",
-              "title": "01-概率空间与事件运算"
+              "title": "01-机器学习概述"
             }
           },
           {
@@ -105,7 +105,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 319.5
+    "width": 292.5
   },
   "right": {
     "id": "f07a0c5b7e11463b",
@@ -236,6 +236,19 @@
   },
   "active": "1f0974e6edccc6c0",
   "lastOpenFiles": [
+    "Atomic-Cards/工程实践/08-HTTP基础与API设计.md",
+    "Atomic-Cards/工程实践/07-LLM API调用与ChatBot.md",
+    "Atomic-Cards/工程实践/06-Ollama与本地LLM部署.md",
+    "Atomic-Cards/工程实践/05-模型保存格式.md",
+    "Atomic-Cards/工程实践/04-Flask与FastAPI模型部署.md",
+    "Atomic-Cards/工程实践/03-Git版本控制.md",
+    "Atomic-Cards/工程实践/02-GPU并行与混合精度.md",
+    "Atomic-Cards/工程实践/01-Docker基础与容器化.md",
+    "Atomic-Cards/概率统计/05-协方差与相关系数.md",
+    "Atomic-Cards/概率统计/04-期望与方差.md",
+    "Atomic-Cards/概率统计/03-随机变量与概率分布.md",
+    "Atomic-Cards/概率统计/02-条件概率与贝叶斯公式.md",
+    "Atomic-Cards/概率统计/01-概率空间与事件运算.md",
     "Atomic-Cards/包管理/03-UV包管理器.md",
     "Atomic-Cards/包管理/01-Conda环境管理.md",
     "Atomic-Cards/包管理/02-Conda包管理与配置.md",
@@ -250,28 +263,15 @@
     "Atomic-Cards/数据库/04-PyMySQL模块.md",
     "Atomic-Cards/卡片总览.md",
     "Atomic-Cards/原子化生成提示词.md.tmp.6892.d07290b51192",
-    "Templates/Note_Templater.md",
-    "Atomic-Cards/深度学习/16-光滑损失函数.md",
     "Atomic-Cards/卡片总览.md.tmp.17160.9b304bb77cc3",
     "Atomic-Cards/原子化生成提示词.md.tmp.17160.b220db876d41",
     "Atomic-Cards/深度学习/15-模型压缩量化剪枝蒸馏.md.tmp.17160.7c9a4f34af82",
-    "Atomic-Cards/深度学习/21-知识蒸馏(Distillation).md",
-    "Atomic-Cards/深度学习/20-模型剪枝(Pruning).md",
-    "Atomic-Cards/深度学习/19-模型量化(Quantization).md",
     "Atomic-Cards/原子化生成提示词.md.tmp.17160.4c9a140feef9",
     "Atomic-Cards/机器学习/12-集成学习.md.tmp.17160.a8ee19b44c28",
     "Atomic-Cards/原子化生成提示词.md.tmp.17160.9125f18d9086",
-    "Atomic-Cards/Python/15-线程与GIL.md",
-    "Atomic-Cards/深度学习/18-知识蒸馏(Distillation).md",
-    "Atomic-Cards/机器学习/28-Stacking.md",
     "Atomic-Cards/原子化生成提示词.md.tmp.17160.185dd8dfa138",
-    "Atomic-Cards/Python/14-进程与多进程.md",
     "Atomic-Cards/Python/14-进程与多进程.md.tmp.17160.5b0fec7fb317",
-    "Atomic-Cards/深度学习/17-模型剪枝(Pruning).md",
     "Atomic-Cards/深度学习/17-模型剪枝(Pruning).md.tmp.17160.8ece3d408d3a",
-    "Atomic-Cards/机器学习/27-Boosting.md",
-    "Atomic-Cards/机器学习/26-Bagging.md",
-    "Atomic-Cards/深度学习/16-模型量化(Quantization).md",
     "Assets/Image/AI-Large-Modlels-Notes/NLP/05-注意力机制和Seq2Seq介绍/1.2.1.4-1 1.png",
     "Assets/Image/AI-Large-Modlels-Notes/ML/监督学习/线性回归/02线性回归(改进版)/5.2.2-2.png",
     "Assets/Image/AI-Large-Modlels-Notes/ML/监督学习/线性回归/02线性回归(改进版)/5.2.2-1-1.png",
