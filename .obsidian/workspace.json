@@ -13,13 +13,13 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Atomic-Cards/原子化生成提示词.md",
+                "file": "Atomic-Cards/AI-Agent/27-RAG查询改写与意图识别.md",
                 "mode": "source",
                 "source": false,
                 "backlinks": false
               },
               "icon": "lucide-file",
-              "title": "原子化生成提示词"
+              "title": "27-RAG查询改写与意图识别"
             }
           },
           {
@@ -206,8 +206,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 408.5,
-    "collapsed": true
+    "width": 408.5
   },
   "left-ribbon": {
     "hiddenItems": {
@@ -223,8 +222,18 @@
       "templater-obsidian:Templater": false
     }
   },
-  "active": "e5c6004f44c0e722",
+  "active": "e83158f79f242826",
   "lastOpenFiles": [
+    "Atomic-Cards/AI-Agent/26-FAQ与RAG混合检索架构.md",
+    "Atomic-Cards/AI-Agent/25-RAG系统评估(RAGAS).md",
+    "Atomic-Cards/原子化生成提示词.md",
+    "Atomic-Cards/AI-Agent/05-BM25算法.md.tmp.30988.ea715f3cb574",
+    "Atomic-Cards/AI-Agent/10-RAG系统双架构.md.tmp.30988.db22f7ecfdbe",
+    "Atomic-Cards/AI-Agent/02-RAG三阶段流程.md.tmp.30988.a76b01cec5d5",
+    "Atomic-Cards/原子化生成提示词.md.tmp.30988.8d7215bf8719",
+    "Atomic-Cards/卡片总览.md.tmp.30988.ef47fa309c37",
+    "Atomic-Cards/卡片总览.md.tmp.30988.e9775195abe3",
+    "Atomic-Cards/AI-Agent/27-RAG查询改写与意图识别.md",
     "AI-Learning-知识点总表.md",
     "AI-Large-Modlels-Notes/Project/EduRAG/BM25算法简介与应用.md",
     "AI-Large-Modlels-Notes/Algorithm/1-两数之和.md",
@@ -247,20 +256,10 @@
     "Atomic-Cards/概率统计/02-条件概率与贝叶斯公式.md",
     "Atomic-Cards/概率统计/01-概率空间与事件运算.md",
     "Atomic-Cards/包管理/03-UV包管理器.md",
-    "Atomic-Cards/包管理/01-Conda环境管理.md",
-    "Atomic-Cards/包管理/02-Conda包管理与配置.md",
-    "AI-Large-Modlels-Notes/Agent/各种提示词/笔记模板提示词.md",
-    "AI-Large-Modlels-Notes/Agent/Coze/03Coze细节（课堂版）.md",
     "Atomic-Cards/原子化生成提示词.md.tmp.6892.d07290b51192",
     "Atomic-Cards/卡片总览.md.tmp.17160.9b304bb77cc3",
     "Atomic-Cards/原子化生成提示词.md.tmp.17160.b220db876d41",
     "Atomic-Cards/深度学习/15-模型压缩量化剪枝蒸馏.md.tmp.17160.7c9a4f34af82",
-    "Atomic-Cards/原子化生成提示词.md.tmp.17160.4c9a140feef9",
-    "Atomic-Cards/机器学习/12-集成学习.md.tmp.17160.a8ee19b44c28",
-    "Atomic-Cards/原子化生成提示词.md.tmp.17160.9125f18d9086",
-    "Atomic-Cards/原子化生成提示词.md.tmp.17160.185dd8dfa138",
-    "Atomic-Cards/Python/14-进程与多进程.md.tmp.17160.5b0fec7fb317",
-    "Atomic-Cards/深度学习/17-模型剪枝(Pruning).md.tmp.17160.8ece3d408d3a",
     "Assets/Image/AI-Large-Modlels-Notes/NLP/05-注意力机制和Seq2Seq介绍/1.2.1.4-1 1.png",
     "Assets/Image/AI-Large-Modlels-Notes/ML/监督学习/线性回归/02线性回归(改进版)/5.2.2-2.png",
     "Assets/Image/AI-Large-Modlels-Notes/ML/监督学习/线性回归/02线性回归(改进版)/5.2.2-1-1.png",
