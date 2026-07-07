@@ -28,13 +28,13 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Atomic-Cards/原子化生成提示词.md",
+                "file": "Atomic-Cards/概率统计/01-概率空间与事件运算.md",
                 "mode": "source",
                 "source": false,
                 "backlinks": false
               },
               "icon": "lucide-file",
-              "title": "原子化生成提示词"
+              "title": "01-概率空间与事件运算"
             }
           },
           {
@@ -234,11 +234,21 @@
       "templater-obsidian:Templater": false
     }
   },
-  "active": "e83158f79f242826",
+  "active": "1f0974e6edccc6c0",
   "lastOpenFiles": [
+    "Atomic-Cards/包管理/03-UV包管理器.md",
+    "Atomic-Cards/包管理/01-Conda环境管理.md",
+    "Atomic-Cards/包管理/02-Conda包管理与配置.md",
+    "AI-Learning-知识点总表.md",
+    "AI-Large-Modlels-Notes/Agent/各种提示词/笔记模板提示词.md",
+    "AI-Large-Modlels-Notes/Agent/Coze/03Coze细节（课堂版）.md",
+    "AI-Large-Modlels-Notes/Agent/Coze/02Coze进阶.md",
+    "AI-Large-Modlels-Notes/Agent/Coze/01Coze基础入门.md",
+    "AI-Large-Modlels-Notes/Agent/提示词工程/提示词工程.md",
+    "AI-Large-Modlels-Notes/Agent/各种提示词/精简笔记提示词.md",
+    "Atomic-Cards/原子化生成提示词.md",
     "Atomic-Cards/数据库/04-PyMySQL模块.md",
     "Atomic-Cards/卡片总览.md",
-    "Atomic-Cards/原子化生成提示词.md",
     "Atomic-Cards/原子化生成提示词.md.tmp.6892.d07290b51192",
     "Templates/Note_Templater.md",
     "Atomic-Cards/深度学习/16-光滑损失函数.md",
@@ -262,16 +272,6 @@
     "Atomic-Cards/机器学习/27-Boosting.md",
     "Atomic-Cards/机器学习/26-Bagging.md",
     "Atomic-Cards/深度学习/16-模型量化(Quantization).md",
-    "Atomic-Cards/机器学习/30-t-SNE与UMAP非线性降维.md",
-    "Atomic-Cards/NLP/14-Layer Normalization.md",
-    "Atomic-Cards/机器学习/29-PCA主成分分析.md",
-    "Atomic-Cards/NLP/13-残差连接(ResidualConnection).md",
-    "Atomic-Cards/机器学习/25-层次聚类.md",
-    "Atomic-Cards/机器学习/24-DBSCAN密度聚类.md",
-    "Atomic-Cards/Python/13-多态与鸭子类型.md",
-    "Atomic-Cards/Python/12-继承与MRO.md",
-    "Atomic-Cards/Python/11-封装(Encapsulation).md",
-    "Atomic-Cards/机器学习/23-ElasticNet正则化.md",
     "Assets/Image/AI-Large-Modlels-Notes/NLP/05-注意力机制和Seq2Seq介绍/1.2.1.4-1 1.png",
     "Assets/Image/AI-Large-Modlels-Notes/ML/监督学习/线性回归/02线性回归(改进版)/5.2.2-2.png",
     "Assets/Image/AI-Large-Modlels-Notes/ML/监督学习/线性回归/02线性回归(改进版)/5.2.2-1-1.png",
