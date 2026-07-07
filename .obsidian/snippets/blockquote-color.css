@@ -1,23 +1,30 @@
-/* ========== 浅色模式 ========== */
+/* ========== Misty 风格 Blockquote - 适配 Obsidian ========== */
+/* 参考: https://github.com/etigerstudio/typora-misty-theme */
+
+/* -------- 浅色模式 -------- */
 .theme-light .HyperMD-quote,
 .theme-light .markdown-preview-view blockquote {
-    background-color: #eaf9ea !important;
-    border-left: 3px solid #6bb86b;
+    border-left: 4px dotted #e5e8e8 !important;
+    color: #444 !important;
+    font-size: 0.9em !important;
+    background-color: transparent !important;
+    padding: 0 12px !important;
 }
 
-.theme-light .markdown-preview-view blockquote {
-    padding: 0.75em 1.25em;
-    border-radius: 6px;
+.theme-light blockquote blockquote {
+    padding-right: 0;
 }
 
-/* ========== 深色模式 ========== */
+/* -------- 深色模式 -------- */
 .theme-dark .HyperMD-quote,
 .theme-dark .markdown-preview-view blockquote {
-    background-color: #1e2a1e !important;
-    border-left: 3px solid #6bb86b;
+    border-left: 4px dotted #4e555c !important;
+    color: #8b97a3 !important;
+    font-size: 0.9em !important;
+    background-color: transparent !important;
+    padding: 0 12px !important;
 }
 
-.theme-dark .markdown-preview-view blockquote {
-    padding: 0.75em 1.25em;
-    border-radius: 6px;
+.theme-dark blockquote blockquote {
+    padding-right: 0;
 }
