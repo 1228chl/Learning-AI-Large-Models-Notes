@@ -13,13 +13,13 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Atomic-Cards/数据库/08-Milvus核心概念.md",
+                "file": "Atomic-Cards/AI-Agent/05-BM25算法.md",
                 "mode": "source",
-                "source": false,
+                "source": true,
                 "backlinks": false
               },
               "icon": "lucide-file",
-              "title": "08-Milvus核心概念"
+              "title": "05-BM25算法"
             }
           },
           {
@@ -85,7 +85,8 @@
               "title": "书签"
             }
           }
-        ]
+        ],
+        "currentTab": 1
       }
     ],
     "direction": "horizontal",
@@ -220,8 +221,12 @@
   },
   "active": "e5c6004f44c0e722",
   "lastOpenFiles": [
-    "Atomic-Cards/数据库/09-嵌入与向量化.md",
+    "Atomic-Cards/数据库/09-Milvus Python操作指南.md",
     "Atomic-Cards/数据库/08-Milvus核心概念.md",
+    "Atomic-Cards/数据库/11-混合检索与重排序.md",
+    "Atomic-Cards/数据库/10-嵌入与向量化.md",
+    "Atomic-Cards/数据库/09-Milvus Python操作指南.md.tmp.17160.bbde5f8ffe65",
+    "Atomic-Cards/数据库/09-嵌入与向量化.md",
     "Atomic-Cards/原子化生成提示词.md",
     "Atomic-Cards/数据分析/02-广播机制.md",
     "Atomic-Cards/数据分析/01-NumPy与ndarray.md",
@@ -238,7 +243,6 @@
     "Atomic-Cards/AI-Agent/10-RAG系统双架构.md.tmp.14120.31e8de390e0a",
     "Atomic-Cards/NLP/12-HuggingFace Transformers库.md.tmp.14120.964ac68a2808",
     "Atomic-Cards/线性代数/10-特征值分解.md.tmp.14120.b7cc908608d6",
-    "Atomic-Cards/NLP/11-GPT与自回归生成.md.tmp.14120.a6014cc7b5f8",
     "Full-Knowledge/00-数学地基/03-概率统计.md",
     "Full-Knowledge/00-数学地基/01-向量与线性代数.md",
     "Atomic-Cards/深度学习/04-反向传播算法.md",
@@ -254,9 +258,6 @@
     "Atomic-Cards/工程实践/07-LLM API调用与ChatBot.md",
     "Atomic-Cards/工程实践/06-Ollama与本地LLM部署.md",
     "Atomic-Cards/工程实践/05-模型保存格式.md",
-    "Atomic-Cards/工程实践/04-Flask与FastAPI模型部署.md",
-    "Atomic-Cards/工程实践/03-Git版本控制.md",
-    "Atomic-Cards/工程实践/01-Docker基础与容器化.md",
     "Assets/Image/AI-Large-Modlels-Notes/ML/监督学习/线性回归/02线性回归(改进版)/5.2.2-2.png",
     "Assets/Image/AI-Large-Modlels-Notes/ML/监督学习/线性回归/02线性回归(改进版)/5.2.2-1-1.png",
     "Assets/Image/AI-Large-Modlels-Notes/ML/监督学习/线性回归/02线性回归(改进版)/5.2.1-1.png",
