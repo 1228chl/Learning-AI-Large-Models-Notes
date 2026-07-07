@@ -13,13 +13,13 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Atomic-Cards/卡片总览.md",
+                "file": "AI-Large-Modlels-Notes/Project/EduRAG/BM25算法简介与应用.md",
                 "mode": "source",
                 "source": false,
                 "backlinks": false
               },
               "icon": "lucide-file",
-              "title": "卡片总览"
+              "title": "BM25算法简介与应用"
             }
           },
           {
@@ -37,8 +37,7 @@
               "title": "1-两数之和"
             }
           }
-        ],
-        "currentTab": 1
+        ]
       }
     ],
     "direction": "vertical"
@@ -225,7 +224,7 @@
       "templater-obsidian:Templater": false
     }
   },
-  "active": "9dddde49a2d5eb85",
+  "active": "e5c6004f44c0e722",
   "lastOpenFiles": [
     "Atomic-Cards/卡片总览.md",
     "AI-Large-Modlels-Notes/Algorithm/1-两数之和.md",

@@ -35,5 +35,5 @@
   "minimal-style@@row-hover": false,
   "minimal-style@@h2-weight": 500,
   "minimal-style@@h4-weight": 500,
-  "minimal-style@@blockquote-border-thickness": 0
+  "minimal-style@@blockquote-border-thickness": 1
 }

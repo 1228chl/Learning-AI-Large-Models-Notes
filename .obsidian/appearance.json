@@ -1,7 +1,7 @@
 {
   "cssTheme": "Minimal",
   "theme": "system",
-  "baseFontSize": 20,
+  "baseFontSize": 18,
   "accentColor": "#8a5cf5",
   "nativeMenus": false,
   "showRibbon": true,
@@ -9,8 +9,8 @@
   "enabledCssSnippets": [
     "mathlive-light-fix",
     "image-center",
-    "inline-code",
-    "blockquote-color"
+    "blockquote-color",
+    "inline-code"
   ],
   "textFontFamily": "Times New Roman,寒蝉锦书宋",
   "interfaceFontFamily": "Times New Roman,寒蝉锦书宋",
