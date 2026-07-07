@@ -4,7 +4,7 @@
 .theme-light .cm-table-widget code,
 .theme-light .table-cell-wrapper code {
     color: #4DB95A !important;
-    background-color: #FAFAFA !important;
+    /* background-color: #FAFAFA !important; */
     border-radius: 4px !important;
 
 }
@@ -15,6 +15,6 @@
 .theme-dark .cm-table-widget code,
 .theme-dark .table-cell-wrapper code {
     color: #7EC67E !important;
-    background-color: #242424 !important;
+    /* background-color: #242424 !important; */
     border-radius: 4px !important;
 }
