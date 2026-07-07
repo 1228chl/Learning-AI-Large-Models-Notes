@@ -103,15 +103,15 @@ FROM users;
 ## 面试追问
 
 **Q1（基础）**：INNER JOIN 和 LEFT JOIN 的区别是什么？分别在什么场景下使用？
-回答要点：① INNER JOIN只返回两表都匹配的记录（交集）；LEFT JOIN返回左表全部记录，右表无匹配时为NULL。② 特征工程构建宽表时常用LEFT JOIN确保不丢失主表样本。③ 多表JOIN时要关注关联字段的索引，否则性能急剧下降。
+**回答要点**：① INNER JOIN只返回两表都匹配的记录（交集）；LEFT JOIN返回左表全部记录，右表无匹配时为NULL。② 特征工程构建宽表时常用LEFT JOIN确保不丢失主表样本。③ 多表JOIN时要关注关联字段的索引，否则性能急剧下降。
 
 **Q2（深挖）**：请写出SQL查询的执行顺序（FROM → WHERE → GROUP BY → HAVING → SELECT → ORDER BY → LIMIT），并说明为什么理解这个顺序很重要。
-回答要点：① FROM确定表 → WHERE过滤行 → GROUP BY分组 → HAVING过滤分组 → SELECT选择列 → ORDER BY排序 → LIMIT限制行数。② 理解执行顺序有助于优化SQL：WHERE中过滤尽可能多的行减少后续处理量；HAVING只用于聚合后的条件过滤。③ 别名（SELECT中的别名）在WHERE中不可用，因为SELECT在WHERE之后执行。
+**回答要点**：① FROM确定表 → WHERE过滤行 → GROUP BY分组 → HAVING过滤分组 → SELECT选择列 → ORDER BY排序 → LIMIT限制行数。② 理解执行顺序有助于优化SQL：WHERE中过滤尽可能多的行减少后续处理量；HAVING只用于聚合后的条件过滤。③ 别名（SELECT中的别名）在WHERE中不可用，因为SELECT在WHERE之后执行。
 
 **Q3（实战）**：在构建ML训练用的特征宽表时，如何通过SQL将用户表、订单表和商品表组合成一个特征矩阵？请写出典型查询。
-回答要点：① 以用户表为主表LEFT JOIN订单表（用户ID关联），再LEFT JOIN商品表（商品ID关联）。② 使用GROUP BY对用户ID分组，COUNT统计订单数、AVG计算平均金额、MAX获取最近下单时间。③ 在关联字段（user_id、product_id）上建索引，否则大数据量下JOIN非常缓慢。
+**回答要点**：① 以用户表为主表LEFT JOIN订单表（用户ID关联），再LEFT JOIN商品表（商品ID关联）。② 使用GROUP BY对用户ID分组，COUNT统计订单数、AVG计算平均金额、MAX获取最近下单时间。③ 在关联字段（user_id、product_id）上建索引，否则大数据量下JOIN非常缓慢。
 
 **Q4（边界）**：JOIN操作在什么情况下性能会严重下降？你会如何优化？
-回答要点：① 大表之间无索引的JOIN会导致全表扫描＋嵌套循环，性能极差。② 多表JOIN（超过3-4张表）且每张表数据量巨大时，临时表和中转表开销不可忽视。③ 优化手段：关联字段加索引、只SELECT需要的列而非*、使用子查询预聚合缩小数据集、分步创建中间结果表。
+**回答要点**：① 大表之间无索引的JOIN会导致全表扫描＋嵌套循环，性能极差。② 多表JOIN（超过3-4张表）且每张表数据量巨大时，临时表和中转表开销不可忽视。③ 优化手段：关联字段加索引、只SELECT需要的列而非*、使用子查询预聚合缩小数据集、分步创建中间结果表。
 
 > 参见 [[01-SQL基础与数据库设计]]、[[03-MySQL高级特性]]、[[04-PyMySQL模块]]

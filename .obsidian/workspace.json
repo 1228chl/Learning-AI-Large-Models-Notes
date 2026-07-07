@@ -13,13 +13,13 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Atomic-Cards/原子化生成提示词.md",
+                "file": "Atomic-Cards/数据库/08-Milvus核心概念.md",
                 "mode": "source",
                 "source": false,
                 "backlinks": false
               },
               "icon": "lucide-file",
-              "title": "原子化生成提示词"
+              "title": "08-Milvus核心概念"
             }
           },
           {
@@ -220,6 +220,11 @@
   },
   "active": "e5c6004f44c0e722",
   "lastOpenFiles": [
+    "Atomic-Cards/数据库/09-嵌入与向量化.md",
+    "Atomic-Cards/数据库/08-Milvus核心概念.md",
+    "Atomic-Cards/原子化生成提示词.md",
+    "Atomic-Cards/数据分析/02-广播机制.md",
+    "Atomic-Cards/数据分析/01-NumPy与ndarray.md",
     "Atomic-Cards/包管理/03-UV包管理器.md",
     "Assets/Image/AI-Large-Modlels-Notes/NLP/05-注意力机制和Seq2Seq介绍/1.2.1.4-1 1.png",
     "Atomic-Cards/原子化生成提示词.md.tmp.14120.0d12b7e45b63",
@@ -234,7 +239,6 @@
     "Atomic-Cards/NLP/12-HuggingFace Transformers库.md.tmp.14120.964ac68a2808",
     "Atomic-Cards/线性代数/10-特征值分解.md.tmp.14120.b7cc908608d6",
     "Atomic-Cards/NLP/11-GPT与自回归生成.md.tmp.14120.a6014cc7b5f8",
-    "Atomic-Cards/原子化生成提示词.md",
     "Full-Knowledge/00-数学地基/03-概率统计.md",
     "Full-Knowledge/00-数学地基/01-向量与线性代数.md",
     "Atomic-Cards/深度学习/04-反向传播算法.md",
@@ -253,9 +257,6 @@
     "Atomic-Cards/工程实践/04-Flask与FastAPI模型部署.md",
     "Atomic-Cards/工程实践/03-Git版本控制.md",
     "Atomic-Cards/工程实践/01-Docker基础与容器化.md",
-    "Atomic-Cards/深度学习/15-模型压缩量化剪枝蒸馏.md",
-    "Atomic-Cards/AI-Agent/21-HTTP基础与API设计.md",
-    "Atomic-Cards/AI-Agent/24-BM25完整实现.md",
     "Assets/Image/AI-Large-Modlels-Notes/ML/监督学习/线性回归/02线性回归(改进版)/5.2.2-2.png",
     "Assets/Image/AI-Large-Modlels-Notes/ML/监督学习/线性回归/02线性回归(改进版)/5.2.2-1-1.png",
     "Assets/Image/AI-Large-Modlels-Notes/ML/监督学习/线性回归/02线性回归(改进版)/5.2.1-1.png",

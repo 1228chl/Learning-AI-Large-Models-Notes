@@ -106,15 +106,15 @@ trainer.train()
 ## 面试追问
 
 **Q1（基础）**：HuggingFace 的 AutoTokenizer、AutoModel 这类 Auto 类是如何做到"自动匹配"模型架构的？
-回答要点：每个模型在 Hub 上有 config.json 记录架构类型（如 bert、gpt2、t5）；Auto 类读取配置文件自动实例化对应的具体实现类（如 BertModel）；提供了统一的接口（from_pretrained、save_pretrained），使模型切换只需改 model_name。
+**回答要点**：每个模型在 Hub 上有 config.json 记录架构类型（如 bert、gpt2、t5）；Auto 类读取配置文件自动实例化对应的具体实现类（如 BertModel）；提供了统一的接口（from_pretrained、save_pretrained），使模型切换只需改 model_name。
 
 **Q2（深挖）**：HuggingFace 的 Pipeline 和 Trainer 分别解决了什么场景的问题？Trainer 较自定义训练循环有哪些优势和不足？
-回答要点：Pipeline 面向推理——一行代码完成特定任务；Trainer 面向训练——内置分布式训练、日志、检查点、评估循环；优势是减少样板代码和内置最佳实践；不足是自定义损失函数和复杂训练逻辑时不够灵活。
+**回答要点**：Pipeline 面向推理——一行代码完成特定任务；Trainer 面向训练——内置分布式训练、日志、检查点、评估循环；优势是减少样板代码和内置最佳实践；不足是自定义损失函数和复杂训练逻辑时不够灵活。
 
 **Q3（实战）**：你微调了一个 BERT 模型需要部署上线，用 HuggingFace 生态你会做哪些推理优化？
-回答要点：模型量化（bitsandbytes 4bit/8bit）减少显存；ONNX Runtime 导出 + 图优化加速推理；Flash Attention 2 加速注意力计算；TorchScript 或 TensorRT 编译优化；对于超大批量，使用 vLLM 或 Text Generation Inference 框架。
+**回答要点**：模型量化（bitsandbytes 4bit/8bit）减少显存；ONNX Runtime 导出 + 图优化加速推理；Flash Attention 2 加速注意力计算；TorchScript 或 TensorRT 编译优化；对于超大批量，使用 vLLM 或 Text Generation Inference 框架。
 
 **Q4（边界）**：使用 HuggingFace Trainer 训练大模型时会遇到哪些常见陷阱？如何排查？
-回答要点：OOM → 梯度累积、混合精度（fp16/bf16）、减小 batch size、启用梯度检查点；训练 loss 不下降 → 检查数据加载是否正确、学习率和 warmup 设置、是否有 NaN（开启 detect_anomaly）；数据加载成为瓶颈 → 增加 num_workers、使用 StreamingDataset；transformers 库版本与模型权重不兼容 → 确认 transformers 版本≥模型要求的版本。
+**回答要点**：OOM → 梯度累积、混合精度（fp16/bf16）、减小 batch size、启用梯度检查点；训练 loss 不下降 → 检查数据加载是否正确、学习率和 warmup 设置、是否有 NaN（开启 detect_anomaly）；数据加载成为瓶颈 → 增加 num_workers、使用 StreamingDataset；transformers 库版本与模型权重不兼容 → 确认 transformers 版本≥模型要求的版本。
 
 > 参见 [[10-BERT与MLM预训练]]、[[11-GPT与自回归生成]]、[[06-自注意力与Transformer]]

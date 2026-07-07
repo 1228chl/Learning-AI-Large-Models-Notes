@@ -107,15 +107,15 @@ echo "All experiments completed!"
 ## 面试追问
 
 **Q1（基础）**：Shell 脚本中 `$0`、`$1`、`$#`、`$@`、`$?` 分别代表什么？写一个简单的参数处理示例。
-回答要点：1）`$0` 是脚本文件名，`$1` 是第一个参数，`$#` 是参数个数，`$@` 是所有参数的列表，`$?` 是上条命令的退出码（0 成功，非 0 失败）；2）示例：`if [ $# -lt 1 ]; then echo "Usage: $0 <config>"; exit 1; fi; echo "Using config: $1"`；3）最佳实践：用变量存储参数（`config=$1`）提高可读性，参数较多时建议用 getopts 处理。
+**回答要点**：1）`$0` 是脚本文件名，`$1` 是第一个参数，`$#` 是参数个数，`$@` 是所有参数的列表，`$?` 是上条命令的退出码（0 成功，非 0 失败）；2）示例：`if [ $# -lt 1 ]; then echo "Usage: $0 <config>"; exit 1; fi; echo "Using config: $1"`；3）最佳实践：用变量存储参数（`config=$1`）提高可读性，参数较多时建议用 getopts 处理。
 
 **Q2（深挖）**：Shell 中 `[ ]`、`[[ ]]`、`(( ))` 三种条件判断有什么区别？
-回答要点：1）`[ ]` 是 test 命令的简写，POSIX 标准兼容，变量需加双引号防止分词（`[ "$var" = "abc" ]`）；2）`[[ ]]` 是 bash 扩展关键字，支持模式匹配（`[[ $var == a* ]]`）、正则匹配（`[[ $var =~ ^[0-9]+$ ]]`）、安全处理空变量（无需引号）；3）`(( ))` 专用于整数算术运算（`(( a > 10 && b < 5 ))`），返回退出码，内部变量无需 $ 前缀；4）推荐：脚本追求可移植用 `[ ]`，bash 环境用 `[[ ]]` 更安全和易读。
+**回答要点**：1）`[ ]` 是 test 命令的简写，POSIX 标准兼容，变量需加双引号防止分词（`[ "$var" = "abc" ]`）；2）`[[ ]]` 是 bash 扩展关键字，支持模式匹配（`[[ $var == a* ]]`）、正则匹配（`[[ $var =~ ^[0-9]+$ ]]`）、安全处理空变量（无需引号）；3）`(( ))` 专用于整数算术运算（`(( a > 10 && b < 5 ))`），返回退出码，内部变量无需 $ 前缀；4）推荐：脚本追求可移植用 `[ ]`，bash 环境用 `[[ ]]` 更安全和易读。
 
 **Q3（实战）**：写一个 ML 实验中自动遍历超参数的 Shell 脚本框架，需要包含哪些关键要素？
-回答要点：1）shebang（#!/bin/bash）和 set -eux 选项提高安全性；2）循环枚举参数组合：`for lr in 0.01 0.001 0.0001; do for bs in 32 64; do ... done; done`；3）每次实验创建独立目录（`mkdir -p exp/lr_$lr/bs_$bs`）；4）记录 PID 和日志：`nohup python train.py --lr $lr --bs $bs > $logdir/train.log 2>&1 & echo $! > $logdir/pid.txt`；5）检测退出码处理失败：`if [ $? -ne 0 ]; then echo "Failed: lr=$lr, bs=$bs" >> errors.log; fi`。
+**回答要点**：1）shebang（#!/bin/bash）和 set -eux 选项提高安全性；2）循环枚举参数组合：`for lr in 0.01 0.001 0.0001; do for bs in 32 64; do ... done; done`；3）每次实验创建独立目录（`mkdir -p exp/lr_$lr/bs_$bs`）；4）记录 PID 和日志：`nohup python train.py --lr $lr --bs $bs > $logdir/train.log 2>&1 & echo $! > $logdir/pid.txt`；5）检测退出码处理失败：`if [ $? -ne 0 ]; then echo "Failed: lr=$lr, bs=$bs" >> errors.log; fi`。
 
 **Q4（边界）**：Shell 脚本在生产环境中的主要缺陷是什么？如何弥补？
-回答要点：1）缺陷：默认不会检测未定义变量（需 set -u）；管道中非最后一个命令的失败会被忽略（需 set -o pipefail）；不支持浮点运算（需依赖 bc/awk）；调试困难（无类型检查、异常堆栈不清晰）；2）弥补措施：脚本开头加 `set -euo pipefail`；使用 shellcheck 静态检查；复杂逻辑改由 Python/Go 实现；关键操作加错误处理和日志；使用 bats 编写单元测试。
+**回答要点**：1）缺陷：默认不会检测未定义变量（需 set -u）；管道中非最后一个命令的失败会被忽略（需 set -o pipefail）；不支持浮点运算（需依赖 bc/awk）；调试困难（无类型检查、异常堆栈不清晰）；2）弥补措施：脚本开头加 `set -euo pipefail`；使用 shellcheck 静态检查；复杂逻辑改由 Python/Go 实现；关键操作加错误处理和日志；使用 bats 编写单元测试。
 
 > 参见 [[02-文件与目录操作]]、[[05-进程管理]]、[[03-文本处理三剑客]]

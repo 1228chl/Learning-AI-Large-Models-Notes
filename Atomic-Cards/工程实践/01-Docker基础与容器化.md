@@ -112,15 +112,15 @@ services:
 ## 面试追问
 
 **Q1（基础）**：Docker 中镜像（Image）和容器（Container）有什么区别？类比说明。
-回答要点：镜像是只读模板（类比类），容器是镜像的运行实例（类比对象）；一个镜像可启动多个容器；镜像分层构建，容器层可写。
+**回答要点**：镜像是只读模板（类比类），容器是镜像的运行实例（类比对象）；一个镜像可启动多个容器；镜像分层构建，容器层可写。
 
 **Q2（深挖）**：Docker 容器和传统虚拟机（VM）在架构上有何本质区别？各自的优缺点是什么？
-回答要点：容器共享宿主机内核（轻量、秒级启动），VM 包含完整 Guest OS（隔离性强、资源占用大）；容器隔离依赖 cgroups/namespace，安全性弱于 VM；容器适合微服务和 CI/CD，VM 适合强隔离需求。
+**回答要点**：容器共享宿主机内核（轻量、秒级启动），VM 包含完整 Guest OS（隔离性强、资源占用大）；容器隔离依赖 cgroups/namespace，安全性弱于 VM；容器适合微服务和 CI/CD，VM 适合强隔离需求。
 
 **Q3（实战）**：在 ML 项目中使用 Docker 进行模型部署时，如何处理 GPU 支持和多服务编排？
-回答要点：使用 `nvidia/cuda` 基础镜像并安装 `nvidia-container-toolkit`；通过 `docker compose` 编排 API 服务、向量数据库、缓存等多容器；注意 CUDA 版本与 PyTorch/TensorFlow 版本的匹配。
+**回答要点**：使用 `nvidia/cuda` 基础镜像并安装 `nvidia-container-toolkit`；通过 `docker compose` 编排 API 服务、向量数据库、缓存等多容器；注意 CUDA 版本与 PyTorch/TensorFlow 版本的匹配。
 
 **Q4（边界）**：Docker 在 ML 场景中有哪些局限性？何时应选择其他方案？
-回答要点：Windows 下 GPU 支持不完善（需 WSL2）；分布式训练的多节点通信配置复杂；大模型镜像体积过大（可用多阶段构建优化）；高性能计算场景考虑 Singularity/Apptainer。
+**回答要点**：Windows 下 GPU 支持不完善（需 WSL2）；分布式训练的多节点通信配置复杂；大模型镜像体积过大（可用多阶段构建优化）；高性能计算场景考虑 Singularity/Apptainer。
 
 > 参见 [[05-进程管理]]、[[08-Dify平台]]
