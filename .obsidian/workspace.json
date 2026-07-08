@@ -43,13 +43,13 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Atomic-Cards/深度学习/04-反向传播算法.md",
+                "file": "Atomic-Cards/NLP/14-Layer Normalization.md",
                 "mode": "source",
                 "source": false,
                 "backlinks": false
               },
               "icon": "lucide-file",
-              "title": "04-反向传播算法"
+              "title": "14-Layer Normalization"
             }
           }
         ],
@@ -222,7 +222,8 @@
       }
     ],
     "direction": "horizontal",
-    "width": 408.5
+    "width": 408.5,
+    "collapsed": true
   },
   "left-ribbon": {
     "hiddenItems": {
@@ -240,19 +241,23 @@
   },
   "active": "b9c397e9f32ab073",
   "lastOpenFiles": [
+    "Atomic-Cards/微积分与优化/03-梯度与方向导数.md.tmp.27952.feabb90a0c16",
+    "Atomic-Cards/微积分与优化/04-Hessian矩阵与二阶导.md.tmp.27952.a4ed52030a69",
+    "Atomic-Cards/微积分与优化/06-凸优化基础.md.tmp.27952.989bed065b05",
+    "Atomic-Cards/微积分与优化/05-梯度下降算法.md.tmp.27952.e82dd0f720ca",
+    "Atomic-Cards/Linux/04-权限管理.md",
+    "Atomic-Cards/线性代数/14-距离度量.md.tmp.27952.c949e88bf1ee",
+    "Atomic-Cards/线性代数/18-线性代数与神经网络的连接.md.tmp.27952.0e78d90db362",
+    "Atomic-Cards/微积分与优化/02-链式法则.md.tmp.27952.9068b57f2108",
+    "Atomic-Cards/线性代数/17-线性方程组与矩阵分解.md.tmp.27952.866ce966ac13",
+    "Atomic-Cards/微积分与优化/01-导数与偏导数.md.tmp.27952.c92b7340e008",
+    "Atomic-Cards/线性代数/15-正交与投影.md.tmp.27952.a202de303428",
+    "Atomic-Cards/线性代数/13-点积与余弦相似度.md.tmp.27952.2d6179ee021f",
+    "Atomic-Cards/深度学习/06-梯度消失与梯度爆炸.md",
+    "Atomic-Cards/深度学习/04-反向传播算法.md",
     "Atomic-Cards/深度学习/01-感知机与多层神经网络.md",
-    "Atomic-Cards/NLP/01-分词算法.md.tmp.27952.27e8a2d4c8aa",
-    "Atomic-Cards/Linux/08-网络与系统监控.md.tmp.27952.bd45bfff14d1",
     "Atomic-Cards/概率统计/03-随机变量与概率分布.md",
-    "Atomic-Cards/AI-Agent/05-BM25算法.md.tmp.27952.fe06830f69b6",
-    "Atomic-Cards/Linux/06-Shell脚本基础.md.tmp.27952.ec0c55ea7caf",
-    "Atomic-Cards/Linux/03-文本处理三剑客.md.tmp.27952.76e30c360031",
     "Atomic-Cards/知识体系/01-核心依赖链与学习路径.md",
-    "Atomic-Cards/Linux/05-进程管理.md.tmp.27952.27e5724de21e",
-    "Atomic-Cards/AI-Agent/24-BM25完整实现.md.tmp.27952.63392dbcfeca",
-    "Atomic-Cards/AI-Agent/10-RAG系统双架构.md.tmp.27952.13e1735c2860",
-    "Atomic-Cards/Linux/01-Linux基础与哲学.md.tmp.27952.c06bcb632a12",
-    "Atomic-Cards/Linux/02-文件与目录操作.md.tmp.27952.5e322c1cd3fd",
     "Atomic-Cards/原子化生成提示词.md",
     "Atomic-Cards/知识体系/02-面试追问树.md",
     "Atomic-Cards/AI-Agent/24-BM25完整实现.md",
@@ -272,10 +277,6 @@
     "Atomic-Cards/机器学习/21-L2正则化(Ridge).md",
     "Atomic-Cards/机器学习/02-监督学习与非监督学习.md",
     "Atomic-Cards/机器学习/01-机器学习概述.md",
-    "Atomic-Cards/机器学习/27-Boosting.md",
-    "Atomic-Cards/机器学习/26-Bagging.md",
-    "Atomic-Cards/机器学习/04-评估指标.md",
-    "Atomic-Cards/微积分与优化/04-Hessian矩阵与二阶导.md",
     "Assets/Image/AI-Large-Modlels-Notes/Project/EduRAG/Milvus向量数据库/1.2.8.3-1.png",
     "Assets/Image/AI-Large-Modlels-Notes/Project/EduRAG/Milvus向量数据库/1.2.8.2-2.png",
     "Assets/Image/AI-Large-Modlels-Notes/Project/EduRAG/Milvus向量数据库/1.2.8.2-1.png",

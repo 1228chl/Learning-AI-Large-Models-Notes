@@ -72,20 +72,32 @@ x_i64 = torch.tensor([1], dtype=torch.long)          # 创建int64长整型张�
 ## 面试追问
 
 **Q1（基础）**：PyTorch 张量和 NumPy ndarray 的主要区别有哪些？
+**回答要点**：
 
-**回答要点**：PyTorch Tensor 支持 GPU 加速（.cuda()），NumPy 仅 CPU；Tensor 集成自动微分（requires_grad），NumPy 无此功能；两者可互相转换（torch.from_numpy() / .numpy()），共享内存需注意同步。
+1. PyTorch Tensor 支持 GPU 加速（.cuda()），NumPy 仅 CPU
+2. Tensor 集成自动微分（requires_grad），NumPy 无此功能
+3. 两者可互相转换（torch.from_numpy() / .numpy()），共享内存需注意同步
 
 **Q2（深挖）**：x.view() 和 x.reshape() 有什么区别？
+**回答要点**：
 
-**回答要点**：view() 要求张量在内存中连续（contiguous），否则需先调用 .contiguous()；reshape() 自动处理连续性，在不连续时返回副本而非视图；用 view() 更高效（无拷贝），但在 Transpose 等操作后需注意连续性。
+1. view() 要求张量在内存中连续（contiguous），否则需先调用 .contiguous()
+2. reshape() 自动处理连续性，在不连续时返回副本而非视图
+3. 用 view() 更高效（无拷贝），但在 Transpose 等操作后需注意连续性
 
 **Q3（实战）**：训练时遇到 "CUDA out of memory"，你会从哪些方面优化？
+**回答要点**：
 
-**回答要点**：减小 batch size（最直接）；用 torch.no_grad() 禁用推理时的梯度计算；使用梯度累积模拟大 batch；检查是否有未释放的张量引用，用 del 及时释放；开启混合精度训练（AMP）减少显存占用。
+1. 减小 batch size，这是最直接的显存优化手段
+2. 用 torch.no_grad() 禁用推理时的梯度计算
+3. 使用梯度累积模拟大 batch，并开启混合精度训练（AMP）减少显存占用
 
 **Q4（边界）**：张量广播机制在什么情况下会导致隐式 bug 或性能问题？
+**回答要点**：
 
-**回答要点**：广播在维度不匹配时自动扩展，可能导致意外的大张量创建（如 (N,1) 与 (1,M) 广播为 (N,M)）；大维度广播显著增加显存和计算开销；调试时用 .shape 显式检查，避免隐式广播掩盖形状不匹配的错误。
+1. 广播在维度不匹配时自动扩展，可能导致意外的大张量创建
+2. 大维度广播显著增加显存和计算开销
+3. 调试时用 .shape 显式检查，避免隐式广播掩盖形状不匹配的错误
 
 ## 参考引用
 - 需要理解自动微分机制的相关知识，参见 [自动微分机制](./08-自动微分机制.md)

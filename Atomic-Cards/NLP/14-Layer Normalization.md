@@ -82,18 +82,34 @@ LayerNorm 对每个词向量做"标准化"：将其分布拉回到零均值单�
 ## 面试追问
 
 **Q1（基础）**：Layer Normalization 的数学公式是什么？它在 Transformer 的什么位置出现？
-**回答要点**：$\text{LN}(x) = \gamma \odot (x - \mu) / (\sigma + \epsilon) + \beta$，每个位置独立计算 $\mu$ 和 $\sigma$；Transformer 中每个子层（MHA / FFN）后（Post-LN）或前（Pre-LN）都放置 LayerNorm。
+**回答要点**：
+
+1. 公式为 $\text{LN}(x) = \gamma \odot (x - \mu) / (\sigma + \epsilon) + \beta$，沿特征维度计算 $\mu$ 和 $\sigma$
+2. Transformer 中每个子层（MHA 和 FFN）后（Post-LN）或前（Pre-LN）都放置 LayerNorm
+3. Pre-LN 先归一化再进入子层，训练更稳定，被 BERT/GPT/LLaMA 等主流模型采用
 
 **Q2（深挖）**：Transformer 为什么用 LayerNorm 而不是 BatchNorm？序列模型中 BatchNorm 有什么根本缺陷？
-**回答要点**：NLP 中序列长度可变，BN 在序列维度上求统计量需固定长度，且对不同位置共享统计量不合理；LN 每个位置独立归一化，不受变长影响；BN 依赖 batch 内样本量，小 batch 时估计不准，且训练/推理行为不一致；LN 训练推理一致，batch 独立性好。
+**回答要点**：
+
+1. BN 在特征维上跨 batch 求统计量，要求序列长度固定，无法处理变长输入
+2. BN 依赖 batch 内样本量，小 batch 时统计量估计不准，且训练/推理行为不一致
+3. LN 对每个位置每个样本独立归一化，不受变长影响，训练推理一致，batch 独立性好
 
 **Q3（实战）**：LLaMA 使用 RMS Norm 替代 LayerNorm，你在部署大模型时是否也会做此选择？依据是什么？
-**回答要点**：会优先选择 RMS Norm，因为它计算更少（省去均值计算、少一半可学习参数），训练速度和推理吞吐都略优；实际经验表明 RMS Norm 对最终精度无显著损失，已成为 LLaMA、ChatGLM、Qwen 等主流 LLM 的标配；在资源受限的部署场景下优势更明显。
+**回答要点**：
+
+1. 会优先选择 RMS Norm，计算量更少——省去均值计算，可学习参数从 2d 减为 d
+2. 实验表明 RMS Norm 对最终精度无显著损失，已成为 LLaMA/ChatGLM/Qwen 等主流 LLM 标配
+3. 在资源受限的部署场景下，训练速度和推理吞吐优势更明显
 
 **Q4（边界）**：LayerNorm 是否在所有场景下都比 BatchNorm 好？哪些场景下 BatchNorm 依然占优？
-**回答要点**：在 CV 任务中 BN 仍是主流——图像固定尺寸、batch 可较大时，BN 计算高效且引入正则化效果；LayerNorm 在 batch size=1 的大模型微调中避免 BN 退化；但 LN 的计算量也比 BN 大（每个样本都要算统计量）；GroupNorm 和 InstanceNorm 等变体在特定情况（如风格迁移、小 batch CV）提供了更多选择。
+**回答要点**：
+
+1. CV 任务中 BN 仍是主流——图像固定尺寸、batch 可较大时，BN 计算高效且引入正则化效果
+2. LN 在 batch size=1 的大模型微调中避免 BN 退化，但 LN 每个样本都算统计量，计算量比 BN 大
+3. GroupNorm 和 InstanceNorm 等变体在风格迁移、小 batch CV 等特定场景提供更多选择
 
 ## 参考引用
 - 需要理解残差连接(ResidualConnection)的相关知识，参见 [残差连接(ResidualConnection)](./13-残差连接(ResidualConnection).md)
-- 需要了解 梯度消失与梯度爆炸的相关知识，参见 [梯度消失与梯度爆炸](../深度学习/06-梯度消失与梯度爆炸.md)
+- 需要了解梯度消失与梯度爆炸的相关知识，参见 [梯度消失与梯度爆炸](../深度学习/06-梯度消失与梯度爆炸.md)
 - 需要理解自注意力与Transformer的相关知识，参见 [自注意力与Transformer](./06-自注意力与Transformer.md)

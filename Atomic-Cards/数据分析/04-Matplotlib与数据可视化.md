@@ -120,22 +120,33 @@ plt.savefig('figure.pdf', bbox_inches='tight', dpi=150)  # bbox_inches 自动裁
 ## 面试追问
 
 **Q1（基础）**：Matplotlib 中 pyplot 接口和面向对象接口的区别是什么？为什么在绘制多子图时推荐使用面向对象接口？
+**回答要点**：
 
-**回答要点**：pyplot 接口（如 `plt.plot()`）基于全局状态机，适合快速单图；面向对象接口（如 `ax.plot()`）显式控制 figure 和 axes 对象，适合复杂布局；`plt.subplots()` 返回 (fig, axes) 数组，可对每个子图独立设置标题、标签和图例，避免状态干扰。
+1. pyplot 接口（如 `plt.plot()`）基于全局状态机，适合快速单图
+2. 面向对象接口（如 `ax.plot()`）显式控制 figure 和 axes 对象，适合复杂布局
+3. `plt.subplots()` 返回 (fig, axes) 数组，可对每个子图独立设置标题、标签和图例，避免状态干扰
 
 **Q2（深挖）**：Matplotlib 的后端（backend）机制是什么？如何选择不同后端来满足交互显示和文件保存的不同需求？
+**回答要点**：
 
-**回答要点**：后端决定输出的目标格式——交互式后端（QtAgg、TkAgg、nbAgg）用于屏幕显示，非交互式后端（Agg、SVG、PDF、PS）用于保存文件；通过 `plt.switch_backend()` 或在配置中设置 rcParams；Jupyter 中常用 `%matplotlib inline`（静图）或 `%matplotlib notebook`（交互）。
+1. 后端决定输出的目标格式——交互式后端（QtAgg、TkAgg、nbAgg）用于屏幕显示，非交互式后端（Agg、SVG、PDF、PS）用于保存文件
+2. 通过 `plt.switch_backend()` 或在配置中设置 rcParams
+3. Jupyter 中常用 `%matplotlib inline`（静图）或 `%matplotlib notebook`（交互）
 
 **Q3（实战）**：如何用 Matplotlib 在深度学习训练过程中实时动态更新 Loss 曲线？给出关键实现思路。
+**回答要点**：
 
-**回答要点**：开启交互模式 `plt.ion()`；创建 figure 后用 `ax.plot()` 初始绘制并保存 line 对象；每个 epoch 调用 `line.set_data(x, y)` 更新数据并 `fig.canvas.draw()` + `fig.canvas.flush_events()` 刷新画面；Jupyter 中可用 `IPython.display.clear_output(wait=True)` + `display(fig)` 实现；也可直接用 TensorBoard 替代。
+1. 开启交互模式 `plt.ion()`
+2. 创建 figure 后用 `ax.plot()` 初始绘制并保存 line 对象
+3. 每个 epoch 调用 `line.set_data(x, y)` 更新数据并 `fig.canvas.draw()` + `fig.canvas.flush_events()` 刷新画面；Jupyter 中可用 `IPython.display.clear_output(wait=True)` + `display(fig)` 实现；也可直接用 TensorBoard 替代
 
 **Q4（边界）**：Matplotlib 在可视化海量数据时有什么短板？什么情况下应考虑其他可视化库？
+**回答要点**：
 
-**回答要点**：百万级散点图渲染慢、交互卡顿、内存占用高；替代方案：Plotly/Bokeh 支持 WebGL 加速交互式可视化；Seaborn 简化统计图表语法；Datashader 先栅格化再渲染适合极大规模数据；ECharts 在商业报表场景下更高效。
+1. 百万级散点图渲染慢、交互卡顿、内存占用高
+2. 替代方案：Plotly/Bokeh 支持 WebGL 加速交互式可视化；Seaborn 简化统计图表语法
+3. Datashader 先栅格化再渲染适合极大规模数据；ECharts 在商业报表场景下更高效
 
 ## 参考引用
-- 需要理解NumPy与ndarray的相关知识，参见 [NumPy与ndarray](./01-NumPy与ndarray.md)
 - 需要理解NumPy与ndarray的相关知识，参见 [NumPy与ndarray](./01-NumPy与ndarray.md)
 - 需要理解Pandas与DataFrame的相关知识，参见 [Pandas与DataFrame](./03-Pandas与DataFrame.md)

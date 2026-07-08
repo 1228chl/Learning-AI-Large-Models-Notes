@@ -95,20 +95,37 @@ results = collection.search(
 ## 面试追问
 
 **Q1（基础）**：Milvus 中的 Collection、Field、Entity、Index、Partition 分别对应 MySQL 中的什么概念？它们的关系是什么？
+**回答要点**：
 
-**回答要点**：① Collection ≈ 表（Table），Field ≈ 列（Column），Entity ≈ 行（Row），Index ≈ 索引，Partition ≈ 分区表。② Collection 包含多个 Field（主键、向量字段、标量字段）。③ Partition 按标签分割数据，可缩小搜索范围。④ Index 是加速向量检索的数据结构，创建索引后才能进行高效的相似度搜索。
+1. Collection ≈ 表（Table），Field ≈ 列（Column），Entity ≈ 行（Row），Index ≈ 索引，Partition ≈ 分区表。
+2. Collection 包含多个 Field（主键、向量字段、标量字段）。
+3. Partition 按标签分割数据，可缩小搜索范围。
+4. Index 是加速向量检索的数据结构，创建索引后才能进行高效的相似度搜索。
 
 **Q2（深挖）**：IVF_FLAT、IVF_SQ8、IVF_PQ 和 HNSW 这几种 Milvus 索引的原理和适用规模有何不同？如何选型？
+**回答要点**：
 
-**回答要点**：① IVF_FLAT：倒排文件+精确距离计算，百万级，精度高但内存消耗大。②IVF_SQ8：标量量化 8bit 压缩，千万级，内存减少 75%，速度提升但精度略有损失。③IVF_PQ：乘积量化，亿级，极致压缩，精度损失最大。④ HNSW：分层导航小世界图，百万级，查询速度最快但内存消耗大，适合对延迟敏感的场景。⑤ 选型：数据量小用 FLAT/IVF_FLAT，大并追求速度用 IVF_SQ8，超大且可接受精度损失用 IVF_PQ，低延迟场景用 HNSW。
+1. IVF_FLAT：倒排文件+精确距离计算，百万级，精度高但内存消耗大。
+2. IVF_SQ8：标量量化 8bit 压缩，千万级，内存减少 75%，速度提升但精度略有损失。
+3. IVF_PQ：乘积量化，亿级，极致压缩，精度损失最大。
+4. HNSW：分层导航小世界图，百万级，查询速度最快但内存消耗大，适合对延迟敏感的场景。
+5. 选型：数据量小用 FLAT/IVF_FLAT，大并追求速度用 IVF_SQ8，超大且可接受精度损失用 IVF_PQ，低延迟场景用 HNSW。
 
 **Q3（实战）**：在 Milvus 中如何实现稠密向量和稀疏向量的混合检索？请写出核心代码流程。
+**回答要点**：
 
-**回答要点**：① Schema 需要分别定义 dense_vector（FLOAT_VECTOR）和 sparse_vector（SPARSE_FLOAT_VECTOR）两个字段，各自创建独立索引。② 使用 BGEM3EmbeddingFunction 同时生成稠密和稀疏向量。③ 创建两个 AnnSearchRequest 分别对应稠密和稀疏检索，再用 WeightedRanker（如稠密 0.7+稀疏 0.3）融合结果。④ 混合检索比单一检索能同时覆盖语义匹配和精确关键词匹配。
+1. Schema 需要分别定义 dense_vector（FLOAT_VECTOR）和 sparse_vector（SPARSE_FLOAT_VECTOR）两个字段，各自创建独立索引。
+2. 使用 BGEM3EmbeddingFunction 同时生成稠密和稀疏向量。
+3. 创建两个 AnnSearchRequest 分别对应稠密和稀疏检索，再用 WeightedRanker（如稠密 0.7+稀疏 0.3）融合结果。
+4. 混合检索比单一检索能同时覆盖语义匹配和精确关键词匹配。
 
 **Q4（边界）**：在十亿级向量规模下，Milvus 可能遇到哪些性能和内存瓶颈？如何应对？
+**回答要点**：
 
-**回答要点**：① 全量数据在内存中加载的成本极高，需要用 DISKANN 磁盘索引或分片部署降低单机内存压力。② 索引构建时间长，需使用增量构建或分批构建索引。③ 查询延迟随数据量上升而增加，需要通过分区（Partition）、标量过滤预筛和读写分离架构控制延迟。④ 网络和 CPU 资源在高并发场景下成为瓶颈，需水平扩展 Coordinator/DataNode/QueryNode 节点。
+1. 全量数据在内存中加载的成本极高，需要用 DISKANN 磁盘索引或分片部署降低单机内存压力。
+2. 索引构建时间长，需使用增量构建或分批构建索引。
+3. 查询延迟随数据量上升而增加，需要通过分区（Partition）、标量过滤预筛和读写分离架构控制延迟。
+4. 网络和 CPU 资源在高并发场景下成为瓶颈，需水平扩展 Coordinator/DataNode/QueryNode 节点。
 
 ## 参考引用
 - 需要理解向量数据库概述的相关知识，参见 [向量数据库概述](./07-向量数据库概述.md)

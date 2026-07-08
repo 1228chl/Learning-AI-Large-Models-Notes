@@ -137,20 +137,33 @@ checkpoints/
 ## 面试追问
 
 **Q1（基础）**：请解释 Git 中工作区（Working Directory）、暂存区（Staging Area）和本地仓库（Local Repo）三者的关系及操作流程。
+**回答要点**：
 
-**回答要点**：工作区是实际编辑目录；`git add` 将修改送入暂存区；`git commit` 将暂存区内容快照到本地仓库；`git status` 查看各区域差异。
+1. 工作区是实际编辑目录，通过 `git add` 将修改送入暂存区，通过 `git commit` 将暂存区内容快照到本地仓库
+2. `git status` 查看各区域差异
+3. 三区域协作完成版本控制
 
 **Q2（深挖）**：`git merge` 和 `git rebase` 的区别是什么？在团队协作中各适用什么场景？
+**回答要点**：
 
-**回答要点**：merge 保留完整分支历史（有分叉），rebase 线性化提交历史（无分叉）；merge 不修改已有 commit，rebase 重写 commit hash；公共分支用 merge，个人特性分支用 rebase 保持整洁。
+1. merge 保留完整分支历史（有分叉），rebase 线性化提交历史（无分叉）
+2. merge 不修改已有 commit，rebase 重写 commit hash
+3. 公共分支用 merge，个人特性分支用 rebase 保持整洁
 
 **Q3（实战）**：在 ML 项目中使用 Git 管理实验代码时，如何处理大文件（数据集、模型权重）？如何避免模型 checkpoints 误提交？
+**回答要点**：
 
-**回答要点**：使用 `.gitignore` 排除 `*.pt`、`*.pkl`、`checkpoints/`、`data/raw/`；大文件用 Git LFS 管理；每次实验创建独立分支追踪不同方案。
+1. 使用 `.gitignore` 排除 `*.pt`、`*.pkl`、`checkpoints/`、`data/raw/`
+2. 大文件用 Git LFS 管理
+3. 每次实验创建独立分支追踪不同方案
 
 **Q4（边界）**：Git 有哪些局限性？在大规模单体仓库（Monorepo）中会遇到什么问题？
+**回答要点**：
 
-**回答要点**：大二进制文件效率低（LFS 可缓解但非完美）；单仓库超大时 `git clone` 慢、历史操作卡顿；子模块（submodule）管理复杂；超大规模项目可能需转向 Perforce 或 Google 的 Piper 等方案。
+1. 大二进制文件效率低（LFS 可缓解但非完美）
+2. 单仓库超大时 `git clone` 慢、历史操作卡顿
+3. 子模块（submodule）管理复杂
+4. 超大规模项目可能需转向 Perforce 或 Google 的 Piper 等方案
 
 ## 参考引用
 - 需要理解 Docker基础与容器化的相关知识，参见 [Docker基础与容器化](./01-Docker基础与容器化.md)

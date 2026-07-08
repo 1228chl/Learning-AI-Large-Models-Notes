@@ -130,22 +130,34 @@ GET  /api/v1/health           # 不依赖模型加载，仅返回服务进程是
 ## 面试追问
 
 **Q1（基础）**：HTTP 方法中 GET 和 POST 的核心区别是什么？在模型推理 API 中为什么通常用 POST？
+**回答要点**：
 
-**回答要点**：GET 用于获取资源（参数在 URL，长度限制，幂等），POST 用于创建/处理（参数在 Body，无长度限制，非幂等）；模型推理不幂等（每次调用结果可能不同），输入文本可能超 URL 限制，Body 传输更安全。
+1. GET 用于获取资源，参数在 URL 中传输，有长度限制且幂等；POST 用于创建/处理数据，参数在 Body 中传输，无长度限制且非幂等
+2. 模型推理是非幂等操作（每次调用结果可能不同），不适合使用 GET
+3. 模型推理的输入文本可能超过 URL 长度限制，使用 POST 的 Body 传输更安全可靠
 
 **Q2（深挖）**：HTTP 状态码 429（Too Many Requests）和 503（Service Unavailable）在 LLM API 调用中分别代表什么？客户端应如何处理？
+**回答要点**：
 
-**回答要点**：429 是触发速率限制（请求频率过高），客户端应等待后重试（指数退避）；503 是服务端暂时不可用（模型加载/过载），客户端可立即重试（通常短暂后恢复）；两者都需配合 `Retry-After` 头部合理安排重试。
+1. 429 Too Many Requests：客户端请求频率过高触发速率限制，应采用指数退避策略等待后重试
+2. 503 Service Unavailable：服务端暂时不可用（模型正在加载或过载），客户端可立即重试
+3. 两者都需配合 `Retry-After` 响应头部合理安排重试时机
 
 **Q3（实战）**：设计一个生产级的模型推理 API 时，你会如何设计端点和返回格式？请给出具体方案。
+**回答要点**：
 
-**回答要点**：版本化命名 `/api/v1/predict`；统一返回格式 `{"code": 0, "data": {...}, "message": "ok"}`；错误时同结构 `{"code": 40001, "data": null, "message": "input text too long"}`；提供 `/health` 健康检查和 `/model/info` 元信息端点。
+1. 端点设计：版本化命名 `/api/v1/predict`，同时提供 `/health` 健康检查和 `/model/info` 元信息端点
+2. 成功时统一返回格式：`{"code": 0, "data": {...}, "message": "ok"}`
+3. 错误时保持相同结构：`{"code": 40001, "data": null, "message": "input text too long"}`
 
 **Q4（边界）**：HTTP/1.1 在 LLM 流式对话场景中有什么局限性？gRPC 和 WebSocket 如何弥补？
+**回答要点**：
 
-**回答要点**：HTTP/1.1 的 SSE（Server-Sent Events）是单向流（服务端→客户端），无法实现双向实时通信；WebSocket 支持全双工通信适合实时交互式对话；gRPC 基于 HTTP/2 的流式传输，协议效率高、支持双向流和强类型接口，适合微服务间高性能通信。
+1. HTTP/1.1 的 SSE 是单向流（仅服务端→客户端），无法实现双向实时通信
+2. WebSocket 支持全双工通信，适合实时交互式对话场景
+3. gRPC 基于 HTTP/2 的流式传输，协议效率高、支持双向流和强类型接口，适合微服务间高性能通信
 
 ## 参考引用
-- 需要理解Flask与FastAPI模型部署的相关知识，参见 [Flask与FastAPI模型部署](./04-Flask与FastAPI模型部署.md)
-- 需要理解LLM API调用与ChatBot的相关知识，参见 [LLM API调用与ChatBot](./07-LLM API调用与ChatBot.md)
-- 需要掌握Socket网络编程以理解编程实现机制，参见 [Socket网络编程](../Python/09-Socket网络编程.md)
+- 需要理解Flask与FastAPI模型部署...的相关知识，参见 [Flask与FastAPI模型部署](./04-Flask与FastAPI模型部署.md)
+- 需要理解LLM API调用与ChatBot...的相关知识，参见 [LLM API调用与ChatBot](./07-LLM API调用与ChatBot.md)
+- 需要掌握Socket网络编程以理解编程实现机制...的相关知识，参见 [Socket网络编程](../Python/09-Socket网络编程.md)

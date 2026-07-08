@@ -117,20 +117,32 @@ y = df['target'].values                         # 标签向量：提取目标列
 ## 面试追问
 
 **Q1（基础）**：DataFrame 和 Series 的区别是什么？如何从 DataFrame 中选取单列、多列以及按条件筛选行？
+**回答要点**：
 
-**回答要点**：DataFrame 是二维表格结构，Series 是单列一维数据；`df['col']` 取单列返回 Series，`df[['col1','col2']]` 取多列返回 DataFrame；条件筛选用 `df[df['score'] > 0.8]`；`.loc[]` 按标签索引，`.iloc[]` 按位置索引。
+1. DataFrame 是二维表格结构，Series 是单列一维数据；`df['col']` 取单列返回 Series，`df[['col1','col2']]` 取多列返回 DataFrame
+2. 条件筛选使用布尔索引：`df[df['score'] > 0.8]` 返回满足条件的行子集
+3. `.loc[]` 按标签索引（包含终点），`.iloc[]` 按整数位置索引（不包含终点）
 
 **Q2（深挖）**：Pandas 的 groupby 操作背后遵循怎样的计算模型？与 SQL 的 GROUP BY 相比有何异同？
+**回答要点**：
 
-**回答要点**：split-apply-combine 三步：按 key 切分数据、对每组应用聚合/变换/过滤函数、合并结果；与 SQL GROUP BY 类似但更灵活——支持 agg 传入多种聚合函数、transform 保留原行数、apply 执行自定义逻辑；内置方法如 `.mean()` 调用更简洁。
+1. split-apply-combine 三步模型：按 key 切分数据、对每组应用聚合/变换/过滤函数、合并各组结果
+2. 相比 SQL GROUP BY 更灵活——支持 agg 传入多种聚合函数、transform 保留原行数、apply 执行自定义逻辑
+3. 内置方法如 `.mean()` 调用更简洁，无需像 SQL 那样显式书写聚合函数和 GROUP BY 子句
 
 **Q3（实战）**：在 ML 项目中，请梳理一条完整的 Pandas 数据预处理 Pipeline，说明常见数据质量问题及处理方式。
+**回答要点**：
 
-**回答要点**：读数据 → 去重 `drop_duplicates()` → 缺失值处理 `fillna()` / `dropna()` → 类型转换 `astype()` → 异常值过滤（3σ 或箱线图） → 特征构造 → 类别编码 `get_dummies()` → 拆分 X/y → 转 NumPy `.values`；注意 fillna 用中位数而非均值能更好抵抗异常值影响。
+1. 读数据 → 去重 `drop_duplicates()` → 缺失值处理 `fillna()` / `dropna()` → 类型转换 `astype()` → 异常值过滤（3σ 或箱线图） → 特征构造 → 类别编码 `get_dummies()` → 拆分 X/y → 转 NumPy `.values`
+2. 使用中位数而非均值填充缺失值，能更好抵抗异常值对数据中心位置估计的干扰
+3. 类别编码应区分有序和无序特征：有序用 LabelEncoder，无序用 OneHotEncoder / get_dummies
 
 **Q4（边界）**：Pandas 在处理大规模数据集时有哪些瓶颈？如何优化？
+**回答要点**：
 
-**回答要点**：数据全部加载到内存易 OOM；单线程执行无法利用多核；优化方案：分块读取 `read_csv(chunksize=)`、使用高效数据类型（category/int32/float32）、用 Dask/Modin/Polars 替代、在 SQL 层预聚合后再读入、利用 `.query()` 和 `.eval()` 通过 numexpr 加速。
+1. 数据全部加载到内存易导致 OOM 崩溃，无法处理超出物理内存大小的数据集
+2. 单线程执行架构无法利用多核 CPU 并行计算，大表操作耗时长
+3. 优化方案：分块读取 `read_csv(chunksize=)`、使用高效数据类型（category/int32/float32）、用 Dask/Modin/Polars 替代、在 SQL 层预聚合后再读入、利用 `.query()` 和 `.eval()` 通过 numexpr 加速
 
 ## 参考引用
 - 需要理解NumPy与ndarray的相关知识，参见 [NumPy与ndarray](./01-NumPy与ndarray.md)

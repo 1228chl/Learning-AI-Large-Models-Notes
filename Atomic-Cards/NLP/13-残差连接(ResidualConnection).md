@@ -59,18 +59,34 @@ def residual_block(x, sublayer):
 ## 面试追问
 
 **Q1（基础）**：残差连接解决了深层网络中的什么核心问题？数学上它为什么有效？
-**回答要点**：解决梯度消失和退化问题；$y = x + \mathcal{F}(x)$ 使梯度 $\partial y / \partial x = 1 + \partial \mathcal{F} / \partial x$ 至少为 1，不会因链式法则连乘而消失；恒等分支保证深层网络至少与浅层性能持平。
+**回答要点**：
+
+1. 解决深层网络中的梯度消失和退化问题
+2. 数学上，$y = x + \mathcal{F}(x)$ 使梯度 $\partial y / \partial x = 1 + \partial \mathcal{F} / \partial x$ 至少为 1，不会因链式法则连乘而消失
+3. 恒等映射分支保证深层网络的性能至少不劣于其浅层子网络
 
 **Q2（深挖）**：Pre-LN 和 Post-LN 的根本区别是什么？为什么现代模型普遍选择 Pre-LN？
-**回答要点**：Post-LN 在残差相加后做 LayerNorm，输出方差被 LN 缩放后输入下一残差块，深层易梯度爆炸，需要 warmup；Pre-LN 在子层前先做 LN，残差路径上的信号不受缩放影响，训练稳定、收敛快；BERT、GPT、LLaMA 等主流模型均采用 Pre-LN。
+**回答要点**：
+
+1. Post-LN 在残差相加后做 LayerNorm，输出方差被 LN 缩放后输入下一残差块，深层易梯度爆炸，需要 warmup
+2. Pre-LN 在子层前先做 LN，残差路径上的信号不受缩放影响，训练稳定、收敛快
+3. BERT、GPT、LLaMA 等主流模型均采用 Pre-LN
 
 **Q3（实战）**：在你的 Transformer 项目中，如果训练出现 loss 震荡或 NaN，你会如何排查残差连接相关的问题？
-**回答要点**：检查是否用了 Post-LN（如原版 Transformer），可切换为 Pre-LN 并移除 warmup；检查残差路径上是否输出了超大值（可加 gradient clipping）；在残差连接中加入 dropout（如 `x + dropout(sublayer(x))`）增加正则化。
+**回答要点**：
+
+1. 检查是否使用 Post-LN（如原版 Transformer），可切换为 Pre-LN 并移除 warmup
+2. 检查残差路径上是否输出了超大值，可添加 gradient clipping
+3. 在残差连接中引入 dropout（如 `x + dropout(sublayer(x))`）增加正则化效果
 
 **Q4（边界）**：残差连接有什么理论上的局限？是否存在不需要残差连接的深层架构？
-**回答要点**：残差连接增加了一倍存储（需保留激活值用于反向传播，显存开销大）；现代研究（如 DeepNet、NormFormer）通过改进初始化或归一化实现深层训练而不依赖残差；也出现了"无残差 Transformer"（如 ReZero、T-Fixup）通过特殊初始化替代残差连接。
+**回答要点**：
+
+1. 残差连接需保留激活值用于反向传播，显存开销增加约一倍
+2. 现代研究（如 DeepNet、NormFormer）通过改进初始化或归一化实现深层训练而不依赖残差
+3. 出现了"无残差 Transformer"（如 ReZero、T-Fixup）等架构，通过特殊初始化替代残差连接
 
 ## 参考引用
-- 需要了解 梯度消失与梯度爆炸的相关知识，参见 [梯度消失与梯度爆炸](../深度学习/06-梯度消失与梯度爆炸.md)
+- 需要了解梯度消失与梯度爆炸的相关知识，参见 [梯度消失与梯度爆炸](../深度学习/06-梯度消失与梯度爆炸.md)
 - 需要理解自注意力与Transformer的相关知识，参见 [自注意力与Transformer](./06-自注意力与Transformer.md)
 - 需要理解Layer Normalization的相关知识，参见 [Layer Normalization](./14-Layer Normalization.md)

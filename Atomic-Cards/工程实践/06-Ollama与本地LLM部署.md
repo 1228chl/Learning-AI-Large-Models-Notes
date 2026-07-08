@@ -127,20 +127,32 @@ print(response.choices[0].message.content)
 ## 面试追问
 
 **Q1（基础）**：Ollama 是什么？它的核心功能和设计理念是什么？
+**回答要点**：
 
-**回答要点**：Ollama 是本地运行大模型的命令行工具，封装模型下载、管理和推理；提供 OpenAI 兼容 API 方便替换；支持 CPU 和 GPU 推理，轻量易用，适合开发测试和私有化部署。
+1. Ollama 是一个命令行工具，封装了模型的下载、管理和推理操作，让本地运行大模型变得简单
+2. 提供 OpenAI 兼容 API，方便开发者将本地模型作为 OpenAI API 的替代方案
+3. 支持 CPU 和 GPU 两种推理模式，轻量易用，适合开发测试和私有化部署场景
 
 **Q2（深挖）**：Ollama 内部是如何实现模型管理和推理的？和直接使用 Transformers 库有何不同？
+**回答要点**：
 
-**回答要点**：Ollama 用 Go 语言编写底层集成 llama.cpp，以 GGUF 格式存储量化模型；自动管理模型版本和缓存，自动选择合适的 GPU 后端；相比 Transformers 库，牺牲部分灵活性换取开箱即用的便利性。
+1. Ollama 用 Go 语言编写，底层集成 llama.cpp，以 GGUF 格式存储量化模型，自动管理模型版本和缓存
+2. 能自动选择合适的 GPU 后端（CUDA/Metal/Vulkan），无需手动配置
+3. 相比 Transformers 库，Ollama 牺牲了部分灵活性换取了开箱即用的便利性
 
 **Q3（实战）**：你在项目中将 Ollama 用于 RAG 或 API 替代方案时，如何处理并发请求和长上下文？
+**回答要点**：
 
-**回答要点**：Ollama 单模型实例默认串行处理，高并发需多实例 + 负载均衡；长上下文可通过 `num_ctx` 参数控制窗口大小但会增大显存；推荐搭配 LangChain/LlamaIndex 使用，用向量库缓解上下文长度限制。
+1. Ollama 单模型实例默认串行处理请求，高并发场景需启动多实例配合负载均衡
+2. 长上下文可通过 `num_ctx` 参数控制窗口大小，但会增加显存占用
+3. 推荐搭配 LangChain/LlamaIndex 使用，借助向量数据库缓解上下文长度限制
 
 **Q4（边界）**：Ollama 在生产环境部署中有哪些局限性？何时应选择云 API 或 vLLM 等替代方案？
+**回答要点**：
 
-**回答要点**：Ollama 缺乏高级批处理（动态 batching）和 PagedAttention 等优化，高并发吞吐不如 vLLM/TGI；大模型（70B+）在消费级 GPU 无法运行；无内置监控和鉴权（需自行反代）；生产级推荐 vLLM + Kubernetes，云场景选 OpenAI API。
+1. 缺乏高级批处理（动态 batching）和 PagedAttention 等优化，高并发吞吐量低于 vLLM/TGI
+2. 大模型（70B+）在消费级 GPU 上无法运行，缺乏内置监控和鉴权机制
+3. 生产级场景推荐 vLLM + Kubernetes 方案，云场景应选择 OpenAI API 等商业服务
 
 ## 参考引用
 - 需要理解LLM API调用与ChatBot的相关知识，参见 [LLM API调用与ChatBot](./07-LLM API调用与ChatBot.md)
