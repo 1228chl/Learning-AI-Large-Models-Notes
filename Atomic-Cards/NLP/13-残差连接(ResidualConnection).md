@@ -54,7 +54,7 @@ def residual_block(x, sublayer):
 | **Transformer** | $x \to \text{MHA} \to \text{Add} \to \text{LN} \to \text{FFN} \to \text{Add} \to \text{LN}$ | 每个子层后接残差连接，支撑 12~96 层堆叠 |
 | **Pre-LN Transformer** | $x \to \text{LN} \to \text{MHA} \to \text{Add} \to \text{LN} \to \text{FFN} \to \text{Add}$ | 将 LN 移入残差圈内，训练更稳定 |
 | **U-Net** | 编码器-解码器间的跳跃连接 | 保留低层空间信息，用于图像分割 |
-| **DenseNet** | $x_\ell = H_\ell([x_0, x_1, \dots, x_{\ell-1}])$ | 密集连接：每层与之前所有层相连 |
+| **DenseNet** | $x_\ell = H_\ell([x_0, x_1, \dots, x_{\ell-1}])$ | $x_\ell$ 为第 $\ell$ 层输出，$H_\ell$ 为第 $\ell$ 层变换函数，$[\cdots]$ 表示拼接；密集连接：每层与之前所有层相连 |
 
 ## 面试追问
 

@@ -27,7 +27,7 @@ $$
 J(\pi) = \mathbb{E}\left[\sum_{t=0}^{T} \gamma^t R(\mathbf{s}_t, \mathbf{a}_t)\right]
 $$
 
-其中 $\mathbf{s}_t = (s_{1,t}, s_{2,t}, \dots, s_{n,t})$ 为联合状态，$\mathbf{a}_t = (a_{1,t}, a_{2,t}, \dots, a_{n,t})$ 为联合动作。
+其中 $\gamma$ 为折扣因子，$R$ 为奖励函数，$\mathbf{s}_t = (s_{1,t}, s_{2,t}, \dots, s_{n,t})$ 为联合状态，$\mathbf{a}_t = (a_{1,t}, a_{2,t}, \dots, a_{n,t})$ 为联合动作。
 
 ### 直观理解
 
@@ -64,7 +64,7 @@ class Message:
 
 | 分配策略 | 数学形式 | 说明 |
 |:---------|:---------|:-----|
-| 能力匹配 | $\text{score}(a_i, t_j) = \text{cosine}(\text{emb}(a_i), \text{emb}(t_j))$ | 根据 Agent 能力描述和任务描述的相似度匹配 |
+| 能力匹配 | $\text{score}(a_i, t_j) = \text{cosine}(\text{emb}(a_i), \text{emb}(t_j))$ | 根据 Agent 能力描述和任务描述的相似度匹配，$\text{emb}(\cdot)$ 为嵌入函数，$t_j$ 为第 $j$ 个任务 |
 | 负载均衡 | $\min \max_i \text{load}(a_i)$ | 最小化最大负载，避免单一 Agent 过载 |
 | 拍卖机制 | $a_i = \arg\max_{a \in \mathcal{A}} \text{bid}(a, t_j)$ | Agent 对任务"出价"，价高者得 |
 

@@ -25,6 +25,12 @@ $$ \text{Output} = x + \text{Sublayer}(x) $$
 
 $$ \text{LayerNorm}(x) = \gamma \odot \frac{x - \mu}{\sigma + \epsilon} + \beta $$
 
+- $\mu$：该位置特征维度的均值
+- $\sigma$：该位置特征维度的标准差
+- $\gamma$：可学习的缩放参数
+- $\beta$：可学习的偏移参数
+- $\epsilon$：防止除零的小常数
+
 **要点**：LayerNorm vs BatchNorm、RMS Norm 简化变体。
 
 ---

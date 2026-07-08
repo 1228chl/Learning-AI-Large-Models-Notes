@@ -13,6 +13,11 @@ GPT（Generative Pre-trained Transformer）是 2018 年起 OpenAI 推出的**自
 
 $$P(\mathbf{y}) = \prod_{t=1}^T P(y_t \mid y_{<t})$$
 
+- $\mathbf{y}$：输出序列
+- $y_t$：位置 $t$ 的 token
+- $y_{<t}$：位置 $t$ 之前的所有 token（历史上下文）
+- $T$：序列总长度
+
 ```python
 from transformers import GPT2LMHeadModel
 
