@@ -222,7 +222,8 @@
       }
     ],
     "direction": "horizontal",
-    "width": 408.5
+    "width": 408.5,
+    "collapsed": true
   },
   "left-ribbon": {
     "hiddenItems": {
@@ -238,7 +239,7 @@
       "templater-obsidian:Templater": false
     }
   },
-  "active": "a73ebf785a6e6ac6",
+  "active": "b9c397e9f32ab073",
   "lastOpenFiles": [
     "Atomic-Cards/卡片总览.md",
     "Atomic-Cards/机器学习/19-模型选择与超参数调优.md",
