@@ -17,6 +17,7 @@ aliases: ["继承", "Inheritance", "MRO", "多继承", "C3线性化"]
 # 动物基类：定义所有动物共有的属性和行为模板，子类通过继承复用 name 属性和 speak 方法签名
 class Animal:
     def __init__(self, name):
+
         self.name = name
     def speak(self):
         pass

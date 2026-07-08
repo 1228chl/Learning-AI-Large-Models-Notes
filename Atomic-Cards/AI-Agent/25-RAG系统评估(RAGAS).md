@@ -83,7 +83,9 @@ from langchain_openai import OpenAIEmbeddings, ChatOpenAI
 
 # 执行评估，同时传入四个核心指标，全面衡量检索质量和生成质量
 result = evaluate(
+
     dataset=dataset,
+
     metrics=[faithfulness, answer_relevancy,
              context_relevancy, context_recall]
 )

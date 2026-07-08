@@ -39,6 +39,7 @@ class BankAccount:
 
     # 公有接口方法：外部只需调用 deposit 即可完成存款，无需了解内部余额的存储和管理细节
     def deposit(self, amount):
+
         self._balance += amount
 
 # 以下代码展示外部对三种访问级别属性的实际访问结果，验证各命名约定的约束力
@@ -56,6 +57,7 @@ print(acc._BankAccount__pin)        # 绕过名字修饰后的实际名称，技
 ```python
 # 温度类，演示 @property 如何将方法伪装成属性，实现可控的读写访问
 class Temperature:
+
     def __init__(self, celsius=0):
         # 将原始温度值存储在受保护属性中，外部应通过 property 接口访问
         self._celsius = celsius
@@ -72,6 +74,7 @@ class Temperature:
         阻止低于绝对零度的不合理温度写入，确保数据始终合法"""
         if value < -273.15:
             raise ValueError("温度不能低于绝对零度")
+
         self._celsius = value
 
     @property
@@ -83,6 +86,7 @@ class Temperature:
 # 创建温度实例并验证 property 的读写行为和校验逻辑
 t = Temperature(25)
 print(t.celsius)                     # 像访问普通属性一样读取，触发 getter 返回 25
+
 t.celsius = 30                       # 像给普通属性赋值一样写入，触发 setter 并执行校验
 ```
 

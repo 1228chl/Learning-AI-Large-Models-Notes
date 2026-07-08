@@ -24,8 +24,11 @@ import torch.nn as nn
 class Seq2Seq(nn.Module):                                 # 定义 Seq2Seq 模型，继承 nn.Module
     def __init__(self, vocab_size, embed_size, hidden_size):  # 初始化：词表大小、嵌入维度、隐藏层维度
         super().__init__()
+
         self.encoder = nn.LSTM(embed_size, hidden_size, batch_first=True)  # 编码器 LSTM：将输入序列编码为隐状态
+
         self.decoder = nn.LSTM(embed_size, hidden_size, batch_first=True)  # 解码器 LSTM：从隐状态逐步生成输出序列
+
         self.fc = nn.Linear(hidden_size, vocab_size)  # 全连接层：将解码器输出映射到词表大小的概率分布
 
     def forward(self, src, trg):                        # 前向传播：src 为源序列，trg 为目标序列

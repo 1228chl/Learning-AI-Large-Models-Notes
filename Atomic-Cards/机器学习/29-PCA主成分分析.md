@@ -25,19 +25,21 @@ $$
 ```python
 from sklearn.decomposition import PCA
 
-# 降维到 2 维
+# 降维到 2 维：找到方差最大的2个方向，将高维数据投影到2维空间
 pca = PCA(n_components=2)
-X_2d = pca.fit_transform(X)
-print(f"解释方差比: {pca.explained_variance_ratio_}")
-print(f"累积方差: {pca.explained_variance_ratio_.cumsum()}")
 
-# 保留指定方差比例
+X_2d = pca.fit_transform(X)
+print(f"解释方差比: {pca.explained_variance_ratio_}")  # 每个主成分单独解释的方差比例
+print(f"累积方差: {pca.explained_variance_ratio_.cumsum()}")  # 前k个主成分累积解释的方差
+
+# 保留指定方差比例：自动选择能解释95%方差的最少主成分数
 pca = PCA(n_components=0.95)
+
 X_reduced = pca.fit_transform(X)
 print(f"保留 {pca.n_components_} 个主成分")
 
-# 查看各特征的贡献
-loadings = pca.components_
+# 查看各特征在主成分上的贡献权重（载荷矩阵）
+loadings = pca.components_  # 每行是一个主成分，每列是原始特征的权重
 ```
 
 ## 算法步骤

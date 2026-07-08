@@ -50,8 +50,10 @@ class StrategySelector:
 
     @staticmethod
     def select(query, query_type):
+
         if query_type == "short":
             return "hyde"          # 短查询用 HyDE：先生成假设文档再检索，弥补短查询语义不足
+
         elif query_type == "complex":
             return "subquery"      # 复杂查询拆子查询：将多意图问题拆解为多个简单子问题分别检索
         else:
@@ -66,13 +68,16 @@ class HyDERetriever:
     """短查询 → 先生成假设答案 → 用假设答案检索"""
     # 初始化，接收向量存储实例和大语言模型实例
     def __init__(self, vector_store, llm):
+
         self.vs = vector_store
+
         self.llm = llm
 
-    # 执行HyDE检索：先用LLM生成假设答案，再用假设答案替代原查询进行向量检索
+
     def retrieve(self, query, k=5):
         # 1. 先生成假设答案：让LLM基于其领域知识对短查询给出一个简要回答（即使可能不准确）
         hyde_prompt = f"请基于你对AI领域的了解，简要回答：{query}"
+
         hypo_answer = self.llm(hyde_prompt)
 
         # 2. 用假设答案代替原查询做向量检索：假设答案比短查询包含更丰富的语义信息
@@ -87,13 +92,16 @@ class SubQueryRetriever:
     """复杂查询拆分为多个子查询，分别检索后合并去重"""
     # 初始化，接收向量存储实例和大语言模型实例
     def __init__(self, vector_store, llm):
+
         self.vs = vector_store
+
         self.llm = llm
 
-    # 执行子查询检索：拆解→分别检索→合并去重
+
     def retrieve(self, query, k=5):
         # 1. LLM 拆解子查询：让LLM将复杂问题分解为3-5个独立的子问题
         prompt = f"将以下问题拆解为3-5个独立的子问题：{query}"
+
         subqueries_text = self.llm(prompt)
         # 按换行符分割并去除空白，得到子查询列表
         subqueries = [q.strip() for q in subqueries_text.split("\n") if q.strip()]
@@ -101,6 +109,7 @@ class SubQueryRetriever:
         # 2. 每个子查询独立检索：对每个子问题分别执行混合检索
         all_docs = []
         for sub_q in subqueries:
+
             docs = self.vs.hybrid_search_with_rerank(sub_q, k=k)
             all_docs.extend(docs)  # 将各子查询结果合并到一个列表中
 
@@ -116,7 +125,9 @@ class SubQueryRetriever:
 class RAGSystem:
     # 初始化系统，接收向量存储实例和大语言模型实例
     def __init__(self, vector_store, llm):
+
         self.vs = vector_store
+
         self.llm = llm
         # 加载预训练的BERT查询分类器，用于判断查询是"通用"还是"专业"
         self.classifier = QueryClassifier("models/bert_query_classifier")
@@ -133,10 +144,12 @@ class RAGSystem:
         if q_type == 1:           # 专业咨询 → MySQL FAQ：直接查询FAQ库获取标准答案
             return self._faq_search(query)
         else:                      # 通用知识 → RAG：走语义检索+LLM生成路径
+
             docs = self._rag_retrieve(query)
 
         # Step 3: 构建 Prompt：将检索到的文档片段拼接为上下文，构建提示模板
         context = "\n".join([d.page_content for d in docs])
+
         prompt = f"""基于以下上下文回答问题。
 如果上下文信息不足，请说"信息不足"。
 
@@ -171,9 +184,12 @@ from langchain_text_splitters import RecursiveCharacterTextSplitter
 
 # 配置切分器：先按段落切，再按句子边界切，最后按逗号切
 splitter = RecursiveCharacterTextSplitter(
+
     separators=["\n\n", "\n", "。|！|？", "；|；\s", "，|，\s"],
+
     chunk_size=500, chunk_overlap=50, keep_separator=True
 )
+
 chunks = splitter.split_documents(documents)  # 对文档递归切分，返回文档块列表
 
 # 父子块策略（检索子块，返回父块）

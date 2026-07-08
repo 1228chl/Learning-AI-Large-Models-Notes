@@ -95,6 +95,7 @@ from transformers import BertForSequenceClassification
 # 加载带分类输出头的 BERT 模型，在预训练权重基础上添加线性分类层用于微调
 model = BertForSequenceClassification.from_pretrained(
     'bert-base-chinese',  # 加载中文预训练 BERT 权重，适应中文文本分类任务
+
     num_labels=2           # 指定输出类别数为 2（二分类任务，如正面/负面情感）
 )
 ```

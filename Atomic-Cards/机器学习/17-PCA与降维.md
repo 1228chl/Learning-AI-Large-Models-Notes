@@ -17,6 +17,7 @@ import matplotlib.pyplot as plt
 
 # 降维到 2 维（用于可视化），将高维数据投影到方差最大的两个方向上
 pca = PCA(n_components=2)
+
 X_2d = pca.fit_transform(X)  # 拟合PCA模型并将数据投影到2维空间
 
 print(f"解释方差比: {pca.explained_variance_ratio_}")  # 每个主成分解释的方差比例
@@ -40,6 +41,7 @@ $$
 ```python
 # 选择主成分数量：自动保留解释95%方差所需的最少主成分数
 pca = PCA(n_components=0.95)          # 保留 95% 的方差，丢弃5%的噪声/冗余
+
 X_reduced = pca.fit_transform(X)
 print(f"保留 {pca.n_components_} 个主成分")
 
@@ -60,6 +62,7 @@ loadings = pca.components_            # 每一行是一个主成分，值为原�
 ```python
 # 用 PCA 加速分类：先降维再训练分类器，减少特征数降低模型复杂度
 pipe = Pipeline([
+
     ('pca', PCA(n_components=100)),          # 先降到100维，去除噪声和冗余特征
     ('clf', RandomForestClassifier())        # 在降维后的特征上训练随机森林
 ])

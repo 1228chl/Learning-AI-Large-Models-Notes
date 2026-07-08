@@ -22,11 +22,13 @@ from sklearn.neighbors import KNeighborsRegressor
 # 分类：用最近5个邻居投票决定新样本的类别
 clf = KNeighborsClassifier(n_neighbors=5, metric='euclidean')  # n_neighbors=K, metric=距离度量方式
 clf.fit(X_train, y_train)  # KNN的"训练"实际是存储训练数据，不做显式学习
+
 y_pred = clf.predict(X_test)  # 计算测试样本到所有训练样本的距离，取最近K个邻居投票
 
 # 回归（用邻居的平均值作为预测结果）
 reg = KNeighborsRegressor(n_neighbors=5)
 reg.fit(X_train, y_train)
+
 y_pred = reg.predict(X_test)  # 用最近K个邻居目标值的均值作为预测结果
 ```
 
@@ -44,12 +46,17 @@ y_pred = reg.predict(X_test)  # 用最近K个邻居目标值的均值作为预�
 # 用交叉验证选最优 K：遍历K值范围，选择验证集平均得分最高的K
 from sklearn.model_selection import cross_val_score
 
+
 k_range = range(1, 31)  # 尝试K从1到30
+
 scores = []
 for k in k_range:
+
     knn = KNeighborsClassifier(n_neighbors=k)
+
     cv_score = cross_val_score(knn, X_train, y_train, cv=5).mean()  # 5折交叉验证的平均准确率
     scores.append(cv_score)
+
 
 best_k = k_range[np.argmax(scores)]  # 取交叉验证得分最高的K值
 ```
@@ -72,7 +79,9 @@ from sklearn.preprocessing import StandardScaler
 
 # KNN依赖距离计算，必须标准化使所有特征在同一尺度，防止量级大的特征主导距离
 scaler = StandardScaler()
+
 X_train = scaler.fit_transform(X_train)  # 在训练集上计算均值和标准差并转换
+
 X_test = scaler.transform(X_test)        # 用训练集的均值和标准差转换测试集（防止数据泄露）
 ```
 

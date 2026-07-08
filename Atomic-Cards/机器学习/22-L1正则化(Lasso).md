@@ -28,9 +28,11 @@ $$
 ```python
 from sklearn.linear_model import Lasso, LassoCV
 
-lasso = LassoCV(alphas=[0.001, 0.01, 0.1, 1.0], cv=5)
+# LassoCV自动用交叉验证选择最优alpha，同时产生稀疏解实现特征选择
+lasso = LassoCV(alphas=[0.001, 0.01, 0.1, 1.0], cv=5)  # 在候选alpha上做5折交叉验证
 lasso.fit(X_train, y_train)
-print(f"非零系数数量: {np.sum(lasso.coef_ != 0)}")
+
+print(f"非零系数数量: {np.sum(lasso.coef_ != 0)}")  # 统计系数中非零的个数，即被保留的特征数
 ```
 
 ## 几何解释
@@ -42,9 +44,11 @@ L1 的约束区域是**菱形**：
 - 维度越高，尖角越多，稀疏性越强
 
 ```python
+# L1约束的几何解释：权重向量必须落在菱形约束区域内
 L1 约束：|w₁| + |w₂| ≤ t
 菱形角点落在 (t,0) 和 (0,t)
-角点上 w₁=0 或 w₂=0
+
+角点上 w₁=0 或 w₂=0（等高线更容易碰在坐标轴尖角上，产生稀疏解）
 ```
 
 ## 特性总结

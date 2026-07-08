@@ -66,6 +66,7 @@ class MyThread(threading.Thread):
 # 3. 线程局部数据：threading.local() 创建每个线程独立的存储空间，
 # 每个线程对 local_data.value 的读写互不干扰，适合存储当前线程的上下文信息（如数据库连接、用户会话）
 local_data = threading.local()
+
 local_data.value = 42
 
 # 4. 守护线程：daemon=True 表示该线程为守护线程，
@@ -90,6 +91,7 @@ import threading
 
 # Lock（互斥锁）示例：保护共享计数器，确保多个线程交替修改时数据不会错乱
 lock = threading.Lock()
+
 shared_counter = 0
 
 def increment():
@@ -98,6 +100,7 @@ def increment():
         # with lock 自动执行 acquire() 和 release()：获取锁时其他线程必须等待，
         # 释放后下一个线程才能继续，保证了 shared_counter += 1 的原子性
         with lock:
+
             shared_counter += 1
 
 # RLock（可重入锁）示例：允许同一线程多次获取锁而不会自我死锁
@@ -111,6 +114,7 @@ def recursive_lock(n):
 # Condition（条件变量）示例：实现生产者-消费者模式，避免忙等待（busy waiting）
 # 生产者和消费者共享一个条件锁，通过 wait/notify 机制协调数据产出和消费的节奏
 cv = threading.Condition()
+
 buffer = []
 
 def producer():
@@ -125,6 +129,7 @@ def consumer():
         # 被 notify 唤醒后重新获取锁，再次检查条件（防止虚假唤醒），确认有数据后取出
         while not buffer:
             cv.wait()
+
         item = buffer.pop()
 ```
 

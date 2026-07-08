@@ -70,6 +70,7 @@ r.sismember('model:runned', 'bert-01')            # O(1) 时间检查元素是�
 
 ```python
 r.zadd('leaderboard', {'model_a': 0.95, 'model_b': 0.92, 'model_c': 0.88})   # 添加成员并指定分数，分数作为排序依据，支持批量添加
+
 r.zrevrange('leaderboard', 0, 2, withscores=True)                            # 按分数从高到低取 Top 3，withscores=True 同时返回分数值
 r.zscore('leaderboard', 'model_a')                                            # 获取指定成员的分数，用于快速查分或在更新前判断当前值
 ```

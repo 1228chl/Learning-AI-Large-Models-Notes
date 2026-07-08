@@ -19,20 +19,26 @@ from langchain_community.embeddings import DashScopeEmbeddings
 # Chat Model（聊天模型）
 # 初始化大语言模型，配置模型名称、API密钥和接口地址，temperature设为0以保证输出确定性
 llm = ChatOpenAI(
+
     model="qwen-max",
+
     api_key=os.getenv("API_KEY"),
+
     base_url=os.getenv("BASE_URL"),
+
     temperature=0
 )
 
 # 调用方式
 resp = llm.invoke("你好")            # 全文输出：等待模型生成完整回复后一次性返回
 for chunk in llm.stream("讲故事"):   # 流式输出：逐token接收生成内容，实时展示给用户
+
     print(chunk.content, end="")
 
 # Embedding 模型
 # 初始化文本嵌入模型，将自然语言文本转换为稠密向量表示
 embeddings = DashScopeEmbeddings(model="text-embedding-v1", dashscope_api_key=os.getenv("API_KEY"))
+
 vector = embeddings.embed_query("要编码的文本")  # → List[float]：将单条查询文本编码为浮点数向量
 ```
 
@@ -43,6 +49,7 @@ from langchain_core.prompts import PromptTemplate, FewShotPromptTemplate
 
 # Zero-shot（零样本提示）：直接使用模板，不提供示例
 prompt = PromptTemplate.from_template("给我讲一个关于{subject}的故事")
+
 text = prompt.format(subject="AI 机器人")  # 用具体主题替换模板中的占位符，生成实际提示文本
 
 # Few-shot（少样本提示）：提供几个示例帮助模型理解任务格式
@@ -52,7 +59,9 @@ examples = [{"text": "手机质量太差", "sentiment": "负面"},
 example_prompt = PromptTemplate.from_template("文本: {text}\n情感: {sentiment}")
 # 将示例列表和模板组合为少样本提示，后缀包含待分类的新输入
 few_shot = FewShotPromptTemplate(examples=examples, example_prompt=example_prompt,
+
                                  suffix="文本: {input}\n情感:", input_variables=["input"])
+
 print(few_shot.format(input="电影太精彩了"))  # 格式化输出完整提示，供模型推理使用
 ```
 
@@ -148,7 +157,9 @@ from langchain_core.output_parsers import JsonOutputParser
 
 # 定义Person数据模型，指定字段名和字段描述，用于约束LLM输出格式
 class Person(BaseModel):
+
     name: str = Field("姓名")
+
     age: int = Field("年龄")
 
 # 创建基于Pydantic模型的JSON解析器，自动验证和转换输出为Person对象

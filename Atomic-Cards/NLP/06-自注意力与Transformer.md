@@ -45,10 +45,15 @@ import torch.nn as nn
 # PyTorch 内置 Transformer
 # 实例化完整的 Transformer 模型，包含编码器和解码器，用于序列到序列建模
 transformer = nn.Transformer(
+
     d_model=512,                    # 模型维度
+
     nhead=8,                        # 注意力头数
+
     num_encoder_layers=6,           # 编码器层数
+
     num_decoder_layers=6,           # 解码器层数
+
     dim_feedforward=2048           # FFN 中间维度
 )
 ```

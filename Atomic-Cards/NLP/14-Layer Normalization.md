@@ -21,8 +21,11 @@ $d$ 为特征维度，$\gamma$（缩放）和 $\beta$（偏移）是可学习参
 
 ```python
 import torch.nn as nn
+
 ln = nn.LayerNorm(512)                         # 创建 LayerNorm 层，归一化维度设为 512（对应 Transformer 的 d_model）
+
 x = torch.randn(2, 10, 512)                   # 模拟输入张量：(batch_size=2, seq_len=10, hidden_dim=512)
+
 y = ln(x)                                      # 对每个样本每个位置独立计算均值/方差，在特征维上归一化为 N(0,1) 后缩放平移
 ```
 

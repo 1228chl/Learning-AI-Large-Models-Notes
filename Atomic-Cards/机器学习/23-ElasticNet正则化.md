@@ -28,10 +28,14 @@ $$
 ```python
 from sklearn.linear_model import ElasticNet, ElasticNetCV
 
+# ElasticNetCV联合搜索alpha（正则化强度）和l1_ratio（L1占比）的最优组合
 enet = ElasticNetCV(
-    l1_ratio=[0.1, 0.3, 0.5, 0.7, 0.9],  # L1 占比
-    alphas=[0.001, 0.01, 0.1, 1.0],
-    cv=5
+
+    l1_ratio=[0.1, 0.3, 0.5, 0.7, 0.9],  # L1占比：0为纯Ridge，1为纯Lasso
+
+    alphas=[0.001, 0.01, 0.1, 1.0],       # 正则化总强度候选值
+
+    cv=5                                   # 5折交叉验证
 )
 enet.fit(X_train, y_train)
 print(f"最佳 alpha: {enet.alpha_}, 最佳 l1_ratio: {enet.l1_ratio_}")

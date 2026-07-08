@@ -18,10 +18,12 @@ t-SNE（t-Distributed Stochastic Neighbor Embedding）和 UMAP（Uniform Manifol
 ```python
 from sklearn.manifold import TSNE
 
-tsne = TSNE(n_components=2, perplexity=30, random_state=42)
-X_tsne = tsne.fit_transform(X)
+# t-SNE降维到2维：保留高维空间中点的局部邻域结构，适合可视化
+tsne = TSNE(n_components=2, perplexity=30, random_state=42)  # perplexity控制局部vs全局平衡
 
-# 可视化
+X_tsne = tsne.fit_transform(X)  # 拟合t-SNE模型并将高维数据映射到2维
+
+# 可视化降维结果，观察数据的聚类结构
 plt.scatter(X_tsne[:, 0], X_tsne[:, 1], c=y, cmap='viridis')
 ```
 
@@ -36,8 +38,10 @@ plt.scatter(X_tsne[:, 0], X_tsne[:, 1], c=y, cmap='viridis')
 ```python
 import umap
 
-reducer = umap.UMAP(n_neighbors=15, min_dist=0.1, random_state=42)
-X_umap = reducer.fit_transform(X)
+# UMAP降维：基于流形学习，比t-SNE更快且保留更多全局结构
+reducer = umap.UMAP(n_neighbors=15, min_dist=0.1, random_state=42)  # n_neighbors控制局部vs全局
+
+X_umap = reducer.fit_transform(X)  # 拟合UMAP模型并将高维数据映射到低维空间
 ```
 
 **核心参数**：

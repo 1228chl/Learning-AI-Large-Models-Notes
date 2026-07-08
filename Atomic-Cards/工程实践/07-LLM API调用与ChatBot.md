@@ -16,7 +16,9 @@ aliases: ["LLM API", "OpenAI API", "智谱API", "ChatBot"]
 ```python
 from openai import OpenAI
 
+
 client = OpenAI(
+
     api_key="sk-xxx",          # 从 OpenAI 控制台获取的 API Key，应通过环境变量读取而非硬编码
     # base_url="..."           # 可选参数：通过代理或反向代理访问 API 时设置自定义端点地址
 )
@@ -24,7 +26,9 @@ client = OpenAI(
 # 非流式调用：等待模型完成全部生成后一次性返回完整结果
 # 适合短文本生成或不在意首 token 延迟的场景
 response = client.chat.completions.create(
+
     model="gpt-4o-mini",       # 模型标识符，决定能力水平和计价标准
+
     messages=[
         {"role": "system", "content": "你是资深AI助手"},  # system 设定角色和行为规则
         {"role": "user", "content": "解释什么是反向传播"}  # user 为用户的实际提问
@@ -36,8 +40,11 @@ print(response.choices[0].message.content)
 # 流式调用（逐 token 输出，体验更好）：通过 Server-Sent Events 接收实时生成流
 # 首 token 延迟远低于非流式，用户体验接近真人打字，适合对话场景
 stream = client.chat.completions.create(
+
     model="gpt-4o-mini",
+
     messages=[{"role": "user", "content": "写一首诗"}],
+
     stream=True                 # 启用流式模式，返回迭代器而非完整响应
 )
 for chunk in stream:
@@ -56,12 +63,17 @@ from openai import OpenAI
 # 智谱 API 完全兼容 OpenAI SDK 格式，仅需修改 base_url 和 api_key
 # 同一份代码可通过配置切换不同厂商，无需改动业务逻辑
 client = OpenAI(
+
     api_key="your.zhipu.api.key",                  # 智谱开放平台申请的 API Key
+
     base_url="https://open.bigmodel.cn/api/paas/v4/"  # 智谱 API 入口地址
 )
 
+
 response = client.chat.completions.create(
+
     model="glm-4-flash",       # 智谱提供的免费模型，适合快速开发和测试
+
     messages=[{"role": "user", "content": "你好"}]
 )
 print(response.choices[0].message.content)
@@ -126,15 +138,20 @@ import asyncio
 
 # 创建 FastAPI 应用实例和 OpenAI 客户端（全局复用，避免每次请求重新创建连接）
 app = FastAPI()
+
 client = OpenAI(api_key="sk-xxx", base_url="...")
 
 @app.post("/chat")
 async def chat(message: str):
     # 内部异步生成器函数：将 OpenAI 流式响应逐 token 产出，供 StreamingResponse 消费
     async def generate():
+
         stream = client.chat.completions.create(
+
             model="gpt-4o-mini",
+
             messages=[{"role": "user", "content": message}],
+
             stream=True        # 启用流式，返回 token 迭代器
         )
         for chunk in stream:

@@ -18,12 +18,19 @@ import pymysql
 
 # 1. 建立连接 —— charset 使用 utf8mb4 以完整支持 4 字节字符（emoji 等），关闭自动提交让应用控制事务边界
 conn = pymysql.connect(
+
     host='localhost',
+
     port=3306,
+
     user='root',
+
     password='root',
+
     database='ml_data',
+
     charset='utf8mb4',
+
     autocommit=False      # 关闭自动提交，由应用层显式控制事务的原子性（多条操作要么全成功要么全回滚）
 )
 
@@ -67,6 +74,7 @@ data = [
     ('Bob', 30, 0.92),
     ('Charlie', 28, 0.78),
 ]
+
 sql = "INSERT INTO predictions (name, age, score) VALUES (%s, %s, %s)"
 cursor.executemany(sql, data)
 conn.commit()
@@ -78,7 +86,9 @@ conn.commit()
 # 事务保证原子性：转账扣款和收款两条 UPDATE 要么全部执行成功，要么全部回滚，杜绝部分更新导致数据不一致
 try:
     conn.begin()                        # 显式开启事务
+
     cursor.execute("UPDATE accounts SET balance = balance - 100 WHERE id = 1")
+
     cursor.execute("UPDATE accounts SET balance = balance + 100 WHERE id = 2")
     conn.commit()                       # 两条更新均成功，持久化变更
 except Exception as e:
@@ -94,15 +104,23 @@ import pymysql
 
 # 连接池复用数据库连接，避免每次请求都经历 TCP 三次握手和身份认证的开销
 pool = PooledDB(
+
     creator=pymysql,
+
     maxconnections=10,      # 最大连接数：根据并发量估算，避免超过数据库上限
+
     host='localhost',
+
     user='root',
+
     password='root',
+
     database='ml_data'
 )
 
+
 conn = pool.connection()    # 从池中获取可用连接（而非新建），使用后自动归还
+
 cursor = conn.cursor()
 ```
 

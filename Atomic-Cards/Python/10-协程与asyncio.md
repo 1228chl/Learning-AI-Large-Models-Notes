@@ -75,6 +75,7 @@ async def fetch_url(session, url):
         return await response.text()
 
 async def main():
+
     urls = ["https://..."] * 10
     
     # 控制并发数：Semaphore(5) 限制同时最多 5 个协程运行
@@ -99,6 +100,7 @@ async def with_timeout():
     try:
         # wait_for 包装协程并设置超时时间，超时则抛出 TimeoutError
         result = await asyncio.wait_for(
+
             slow_operation(), timeout=5.0
         )
     except asyncio.TimeoutError:
@@ -112,6 +114,7 @@ async def with_timeout():
 # requests.get 是阻塞调用，在 I/O 等待期间线程什么也不做
 def sync_fetch():
     for url in urls:
+
         data = requests.get(url).text   # 每个请求等待上一个完成
 
 # 异步版本（并发）：发起所有请求后同时等待，总耗时 ≈ 最慢的那个请求
@@ -120,6 +123,7 @@ async def async_fetch():
     async with aiohttp.ClientSession() as session:
         # 创建所有任务但尚未执行，gather 才真正并发启动它们
         tasks = [fetch_url(session, url) for url in urls]
+
         results = await asyncio.gather(*tasks)  # 并发执行
 ```
 
@@ -144,6 +148,7 @@ from fastapi import FastAPI
 from fastapi.responses import StreamingResponse
 from openai import AsyncOpenAI
 
+
 app = FastAPI()
 # AsyncOpenAI 是 OpenAI 客户端的异步版本，其网络请求不阻塞工作线程
 client = AsyncOpenAI()
@@ -153,8 +158,11 @@ client = AsyncOpenAI()
 async def chat(message: str):
     # await 异步调用 LLM API，等待期间事件循环可以处理其他请求
     stream = await client.chat.completions.create(
+
         model="gpt-4o-mini",
+
         messages=[{"role": "user", "content": message}],
+
         stream=True          # 启用流式输出，逐 token 返回结果
     )
     # 嵌套的异步生成器函数：使用 async for 逐 token 读取流

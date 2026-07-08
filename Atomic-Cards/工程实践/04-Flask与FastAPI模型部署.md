@@ -54,20 +54,25 @@ class PredictOutput(BaseModel):
 # 在模块加载阶段预加载模型和分词器，避免首次请求时因加载耗时导致超时
 # 生产部署时应加入模型预热逻辑，确保服务就绪后才对外提供服务
 model_name = "bert-base-chinese"
+
 tokenizer = AutoTokenizer.from_pretrained(model_name)
+
 model = AutoModelForSequenceClassification.from_pretrained(model_name)
 model.eval()  # 切换为推理模式：禁用 Dropout 和 BatchNorm 的训练行为，保证输出确定性
+
 
 @app.post("/predict", response_model=PredictOutput)
 async def predict(input: PredictInput):
     # 将输入文本转为模型所需的张量格式，返回 PyTorch 张量，过长文本截断
     inputs = tokenizer(input.text, return_tensors="pt", truncation=True)
     with torch.no_grad():  # 禁用梯度计算，大幅减少内存占用并加速推理
+
         outputs = model(**inputs)
     # 对 logits 做 softmax 得到类别概率分布，dim=1 沿类别维度归一化
     probs = torch.softmax(outputs.logits, dim=1)
     # 二分类：取正类概率与 0.5 阈值比较，实际生产应使用校准后的阈值
     label = "positive" if probs[0][1] > 0.5 else "negative"
+
     return PredictOutput(label=label, confidence=float(probs[0][1]))
 
 # 启动命令：uvicorn main:app --host 0.0.0.0 --port 8000
@@ -82,19 +87,24 @@ async def predict(input: PredictInput):
 from flask import Flask, request, jsonify
 import torch
 
+
 app = Flask(__name__)
 # 加载训练好的模型（需自行实现 load_model 函数）
 # 注意：Flask 默认同步执行，高并发场景下每个请求会阻塞一个线程
 model = load_model()
 
+
 @app.route('/predict', methods=['POST'])
 def predict():
     # Flask 手动解析 JSON 请求体（无自动验证，需自行处理解析失败）
     data = request.get_json()
+
     text = data['text']
+
     result = model.predict(text)
     # 手动将结果序列化为 JSON 返回，需自行处理数据类型转换（如 numpy/torch 转 list）
     return jsonify({'prediction': result.tolist()})
+
 
 if __name__ == '__main__':
     # Flask 开发服务器，生产环境应换用 Gunicorn 或 uWSGI
@@ -111,6 +121,7 @@ import torch
 # sklearn 模型使用 joblib：比标准 pickle 对大数组/NumPy 对象更高效
 # compress=3 在文件大小与序列化速度间取得平衡（0-9 可选，9 压缩比最高但最慢）
 joblib.dump(model, 'model.joblib', compress=3)
+
 model = joblib.load('model.joblib')
 
 # PyTorch 模型推荐仅保存 state_dict（参数）而非完整模型对象

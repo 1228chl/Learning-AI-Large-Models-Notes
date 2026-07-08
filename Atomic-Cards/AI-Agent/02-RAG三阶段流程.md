@@ -28,12 +28,15 @@ from langchain.vectorstores import Milvus
 
 # 文档切分：将长文档切割为适合 LLM 上下文的固定大小文本块
 text_splitter = RecursiveCharacterTextSplitter(
+
     chunk_size=500, chunk_overlap=50  # 每块最大500字符，块间重叠50字符避免边界信息丢失
 )
+
 chunks = text_splitter.split_documents(documents)  # 执行切分，返回文本块列表
 
 # 向量化并存储：将文本块转换为向量后存入 Milvus 向量数据库
 embeddings = HuggingFaceEmbeddings(model_name="BAAI/bge-base-zh")  # 加载中英双语嵌入模型
+
 vector_store = Milvus.from_documents(chunks, embeddings)  # 将向量化后的文档存入 Milvus，完成索引构建
 ```
 

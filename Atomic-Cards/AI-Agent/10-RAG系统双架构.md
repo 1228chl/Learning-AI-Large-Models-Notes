@@ -36,6 +36,7 @@ def classify_query(query):
 def answer(query):
     # 先对查询进行分类，确定走哪条处理路径
     q_type = classify_query(query)
+
     if q_type == "professional":
         # 专业问题走MySQL FAQ精确匹配，快速返回标准答案
         return mysql_faq.search(query)       # 精确匹配
@@ -93,10 +94,12 @@ class MySQLFAQ:
         # 创建数据库游标并查询所有FAQ记录的问题和答案列
         cursor = self.conn.cursor()
         cursor.execute("SELECT question, answer FROM faq")
+
         faq_list = cursor.fetchall()
 
         # 2. BM25 排序：构建BM25模型并对每个FAQ问题计算与用户查询的相关性得分
         bm25 = BM25([q for q, a in faq_list])
+
         scores = [bm25.score(query, i) for i in range(len(faq_list))]
 
         # 3. 返回最佳匹配：取得分最高的FAQ答案，若最高分仍低于阈值则返回空值

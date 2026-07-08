@@ -20,6 +20,7 @@ import torch.nn as nn
 
 # RNN 层
 rnn = nn.RNN(input_size=100, hidden_size=256, num_layers=2, batch_first=True)  # 创建RNN层，沿时间步循环处理序列数据
+
 output, h_n = rnn(x)          # output: (N, L, 256), h_n: (2, N, 256)
 ```
 

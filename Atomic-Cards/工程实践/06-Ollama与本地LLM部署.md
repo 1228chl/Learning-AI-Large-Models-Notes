@@ -41,8 +41,10 @@ import json
 # 非流式对话函数：一次性发送请求，等待完整回复后返回
 # stream=False 时 Ollama 会将完整回复序列化为一个 JSON 对象返回
 def chat_with_ollama(prompt, model="qwen2:0.5b"):
+
     response = requests.post(
         "http://localhost:11434/api/chat",    # Ollama 本地 API 端点（默认端口 11434）
+
         json={
             "model": model,
             "messages": [{"role": "user", "content": prompt}],
@@ -54,18 +56,22 @@ def chat_with_ollama(prompt, model="qwen2:0.5b"):
 
 # 流式输出函数：逐 token 打印，实现打字机效果，首 token 延迟更低
 def chat_stream(prompt, model="qwen2:0.5b"):
+
     response = requests.post(
         "http://localhost:11434/api/chat",
+
         json={
             "model": model,
             "messages": [{"role": "user", "content": prompt}],
             "stream": True                    # 流式模式，响应以换行分隔的 SSE 事件流
         },
+
         stream=True                           # requests 库的流式传输，不等待完整响应
     )
     # 逐行解析 Ollama 返回的 SSE 事件流，每行是一个独立的 JSON 对象
     for line in response.iter_lines():
         if line:
+
             data = json.loads(line)
             # done=true 表示生成完毕（最后的统计信息包），不包含实际内容，跳过
             if not data.get("done"):
@@ -80,14 +86,19 @@ def chat_stream(prompt, model="qwen2:0.5b"):
 # 这意味着本地开发和远程 API 调用可以使用完全相同的代码，仅需修改 base_url
 from openai import OpenAI
 
+
 client = OpenAI(
+
     base_url="http://localhost:11434/v1",    # Ollama 提供的 OpenAI 兼容端点
+
     api_key="ollama"                         # 本地服务不需要 API Key，填任意值即可占位
 )
 
 # 调用方式与 OpenAI API 完全一致：模型名、消息结构、参数均可复用
 response = client.chat.completions.create(
+
     model="qwen2:0.5b",
+
     messages=[{"role": "user", "content": "你好"}]
 )
 print(response.choices[0].message.content)

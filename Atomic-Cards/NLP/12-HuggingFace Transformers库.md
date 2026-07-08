@@ -18,15 +18,18 @@ from transformers import pipeline
 
 # 情感分析
 classifier = pipeline("sentiment-analysis")                                 # 创建情感分析 pipeline，自动加载默认的蒸馏模型
+
 result = classifier("I love this course!")                                  # 对输入文本进行情感分类，返回标签（POSITIVE/NEGATIVE）和置信度分数
 # [{'label': 'POSITIVE', 'score': 0.987}]
 
 # 文本生成
 generator = pipeline("text-generation", model="gpt2")                       # 创建文本生成 pipeline，显式指定使用 GPT-2 模型
+
 generator("AI will", max_length=30)                                         # 以 "AI will" 为前缀，自回归逐个 token 续写，最长生成 30 个 token
 
 # 问答
 qa = pipeline("question-answering")                                         # 创建抽取式问答 pipeline，自动加载默认模型
+
 qa(context="Paris is capital of France", question="Where is Paris?")        # 在给定上下文中定位答案，返回答案文本及其在原文中的起止位置
 ```
 
@@ -47,7 +50,9 @@ from transformers import AutoTokenizer, AutoModel, AutoModelForSequenceClassific
 
 # 加载 tokenizer 和模型
 model_name = "bert-base-chinese"                                                                     # 指定模型名称，HuggingFace Hub 上的中文 BERT 基座模型
+
 tokenizer = AutoTokenizer.from_pretrained(model_name)                                                # 自动加载与模型匹配的分词器，负责将文本切分为 token 并映射为 ID
+
 model = AutoModelForSequenceClassification.from_pretrained(model_name)                               # 加载预训练 BERT 权重并附加序列分类头，用于句子级分类任务
 
 # 编码
@@ -56,6 +61,7 @@ inputs = tokenizer("我爱自然语言处理", return_tensors="pt")             
 
 # 推理
 outputs = model(**inputs)                                                                            # 将编码后的输入送入模型前向传播，返回包含 logits、隐状态等的输出对象
+
 logits = outputs.logits                                                                              # 提取分类头的原始分数（未经过 Softmax），形状为 (batch_size, num_labels)
 ```
 
@@ -74,21 +80,33 @@ from transformers import Trainer, TrainingArguments
 
 # 配置训练超参数：控制输出路径、训练轮数、批次大小、学习率策略和保存频率
 training_args = TrainingArguments(
+
     output_dir="./results",                        # 模型检查点、日志和配置文件的保存目录
+
     num_train_epochs=3,                            # 在整个训练集上迭代 3 轮（epoch），防止欠拟合
+
     per_device_train_batch_size=16,                # 每张 GPU 的批次大小，总 batch size = 16 × GPU 数量
+
     learning_rate=2e-5,                            # AdamW 优化器初始学习率（BERT 微调常用 2e-5~5e-5），过大易导致 loss 震荡
+
     warmup_steps=500,                              # 前 500 步学习率从 0 线性预热到目标值，稳定训练初期梯度更新
+
     logging_steps=100,                             # 每 100 步输出一次 loss 和学习率等训练指标，便于监控收敛状态
+
     save_strategy="epoch",                         # 每个 epoch 结束时保存一次模型，兼顾恢复点与存储开销
 )
 
 # 创建 Trainer 实例：封装模型、训练参数、数据集和分词器，自动管理训练循环
 trainer = Trainer(
+
     model=model,                                   # 待微调的预训练模型（如 BERT），其权重将在训练中更新
+
     args=training_args,                            # 上述 TrainingArguments 配置对象
+
     train_dataset=train_dataset,                   # 训练数据集，应为 HuggingFace Dataset 格式，包含 input_ids 和 labels
+
     eval_dataset=eval_dataset,                     # 验证数据集，每个 epoch 结束后自动评估，用于监控过拟合
+
     tokenizer=tokenizer,                           # 分词器，保存模型时一并保存分词配置，保证推理时预处理一致
 )
 trainer.train()                                    # 启动完整训练循环：前向传播 → loss 计算 → 反向传播 → 参数更新 → 日志记录

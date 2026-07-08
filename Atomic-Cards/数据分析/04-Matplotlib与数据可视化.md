@@ -17,10 +17,12 @@ import numpy as np
 
 # 生成数据：linspace 在 [0, 10] 区间均匀取 100 个点，保证曲线采样足够平滑
 x = np.linspace(0, 10, 100)
+
 y = np.sin(x)
 
 # pyplot 接口：基于全局状态机一步步构建图表，适合快速绘制单幅图
 plt.figure(figsize=(8, 4))    # 创建画布 — 设置宽高比例，默认英寸单位，影响显示和保存比例
+
 plt.plot(x, y, label='sin(x)')  # 绘制折线图 — 自动连接相邻点，适合展示连续变化趋势
 plt.xlabel('x'); plt.ylabel('y')  # 坐标轴标签 — 说明横纵轴物理含义，图表可读性的基础
 plt.title('Sine Wave')          # 图表标题 — 一句话概括图表内容，方便读者快速理解
@@ -46,6 +48,7 @@ fig, axes = plt.subplots(2, 2, figsize=(12, 8))  # 创建 2 行 2 列子图，�
 
 # 左上：训练曲线 — 对比训练集和验证集 loss 趋势，判断是否存在过拟合
 axes[0, 0].plot(train_loss, label='Train Loss')   # 训练损失 — 正常应持续下降
+
 axes[0, 0].plot(val_loss, label='Val Loss')        # 验证损失 — 若开始上升则预示过拟合
 axes[0, 0].legend()
 axes[0, 0].set_title('Training Curve')
@@ -74,12 +77,14 @@ def plot_training(history):
     # 左图：损失曲线 — 训练损失持续下降说明模型在学习
     # 验证损失不再下降或开始上升时应考虑早停，防止过拟合
     ax1.plot(history['train_loss'], label='Train')
+
     ax1.plot(history['val_loss'], label='Validation')
     ax1.set_xlabel('Epoch'); ax1.set_ylabel('Loss')
     ax1.legend(); ax1.grid(True)
     
     # 右图：准确率曲线 — 验证准确率趋于平稳时表明模型容量已用尽
     ax2.plot(history['train_acc'], label='Train')
+
     ax2.plot(history['val_acc'], label='Validation')
     ax2.set_xlabel('Epoch'); ax2.set_ylabel('Accuracy')
     ax2.legend(); ax2.grid(True)

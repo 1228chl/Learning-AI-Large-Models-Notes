@@ -60,16 +60,21 @@ def call_llm_api(url, api_key, messages):
     try:
         # timeout=30 同时设置连接超时和读取超时，防止网络故障时无限挂起
         response = requests.post(
+
             url, headers=headers,
+
             json={"model": "gpt-4o-mini", "messages": messages},
+
             timeout=30
         )
         # 根据 HTTP 状态码分场景处理，不同状态码对应不同的恢复策略
         if response.status_code == 200:
             return response.json()           # 成功：解析并返回 JSON 响应体
+
         elif response.status_code == 429:
             # 429 Too Many Requests：触发速率限制，应等待 Retry-After 头部指定的时长再重试
             print("速率限制，等待重试...")
+
         elif response.status_code == 401:
             # 401 Unauthorized：API Key 错误或过期，继续重试无意义，应停止并通知运维
             print("API Key 无效，请检查")

@@ -37,12 +37,15 @@ DBSCAN (Density-Based Spatial Clustering of Applications with Noise) 基于样�
 ```python
 from sklearn.cluster import DBSCAN
 
+# DBSCAN基于密度聚类：eps控制邻域半径，min_samples决定核心点的密度阈值
 dbscan = DBSCAN(eps=0.5, min_samples=5)
-labels = dbscan.fit_predict(X)
 
-# -1 表示噪声点
-n_clusters = len(set(labels)) - (1 if -1 in labels else 0)
-n_noise = list(labels).count(-1)
+labels = dbscan.fit_predict(X)  # 训练并返回聚类标签，标签为-1表示噪声点
+
+# -1 表示噪声点（不属于任何簇的孤立点）
+n_clusters = len(set(labels)) - (1 if -1 in labels else 0)  # 排除噪声标签后计算簇数
+
+n_noise = list(labels).count(-1)  # 统计被标记为噪声（-1）的样本数
 print(f"簇数量: {n_clusters}, 噪声点: {n_noise}")
 ```
 

@@ -216,8 +216,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 408.5,
-    "collapsed": true
+    "width": 408.5
   },
   "left-ribbon": {
     "hiddenItems": {
@@ -233,20 +232,21 @@
       "templater-obsidian:Templater": false
     }
   },
-  "active": "e5c6004f44c0e722",
+  "active": "e83158f79f242826",
   "lastOpenFiles": [
+    "Atomic-Cards/原子化生成提示词.md",
+    "Atomic-Cards/机器学习/27-Boosting.md",
+    "Atomic-Cards/机器学习/26-Bagging.md",
+    "Atomic-Cards/机器学习/30-t-SNE与UMAP非线性降维.md.tmp.16708.e77b69861814",
+    "Atomic-Cards/机器学习/25-层次聚类.md.tmp.16708.e01bcc1e8303",
+    "Atomic-Cards/机器学习/24-DBSCAN密度聚类.md.tmp.16708.3bfb01f52198",
+    "Atomic-Cards/机器学习/23-ElasticNet正则化.md.tmp.16708.1a3f8f076a70",
+    "Atomic-Cards/机器学习/22-L1正则化(Lasso).md.tmp.16708.c619280862a9",
     "Atomic-Cards/机器学习/21-L2正则化(Ridge).md.tmp.16708.56330eb2bc2b",
     "Atomic-Cards/机器学习/21-L2正则化(Ridge).md.tmp.16708.a2b4ab3b9696",
     "Atomic-Cards/机器学习/20-正则化.md.tmp.16708.95dd156137db",
     "Atomic-Cards/机器学习/19-模型选择与超参数调优.md.tmp.16708.bdf71ca8a3d9",
     "Atomic-Cards/机器学习/19-模型选择与超参数调优.md.tmp.16708.34d262685ef0",
-    "Atomic-Cards/数据库/09-Milvus Python操作指南.md.tmp.16708.2dc67b3c2f7a",
-    "Atomic-Cards/机器学习/18-特征工程.md.tmp.16708.9afbf1b597fb",
-    "Atomic-Cards/机器学习/18-特征工程.md.tmp.16708.b42a90c2c2b7",
-    "Atomic-Cards/数据库/09-Milvus Python操作指南.md.tmp.16708.74b70ad5b6f1",
-    "Atomic-Cards/数据结构与算法/15-贪心算法.md.tmp.16708.b96cef3016bd",
-    "Atomic-Cards/数据库/09-Milvus Python操作指南.md.tmp.16708.311b910a4271",
-    "Atomic-Cards/原子化生成提示词.md",
     "Atomic-Cards/机器学习/04-评估指标.md",
     "Atomic-Cards/机器学习/05-过拟合与欠拟合.md",
     "Atomic-Cards/微积分与优化/04-Hessian矩阵与二阶导.md",
@@ -270,7 +270,6 @@
     "Atomic-Cards/机器学习/16-层次聚类与DBSCAN.md",
     "Atomic-Cards/新提示词.md",
     "Atomic-Cards/机器学习/10-支持向量机.md",
-    "Atomic-Cards/机器学习/02-监督学习与非监督学习.md",
     "Assets/Image/AI-Large-Modlels-Notes/Project/EduRAG/Milvus向量数据库/1.2.8.3-1.png",
     "Assets/Image/AI-Large-Modlels-Notes/Project/EduRAG/Milvus向量数据库/1.2.8.2-2.png",
     "Assets/Image/AI-Large-Modlels-Notes/Project/EduRAG/Milvus向量数据库/1.2.8.2-1.png",

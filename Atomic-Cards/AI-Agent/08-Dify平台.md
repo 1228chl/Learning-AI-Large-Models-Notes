@@ -52,11 +52,13 @@ import requests
 # 向Dify的对话型应用发送聊天请求，获取AI回复
 response = requests.post(
     "http://localhost:3000/api/chat-messages",
+
     json={
         "query": "什么是注意力机制？",  # 用户提问的内容
         "user": "user_123",  # 用户标识，用于区分不同对话
         "response_mode": "streaming"  # 流式响应模式，实现逐词输出的效果
     },
+
     headers={"Authorization": "Bearer app-xxxx"}  # API密钥认证，app-xxxx需替换为实际密钥
 )
 ```

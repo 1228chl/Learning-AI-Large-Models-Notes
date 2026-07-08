@@ -39,6 +39,7 @@ llm = OpenAI(model_name="gpt-3.5-turbo-instruct")
 
 # Chat Model（对话）：使用对话式模型，支持多轮消息交互
 chat = ChatOpenAI(model="gpt-4")
+
 chat.invoke([HumanMessage(content="Hello!")])  # 通过消息列表调用，HumanMessage 封装用户输入
 ```
 
@@ -53,6 +54,7 @@ template = PromptTemplate.from_template(
     "上下文: {context}\n问题: {question}"  # {context} 和 {question} 会在运行时被替换为实际值
 )
 
+
 prompt = template.format(context="...", question="什么是 RAG？")  # 填充模板变量，生成最终提示词
 ```
 
@@ -63,12 +65,15 @@ from langchain.chains import RetrievalQA, LLMChain, SimpleSequentialChain
 
 # RAG 链：将向量检索与 LLM 生成串联为一条端到端问答管道
 qa_chain = RetrievalQA.from_chain_type(
+
     llm=chat, retriever=vector_store.as_retriever()  # 绑定对话模型和向量检索器
 )
 
 # 多步链：将多个处理步骤按顺序串联，前一步的输出自动作为后一步的输入
 chain1 = LLMChain(llm=llm, prompt=prompt1)  # 第一步：执行 LLM 调用，按 prompt1 模板生成中间结果
+
 chain2 = LLMChain(llm=llm, prompt=prompt2)  # 第二步：将第一步的输出作为输入，继续处理
+
 pipeline = SimpleSequentialChain(chains=[chain1, chain2])  # 将两个链串联为顺序执行管道
 ```
 
@@ -77,7 +82,9 @@ pipeline = SimpleSequentialChain(chains=[chain1, chain2])  # 将两个链串联�
 ```python
 from langchain.memory import ConversationBufferMemory
 
+
 memory = ConversationBufferMemory(return_messages=True)  # 创建对话缓冲区记忆，以消息列表格式存储历史
+
 chain = LLMChain(llm=chat, prompt=prompt, memory=memory)  # 将记忆注入链中，使 LLM 能感知对话上下文
 ```
 
@@ -94,9 +101,13 @@ def search_web(query: str) -> str:
 
 # 初始化 Agent：将工具、LLM 和决策策略组合为一个可自主推理和行动的智能体
 agent = initialize_agent(
+
     tools=[search_web, ...],  # 向 Agent 注册可用的工具列表
+
     llm=chat,                 # 使用对话模型作为 Agent 的推理大脑
+
     agent="zero-shot-react-description",  # 采用 ReAct 策略：观察→思考→行动的循环
+
     verbose=True              # 开启详细日志，输出 Agent 的推理过程便于调试
 )
 ```
@@ -108,9 +119,13 @@ from langchain.document_loaders import TextLoader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain.vectorstores import FAISS
 
+
 loader = TextLoader("data.txt")  # 创建文件加载器，读取指定文本文件
+
 docs = loader.load()             # 执行加载，将文件内容解析为 Document 对象列表
+
 splits = RecursiveCharacterTextSplitter().split_documents(docs)  # 将文档递归切分为适合检索的小文本块
+
 vectorstore = FAISS.from_documents(splits, embeddings)  # 将文本块向量化后存入 FAISS 向量索引库
 ```
 

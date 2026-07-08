@@ -37,6 +37,7 @@ print(torch.cuda.get_device_properties(0))  # 打印显存总量、计算能力�
 ```python
 from torch.cuda.amp import autocast, GradScaler
 
+
 model = MyModel().cuda()
 # 初始化梯度缩放器：FP16 的动态范围远小于 FP32，微小梯度会下溢为 0
 # GradScaler 在反向传播前放大 loss，使所有梯度进入 FP16 可表示范围，更新权重前再缩小复原
@@ -48,7 +49,9 @@ for data, target in dataloader:
     # autocast 上下文管理器：自动为每个算子选择 FP16 或 FP32 执行
     # 矩阵乘法、卷积等密集运算使用 FP16 加速（2-8x），LayerNorm、Softmax 等敏感操作保留 FP32
     with autocast():
+
         output = model(data)
+
         loss = criterion(output, target)
 
     # 缩放后的反向传播：scaler.scale(loss) 将 loss 乘以当前缩放因子，防止 FP16 下溢
@@ -78,7 +81,9 @@ model = nn.DataParallel(model)
 # 无主卡瓶颈，通信效率远高于 DataParallel，支持多机多卡
 # 启动方式：torchrun --nproc_per_node=4 train.py
 import torch.distributed as dist
+
 dist.init_process_group(backend='nccl')  # 初始化分布式进程组，NCCL 是 NVIDIA 优化的 GPU 通信库
+
 model = nn.DDP(model, device_ids=[local_rank])  # 包装为分布式模型，local_rank 为当前进程绑定的 GPU 编号
 ```
 

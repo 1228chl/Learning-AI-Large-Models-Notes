@@ -20,10 +20,15 @@ from gensim.models import FastText
 
 # 训练 FastText 词向量
 model = FastText(
+
     sentences=sentences,        # 分词后的句子列表
+
     vector_size=100,             # 向量维度
+
     window=5,                    # 窗口大小
+
     min_count=1,                 # 最低词频
+
     min_n=3, max_n=6            # n-gram 长度范围（3~6 字符）
 )
 
@@ -67,7 +72,9 @@ import fasttext
 
 # 训练分类器（数据格式：__label__<标签> <文本>）
 model = fasttext.train_supervised(
+
     input="train.txt",        # 训练数据文件路径，每行格式为 __label__<标签> <文本>
+
     lr=1.0, epoch=25, wordNgrams=2  # 学习率、训练轮数、使用的词 n-gram 阶数
 )
 

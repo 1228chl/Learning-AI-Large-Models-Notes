@@ -24,10 +24,14 @@ client = MilvusClient(uri="http://localhost:19530", db_name="default")
 # auto_id=False 表示由业务方手动提供 ID，便于后续按业务 ID 精确删除或更新
 # enable_dynamic_field=True 允许存储未预定义的字段，避免频繁修改 Schema
 schema = client.create_schema(auto_id=False, enable_dynamic_field=True)
+
 schema.add_field("id", DataType.VARCHAR, is_primary=True, max_length=100)
+
 schema.add_field("text", DataType.VARCHAR, max_length=65535)
+
 schema.add_field("dense_vector", DataType.FLOAT_VECTOR, dim=1024)   # BGE-M3 稠密维度，固定 1024 维，捕获深层语义特征
 schema.add_field("sparse_vector", DataType.SPARSE_FLOAT_VECTOR)     # 稀疏向量，维度极高但仅非零位携带信息，适合精确关键词匹配
+
 schema.add_field("source", DataType.VARCHAR, max_length=50)
 
 # 准备索引参数：稠密向量用 IVF_FLAT（聚类倒排索引，平衡速度和召回），稀疏向量用 SPARSE_INVERTED_INDEX（专为高维稀疏数据设计）
@@ -51,23 +55,31 @@ ef = BGEM3EmbeddingFunction(use_fp16=False)
 
 # 准备待嵌入的文本，BGE-M3 一次调用同时输出稠密和稀疏两种向量表示
 texts = ["什么是注意力机制？", "Transformer 的核心创新是自注意力"]
+
 embeddings = ef(texts)
+
 
 data = []
 for i, text in enumerate(texts):
     # 解析稀疏向量返回格式：milvus_model 可能输出 coo_array 或 csr_matrix，两种格式的索引和数据属性名不同，须兼容处理
     sparse_vec = {}
     try:
+
         row = embeddings["sparse"][i]
         if hasattr(row, 'col'):       # coo_array 格式：col 为列索引数组，data 为非零值数组
+
             indices, values = row.col, row.data
         else:                          # csr_matrix 格式：indices 为列索引数组，data 为非零值数组
+
             indices, values = row.indices, row.data
     except:
+
         row = embeddings["sparse"].getrow(i)
+
         indices, values = row.indices, row.data
 
     for idx, val in zip(indices, values):
+
         sparse_vec[int(idx)] = float(val)
 
     data.append({
@@ -87,43 +99,59 @@ client.upsert("knowledge_base", data=data)
 ```python
 # 将查询文本通过 BGE-M3 转为稠密和稀疏向量，格式与插入数据时完全一致，确保检索可比性
 query_embeddings = ef(["什么是Transformer？"])
+
 dense_q = query_embeddings["dense"][0]
 
 # 从 BGE-M3 输出中提取稀疏向量的非零索引和值，与数据插入时的格式兼容逻辑相同
 sparse_q = {}
+
 row = query_embeddings["sparse"][0]
+
 indices = row.col if hasattr(row, 'col') else row.indices
+
 values = row.data if hasattr(row, 'data') else row.data
 for idx, val in zip(indices, values):
+
     sparse_q[int(idx)] = float(val)
 
 # 稠密检索请求：用内积度量 (IP) 在 dense_vector 字段上做近似最近邻搜索，nprobe=10 控制探测的聚类数，值越大召回越高但越慢
 dense_req = AnnSearchRequest(
+
     data=[dense_q], anns_field="dense_vector",
+
     param={"metric_type": "IP", "params": {"nprobe": 10}},
+
     limit=20
 )
 
 # 稀疏检索请求：使用 Milvus 稀疏倒排索引检索，不需要 nprobe 参数，其倒排结构天然适配高维稀疏数据的匹配逻辑
 sparse_req = AnnSearchRequest(
+
     data=[sparse_q], anns_field="sparse_vector",
+
     param={"metric_type": "IP", "params": {}},
+
     limit=20
 )
 
 # 混合检索：WeightedRanker 加权融合双路检索结果，稠密 0.7 偏向语义理解，稀疏 0.3 保留精确关键词匹配能力
 ranker = WeightedRanker(0.7, 0.3)
+
 results = client.hybrid_search(
     "knowledge_base", [dense_req, sparse_req],
+
     ranker=ranker, limit=10,
+
     output_fields=["text", "source"]
 )
 
 # 结果重排序：用 BGE-Reranker CrossEncoder 对粗排结果做二次精排，弥补向量近似检索的精度损失
 from sentence_transformers import CrossEncoder
+
 reranker = CrossEncoder("BAAI/bge-reranker-v2-m3")
 # 构造查询-文档对用于 CrossEncoder 全交互注意力计算，比 Bi-Encoder 的点积相似度更精准
 pairs = [[query, hit["entity"]["text"]] for hit in results[0]]
+
 scores = reranker.predict(pairs)
 # 按 CrossEncoder 预测的相关性分数降序排列，得到最终的精排结果列表
 ranked = sorted(zip(results[0], scores), key=lambda x: x[1], reverse=True)
@@ -135,23 +163,35 @@ ranked = sorted(zip(results[0], scores), key=lambda x: x[1], reverse=True)
 # 带标量过滤条件的向量搜索：expr 参数支持类 SQL 语法，先按条件筛除无关数据，再在剩余子集上做 ANN 搜索
 results = client.search(
     "knowledge_base",
+
     data=[dense_q],
+
     anns_field="dense_vector",
+
     param={"metric_type": "IP", "nprobe": 10},
+
     limit=5,
+
     expr="source == 'ai_knowledge'",     # 标量过滤表达式，等同于 SQL 的 WHERE 子句；只检索来源为 ai_knowledge 的文档
+
     output_fields=["text"]
 )
 
 # 分区搜索：按类别创建独立物理分区，同类数据集中存储；搜索时只扫描指定分区，大幅减少计算量
 client.create_partition("knowledge_base", "part_math")
+
 client.insert("knowledge_base", data, partition_name="part_math")
 
 results = client.search(
+
     "knowledge_base", data=[dense_q],
+
     anns_field="dense_vector",
+
     param={"metric_type": "IP"},
+
     limit=5,
+
     partition_names=["part_math"]         # 指定目标分区名称列表，搜索仅在列出分区内执行，实现数据级查询隔离
 )
 ```

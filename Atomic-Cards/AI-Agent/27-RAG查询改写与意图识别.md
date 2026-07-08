@@ -46,6 +46,7 @@ aliases: ["Query改写", "意图识别", "查询重写", "Query Routing"]
 ## 实现示例
 
 ```python
+
 def rewrite_query(query: str, history: list = None) -> str:
     """查询改写：补全对话上下文，解决多轮对话中的指代消解问题"""
     # 如果没有历史对话，说明是首轮查询，直接返回原始查询无需改写

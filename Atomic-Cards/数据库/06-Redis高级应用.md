@@ -13,6 +13,7 @@ aliases: ["缓存策略", "过期时间", "Redis管道", "连接池"]
 # 设置过期时间 —— 避免缓存永久占用内存，自动清理冷数据
 r.setex('cache:key', 300, 'value')         # 300 秒过期（set 与 expire 原子操作）
 r.expire('cache:key', 600)                 # 设置/修改过期时间，适用于已存在的 key
+
 r.ttl('cache:key')                         # 查看剩余秒数（-2=key 已删除，-1=永不过期）
 ```
 
@@ -61,9 +62,13 @@ def get_prediction(model_id, input_data):
 ```python
 # 创建连接池 —— 复用 TCP 连接，避免每次操作都经历三次握手与四次挥手
 pool = redis.ConnectionPool(
+
     host='localhost',       # Redis 服务器地址，生产环境应改用配置变量替代硬编码
+
     port=6379,               # Redis 默认端口
+
     max_connections=20,      # 最大连接数，防止突发流量打满单机端口资源
+
     decode_responses=True    # 自动将 bytes 解码为 str，避免手动 decode 的繁琐
 )
 # 使用连接池创建客户端，后续所有 Redis 操作自动从池中获取/归还连接

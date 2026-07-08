@@ -24,7 +24,9 @@ df = pd.DataFrame({
 
 # 读取文件：Pandas 支持多种格式直接加载，无需手动解析文件格式
 df = pd.read_csv('train.csv')      # CSV 是最常见的表格格式，read_csv 自动推断列类型和分隔符
+
 df = pd.read_excel('data.xlsx')    # Excel 读取代处理多 sheet 和合并单元格，适合业务数据
+
 df = pd.read_json('data.json')     # JSON 适合嵌套结构数据，Pandas 自动展平为表格
 ```
 
@@ -84,6 +86,7 @@ pd.pivot_table(df, values='score', index='category', columns='gender')  # 按类
 
 # 合并：类似 SQL JOIN，将多张表按关联键拼接，常用于特征拼接
 pd.merge(df1, df2, on='user_id', how='left')    # 左连接 — 以 df1 为基准保留所有行，无匹配填充 NaN
+
 pd.concat([df1, df2], axis=0)                   # 行拼接 — 上下堆叠，要求列名一致，用于追加新数据
 ```
 
@@ -101,9 +104,13 @@ pd.concat([df1, df2], axis=0)                   # 行拼接 — 上下堆叠，�
 ```python
 # 完整 ML 数据预处理流程：从原始数据到模型输入的典型 Pipeline
 df = pd.read_csv('data.csv')                    # 读入原始数据，自动解析列名和推断列类型
+
 df = df.drop_duplicates()                       # 去重 — 避免同一样本重复出现导致训练偏差
+
 df = df.fillna(df.median(numeric_only=True))    # 用中位数填充缺失值 — 中位数比均值更抗异常干扰
+
 X = df.drop('target', axis=1).values            # 特征矩阵：去掉标签列并转为 NumPy 数组供模型训练
+
 y = df['target'].values                         # 标签向量：提取目标列用于监督学习反向传播
 ```
 
