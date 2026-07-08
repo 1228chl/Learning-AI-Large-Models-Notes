@@ -117,4 +117,8 @@ trainer.train()
 **Q4（边界）**：使用 HuggingFace Trainer 训练大模型时会遇到哪些常见陷阱？如何排查？
 **回答要点**：OOM → 梯度累积、混合精度（fp16/bf16）、减小 batch size、启用梯度检查点；训练 loss 不下降 → 检查数据加载是否正确、学习率和 warmup 设置、是否有 NaN（开启 detect_anomaly）；数据加载成为瓶颈 → 增加 num_workers、使用 StreamingDataset；transformers 库版本与模型权重不兼容 → 确认 transformers 版本≥模型要求的版本。
 
-> 理解前置知识可参见 [BERT与MLM预训练](./10-BERT与MLM预训练.md)；理解前置知识可参见 [GPT与自回归生成](./11-GPT与自回归生成.md)；理解前置知识可参见 [自注意力与Transformer](./06-自注意力与Transformer.md)
+## 参考引用
+
+- 需要理解BERT与MLM预训练的相关知识，参见 [BERT与MLM预训练](./10-BERT与MLM预训练.md)
+- 需要理解GPT与自回归生成的相关知识，参见 [GPT与自回归生成](./11-GPT与自回归生成.md)
+- 需要理解自注意力与Transformer的相关知识，参见 [自注意力与Transformer](./06-自注意力与Transformer.md)

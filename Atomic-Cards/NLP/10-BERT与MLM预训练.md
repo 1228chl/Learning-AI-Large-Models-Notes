@@ -110,4 +110,10 @@ model = BertForSequenceClassification.from_pretrained(
 **Q4（边界）**：RoBERTa 等后续研究表明 BERT 的 NSP 任务并非必要。BERT 的原始设计还有哪些被后续模型改进的局限性？
 **回答要点**：NSP 被 RoBERTa 证明无用，删除后效果更好；静态掩码策略不如动态掩码；BERT 无法生成文本（编码器架构的天生限制）；对句子级理解任务（如语义相似度）的效果不如句子对训练的方式。
 
-> 理解前置知识可参见 [残差连接与LayerNorm](./09-残差连接与LayerNorm.md)；理解前置知识可参见 [HuggingFace Transformers库](./12-HuggingFace Transformers库.md)；理解前置知识可参见 [GPT与自回归生成](./11-GPT与自回归生成.md)；理解前置知识可参见 [自注意力与Transformer](./06-自注意力与Transformer.md)；理解前置知识可参见 [多头注意力](./07-多头注意力.md)
+## 参考引用
+
+- 需要理解残差连接与LayerNorm的相关知识，参见 [残差连接与LayerNorm](./09-残差连接与LayerNorm.md)
+- 需要理解HuggingFace Transformers库的相关知识，参见 [HuggingFace Transformers库](./12-HuggingFace Transformers库.md)
+- 需要理解GPT与自回归生成的相关知识，参见 [GPT与自回归生成](./11-GPT与自回归生成.md)
+- 需要理解自注意力与Transformer的相关知识，参见 [自注意力与Transformer](./06-自注意力与Transformer.md)
+- 需要理解多头注意力的相关知识，参见 [多头注意力](./07-多头注意力.md)

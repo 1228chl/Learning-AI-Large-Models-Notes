@@ -13,13 +13,13 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Atomic-Cards/工程实践/03-Git版本控制.md",
+                "file": "Atomic-Cards/工程实践/07-LLM API调用与ChatBot.md",
                 "mode": "source",
                 "source": false,
                 "backlinks": false
               },
               "icon": "lucide-file",
-              "title": "03-Git版本控制"
+              "title": "07-LLM API调用与ChatBot"
             }
           },
           {
@@ -236,20 +236,26 @@
   "active": "e5c6004f44c0e722",
   "lastOpenFiles": [
     "Atomic-Cards/原子化生成提示词.md",
-    "Atomic-Cards/原子化生成提示词.md.tmp.2932.ef6f092acc4b",
+    "Atomic-Cards/深度学习/20-模型剪枝(Pruning).md.tmp.2932.bae667c72a17",
+    "Atomic-Cards/深度学习/19-模型量化(Quantization).md.tmp.2932.0cf4c971f8ac",
+    "Atomic-Cards/机器学习/23-ElasticNet正则化.md.tmp.2932.79aad8b2cfc7",
+    "Atomic-Cards/深度学习/15-模型压缩量化剪枝蒸馏.md.tmp.2932.b7ba9aeb6513",
+    "Atomic-Cards/原子化生成提示词.md.tmp.2932.a60020acfb59",
+    "Atomic-Cards/原子化生成提示词.md.tmp.2932.fa3395c07ec9",
+    "Atomic-Cards/原子化生成提示词.md.tmp.2932.3b9391b4b0ac",
     "Atomic-Cards/工程实践/03-Git版本控制.md",
-    "Atomic-Cards/深度学习/15-模型压缩量化剪枝蒸馏.md.tmp.2932.b2910b857fd1",
+    "Atomic-Cards/工程实践/05-模型保存格式.md",
+    "Atomic-Cards/深度学习/20-模型剪枝(Pruning).md.tmp.2932.c7b247bd6814",
+    "Atomic-Cards/深度学习/19-模型量化(Quantization).md.tmp.2932.0e24bc68826c",
+    "Atomic-Cards/机器学习/23-ElasticNet正则化.md.tmp.2932.a0ca9ae4030d",
     "Atomic-Cards/机器学习/19-模型选择与超参数调优.md",
     "Atomic-Cards/机器学习/03-数据集划分与交叉验证.md",
     "Atomic-Cards/机器学习/08-KNN算法.md",
     "Atomic-Cards/机器学习/07-逻辑回归.md",
     "Atomic-Cards/机器学习/06-线性回归.md",
-    "Atomic-Cards/数据库/03-MySQL高级特性.md.tmp.2932.dec829fd9183",
-    "Atomic-Cards/机器学习/30-t-SNE与UMAP非线性降维.md.tmp.2932.6d151891e2ca",
     "Atomic-Cards/机器学习/05-过拟合与欠拟合.md",
     "Atomic-Cards/机器学习/16-层次聚类与DBSCAN.md",
     "Atomic-Cards/新提示词.md",
-    "Atomic-Cards/新建 文本文档.txt",
     "Atomic-Cards/机器学习/10-支持向量机.md",
     "Atomic-Cards/机器学习/02-监督学习与非监督学习.md",
     "Atomic-Cards/AI-Agent/27-RAG查询改写与意图识别.md",
@@ -264,7 +270,6 @@
     "Atomic-Cards/AI-Agent/07-Coze平台.md",
     "Atomic-Cards/AI-Agent/06-提示词工程核心原则.md",
     "Atomic-Cards/AI-Agent/05-BM25算法.md",
-    "Atomic-Cards/AI-Agent/04-LangChain六大组件.md",
     "Assets/Image/AI-Large-Modlels-Notes/Project/EduRAG/Milvus向量数据库/1.2.8.3-1.png",
     "Assets/Image/AI-Large-Modlels-Notes/Project/EduRAG/Milvus向量数据库/1.2.8.2-2.png",
     "Assets/Image/AI-Large-Modlels-Notes/Project/EduRAG/Milvus向量数据库/1.2.8.2-1.png",
@@ -273,11 +278,6 @@
     "Assets/Image/AI-Large-Modlels-Notes/Project/EduRAG/Milvus向量数据库/1.2.8-2.png",
     "Assets/Image/AI-Large-Modlels-Notes/Project/EduRAG/Milvus向量数据库/1.2.8-1.png",
     "Assets/Image/AI-Large-Modlels-Notes/Project/EduRAG/Milvus向量数据库/1.2.7.6-1.png",
-    "Assets/Image/AI-Large-Modlels-Notes/Project/EduRAG/Milvus向量数据库",
-    "Assets/Image/AI-Large-Modlels-Notes/Project/EduRAG",
-    "Atomic-Cards/AI-Agent/05-BM25算法.md.tmp.30988.ea715f3cb574",
-    "Atomic-Cards/AI-Agent/10-RAG系统双架构.md.tmp.30988.db22f7ecfdbe",
-    "Atomic-Cards/AI-Agent/02-RAG三阶段流程.md.tmp.30988.a76b01cec5d5",
     "Assets/Image/AI-Large-Modlels-Notes/NLP/05-注意力机制和Seq2Seq介绍/1.2.1.4-1 1.png",
     "Assets/Image/AI-Large-Modlels-Notes/ML/监督学习/线性回归/02线性回归(改进版)/5.2.2-2.png",
     "未命名.canvas"

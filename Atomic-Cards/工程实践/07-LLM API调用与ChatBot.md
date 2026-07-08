@@ -156,4 +156,9 @@ async def chat(message: str):
 
 **回答要点**：Prompt 数据经第三方服务器存在隐私泄露风险（合规场景需本地部署）；API Key 泄露可能导致恶意调用和财务损失（环境变量 + 密钥管理服务）；建议敏感数据脱敏、使用数据不落地的本地模型、实现访问控制和用量审计。
 
-> 理解前置知识可参见 [Ollama与本地LLM部署](./06-Ollama与本地LLM部署.md)；理解提示词工程核心原则的AI应用开发可参见 [提示词工程核心原则](../AI-Agent/06-提示词工程核心原则.md)；理解前置知识可参见 [Flask与FastAPI模型部署](./04-Flask与FastAPI模型部署.md)；理解Agent定义与核心公式的AI应用开发可参见 [Agent定义与核心公式](../AI-Agent/01-Agent定义与核心公式.md)
+## 参考引用
+
+- 需要理解Ollama与本地LLM部署的相关知识，参见 [Ollama与本地LLM部署](./06-Ollama与本地LLM部署.md)
+- 需要了解提示词工程核心原则以理解AI应用开发与RAG流程，参见 [提示词工程核心原则](../AI-Agent/06-提示词工程核心原则.md)
+- 需要理解Flask与FastAPI模型部署的相关知识，参见 [Flask与FastAPI模型部署](./04-Flask与FastAPI模型部署.md)
+- 需要了解Agent定义与核心公式以理解AI应用开发与RAG流程，参见 [Agent定义与核心公式](../AI-Agent/01-Agent定义与核心公式.md)

@@ -126,4 +126,10 @@ services:
 
 **回答要点**：Windows 下 GPU 支持不完善（需 WSL2）；分布式训练的多节点通信配置复杂；大模型镜像体积过大（可用多阶段构建优化）；高性能计算场景考虑 Singularity/Apptainer。
 
-> 理解进程管理的系统基础可参见 [进程管理](../Linux/05-进程管理.md)；理解Dify平台的AI应用开发可参见 [Dify平台](../AI-Agent/08-Dify平台.md)；理解前置知识可参见 [Ollama与本地LLM部署](./06-Ollama与本地LLM部署.md)；理解前置知识可参见 [LLM API调用与ChatBot](./07-LLM API调用与ChatBot.md)；理解前置知识可参见 [模型保存格式](./05-模型保存格式.md)
+## 参考引用
+
+- 需要了解进程管理以理解操作系统与命令行基础，参见 [进程管理](../Linux/05-进程管理.md)
+- 需要了解Dify平台以理解AI应用开发与RAG流程，参见 [Dify平台](../AI-Agent/08-Dify平台.md)
+- 需要理解Ollama与本地LLM部署的相关知识，参见 [Ollama与本地LLM部署](./06-Ollama与本地LLM部署.md)
+- 需要理解LLM API调用与ChatBot的相关知识，参见 [LLM API调用与ChatBot](./07-LLM API调用与ChatBot.md)
+- 需要理解模型保存格式的相关知识，参见 [模型保存格式](./05-模型保存格式.md)

@@ -69,4 +69,9 @@ def residual_block(x, sublayer):
 **Q4（边界）**：残差连接有什么理论上的局限？是否存在不需要残差连接的深层架构？
 **回答要点**：残差连接增加了一倍存储（需保留激活值用于反向传播，显存开销大）；现代研究（如 DeepNet、NormFormer）通过改进初始化或归一化实现深层训练而不依赖残差；也出现了"无残差 Transformer"（如 ReZero、T-Fixup）通过特殊初始化替代残差连接。
 
-> 理解前置知识可参见 [自注意力与Transformer](./06-自注意力与Transformer.md)；理解前置知识可参见 [多头注意力](./07-多头注意力.md)；理解前置知识可参见 [位置编码](./08-位置编码.md)；理解前置知识可参见 [Layer Normalization](./14-Layer Normalization.md)
+## 参考引用
+
+- 需要理解自注意力与Transformer的相关知识，参见 [自注意力与Transformer](./06-自注意力与Transformer.md)
+- 需要理解多头注意力的相关知识，参见 [多头注意力](./07-多头注意力.md)
+- 需要理解位置编码的相关知识，参见 [位置编码](./08-位置编码.md)
+- 需要理解Layer Normalization的相关知识，参见 [Layer Normalization](./14-Layer Normalization.md)

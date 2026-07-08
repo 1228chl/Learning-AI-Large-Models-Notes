@@ -122,4 +122,8 @@ for message in pubsub.listen():
 
 **回答要点**：① 根据 maxmemory-policy 策略执行淘汰：noeviction（默认）拒绝写操作返回错误；allkeys-lru 淘汰最近最少使用的 Key（最常用）；volatile-lru/ttl 仅在设置了过期时间的 Key 中淘汰。② 不适合缓存的重要数据不应使用设置了淘汰策略的 Redis 存储。③ 生产环境中通常设置为 allkeys-lru，配合合理的 maxmemory 和监控告警，避免数据被意外淘汰。
 
-> 理解前置知识可参见 [Redis核心数据结构](./05-Redis核心数据结构.md)；理解前置知识可参见 [PyMySQL模块](./04-PyMySQL模块.md)；理解文本处理三剑客的系统基础可参见 [文本处理三剑客](../Linux/03-文本处理三剑客.md)
+## 参考引用
+
+- 需要理解Redis核心数据结构的相关知识，参见 [Redis核心数据结构](./05-Redis核心数据结构.md)
+- 需要理解PyMySQL模块的相关知识，参见 [PyMySQL模块](./04-PyMySQL模块.md)
+- 需要了解文本处理三剑客以理解操作系统与命令行基础，参见 [文本处理三剑客](../Linux/03-文本处理三剑客.md)

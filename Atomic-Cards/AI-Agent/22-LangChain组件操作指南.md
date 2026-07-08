@@ -162,4 +162,9 @@ print(chain.invoke("AI"))
 
 **回答要点**：版本兼容性问题——langchain 主包与 langchain-openai、langchain-community 等子包需严格对齐，建议锁定依赖版本并做好兼容性测试；链式调用超时无容错——需设置 request_timeout 和 retry 策略；Agent 的 ReAct 循环可能无限迭代——必须设置 max_iterations 限制；回调/追踪不完善——引入 LangSmith 记录完整调用链路便于排查。
 
-> 理解前置知识可参见 [RAG三阶段流程](./02-RAG三阶段流程.md)；理解前置知识可参见 [LangChain六大组件](./04-LangChain六大组件.md)；理解嵌入与向量化的数据存储与检索可参见 [嵌入与向量化](../数据库/10-嵌入与向量化.md)；理解Milvus核心概念的数据存储与检索可参见 [Milvus核心概念](../数据库/08-Milvus核心概念.md)
+## 参考引用
+
+- 需要理解RAG三阶段流程的相关知识，参见 [RAG三阶段流程](./02-RAG三阶段流程.md)
+- 需要理解LangChain六大组件的相关知识，参见 [LangChain六大组件](./04-LangChain六大组件.md)
+- 需要了解嵌入与向量化以理解数据存储与检索技术，参见 [嵌入与向量化](../数据库/10-嵌入与向量化.md)
+- 需要了解Milvus核心概念以理解数据存储与检索技术，参见 [Milvus核心概念](../数据库/08-Milvus核心概念.md)

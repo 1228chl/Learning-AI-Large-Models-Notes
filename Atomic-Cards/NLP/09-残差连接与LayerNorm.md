@@ -38,4 +38,8 @@ $$ \text{LayerNorm}(x) = \gamma \odot \frac{x - \mu}{\sigma + \epsilon} + \beta 
 
 ---
 
-> 理解前置知识可参见 [多头注意力](./07-多头注意力.md)；理解前置知识可参见 [自注意力与Transformer](./06-自注意力与Transformer.md)；理解前置知识可参见 [Layer Normalization](./14-Layer Normalization.md)
+## 参考引用
+
+- 需要理解多头注意力的相关知识，参见 [多头注意力](./07-多头注意力.md)
+- 需要理解自注意力与Transformer的相关知识，参见 [自注意力与Transformer](./06-自注意力与Transformer.md)
+- 需要理解Layer Normalization的相关知识，参见 [Layer Normalization](./14-Layer Normalization.md)
