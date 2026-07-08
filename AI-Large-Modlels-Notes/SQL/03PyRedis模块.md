@@ -1,8 +1,3 @@
-**上一级：** [02PyMySQL模块](02PyMySQL模块.md)
-
-**标签：** #sql #基础 
-
----
 
 # 详细笔记：Python 操作 Redis（redis-py）
 

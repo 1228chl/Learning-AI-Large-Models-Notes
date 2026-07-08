@@ -1,10 +1,4 @@
-**上一级：** [01MySQL数据库](01MySQL数据库.md)
 
-**下一级：** [03PyRedis模块](03PyRedis模块.md)
-
-**标签：** #sql #基础 
-
----
 
 # 详细笔记：Python 操作 MySQL（PyMySQL）
 
