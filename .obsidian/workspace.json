@@ -53,7 +53,7 @@
             }
           }
         ],
-        "currentTab": 1
+        "currentTab": 2
       }
     ],
     "direction": "vertical"
@@ -222,7 +222,8 @@
       }
     ],
     "direction": "horizontal",
-    "width": 408.5
+    "width": 408.5,
+    "collapsed": true
   },
   "left-ribbon": {
     "hiddenItems": {
@@ -238,10 +239,10 @@
       "templater-obsidian:Templater": false
     }
   },
-  "active": "9dddde49a2d5eb85",
+  "active": "b9c397e9f32ab073",
   "lastOpenFiles": [
-    "AI-Large-Modlels-Notes/Algorithm/1-两数之和.md",
     "Atomic-Cards/工程实践/09-Claude使用指南.md",
+    "AI-Large-Modlels-Notes/Algorithm/1-两数之和.md",
     "Atomic-Cards/工程实践/09-Claude使用指南.md.tmp.27952.5a235a0b0df7",
     "Atomic-Cards/原子化生成提示词.md.tmp.27952.ad1b48e80d51",
     "Atomic-Cards/卡片总览.md.tmp.27952.c612c7d24496",
