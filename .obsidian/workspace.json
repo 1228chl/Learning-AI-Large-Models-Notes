@@ -52,8 +52,7 @@
               "title": "原子化生成提示词"
             }
           }
-        ],
-        "currentTab": 2
+        ]
       }
     ],
     "direction": "vertical"
@@ -222,7 +221,8 @@
       }
     ],
     "direction": "horizontal",
-    "width": 408.5
+    "width": 408.5,
+    "collapsed": true
   },
   "left-ribbon": {
     "hiddenItems": {
@@ -238,11 +238,11 @@
       "templater-obsidian:Templater": false
     }
   },
-  "active": "e83158f79f242826",
+  "active": "e5c6004f44c0e722",
   "lastOpenFiles": [
-    "Atomic-Cards/原子化生成提示词.md.tmp.34424.bf0f3f31d9d2",
     "Atomic-Cards/工程实践/09-Claude使用指南.md",
     "Atomic-Cards/原子化生成提示词.md",
+    "Atomic-Cards/原子化生成提示词.md.tmp.34424.bf0f3f31d9d2",
     "Atomic-Cards/原子化生成提示词.md.tmp.34424.57634ffc9ad0",
     "Atomic-Cards/原子化生成提示词.md.tmp.34424.b5aae8874055",
     "Atomic-Cards/原子化生成提示词.md.tmp.34424.2e6d0dcab969",
@@ -275,7 +275,6 @@
     "Atomic-Cards/NLP/11-GPT与自回归生成.md",
     "Atomic-Cards/NLP/10-BERT与MLM预训练.md",
     "Atomic-Cards/NLP/09-残差连接与LayerNorm.md",
-    "Atomic-Cards/原子化生成提示词.md.tmp.34424.a9318b8e005f",
     "Assets/Image/AI-Large-Modlels-Notes/Project/EduRAG/Milvus向量数据库/1.2.8.3-1.png",
     "Assets/Image/AI-Large-Modlels-Notes/Project/EduRAG/Milvus向量数据库/1.2.8.2-2.png",
     "Assets/Image/AI-Large-Modlels-Notes/Project/EduRAG/Milvus向量数据库/1.2.8.2-1.png",
