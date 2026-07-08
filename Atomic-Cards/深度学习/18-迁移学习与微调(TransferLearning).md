@@ -45,7 +45,7 @@ $$
 
 ## 微调的数学原理
 
-设预训练模型参数为 $\theta_{\text{pre}}$，微调过程可视为求解以下优化问题：
+设预训练模型参数为 $\theta_{\text{pre}}$，$D_t$ 为目标域数据集，$\mathcal{L}_t$ 为目标域损失函数，$\lambda$ 为正则化强度，微调过程可视为求解以下优化问题：
 
 $$
 \theta^* = \arg\min_\theta \mathcal{L}_t(\theta; D_t) + \lambda \mathcal{R}(\theta - \theta_{\text{pre}})
@@ -67,6 +67,9 @@ $$
 \mathbb{E}_{P_t}[\ell(h_s, y)] > \mathbb{E}_{P_t}[\ell(h_{\text{scratch}}, y)]
 $$
 
+- $h_s$：源域训练得到的模型
+- $h_{\text{scratch}}$：从头训练的模型
+
 缓解策略：
 1. **特征级适配**：使用对抗训练（GAN）对齐特征分布
 2. **渐进式解冻**：从顶层到底层逐步解冻参数
@@ -77,8 +80,8 @@ $$
 | 应用场景 | 数学形式 | 说明 |
 |:---------|:---------|:-----|
 | 领域自适应 | $\min_h \epsilon_s(h) + \lambda \text{MMD}(P_s, P_t)$ | 最小化源域误差同时减小域间分布差异 |
-| 元学习（MAML） | $\theta^* = \arg\min_\theta \sum_i \mathcal{L}_i(\theta - \alpha \nabla \mathcal{L}_i(\theta))$ | 在多个任务上预训练，快速适应新任务 |
-| 持续学习（EWC） | $\mathcal{L}(\theta) = \mathcal{L}_t(\theta) + \frac{\gamma}{2} \sum_i F_i (\theta_i - \theta_{i}^*)^2$ | 防止新任务训练遗忘旧任务知识 |
+| 元学习（MAML） | $\theta^* = \arg\min_\theta \sum_i \mathcal{L}_i(\theta - \alpha \nabla \mathcal{L}_i(\theta))$ | 在多个任务上预训练，快速适应新任务。$\mathcal{L}_i$ 为第 $i$ 个任务的损失函数，$\alpha$ 为内循环学习率 |
+| 持续学习（EWC） | $\mathcal{L}(\theta) = \mathcal{L}_t(\theta) + \frac{\gamma}{2} \sum_i F_i (\theta_i - \theta_{i}^*)^2$ | 防止新任务训练遗忘旧任务知识。$\mathcal{L}$ 为总损失，$\mathcal{L}_t$ 为当前任务的损失函数，$\gamma$ 为正则化强度 |
 
 ## 代码示例
 

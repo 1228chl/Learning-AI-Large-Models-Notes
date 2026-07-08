@@ -13,13 +13,13 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Atomic-Cards/机器学习/19-模型选择与超参数调优.md",
+                "file": "Atomic-Cards/深度学习/01-感知机与多层神经网络.md",
                 "mode": "source",
                 "source": false,
                 "backlinks": false
               },
               "icon": "lucide-file",
-              "title": "19-模型选择与超参数调优"
+              "title": "01-感知机与多层神经网络"
             }
           },
           {
@@ -52,8 +52,7 @@
               "title": "RAG学习步骤与流程"
             }
           }
-        ],
-        "currentTab": 2
+        ]
       }
     ],
     "direction": "vertical"
@@ -239,21 +238,24 @@
       "templater-obsidian:Templater": false
     }
   },
-  "active": "b9c397e9f32ab073",
+  "active": "e5c6004f44c0e722",
   "lastOpenFiles": [
-    "Atomic-Cards/深度学习/16-光滑损失函数.md.tmp.27952.a069227c2f54",
-    "Atomic-Cards/深度学习/16-光滑损失函数.md.tmp.27952.562497f4a75e",
-    "Atomic-Cards/深度学习/16-光滑损失函数.md.tmp.27952.c2c82dc78e5c",
-    "Atomic-Cards/知识体系/01-核心依赖链与学习路径.md.tmp.27952.9def587bbfdd",
-    "Atomic-Cards/深度学习/19-模型量化(Quantization).md.tmp.27952.a1049feaa21d",
-    "Atomic-Cards/深度学习/07-PyTorch张量与运算.md.tmp.27952.1f3e58de5585",
-    "Atomic-Cards/深度学习/07-PyTorch张量与运算.md.tmp.27952.512d793731a6",
-    "Atomic-Cards/深度学习/01-感知机与多层神经网络.md.tmp.27952.c5bdd21729e6",
-    "Atomic-Cards/深度学习/14-知识蒸馏详解.md.tmp.27952.383a5ae5f7c0",
-    "Atomic-Cards/深度学习/11-RNN与序列建模.md.tmp.27952.f9912eb23a53",
-    "Atomic-Cards/深度学习/05-权重初始化策略.md.tmp.27952.afd59f295829",
-    "Atomic-Cards/NLP/02-词嵌入与分布式表示.md",
+    "Atomic-Cards/原子化生成提示词.md.tmp.27952.aaac417579a2",
+    "Atomic-Cards/微积分与优化/02-链式法则.md.tmp.27952.5aaab99c08a4",
+    "Atomic-Cards/微积分与优化/05-梯度下降算法.md.tmp.27952.426c7ab16c9d",
+    "Atomic-Cards/微积分与优化/05-梯度下降算法.md.tmp.27952.94e64ffca852",
+    "Atomic-Cards/微积分与优化/05-梯度下降算法.md.tmp.27952.e189dd9f2518",
+    "Atomic-Cards/微积分与优化/05-梯度下降算法.md.tmp.27952.fe95fe335f96",
+    "Atomic-Cards/微积分与优化/05-梯度下降算法.md.tmp.27952.8f8fb02ecc1e",
+    "Atomic-Cards/线性代数/18-线性代数与神经网络的连接.md.tmp.27952.4078889b5952",
+    "Atomic-Cards/微积分与优化/03-梯度与方向导数.md.tmp.27952.75780f86e35e",
+    "Atomic-Cards/微积分与优化/04-Hessian矩阵与二阶导.md.tmp.27952.50ec3a5fee97",
+    "Atomic-Cards/微积分与优化/04-Hessian矩阵与二阶导.md.tmp.27952.6b59131260e7",
+    "Atomic-Cards/深度学习/02-激活函数.md",
+    "Atomic-Cards/深度学习/03-损失函数.md",
+    "Atomic-Cards/机器学习/19-模型选择与超参数调优.md",
     "AI-Large-Modlels-Notes/Project/EduRAG/RAG学习步骤与流程.md",
+    "Atomic-Cards/NLP/02-词嵌入与分布式表示.md",
     "Atomic-Cards/NLP/01-分词算法.md",
     "Atomic-Cards/NLP/04-Seq2Seq与Encoder-Decoder.md",
     "Atomic-Cards/NLP/07-多头注意力.md",
@@ -274,9 +276,6 @@
     "Atomic-Cards/AI-Agent/25-RAG系统评估(RAGAS).md",
     "Atomic-Cards/AI-Agent/11-多Agent协作(Multi-Agent).md",
     "Atomic-Cards/AI-Agent/09-工作流编排(Workflow).md",
-    "Atomic-Cards/深度学习/18-迁移学习与微调(TransferLearning).md",
-    "Atomic-Cards/深度学习/17-迁移学习与微调.md",
-    "Atomic-Cards/卡片总览.md",
     "Assets/Image/AI-Large-Modlels-Notes/Project/EduRAG/Milvus向量数据库/1.2.8.3-1.png",
     "Assets/Image/AI-Large-Modlels-Notes/Project/EduRAG/Milvus向量数据库/1.2.8.2-2.png",
     "Assets/Image/AI-Large-Modlels-Notes/Project/EduRAG/Milvus向量数据库/1.2.8.2-1.png",

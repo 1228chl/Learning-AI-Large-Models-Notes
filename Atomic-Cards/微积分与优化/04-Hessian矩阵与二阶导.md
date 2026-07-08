@@ -51,10 +51,10 @@ f(\mathbf{x} + \Delta \mathbf{x}) \approx f(\mathbf{x}) + \nabla f(\mathbf{x})^T
 
 | 应用 | 形式 | 说明 |
 |------|------|------|
-| **牛顿法** | $\theta_{t+1} = \theta_t - H^{-1}\nabla L(\theta_t)$ | 利用曲率加速收敛 |
+| **牛顿法** | $\theta_{t+1} = \theta_t - H^{-1}\nabla L(\theta_t)$ | $\theta_t$：第 $t$ 步的参数；$L$：损失函数。利用曲率加速收敛 |
 | **凸函数判别** | Hessian 半正定 $\iff$ 凸函数 | 全局最优性的保证 |
-| **优化条件** | $\nabla L(\theta^*) = 0, H(\theta^*) \succ 0$ | 极小值的充分条件 |
-| **自然梯度** | $F = \mathbb{E}[\nabla \log p \cdot \nabla \log p^T]$ | Fisher 信息矩阵是 Hessian 的期望 |
+| **优化条件** | $\nabla L(\theta^*) = 0, H(\theta^*) \succ 0$ | $\theta^*$：最优参数；$L$：损失函数。极小值的充分条件 |
+| **自然梯度** | $F = \mathbb{E}[\nabla \log p \cdot \nabla \log p^T]$ | $F$：Fisher 信息矩阵；$p$：概率分布。Fisher 信息矩阵是 Hessian 的期望 |
 
 ## 面试追问
 
