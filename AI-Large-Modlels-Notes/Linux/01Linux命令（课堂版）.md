@@ -1,8 +1,3 @@
-**下一级：** [02Linux命令](02Linux命令.md)
-
-**标签：** #Linux #命令 #基础
-
----
 
 # Linux 环境和 Linux 命令
 

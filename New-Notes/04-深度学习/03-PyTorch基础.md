@@ -1,8 +1,6 @@
 # PyTorch基础
 
-**标签：** #PyTorch #框架
 
----
 
 ## 1. 什么是PyTorch
 

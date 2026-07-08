@@ -1,8 +1,6 @@
 # NLP自然语言处理完整指南
 
-**标签：** #NLP #Transformer #BERT #GPT
 
----
 
 ## 目录
 

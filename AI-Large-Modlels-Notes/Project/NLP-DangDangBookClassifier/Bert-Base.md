@@ -1,6 +1,4 @@
 
-**标签：** #Project #NLP 
-
 
 ---
 # bertBase

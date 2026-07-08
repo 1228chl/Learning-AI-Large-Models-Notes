@@ -1,8 +1,5 @@
 # Matplotlib可视化
 
-**标签：** #Matplotlib #可视化
-
----
 
 ## 1. 什么是Matplotlib
 

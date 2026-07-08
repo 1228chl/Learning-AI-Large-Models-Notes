@@ -1,8 +1,6 @@
 # Pandas基础
 
-**标签：** #Pandas #数据分析
 
----
 
 ## 1. 什么是Pandas
 

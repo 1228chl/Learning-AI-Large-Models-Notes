@@ -1,8 +1,6 @@
 # Markdown与LaTeX语法完整指南
 
-**标签：** #Markdown #LaTeX #工具
 
----
 
 ## 目录
 

@@ -1,8 +1,6 @@
 # Agent与提示词工程完整指南
 
-**标签：** #Agent #Prompt #LLM #RAG
 
----
 
 ## 目录
 

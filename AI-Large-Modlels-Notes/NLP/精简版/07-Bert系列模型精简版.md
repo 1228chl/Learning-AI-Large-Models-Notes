@@ -1,10 +1,3 @@
-**上一级：** [06-Transformer精简版](06-Transformer精简版.md)
-
-**下一级：** [08-Transformers库和Bert应用精简版](08-Transformers库和Bert应用精简版.md)
-
-**标签：** #NLP
-
----
 
 # Bert 系列模型（核心精简版）
 

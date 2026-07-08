@@ -1,6 +1,3 @@
-**标签：** #RAG #LangChain
-
----
 
 # LangChain 框架完全学习笔记
 

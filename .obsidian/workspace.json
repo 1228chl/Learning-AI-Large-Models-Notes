@@ -13,13 +13,13 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "AI-Large-Modlels-Notes/Python/10python_进阶.md",
+                "file": "README.md",
                 "mode": "source",
                 "source": false,
                 "backlinks": false
               },
               "icon": "lucide-file",
-              "title": "10python_进阶"
+              "title": "README"
             }
           },
           {
@@ -35,6 +35,16 @@
               },
               "icon": "lucide-file",
               "title": "1-两数之和"
+            }
+          },
+          {
+            "id": "b9c397e9f32ab073",
+            "type": "leaf",
+            "state": {
+              "type": "graph",
+              "state": {},
+              "icon": "lucide-git-fork",
+              "title": "关系图谱"
             }
           }
         ]
@@ -94,7 +104,8 @@
       }
     ],
     "direction": "horizontal",
-    "width": 292.5
+    "width": 292.5,
+    "collapsed": true
   },
   "right": {
     "id": "f07a0c5b7e11463b",
@@ -225,28 +236,32 @@
   },
   "active": "e5c6004f44c0e722",
   "lastOpenFiles": [
-    "AI-Large-Modlels-Notes/Python/09正则表达式.md",
-    "AI-Large-Modlels-Notes/Python/08迭代器&生成器&协程.md",
-    "AI-Large-Modlels-Notes/Python/07线程.md",
-    "AI-Large-Modlels-Notes/Python/06进程.md",
-    "AI-Large-Modlels-Notes/Python/05深浅拷贝.md",
-    "AI-Large-Modlels-Notes/Python/04网络编程.md",
-    "AI-Large-Modlels-Notes/Python/03闭包和装饰器.md",
-    "AI-Large-Modlels-Notes/Python/02面向对象高级.md",
-    "AI-Large-Modlels-Notes/Python/01面向对象基础.md",
-    "AI-Large-Modlels-Notes/Question/DL-Question.md",
-    "AI-Large-Modlels-Notes/Markdown语法.md",
-    "AI-Large-Modlels-Notes/SQL/03PyRedis模块.md",
-    "AI-Large-Modlels-Notes/SQL/02PyMySQL模块.md",
-    "AI-Large-Modlels-Notes/SQL/01MySQL数据库.md",
-    "AI-Large-Modlels-Notes/Project/EduRAG/基于MySQL数据库实现问答系统.md",
-    "AI-Large-Modlels-Notes/Project/EduRAG/Redis数据库简介与使用.md",
-    "AI-Large-Modlels-Notes/Project/EduRAG/BM25算法简介与应用.md",
-    "AI-Large-Modlels-Notes/Project/EduRAG/Milvus 的加权排序器.md",
-    "AI-Large-Modlels-Notes/Project/EduRAG/Milvus向量数据库.md",
-    "AI-Large-Modlels-Notes/Project/EduRAG/MySQL相关知识（RAG）.md",
     "AI-Large-Modlels-Notes/Algorithm/1-两数之和.md",
-    "AI-Large-Modlels-Notes/Project/EduRAG/常见的距离.md",
+    "README.md",
+    "AI-Learning-知识点总表.md",
+    "New-Notes/README.md",
+    "New-Notes/知识体系总表.md",
+    "New-Notes/10-RAG与LangChain.md",
+    "New-Notes/09-Python进阶.md",
+    "New-Notes/08-数学基础.md",
+    "New-Notes/07-Agent与提示词工程.md",
+    "New-Notes/06-数据分析基础.md",
+    "New-Notes/05-NLP自然语言处理.md",
+    "New-Notes/04-深度学习基础.md",
+    "New-Notes/03-监督学习算法.md",
+    "New-Notes/02-机器学习基础.md",
+    "New-Notes/01-Markdown与LaTeX语法.md",
+    "New-Notes/Deep-Knowledge/README.md",
+    "New-Notes/Deep-Knowledge/核心依赖链.md",
+    "New-Notes/Deep-Knowledge/01-数学地基/04-微积分.md",
+    "New-Notes/Deep-Knowledge/01-数学地基/03-概率统计.md",
+    "New-Notes/Deep-Knowledge/01-数学地基/02-线性代数-矩阵.md",
+    "New-Notes/Deep-Knowledge/01-数学地基/01-线性代数-向量.md",
+    "New-Notes/Atomic-Cards/README.md",
+    "New-Notes/Atomic-Cards/10-RAG检索增强生成.md",
+    "New-Notes/Atomic-Cards/09-注意力机制.md",
+    "New-Notes/Atomic-Cards/08-过拟合与欠拟合.md",
+    "New-Notes/Atomic-Cards/07-BERT.md",
     "Assets/Image/AI-Large-Modlels-Notes/Project/EduRAG/Milvus向量数据库/1.2.8.3-1.png",
     "Assets/Image/AI-Large-Modlels-Notes/Project/EduRAG/Milvus向量数据库/1.2.8.2-2.png",
     "Assets/Image/AI-Large-Modlels-Notes/Project/EduRAG/Milvus向量数据库/1.2.8.2-1.png",
@@ -257,10 +272,6 @@
     "Assets/Image/AI-Large-Modlels-Notes/Project/EduRAG/Milvus向量数据库/1.2.7.6-1.png",
     "Assets/Image/AI-Large-Modlels-Notes/Project/EduRAG/Milvus向量数据库",
     "Assets/Image/AI-Large-Modlels-Notes/Project/EduRAG",
-    "AI-Large-Modlels-Notes/Project/EduRAG/Python日志介绍与应用.md",
-    "AI-Large-Modlels-Notes/Agent/RAG/LangChain框架.md",
-    "AI-Large-Modlels-Notes/Agent/RAG/Milvus.md",
-    "AI-Large-Modlels-Notes/Agent/RAG/基于MySQL库的问答系统.md",
     "Atomic-Cards/AI-Agent/05-BM25算法.md.tmp.30988.ea715f3cb574",
     "Atomic-Cards/AI-Agent/10-RAG系统双架构.md.tmp.30988.db22f7ecfdbe",
     "Atomic-Cards/AI-Agent/02-RAG三阶段流程.md.tmp.30988.a76b01cec5d5",

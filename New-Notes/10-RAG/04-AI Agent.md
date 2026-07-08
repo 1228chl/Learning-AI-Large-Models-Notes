@@ -1,8 +1,6 @@
 # AI Agent
 
-**标签：** #Agent #LLM
 
----
 
 ## 1. 什么是AI Agent
 

@@ -1,8 +1,3 @@
-**下一级：**  [02NumPy（AI大全版）](02NumPy（AI大全版）.md)
-
-**标签：** #NumPy #基础
-
----
 
 # 一、NumPy 优势与 ndarray 初识
 

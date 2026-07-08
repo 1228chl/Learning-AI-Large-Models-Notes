@@ -1,8 +1,6 @@
 # RAG与LangChain完整指南
 
-**标签：** #RAG #LangChain #LLM #Agent
 
----
 
 ## 目录
 

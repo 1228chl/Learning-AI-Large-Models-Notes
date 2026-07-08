@@ -1,8 +1,6 @@
 # LangChain基础
 
-**标签：** #LangChain #LLM
 
----
 
 ## 1. 什么是LangChain
 

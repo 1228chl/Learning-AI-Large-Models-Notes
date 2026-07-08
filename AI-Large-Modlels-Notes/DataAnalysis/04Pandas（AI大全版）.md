@@ -1,10 +1,3 @@
-**上一级：** [03Pandas模块（课堂版）](03Pandas模块（课堂版）.md)
-
-**下一级：**  [05Matplotlib](05Matplotlib.md)
-
-**标签：** #Pandas #基础 
-
----
 
 # 一、Pandas 优势
 

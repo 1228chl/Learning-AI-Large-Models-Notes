@@ -1,8 +1,6 @@
 # Transformer架构
 
-**标签：** #NLP #Transformer
 
----
 
 ## 1. Transformer概述
 

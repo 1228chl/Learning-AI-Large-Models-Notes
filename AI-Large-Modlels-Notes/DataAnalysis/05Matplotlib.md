@@ -1,8 +1,3 @@
-**上一级：** [04Pandas（AI大全版）](04Pandas（AI大全版）.md)
-
-**标签：** #Pandas #基础 
-
----
 
 # Matplotlib
 
