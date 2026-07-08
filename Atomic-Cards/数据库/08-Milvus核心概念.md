@@ -26,14 +26,21 @@ Milvus 是一个开源的分布式向量数据库，专为处理海量向量数�
 ```python
 from pymilvus import CollectionSchema, FieldSchema, DataType
 
+# 定义集合的字段列表，每个 FieldSchema 描述一个列的名称、数据类型和约束
 fields = [
+    # 主键字段，INT64 类型，用于唯一标识集合中的每一条记录
     FieldSchema(name="id", dtype=DataType.INT64, is_primary=True),
+    # 向量字段，FLOAT_VECTOR 类型，dim=768 表示嵌入维度（需与所用嵌入模型的输出维度一致）
     FieldSchema(name="embedding", dtype=DataType.FLOAT_VECTOR, dim=768),
+    # 原始文本字段，VARCHAR 类型，最大长度 4096 字符，用于在检索结果中返回原文供下游 LLM 使用
     FieldSchema(name="text", dtype=DataType.VARCHAR, max_length=4096),
+    # 分类标签字段，可在搜索时配合 expr 参数进行标量预过滤，提升检索效率
     FieldSchema(name="category", dtype=DataType.VARCHAR, max_length=64),
 ]
 
+# 将字段列表封装为集合 Schema，description 用于说明集合的业务用途（便于运维分类管理）
 schema = CollectionSchema(fields, description="RAG 知识库")
+# 使用 Schema 创建名为 "edu_rag" 的集合实例，集合名称类似 MySQL 的表名，需在整个集群中唯一
 collection = Collection(name="edu_rag", schema=schema)
 ```
 
@@ -51,19 +58,28 @@ collection = Collection(name="edu_rag", schema=schema)
 ## 相似度搜索
 
 ```python
+# Milvus 采用懒加载（Lazy Loading）机制，load() 将指定集合的数据加载到内存，之后才能执行搜索操作
 collection.load()                              # 加载到内存
 
+# 配置搜索参数：metric_type 决定距离度量方式，nprobe 控制搜索时探测的聚类数（值越大精度越高但延迟也越大）
 search_params = {
     "metric_type": "IP",                        # 内积（或 L2、COSINE）
     "params": {"nprobe": 10}                    # 搜索的聚类数
 }
 
+# 执行 ANN（近似最近邻）搜索，返回与 query_vector 最相似的 Top-K 条结果
 results = collection.search(
+    # 查询向量列表（可传入多个向量实现批量搜索），每个向量维度需与 Schema 中定义的 dim 一致
     data=[query_vector],                        # 查询向量
+    # 指定搜索的目标向量字段名，必须与 Schema 中定义的向量字段名称保持一致
     anns_field="embedding",                     # 向量字段名
+    # 传入搜索参数字典，包含 metric_type 和 nprobe，控制本次搜索的度量与精度行为
     param=search_params,
+    # 返回最相似的 K 条结果，K 值取决于业务场景（对话检索常用 3~5，RAG 知识库常用 10~20）
     limit=10,                                   # 返回 Top-10
+    # 标量过滤表达式，在向量搜索前先通过标量字段筛选数据子集（混合检索 Hybrid Search 的核心手段）
     expr="category == 'math'",                  # 标量过滤
+    # 除主键和距离值外额外返回的字段，避免根据主键二次回表查询，减少 I/O 开销
     output_fields=["text"]                      # 返回字段
 )
 ```

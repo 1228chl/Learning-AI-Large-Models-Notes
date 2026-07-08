@@ -49,6 +49,8 @@ BERT（Bidirectional Encoder Representations from Transformers）是 2018 年由
 ```python
 from transformers import BertModel
 
+# 从 HuggingFace Hub 加载预训练的 BERT-base 英文模型（uncased：不区分大小写）
+# 该模型含 12 层 Transformer 编码器，已在超大规模英文语料上完成预训练
 model = BertModel.from_pretrained('bert-base-uncased')
 # 12 层 Transformer 编码器
 # 12 个注意力头
@@ -90,8 +92,10 @@ model = BertModel.from_pretrained('bert-base-uncased')
 from transformers import BertForSequenceClassification
 
 # 加载预训练 BERT + 分类头
+# 加载带分类输出头的 BERT 模型，在预训练权重基础上添加线性分类层用于微调
 model = BertForSequenceClassification.from_pretrained(
-    'bert-base-chinese', num_labels=2
+    'bert-base-chinese',  # 加载中文预训练 BERT 权重，适应中文文本分类任务
+    num_labels=2           # 指定输出类别数为 2（二分类任务，如正面/负面情感）
 )
 ```
 

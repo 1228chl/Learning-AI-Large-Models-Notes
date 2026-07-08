@@ -30,7 +30,7 @@ $$
 ```python
 import torch.nn as nn
 
-lstm = nn.LSTM(input_size=100, hidden_size=256, num_layers=2, batch_first=True)
+lstm = nn.LSTM(input_size=100, hidden_size=256, num_layers=2, batch_first=True)  # 创建LSTM层，通过门控机制和细胞状态捕捉长距离依赖
 output, (h_n, c_n) = lstm(x)     # output: (N, L, 256), c_n: 细胞状态
 ```
 

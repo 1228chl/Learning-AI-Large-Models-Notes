@@ -30,18 +30,28 @@ aliases: ["Socket", "网络编程", "TCP", "UDP"]
 ```python
 # === 服务端（Server） ===
 import socket
+# 创建 TCP 套接字：AF_INET 表示 IPv4，SOCK_STREAM 表示 TCP 协议
 server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+# 绑定 IP 和端口：'0.0.0.0' 表示监听所有网卡地址
 server.bind(('0.0.0.0', 8080))    # 绑定地址和端口
+# 开始监听：参数 5 表示最大等待连接数（连接队列长度）
 server.listen(5)                   # 监听，最多 5 个排队
+# accept 是阻塞调用：等待客户端连接，返回新套接字和客户端地址
 conn, addr = server.accept()       # 阻塞等待客户端连接
+# 从客户端接收数据，最多 1024 字节（需要循环读取以获取完整消息）
 data = conn.recv(1024)             # 接收数据
+# 向客户端发送二进制数据（字符串需编码为 bytes）
 conn.send(b'Hello')                # 发送数据
+# 关闭连接，释放资源（触发 TCP 四次挥手）
 conn.close()
 
 # === 客户端（Client） ===
 client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+# 连接到服务端：127.0.0.1 表示本地回环地址（本机）
 client.connect(('127.0.0.1', 8080))
+# 向服务端发送二进制数据
 client.send(b'Hello Server')
+# 接收服务端的响应
 data = client.recv(1024)
 client.close()
 ```
@@ -58,17 +68,25 @@ client.close()
 ## HTTP 协议基础
 
 ```python
-# 最简 HTTP 服务端
+# 最简 HTTP 服务端：基于标准库 http.server 实现，封装了底层 Socket 细节
 from http.server import HTTPServer, BaseHTTPRequestHandler
 
+# 自定义请求处理器：继承 BaseHTTPRequestHandler 并重写 do_GET 方法
 class Handler(BaseHTTPRequestHandler):
+    # 处理 GET 请求：当客户端发起 GET 请求时自动调用此方法
     def do_GET(self):
+        # 发送 HTTP 响应状态码（200 表示成功）
         self.send_response(200)
+        # 设置响应头：告知客户端返回内容的类型
         self.send_header('Content-type', 'text/plain')
+        # 结束响应头部，之后发送的内容属于响应体
         self.end_headers()
+        # 写入响应体内容（wfile 是用于写入响应的文件类对象）
         self.wfile.write(b'Hello, AI World!')
 
+# 创建 HTTP 服务实例：绑定到 0.0.0.0:8000，使用自定义的 Handler 处理请求
 server = HTTPServer(('0.0.0.0', 8000), Handler)
+# 启动服务并永久运行，监听并处理进入的 HTTP 请求
 server.serve_forever()
 ```
 

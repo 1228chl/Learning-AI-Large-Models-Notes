@@ -30,12 +30,12 @@ $$
 ```python
 from sklearn.linear_model import Ridge, RidgeCV
 
-# 自动用交叉验证选最优 alpha（= λ）
+# 自动用交叉验证选择最优alpha（= λ），在候选值列表中找使验证集误差最小的正则化强度
 ridge = RidgeCV(alphas=[0.01, 0.1, 1.0, 10.0], cv=5)
 ridge.fit(X_train, y_train)
-print(f"最佳 alpha: {ridge.alpha_}")
+print(f"最佳 alpha: {ridge.alpha_}")  # 输出交叉验证选择的最优alpha值
 
-# 手动指定
+# 手动指定alpha：若已知合适的正则化强度，可直接传入
 ridge = Ridge(alpha=1.0)
 ridge.fit(X_train, y_train)
 ```
@@ -49,9 +49,10 @@ L2 的约束区域是**圆形**：
 - 所有权重均匀缩小，但都不为零
 
 ```python
+# L2约束的几何解释：权重向量必须落在圆形约束区域内
 约束条件：w₁² + w₂² ≤ t
 　　　　↕
-三维中是球体，高维中是超球体
+三维中是球体，高维中是超球体（各维度权重均匀缩小但不为零）
 ```
 
 ## 特性总结

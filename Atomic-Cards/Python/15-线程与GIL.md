@@ -47,26 +47,31 @@ $$
 ```python
 import threading
 
-# 1. 创建线程
+# 1. 创建线程：定义线程要执行的函数，然后通过 Thread 对象启动
 def worker(name):
     print(f"Thread {name} running")
 
+# Thread 构造函数传入目标函数和参数，start() 在新线程中调用 worker，
+# join() 阻塞当前线程（通常为主线程）直到该线程执行完毕，用于同步等待
 t = threading.Thread(target=worker, args=("A",))
 t.start()
-t.join()     # 等待完成
+t.join()
 
-# 2. 继承 Thread 类
+# 2. 继承 Thread 类：通过重写 run 方法自定义线程行为，
+# 调用 start() 后自动在新线程中执行 run() 方法中的代码
 class MyThread(threading.Thread):
     def run(self):
-        pass  # 线程入口
+        pass
 
-# 3. 线程局部数据
+# 3. 线程局部数据：threading.local() 创建每个线程独立的存储空间，
+# 每个线程对 local_data.value 的读写互不干扰，适合存储当前线程的上下文信息（如数据库连接、用户会话）
 local_data = threading.local()
-local_data.value = 42    # 每个线程拥有独立副本
+local_data.value = 42
 
-# 4. 守护线程
+# 4. 守护线程：daemon=True 表示该线程为守护线程，
+# 当主进程退出时，所有守护线程会自动终止而不需要显式等待，
+# 适合后台周期性任务、日志监控、指标采集等场景
 t = threading.Thread(target=worker, daemon=True)
-# 主进程退出时守护线程自动终止
 ```
 
 ## 线程同步机制
@@ -83,36 +88,43 @@ t = threading.Thread(target=worker, daemon=True)
 ```python
 import threading
 
-# Lock 示例
+# Lock（互斥锁）示例：保护共享计数器，确保多个线程交替修改时数据不会错乱
 lock = threading.Lock()
 shared_counter = 0
 
 def increment():
     global shared_counter
     for _ in range(1000):
-        with lock:      # 自动 acquire/release
+        # with lock 自动执行 acquire() 和 release()：获取锁时其他线程必须等待，
+        # 释放后下一个线程才能继续，保证了 shared_counter += 1 的原子性
+        with lock:
             shared_counter += 1
 
-# RLock 示例（可重入）
+# RLock（可重入锁）示例：允许同一线程多次获取锁而不会自我死锁
+# 这对递归函数中需要保护共享资源至关重要——普通 Lock 在递归时会因为已持有锁而阻塞自己
 rlock = threading.RLock()
 def recursive_lock(n):
     with rlock:
         if n > 0:
-            recursive_lock(n - 1)   # 同一线程可重复获取
+            recursive_lock(n - 1)
 
-# Condition 示例（生产者-消费者）
+# Condition（条件变量）示例：实现生产者-消费者模式，避免忙等待（busy waiting）
+# 生产者和消费者共享一个条件锁，通过 wait/notify 机制协调数据产出和消费的节奏
 cv = threading.Condition()
 buffer = []
 
 def producer():
     with cv:
+        # 生产者获取条件锁，将数据放入缓冲区，然后通知消费者有新数据可用
         buffer.append(item)
-        cv.notify()     # 唤醒消费者
+        cv.notify()
 
 def consumer():
     with cv:
+        # 消费者获取条件锁后检查缓冲区：如果没有数据则调用 wait() 释放锁并阻塞等待，
+        # 被 notify 唤醒后重新获取锁，再次检查条件（防止虚假唤醒），确认有数据后取出
         while not buffer:
-            cv.wait()   # 等待生产者 notify
+            cv.wait()
         item = buffer.pop()
 ```
 

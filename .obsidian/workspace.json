@@ -13,13 +13,13 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Atomic-Cards/原子化生成提示词.md",
+                "file": "Atomic-Cards/机器学习/27-Boosting.md",
                 "mode": "source",
                 "source": false,
                 "backlinks": false
               },
               "icon": "lucide-file",
-              "title": "原子化生成提示词"
+              "title": "27-Boosting"
             }
           },
           {
@@ -235,12 +235,20 @@
   },
   "active": "e5c6004f44c0e722",
   "lastOpenFiles": [
-    "Atomic-Cards/原子化生成提示词.md.tmp.16708.fd8369665f85",
+    "Atomic-Cards/机器学习/21-L2正则化(Ridge).md.tmp.16708.56330eb2bc2b",
+    "Atomic-Cards/机器学习/21-L2正则化(Ridge).md.tmp.16708.a2b4ab3b9696",
+    "Atomic-Cards/机器学习/20-正则化.md.tmp.16708.95dd156137db",
+    "Atomic-Cards/机器学习/19-模型选择与超参数调优.md.tmp.16708.bdf71ca8a3d9",
+    "Atomic-Cards/机器学习/19-模型选择与超参数调优.md.tmp.16708.34d262685ef0",
+    "Atomic-Cards/数据库/09-Milvus Python操作指南.md.tmp.16708.2dc67b3c2f7a",
+    "Atomic-Cards/机器学习/18-特征工程.md.tmp.16708.9afbf1b597fb",
+    "Atomic-Cards/机器学习/18-特征工程.md.tmp.16708.b42a90c2c2b7",
+    "Atomic-Cards/数据库/09-Milvus Python操作指南.md.tmp.16708.74b70ad5b6f1",
+    "Atomic-Cards/数据结构与算法/15-贪心算法.md.tmp.16708.b96cef3016bd",
+    "Atomic-Cards/数据库/09-Milvus Python操作指南.md.tmp.16708.311b910a4271",
+    "Atomic-Cards/原子化生成提示词.md",
     "Atomic-Cards/机器学习/04-评估指标.md",
     "Atomic-Cards/机器学习/05-过拟合与欠拟合.md",
-    "Atomic-Cards/深度学习/16-光滑损失函数.md.tmp.31264.4aae51a0c4ee",
-    "Atomic-Cards/原子化生成提示词.md",
-    "Atomic-Cards/机器学习/04-评估指标.md.tmp.31264.2c53d9451b89",
     "Atomic-Cards/微积分与优化/04-Hessian矩阵与二阶导.md",
     "Atomic-Cards/微积分与优化/02-链式法则.md",
     "Atomic-Cards/Linux/04-权限管理.md",
@@ -252,14 +260,6 @@
     "Atomic-Cards/深度学习/02-激活函数.md",
     "Atomic-Cards/工程实践/06-Ollama与本地LLM部署.md",
     "Atomic-Cards/工程实践/07-LLM API调用与ChatBot.md",
-    "Atomic-Cards/机器学习/09-朴素贝叶斯.md.tmp.2932.05b595c0f902",
-    "Atomic-Cards/Python/13-多态与鸭子类型.md.tmp.2932.b6ad16f7ef7b",
-    "Atomic-Cards/深度学习/20-模型剪枝(Pruning).md.tmp.2932.bae667c72a17",
-    "Atomic-Cards/深度学习/19-模型量化(Quantization).md.tmp.2932.0cf4c971f8ac",
-    "Atomic-Cards/机器学习/23-ElasticNet正则化.md.tmp.2932.79aad8b2cfc7",
-    "Atomic-Cards/深度学习/15-模型压缩量化剪枝蒸馏.md.tmp.2932.b7ba9aeb6513",
-    "Atomic-Cards/原子化生成提示词.md.tmp.2932.a60020acfb59",
-    "Atomic-Cards/原子化生成提示词.md.tmp.2932.fa3395c07ec9",
     "Atomic-Cards/工程实践/03-Git版本控制.md",
     "Atomic-Cards/工程实践/05-模型保存格式.md",
     "Atomic-Cards/机器学习/19-模型选择与超参数调优.md",

@@ -20,33 +20,34 @@ $$
 ```python
 from sklearn.cluster import KMeans
 
+# 创建K-means聚类器，将数据划分为5个簇，固定随机种子确保结果可复现
 kmeans = KMeans(n_clusters=5, random_state=42)
-kmeans.fit(X)
+kmeans.fit(X)  # 迭代优化：分配样本到最近中心 → 更新中心 → 重复直到收敛
 
-labels = kmeans.labels_                # 每个样本所属簇
-centers = kmeans.cluster_centers_      # 簇中心坐标
-inertia = kmeans.inertia_              # 簇内平方和
+labels = kmeans.labels_                # 每个样本所属簇的编号（0到K-1）
+centers = kmeans.cluster_centers_      # 簇中心坐标（K个点的位置）
+inertia = kmeans.inertia_              # 簇内平方和（所有样本到其簇中心的距离平方和），越小越紧密
 ```
 
 ## 算法步骤
 
 ```python
-# K-means 手动实现核心逻辑
+# K-means 手动实现核心逻辑：迭代执行分配-更新步骤直到收敛
 import numpy as np
 
 def kmeans(X, K, max_iters=100):
-    # 1. 随机初始化 K 个簇中心
+    # 1. 随机初始化 K 个簇中心：从数据中随机抽取K个样本作为初始中心
     centers = X[np.random.choice(len(X), K, replace=False)]
 
     for _ in range(max_iters):
-        # 2. 分配：每个样本归到最近的簇中心
-        distances = np.linalg.norm(X[:, None] - centers, axis=2)
-        labels = np.argmin(distances, axis=1)
+        # 2. 分配步骤：每个样本归到最近的簇中心
+        distances = np.linalg.norm(X[:, None] - centers, axis=2)  # 计算所有样本到所有中心的距离
+        labels = np.argmin(distances, axis=1)  # 每个样本选择最近的中心作为所属簇
 
-        # 3. 更新：重新计算每个簇的中心
+        # 3. 更新步骤：重新计算每个簇的中心（取簇内所有点的均值）
         new_centers = np.array([X[labels == k].mean(axis=0) for k in range(K)])
 
-        # 4. 收敛检查
+        # 4. 收敛检查：如果中心不再变化，说明算法已收敛
         if np.all(centers == new_centers):
             break
         centers = new_centers
@@ -57,23 +58,23 @@ def kmeans(X, K, max_iters=100):
 ## 如何选择 K
 
 ```python
-# 肘部法（Elbow Method）
+# 肘部法（Elbow Method）：通过观察惯性随K值变化的曲线选择最优K
 inertias = []
 K_range = range(1, 11)
 
 for k in K_range:
     kmeans = KMeans(n_clusters=k, random_state=42)
     kmeans.fit(X)
-    inertias.append(kmeans.inertia_)
+    inertias.append(kmeans.inertia_)  # 记录当前K下的簇内平方和
 
-# 画图：惯性下降变缓的"拐点"即为最优 K
-# silhouette_score（轮廓系数）
+# 画图观察：惯性下降变缓的"拐点"即为最优 K
+# silhouette_score（轮廓系数）：衡量簇内紧密度和簇间分离度，取值范围[-1,1]，越大越好
 from sklearn.metrics import silhouette_score
 
 for k in range(2, 11):
     kmeans = KMeans(n_clusters=k, random_state=42)
-    labels = kmeans.fit_predict(X)
-    score = silhouette_score(X, labels)
+    labels = kmeans.fit_predict(X)   # 训练并直接获取聚类标签
+    score = silhouette_score(X, labels)  # 计算当前K的轮廓系数
     print(f"K={k}, Silhouette={score:.4f}")
 ```
 
@@ -97,8 +98,8 @@ for k in range(2, 11):
 ```python
 from sklearn.cluster import MiniBatchKMeans
 
-# 适合大数据（每次用一小批样本更新）
-mbk = MiniBatchKMeans(n_clusters=5, batch_size=1024)
+# Mini-Batch K-means：适合大数据集，每次用一小批样本更新簇中心，大幅提升训练速度
+mbk = MiniBatchKMeans(n_clusters=5, batch_size=1024)  # batch_size控制每次处理的样本数
 mbk.fit(X_large)
 ```
 

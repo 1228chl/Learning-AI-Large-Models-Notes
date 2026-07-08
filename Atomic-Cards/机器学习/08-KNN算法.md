@@ -19,15 +19,15 @@ K-近邻（K-Nearest Neighbors, KNN）是一种**非参数**、**惰性学习**�
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.neighbors import KNeighborsRegressor
 
-# 分类
-clf = KNeighborsClassifier(n_neighbors=5, metric='euclidean')
-clf.fit(X_train, y_train)
-y_pred = clf.predict(X_test)
+# 分类：用最近5个邻居投票决定新样本的类别
+clf = KNeighborsClassifier(n_neighbors=5, metric='euclidean')  # n_neighbors=K, metric=距离度量方式
+clf.fit(X_train, y_train)  # KNN的"训练"实际是存储训练数据，不做显式学习
+y_pred = clf.predict(X_test)  # 计算测试样本到所有训练样本的距离，取最近K个邻居投票
 
-# 回归（用邻居的平均值）
+# 回归（用邻居的平均值作为预测结果）
 reg = KNeighborsRegressor(n_neighbors=5)
 reg.fit(X_train, y_train)
-y_pred = reg.predict(X_test)
+y_pred = reg.predict(X_test)  # 用最近K个邻居目标值的均值作为预测结果
 ```
 
 ## 三个关键因素
@@ -41,17 +41,17 @@ y_pred = reg.predict(X_test)
 | **√n** | 适中 | 适中 | — | 经验法则 |
 
 ```python
-# 用交叉验证选最优 K
+# 用交叉验证选最优 K：遍历K值范围，选择验证集平均得分最高的K
 from sklearn.model_selection import cross_val_score
 
-k_range = range(1, 31)
+k_range = range(1, 31)  # 尝试K从1到30
 scores = []
 for k in k_range:
     knn = KNeighborsClassifier(n_neighbors=k)
-    cv_score = cross_val_score(knn, X_train, y_train, cv=5).mean()
+    cv_score = cross_val_score(knn, X_train, y_train, cv=5).mean()  # 5折交叉验证的平均准确率
     scores.append(cv_score)
 
-best_k = k_range[np.argmax(scores)]
+best_k = k_range[np.argmax(scores)]  # 取交叉验证得分最高的K值
 ```
 
 ### 2. 距离度量
@@ -70,9 +70,10 @@ KNN 严重依赖**距离**计算，因此特征必须**归一化/标准化**，�
 ```python
 from sklearn.preprocessing import StandardScaler
 
+# KNN依赖距离计算，必须标准化使所有特征在同一尺度，防止量级大的特征主导距离
 scaler = StandardScaler()
-X_train = scaler.fit_transform(X_train)
-X_test = scaler.transform(X_test)        # 用训练集的参数
+X_train = scaler.fit_transform(X_train)  # 在训练集上计算均值和标准差并转换
+X_test = scaler.transform(X_test)        # 用训练集的均值和标准差转换测试集（防止数据泄露）
 ```
 
 ## 算法特性
@@ -87,11 +88,11 @@ X_test = scaler.transform(X_test)        # 用训练集的参数
 ## 适用于 KNN 的场景
 
 ```python
-# KNN 适合：低维、小数据、决策边界不规则
-# KNN 不适合：高维（维度灾难）、大数据（预测太慢）、特征尺度不一
+# KNN 适合场景：低维数据（特征少）、样本量小、决策边界形状不规则
+# KNN 不适合场景：高维数据（维度灾难使距离度量失效）、大数据量（预测时需要计算所有距离，速度慢）、特征尺度不统一
 
-# 维度灾难：高维空间中所有点距离趋于相等，KNN 失效
-# 对策：降维（PCA）后再用 KNN
+# 维度灾难：高维空间中所有点之间的距离趋于相等，最近邻和最远邻差距极小，KNN"邻近"概念失效
+# 对策：先降维（如PCA）后再用 KNN，在高维空间邻近性仍能保持时有效
 ```
 
 ## 面试追问

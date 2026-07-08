@@ -21,9 +21,9 @@ $d$ 为特征维度，$\gamma$（缩放）和 $\beta$（偏移）是可学习参
 
 ```python
 import torch.nn as nn
-ln = nn.LayerNorm(512)             # d_model = 512
-x = torch.randn(2, 10, 512)       # (batch, seq_len, d_model)
-y = ln(x)                          # 每个 (2, 10) 位置的 512 维向量独立归一化
+ln = nn.LayerNorm(512)                         # 创建 LayerNorm 层，归一化维度设为 512（对应 Transformer 的 d_model）
+x = torch.randn(2, 10, 512)                   # 模拟输入张量：(batch_size=2, seq_len=10, hidden_dim=512)
+y = ln(x)                                      # 对每个样本每个位置独立计算均值/方差，在特征维上归一化为 N(0,1) 后缩放平移
 ```
 
 ## 核心公式与分类
@@ -42,9 +42,9 @@ y = ln(x)                          # 每个 (2, 10) 位置的 512 维向量独�
 ```python
 # 直观区别
 # BN: 在 N 个样本间归一化某个特征维度
-mu_bn = x.mean(dim=0)   # shape = (L, d)
+mu_bn = x.mean(dim=0)                          # BatchNorm：沿批次维度（dim=0）计算均值，统计量形状为 (seq_len, hidden_dim)
 # LN: 在一个样本内归一化所有特征维度
-mu_ln = x.mean(dim=-1)  # shape = (N, L)
+mu_ln = x.mean(dim=-1)                         # LayerNorm：沿特征维度（dim=-1）计算均值，每个位置独立统计，形状为 (batch, seq_len)
 ```
 
 ### RMS Norm

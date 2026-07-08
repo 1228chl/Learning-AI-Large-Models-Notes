@@ -16,16 +16,17 @@ Redis（Remote Dictionary Server）是一个**内存型键值数据库**。数�
 ```python
 import redis
 
+# 连接本地 Redis 服务实例；decode_responses=True 使响应自动解码为字符串，避免手动处理 bytes 类型
 r = redis.Redis(host='localhost', port=6379, decode_responses=True)
 ```
 
 ### String（字符串）— 最基础
 
 ```python
-r.set('key', 'value')           # 写入
-r.get('key')                    # 读取 → 'value'
-r.incr('counter')               # 原子自增（分布式计数）
-r.setex('token', 3600, 'abc')   # 带过期时间的写入
+r.set('key', 'value')           # 设置键值对，若 key 已存在则覆盖旧值
+r.get('key')                    # 根据 key 获取值，key 不存在时返回 None → 'value'
+r.incr('counter')               # 原子自增操作，线程/进程安全，适合并发环境下的计数器（如 PV/UV）
+r.setex('token', 3600, 'abc')   # 写入带过期时间的键值对（秒级 TTL），到期自动删除，适合存储临时凭证或缓存数据
 ```
 
 | 适用场景 | 示例 |
@@ -37,10 +38,10 @@ r.setex('token', 3600, 'abc')   # 带过期时间的写入
 ### Hash（哈希）— 存储对象
 
 ```python
-r.hset('user:1001', 'name', 'Alice')
-r.hset('user:1001', 'score', 0.95)
-r.hgetall('user:1001')           # {'name': 'Alice', 'score': '0.95'}
-r.hincrby('user:1001', 'score', 1)
+r.hset('user:1001', 'name', 'Alice')       # 在哈希 user:1001 中设置字段 name 的值，同个 key 下可存多个字段
+r.hset('user:1001', 'score', 0.95)         # 继续向同一哈希添加字段 score，适合表示对象的多个属性
+r.hgetall('user:1001')                     # 获取哈希下的所有字段与值，以字典形式返回 → {'name': 'Alice', 'score': '0.95'}
+r.hincrby('user:1001', 'score', 1)         # 对哈希中某数值字段原子自增，无需先读取再写入，避免竞态条件
 ```
 
 适合存储结构化对象，如实验配置、用户画像特征。
@@ -48,9 +49,9 @@ r.hincrby('user:1001', 'score', 1)
 ### List（列表）— 消息队列
 
 ```python
-r.lpush('queue:train', 'job_1')      # 左侧入队
-r.rpop('queue:train')                 # 右侧出队 → 'job_1'
-r.llen('queue:train')                 # 队列长度
+r.lpush('queue:train', 'job_1')      # 从队列左侧插入元素（头插法），生产者/任务分发方使用
+r.rpop('queue:train')                 # 从队列右侧移除并返回元素（尾出法），消费者 Worker 取出任务 → 'job_1'
+r.llen('queue:train')                 # 返回队列当前长度，用于监控任务积压情况和消费者处理能力
 ```
 
 适用于简单的消息队列、日志队列。
@@ -58,9 +59,9 @@ r.llen('queue:train')                 # 队列长度
 ### Set（集合）— 去重与关系
 
 ```python
-r.sadd('model:runned', 'bert-01', 'gpt-02')
-r.smembers('model:runned')                  # 所有已运行模型
-r.sismember('model:runned', 'bert-01')      # 判断是否存在 → True
+r.sadd('model:runned', 'bert-01', 'gpt-02')      # 向集合添加一个或多个元素，重复元素自动去重
+r.smembers('model:runned')                        # 返回集合中的所有元素（无顺序保证）→ 所有已运行模型
+r.sismember('model:runned', 'bert-01')            # O(1) 时间检查元素是否存在，比遍历列表更高效 → True
 ```
 
 适用于去重、共同关注、交并补运算。
@@ -68,9 +69,9 @@ r.sismember('model:runned', 'bert-01')      # 判断是否存在 → True
 ### Sorted Set（有序集合）— 排行榜
 
 ```python
-r.zadd('leaderboard', {'model_a': 0.95, 'model_b': 0.92, 'model_c': 0.88})
-r.zrevrange('leaderboard', 0, 2, withscores=True)     # Top 3
-r.zscore('leaderboard', 'model_a')                     # 查分数
+r.zadd('leaderboard', {'model_a': 0.95, 'model_b': 0.92, 'model_c': 0.88})   # 添加成员并指定分数，分数作为排序依据，支持批量添加
+r.zrevrange('leaderboard', 0, 2, withscores=True)                            # 按分数从高到低取 Top 3，withscores=True 同时返回分数值
+r.zscore('leaderboard', 'model_a')                                            # 获取指定成员的分数，用于快速查分或在更新前判断当前值
 ```
 
 适用于排行榜、带权重的任务队列。

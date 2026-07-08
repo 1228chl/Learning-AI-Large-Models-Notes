@@ -30,8 +30,8 @@ $$
 ```python
 import torch.nn as nn
 
-gru = nn.GRU(input_size=100, hidden_size=256, num_layers=2, batch_first=True)
-output, h_n = gru(x)
+gru = nn.GRU(input_size=100, hidden_size=256, num_layers=2, batch_first=True)  # 创建GRU层，LSTM的简化变体，参数量更少计算更快
+output, h_n = gru(x)  # 前向传播：output为所有时间步输出，h_n为最后一个时间步隐藏状态
 
 # 与 LSTM 的对比
 lstm = nn.LSTM(100, 256)     # params = 4 × (100×256 + 256×256 + 256) ≈ 365K

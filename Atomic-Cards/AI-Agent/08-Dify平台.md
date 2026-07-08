@@ -49,14 +49,15 @@ docker compose up -d
 # Dify 提供的 API（发布后自动生成）
 import requests
 
+# 向Dify的对话型应用发送聊天请求，获取AI回复
 response = requests.post(
     "http://localhost:3000/api/chat-messages",
     json={
-        "query": "什么是注意力机制？",
-        "user": "user_123",
-        "response_mode": "streaming"
+        "query": "什么是注意力机制？",  # 用户提问的内容
+        "user": "user_123",  # 用户标识，用于区分不同对话
+        "response_mode": "streaming"  # 流式响应模式，实现逐词输出的效果
     },
-    headers={"Authorization": "Bearer app-xxxx"}
+    headers={"Authorization": "Bearer app-xxxx"}  # API密钥认证，app-xxxx需替换为实际密钥
 )
 ```
 

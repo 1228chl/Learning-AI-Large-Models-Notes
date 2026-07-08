@@ -24,11 +24,12 @@ GPU 通过数千个 CUDA 核心并行执行**矩阵乘法**等运算。混合精
 ```python
 import torch
 
-# 检查 GPU 状态
-print(torch.cuda.is_available())          # CUDA 是否可用
-print(torch.cuda.device_count())          # GPU 数量
-print(torch.cuda.get_device_name(0))      # GPU 型号
-print(torch.cuda.get_device_properties(0))  # 显存等信息
+# 检查 GPU 状态：任何 GPU 训练脚本的第一步，确认 CUDA 环境就绪后才能执行后续操作
+# 避免在不支持 GPU 的环境下运行时报错，便于快速定位硬件配置问题
+print(torch.cuda.is_available())          # 返回 bool，确认 CUDA 驱动和库是否可用
+print(torch.cuda.device_count())          # 返回 GPU 数量，用于规划数据并行时的设备分配
+print(torch.cuda.get_device_name(0))      # 获取 GPU 型号名称，便于区分开发与生产环境的硬件差异
+print(torch.cuda.get_device_properties(0))  # 打印显存总量、计算能力等详细硬件属性，辅助判断模型能否装入
 ```
 
 ## 混合精度训练（AMP）
@@ -37,17 +38,24 @@ print(torch.cuda.get_device_properties(0))  # 显存等信息
 from torch.cuda.amp import autocast, GradScaler
 
 model = MyModel().cuda()
-scaler = GradScaler()                     # 梯度缩放（防止 FP16 下溢）
+# 初始化梯度缩放器：FP16 的动态范围远小于 FP32，微小梯度会下溢为 0
+# GradScaler 在反向传播前放大 loss，使所有梯度进入 FP16 可表示范围，更新权重前再缩小复原
+scaler = GradScaler()
 
 for data, target in dataloader:
     optimizer.zero_grad()
 
-    with autocast():                      # 自动混合精度
+    # autocast 上下文管理器：自动为每个算子选择 FP16 或 FP32 执行
+    # 矩阵乘法、卷积等密集运算使用 FP16 加速（2-8x），LayerNorm、Softmax 等敏感操作保留 FP32
+    with autocast():
         output = model(data)
         loss = criterion(output, target)
 
-    scaler.scale(loss).backward()          # FP16 梯度放大
-    scaler.step(optimizer)                # 缩小后更新 FP32 参数
+    # 缩放后的反向传播：scaler.scale(loss) 将 loss 乘以当前缩放因子，防止 FP16 下溢
+    scaler.scale(loss).backward()
+    # step 内部将累积的梯度除以缩放因子恢复原始尺度，再用 FP32 精度更新参数
+    scaler.step(optimizer)
+    # 动态调整缩放因子：若本轮无梯度上溢，下次增大缩放因子；有上溢则跳过本轮更新并缩小因子
     scaler.update()
 ```
 
@@ -61,15 +69,17 @@ for data, target in dataloader:
 ## 分布式训练
 
 ```python
-# 单机多卡（DataParallel — 简单但慢）
+# 单机多卡方案一（DataParallel）：一行代码即可启用，但存在性能瓶颈
+# 主卡作为汇聚节点负责梯度汇总，通信量随卡数线性增长，且不支持多节点扩展
 model = nn.DataParallel(model)
 
-# 推荐：DistributedDataParallel（更快）
-# 启动命令：
-# torchrun --nproc_per_node=4 train.py
+# 推荐方案二：DistributedDataParallel（DDP）—— 官方推荐的高性能方案
+# 每个进程独立维护完整模型副本，仅在反向传播时通过 NCCL 后端异步同步梯度
+# 无主卡瓶颈，通信效率远高于 DataParallel，支持多机多卡
+# 启动方式：torchrun --nproc_per_node=4 train.py
 import torch.distributed as dist
-dist.init_process_group(backend='nccl')
-model = nn.DDP(model, device_ids=[local_rank])
+dist.init_process_group(backend='nccl')  # 初始化分布式进程组，NCCL 是 NVIDIA 优化的 GPU 通信库
+model = nn.DDP(model, device_ids=[local_rank])  # 包装为分布式模型，local_rank 为当前进程绑定的 GPU 编号
 ```
 
 | 并行策略 | 原理 | 适用 | 通信开销 |

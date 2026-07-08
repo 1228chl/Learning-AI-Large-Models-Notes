@@ -19,7 +19,7 @@ $$
 
 ```python
 # Agent 的简化循环
-def agent_loop(query):
+def agent_loop(query):  # 定义 Agent 主循环函数，接收用户的原始查询作为输入
     # 1. 感知：理解用户输入
     # 2. 规划：拆解任务步骤
     # 3. 行动：调用工具获取信息

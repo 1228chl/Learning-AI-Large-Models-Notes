@@ -26,15 +26,15 @@ from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain.embeddings import HuggingFaceEmbeddings
 from langchain.vectorstores import Milvus
 
-# 文档切分
+# 文档切分：将长文档切割为适合 LLM 上下文的固定大小文本块
 text_splitter = RecursiveCharacterTextSplitter(
-    chunk_size=500, chunk_overlap=50
+    chunk_size=500, chunk_overlap=50  # 每块最大500字符，块间重叠50字符避免边界信息丢失
 )
-chunks = text_splitter.split_documents(documents)
+chunks = text_splitter.split_documents(documents)  # 执行切分，返回文本块列表
 
-# 向量化并存储
-embeddings = HuggingFaceEmbeddings(model_name="BAAI/bge-base-zh")
-vector_store = Milvus.from_documents(chunks, embeddings)
+# 向量化并存储：将文本块转换为向量后存入 Milvus 向量数据库
+embeddings = HuggingFaceEmbeddings(model_name="BAAI/bge-base-zh")  # 加载中英双语嵌入模型
+vector_store = Milvus.from_documents(chunks, embeddings)  # 将向量化后的文档存入 Milvus，完成索引构建
 ```
 
 ### 2. 检索阶段（Retrieval）
@@ -53,12 +53,12 @@ vector_store = Milvus.from_documents(chunks, embeddings)
 from langchain.llms import OpenAI
 from langchain.chains import RetrievalQA
 
+# 构建 RAG 问答链：将检索器与 LLM 组合，实现"检索→增强→生成"的完整流程
 qa = RetrievalQA.from_chain_type(
-    llm=OpenAI(),
-    retriever=vector_store.as_retriever(search_kwargs={"k": 3})
+    llm=OpenAI(),  # 使用 OpenAI 的 LLM 作为生成模型
+    retriever=vector_store.as_retriever(search_kwargs={"k": 3})  # 设置检索器，每次查询返回 Top-3 最相关文档
 )
-answer = qa.run("什么是注意力机制？")
-```
+answer = qa.run("什么是注意力机制？")  # 执行问答：先检索相关文档，再让 LLM 基于检索结果生成回答
 
 ## 为什么需要 RAG？
 

@@ -49,45 +49,60 @@ HTTP（HyperText Transfer Protocol，超文本传输协议）是 Web 通信的�
 ```python
 import requests
 
-# 调用 LLM API 的完整错误处理
+# 调用 LLM API 的完整错误处理：涵盖网络层和 HTTP 状态层的所有常见异常
+# 生产环境应结合 tenacity 等重试库实现指数退避，而非仅打印日志
 def call_llm_api(url, api_key, messages):
+    # 标准 HTTP 认证头：Bearer Token 是 LLM API 通用的鉴权方式
     headers = {
         "Authorization": f"Bearer {api_key}",
-        "Content-Type": "application/json"
+        "Content-Type": "application/json"    # 声明请求体为 JSON 格式
     }
     try:
+        # timeout=30 同时设置连接超时和读取超时，防止网络故障时无限挂起
         response = requests.post(
             url, headers=headers,
             json={"model": "gpt-4o-mini", "messages": messages},
             timeout=30
         )
+        # 根据 HTTP 状态码分场景处理，不同状态码对应不同的恢复策略
         if response.status_code == 200:
-            return response.json()
+            return response.json()           # 成功：解析并返回 JSON 响应体
         elif response.status_code == 429:
+            # 429 Too Many Requests：触发速率限制，应等待 Retry-After 头部指定的时长再重试
             print("速率限制，等待重试...")
         elif response.status_code == 401:
+            # 401 Unauthorized：API Key 错误或过期，继续重试无意义，应停止并通知运维
             print("API Key 无效，请检查")
         else:
             print(f"错误 {response.status_code}: {response.text}")
     except requests.exceptions.Timeout:
+        # 请求超时：通常是网络延迟或服务端负载过高，可重试
         print("请求超时")
     except requests.exceptions.ConnectionError:
+        # 连接失败：DNS 解析错误、目标服务器不可达等网络层面问题
         print("网络连接失败")
 ```
 
 ## RESTful API 设计
 
 ```python
-# 模型推理 API 设计示例
-POST /api/v1/predict          # 模型推理
-  请求: {"text": "..."}        # 输入文本
-  响应: {"label": "pos", "score": 0.95}
+# RESTful 模型推理 API 设计示例
+# 遵循资源命名、版本控制、正确 HTTP 方法的 RESTful 原则，便于客户端理解和调用
 
-GET  /api/v1/model/status     # 获取模型状态
-  响应: {"status": "ready", "uptime": "12h"}
+# 预测端点（POST）：创建推理任务，请求体携带输入，返回预测结果
+# 使用 POST 而非 GET 因为推理不是幂等操作，且输入文本可能超过 URL 长度限制
+POST /api/v1/predict          # API 路径包含版本号 v1，未来升级 v2 时可共存
+  请求: {"text": "..."}        # 请求体为 JSON，携带用户输入的待推理文本
+  响应: {"label": "pos", "score": 0.95}  # 返回预测标签和置信度分数
 
-GET  /api/v1/health           # 健康检查
-  响应: {"status": "ok"}
+# 状态查询端点（GET）：获取当前运行模型的状态和元信息
+# GET 是幂等方法，适合查询操作，不会改变服务器状态
+GET  /api/v1/model/status     # 用于监控面板或负载均衡器的状态检查
+  响应: {"status": "ready", "uptime": "12h"}  # 模型就绪状态和已运行时长
+
+# 健康检查端点（GET）：最简单的存活探针，被 Kubernetes/Docker 等调度系统定期调用
+GET  /api/v1/health           # 不依赖模型加载，仅返回服务进程是否正常响应
+  响应: {"status": "ok"}      # 轻量级响应，不携带模型状态，确保高可用
 ```
 
 | 设计原则 | 说明 | 示例 |

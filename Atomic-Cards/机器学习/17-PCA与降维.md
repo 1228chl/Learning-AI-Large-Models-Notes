@@ -15,13 +15,13 @@ aliases: ["PCA", "主成分分析", "降维", "t-SNE"]
 from sklearn.decomposition import PCA
 import matplotlib.pyplot as plt
 
-# 降维到 2 维（用于可视化）
+# 降维到 2 维（用于可视化），将高维数据投影到方差最大的两个方向上
 pca = PCA(n_components=2)
-X_2d = pca.fit_transform(X)
+X_2d = pca.fit_transform(X)  # 拟合PCA模型并将数据投影到2维空间
 
-print(f"解释方差比: {pca.explained_variance_ratio_}")
-print(f"累积方差: {pca.explained_variance_ratio_.cumsum()}")
-# 可视化
+print(f"解释方差比: {pca.explained_variance_ratio_}")  # 每个主成分解释的方差比例
+print(f"累积方差: {pca.explained_variance_ratio_.cumsum()}")  # 前k个主成分累积解释的方差比例
+# 可视化：用2维散点图展示高维数据的聚类结构
 plt.scatter(X_2d[:, 0], X_2d[:, 1], c=y, cmap='viridis')
 plt.xlabel('PC1'); plt.ylabel('PC2')
 ```
@@ -38,13 +38,13 @@ $$
 - 特征值 $\lambda_i$ → 该方向上的方差大小
 
 ```python
-# 选择主成分数量
-pca = PCA(n_components=0.95)          # 保留 95% 的方差
+# 选择主成分数量：自动保留解释95%方差所需的最少主成分数
+pca = PCA(n_components=0.95)          # 保留 95% 的方差，丢弃5%的噪声/冗余
 X_reduced = pca.fit_transform(X)
 print(f"保留 {pca.n_components_} 个主成分")
 
-# 查看各特征的贡献
-loadings = pca.components_            # 每个主成分是原始特征的线性组合
+# 查看各特征的贡献（载荷矩阵）：每个主成分是原始特征的加权线性组合
+loadings = pca.components_            # 每一行是一个主成分，值为原始特征的权重
 ```
 
 ## PCA 的应用
@@ -58,12 +58,12 @@ loadings = pca.components_            # 每个主成分是原始特征的线性�
 | **多重共线性处理** | PCA 去相关后再建模 |
 
 ```python
-# 用 PCA 加速分类
+# 用 PCA 加速分类：先降维再训练分类器，减少特征数降低模型复杂度
 pipe = Pipeline([
-    ('pca', PCA(n_components=100)),
-    ('clf', RandomForestClassifier())
+    ('pca', PCA(n_components=100)),          # 先降到100维，去除噪声和冗余特征
+    ('clf', RandomForestClassifier())        # 在降维后的特征上训练随机森林
 ])
-pipe.fit(X_train, y_train)
+pipe.fit(X_train, y_train)  # 流水线自动完成先降维再分类的流程
 ```
 
 ## 线性 vs 非线性降维

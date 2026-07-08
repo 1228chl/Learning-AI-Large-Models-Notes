@@ -15,15 +15,15 @@ aliases: ["PyTorch", "张量", "Tensor", "GPU"]
 import torch
 
 # 创建张量
-x = torch.tensor([[1, 2], [3, 4]])         # 从数据创建
-x = torch.zeros(3, 4)                       # 全零
-x = torch.randn(2, 3)                       # 标准正态分布随机
-x = torch.ones(2, 3, dtype=torch.float32)
+x = torch.tensor([[1, 2], [3, 4]])         # 从Python嵌套列表直接创建2x2张量，自动推断数据类型
+x = torch.zeros(3, 4)                       # 创建3行4列的全零张量，常用于初始化占位或偏置
+x = torch.randn(2, 3)                       # 创建2x3的标准正态分布随机张量，用于权重随机初始化
+x = torch.ones(2, 3, dtype=torch.float32)   # 创建2x3的全1张量，显式指定float32数据类型
 
 # 设备管理
-x_cpu = torch.tensor([1, 2])
-x_gpu = x_cpu.cuda()                        # 移到 GPU
-x_back = x_gpu.cpu()                        # 移回 CPU
+x_cpu = torch.tensor([1, 2])                # 在CPU上创建一维张量，数据默认驻留在CPU内存
+x_gpu = x_cpu.cuda()                        # 将张量从CPU迁移到GPU显存，启用GPU加速后续计算
+x_back = x_gpu.cpu()                        # 将张量从GPU显存移回CPU内存，便于与NumPy等CPU端库交互
 ```
 
 ## 张量操作
@@ -42,13 +42,13 @@ x_back = x_gpu.cpu()                        # 移回 CPU
 
 ```python
 # GPU 加速
-device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-x = torch.randn(1000, 1000, device=device)
+device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')  # 自动选择计算设备：有GPU则用cuda加速，否则回退到cpu
+x = torch.randn(1000, 1000, device=device)                              # 直接在指定设备上创建1000x1000随机张量，省去手动搬运步骤
 
 # 数据类型
-x_f32 = torch.tensor([1.0], dtype=torch.float32)   # 默认
-x_f16 = x_f32.half()                                 # 半精度（混合训练）
-x_i64 = torch.tensor([1], dtype=torch.long)          # 标签通常用 long
+x_f32 = torch.tensor([1.0], dtype=torch.float32)   # 创建float32张量，此为PyTorch默认浮点精度类型
+x_f16 = x_f32.half()                                 # 转换为半精度float16，用于混合精度训练以节省显存并加速计算
+x_i64 = torch.tensor([1], dtype=torch.long)          # 创建int64长整型张量，分类任务标签通常使用该类型
 ```
 
 ## ML 中的张量

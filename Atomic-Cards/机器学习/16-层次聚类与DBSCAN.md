@@ -32,15 +32,15 @@ aliases: ["DBSCAN", "层次聚类", "密度聚类"]
 ## 聚类算法选择指南
 
 ```python
-# 选择策略
+# 聚类算法选择策略：根据数据规模、簇形状需求和是否需要层次结构来决定
 if data_size > 10000:
-    choose = "Mini-Batch K-means"
+    choose = "Mini-Batch K-means"        # 大数据首选Mini-Batch K-means，线性复杂度
 elif cluster_shape == "任意形状":
-    choose = "DBSCAN"
+    choose = "DBSCAN"                     # 非球形簇用DBSCAN，自动发现任意形状
 elif need_hierarchy or n_clusters不确定:
-    choose = "层次聚类"
+    choose = "层次聚类"                    # 需要树状图分析时用层次聚类
 else:
-    choose = "K-means"
+    choose = "K-means"                    # 默认用K-means，简单快速效果好
 ```
 
 | 场景 | 推荐算法 | 原因 |

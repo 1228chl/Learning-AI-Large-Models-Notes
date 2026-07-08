@@ -13,6 +13,8 @@ aliases: ["Flask", "FastAPI", "模型部署", "API部署"]
 
 ```python
 # 核心流程：训练好的模型 → 加载 → 包装为 API → 启动服务
+# 将离线训练完成的模型封装为 Web 服务，使前端或其他微服务可通过 HTTP 请求调用推理
+# 这是 ML 工程中最基础的模型上线方式，核心关注点：模型加载时机、请求验证、错误处理
 ```
 
 ## Flask vs FastAPI
@@ -37,9 +39,11 @@ from pydantic import BaseModel
 import torch
 from transformers import AutoTokenizer, AutoModelForSequenceClassification
 
+# 创建 FastAPI 应用实例，title 会在自动生成的 Swagger 文档中显示
 app = FastAPI(title="文本分类 API")
 
-# 请求体模型（Pydantic 自动验证）
+# 定义请求与响应的数据模型（继承 Pydantic BaseModel）
+# FastAPI 自动根据类型注解验证请求字段，非法请求直接返回 422，无需手写验证逻辑
 class PredictInput(BaseModel):
     text: str
 
@@ -47,22 +51,27 @@ class PredictOutput(BaseModel):
     label: str
     confidence: float
 
-# 启动时加载模型
+# 在模块加载阶段预加载模型和分词器，避免首次请求时因加载耗时导致超时
+# 生产部署时应加入模型预热逻辑，确保服务就绪后才对外提供服务
 model_name = "bert-base-chinese"
 tokenizer = AutoTokenizer.from_pretrained(model_name)
 model = AutoModelForSequenceClassification.from_pretrained(model_name)
-model.eval()
+model.eval()  # 切换为推理模式：禁用 Dropout 和 BatchNorm 的训练行为，保证输出确定性
 
 @app.post("/predict", response_model=PredictOutput)
 async def predict(input: PredictInput):
+    # 将输入文本转为模型所需的张量格式，返回 PyTorch 张量，过长文本截断
     inputs = tokenizer(input.text, return_tensors="pt", truncation=True)
-    with torch.no_grad():
+    with torch.no_grad():  # 禁用梯度计算，大幅减少内存占用并加速推理
         outputs = model(**inputs)
+    # 对 logits 做 softmax 得到类别概率分布，dim=1 沿类别维度归一化
     probs = torch.softmax(outputs.logits, dim=1)
+    # 二分类：取正类概率与 0.5 阈值比较，实际生产应使用校准后的阈值
     label = "positive" if probs[0][1] > 0.5 else "negative"
     return PredictOutput(label=label, confidence=float(probs[0][1]))
 
-# 启动: uvicorn main:app --host 0.0.0.0 --port 8000
+# 启动命令：uvicorn main:app --host 0.0.0.0 --port 8000
+# --host 0.0.0.0 监听所有网络接口，--port 8000 默认端口，生产应加 --workers 多进程
 ```
 
 ## Flask 部署示例
@@ -74,34 +83,42 @@ from flask import Flask, request, jsonify
 import torch
 
 app = Flask(__name__)
-model = load_model()     # 加载训练好的模型
+# 加载训练好的模型（需自行实现 load_model 函数）
+# 注意：Flask 默认同步执行，高并发场景下每个请求会阻塞一个线程
+model = load_model()
 
 @app.route('/predict', methods=['POST'])
 def predict():
+    # Flask 手动解析 JSON 请求体（无自动验证，需自行处理解析失败）
     data = request.get_json()
     text = data['text']
     result = model.predict(text)
+    # 手动将结果序列化为 JSON 返回，需自行处理数据类型转换（如 numpy/torch 转 list）
     return jsonify({'prediction': result.tolist()})
 
 if __name__ == '__main__':
+    # Flask 开发服务器，生产环境应换用 Gunicorn 或 uWSGI
     app.run(host='0.0.0.0', port=5000)
 ```
 
 ## 模型加载最佳实践
 
 ```python
-# 模型保存格式与加载
+# 模型保存格式与加载：不同框架有各自推荐的序列化方式，选错可能导致兼容或安全问题
 import joblib
 import torch
 
-# sklearn 模型 → joblib
+# sklearn 模型使用 joblib：比标准 pickle 对大数组/NumPy 对象更高效
+# compress=3 在文件大小与序列化速度间取得平衡（0-9 可选，9 压缩比最高但最慢）
 joblib.dump(model, 'model.joblib', compress=3)
 model = joblib.load('model.joblib')
 
-# PyTorch 模型 → .pt
+# PyTorch 模型推荐仅保存 state_dict（参数）而非完整模型对象
+# 仅存参数字典体积小、跨版本兼容性好、不包含可执行代码更安全
 torch.save(model.state_dict(), 'model.pt')
+# 加载时 map_location='cpu' 确保即使在无 GPU 环境也能加载模型（自动映射设备）
 model.load_state_dict(torch.load('model.pt', map_location='cpu'))
-model.eval()
+model.eval()  # 切换推理模式：禁用 Dropout，固定 BatchNorm 的 running stats
 ```
 
 ## API 文档与测试

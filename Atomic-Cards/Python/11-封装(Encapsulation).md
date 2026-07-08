@@ -26,21 +26,27 @@ Python 通过命名约定控制访问权限（没有 Java/C++ 的 `private/prote
 双下划线前缀触发 Python 的**名字修饰**机制，自动将 `__name` 改写为 `_ClassName__name`：
 
 ```python
+# 银行账户类，演示 Python 三种访问级别的命名约定及其访问限制效果
 class BankAccount:
     def __init__(self, owner):
-        self.owner = owner          # 公有
-        self._balance = 0           # 受保护（约定）
-        self.__pin = "1234"         # 私有（名字修饰 → _BankAccount__pin）
+        # 公有属性：外部可以直接读写，没有任何访问限制
+        self.owner = owner
+        # 受保护属性（约定）：以下划线开头，表示"内部使用，外部请勿直接访问"，但 Python 不做强制限制
+        self._balance = 0
+        # 私有属性（名字修饰）：双下划线开头触发 Name Mangling，自动重命名为 _BankAccount__pin，
+        # 子类和外部无法通过原名访问，避免意外覆盖和误用
+        self.__pin = "1234"
 
-    def deposit(self, amount):      # 公有接口
+    # 公有接口方法：外部只需调用 deposit 即可完成存款，无需了解内部余额的存储和管理细节
+    def deposit(self, amount):
         self._balance += amount
 
-# 外部访问
+# 以下代码展示外部对三种访问级别属性的实际访问结果，验证各命名约定的约束力
 acc = BankAccount("Alice")
-print(acc.owner)                    # ✅ 公有 → Alice
-print(acc._balance)                 # ⚠️ 可访问但不推荐
-print(acc.__pin)                    # ❌ AttributeError（名字修饰）
-print(acc._BankAccount__pin)        # ⚠️ 实际名称，可绕过但不推荐
+print(acc.owner)                    # 公有属性可直接访问 → Alice
+print(acc._balance)                 # 受保护属性虽可访问（Python 不强制阻止），但按约定不应在外部直接读写
+print(acc.__pin)                    # 私有属性触发 Name Mangling，原名访问导致 AttributeError
+print(acc._BankAccount__pin)        # 绕过名字修饰后的实际名称，技术上可访问但不推荐这样做
 ```
 
 ## property 装饰器
@@ -48,27 +54,36 @@ print(acc._BankAccount__pin)        # ⚠️ 实际名称，可绕过但不推�
 通过 `@property` 实现**可控的属性访问**，在外部看起来像属性访问，内部可执行校验逻辑：
 
 ```python
+# 温度类，演示 @property 如何将方法伪装成属性，实现可控的读写访问
 class Temperature:
     def __init__(self, celsius=0):
+        # 将原始温度值存储在受保护属性中，外部应通过 property 接口访问
         self._celsius = celsius
 
     @property
-    def celsius(self):               # 获取（像属性一样访问）
+    def celsius(self):
+        """celsius 属性的获取器（getter）——外部可以像访问普通属性一样读取 t.celsius，
+        内部返回受保护字段 _celsius 的值，隐藏了实际的存储细节"""
         return self._celsius
 
     @celsius.setter
-    def celsius(self, value):        # 设置（带校验）
+    def celsius(self, value):
+        """celsius 属性的设置器（setter）——为赋值操作注入校验逻辑，
+        阻止低于绝对零度的不合理温度写入，确保数据始终合法"""
         if value < -273.15:
             raise ValueError("温度不能低于绝对零度")
         self._celsius = value
 
     @property
-    def fahrenheit(self):            # 只读属性（无 setter）
+    def fahrenheit(self):
+        """只读计算属性：没有定义 setter，因此外部无法赋值修改；
+        每次访问时由摄氏温度实时换算得出，保证两个温度值始终同步"""
         return self._celsius * 9/5 + 32
 
+# 创建温度实例并验证 property 的读写行为和校验逻辑
 t = Temperature(25)
-print(t.celsius)                     # 25（像属性一样读）
-t.celsius = 30                       # 像属性一样写（触发校验）
+print(t.celsius)                     # 像访问普通属性一样读取，触发 getter 返回 25
+t.celsius = 30                       # 像给普通属性赋值一样写入，触发 setter 并执行校验
 ```
 
 ## 封装的 ML/DL 应用

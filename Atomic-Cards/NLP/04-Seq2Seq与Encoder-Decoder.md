@@ -21,20 +21,20 @@ Seq2Seq（Sequence-to-Sequence，序列到序列模型）是一种将**输入序
 ```python
 import torch.nn as nn
 
-class Seq2Seq(nn.Module):
-    def __init__(self, vocab_size, embed_size, hidden_size):
+class Seq2Seq(nn.Module):                                 # 定义 Seq2Seq 模型，继承 nn.Module
+    def __init__(self, vocab_size, embed_size, hidden_size):  # 初始化：词表大小、嵌入维度、隐藏层维度
         super().__init__()
-        self.encoder = nn.LSTM(embed_size, hidden_size, batch_first=True)
-        self.decoder = nn.LSTM(embed_size, hidden_size, batch_first=True)
-        self.fc = nn.Linear(hidden_size, vocab_size)
+        self.encoder = nn.LSTM(embed_size, hidden_size, batch_first=True)  # 编码器 LSTM：将输入序列编码为隐状态
+        self.decoder = nn.LSTM(embed_size, hidden_size, batch_first=True)  # 解码器 LSTM：从隐状态逐步生成输出序列
+        self.fc = nn.Linear(hidden_size, vocab_size)  # 全连接层：将解码器输出映射到词表大小的概率分布
 
-    def forward(self, src, trg):
+    def forward(self, src, trg):                        # 前向传播：src 为源序列，trg 为目标序列
         # 编码器：一次性处理整个输入序列
-        _, (h, c) = self.encoder(src)
+        _, (h, c) = self.encoder(src)                   # 编码器输出 (隐状态 h, 细胞状态 c) 作为解码器初始状态
 
         # 解码器：以编码器最终状态为初始状态，逐步生成
-        output, _ = self.decoder(trg, (h, c))
-        return self.fc(output)
+        output, _ = self.decoder(trg, (h, c))           # 解码器使用编码器最终状态初始化，逐时间步生成输出
+        return self.fc(output)                           # 将解码器输出通过全连接层，得到每个时间步的词表概率
 ```
 
 ## 编码器-解码器架构

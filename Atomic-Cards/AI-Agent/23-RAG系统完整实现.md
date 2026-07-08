@@ -12,108 +12,130 @@ aliases: ["RAG系统实现", "RAG代码", "HyDE", "RAG查询分类"]
 ## 系统架构
 
 ```python
+# RAG系统完整流程图：用户查询依次经过分类、策略选择、检索、生成四个阶段
 用户查询 → 查询分类器(BERT) → 策略选择器 → 检索(混合检索+重排序) → LLM生成
 ```
 
 ## 查询分类器
 
 ```python
+# BERT二分类查询分类器：将用户查询分为"通用知识(0)"和"专业咨询(1)"两类
 class QueryClassifier:
     """BERT 二分类：通用知识(0) vs 专业咨询(1)"""
+    # 初始化分类器，加载预训练的BERT模型和对应的分词器
     def __init__(self, model_path):
         from transformers import BertTokenizer, BertForSequenceClassification
+        # 加载BERT分词器，用于将文本转换为模型可理解的token ID序列
         self.tokenizer = BertTokenizer.from_pretrained(model_path)
+        # 加载BERT序列分类模型，包含预训练权重和分类头
         self.model = BertForSequenceClassification.from_pretrained(model_path)
 
+    # 对查询进行分类，返回0（通用知识）或1（专业咨询）
     def classify(self, query: str) -> int:
+        # 将查询文本编码为PyTorch张量，截断至128个token以控制计算量
         inputs = self.tokenizer(query, return_tensors="pt", truncation=True, max_length=128)
+        # 将编码后的输入送入BERT模型进行前向推理，得到分类logits
         outputs = self.model(**inputs)
         import torch
+        # 取logits中得分最高的类别索引作为最终分类结果（0或1）
         return torch.argmax(outputs.logits, dim=1).item()
 ```
 
 ## 检索策略选择器
 
 ```python
+# 检索策略选择器：根据查询长度和复杂度动态决定使用哪种检索策略
 class StrategySelector:
     """根据查询类型动态选择检索策略"""
 
     @staticmethod
     def select(query, query_type):
         if query_type == "short":
-            return "hyde"          # 短查询用 HyDE
+            return "hyde"          # 短查询用 HyDE：先生成假设文档再检索，弥补短查询语义不足
         elif query_type == "complex":
-            return "subquery"      # 复杂查询拆子查询
+            return "subquery"      # 复杂查询拆子查询：将多意图问题拆解为多个简单子问题分别检索
         else:
-            return "direct"        # 普通查询直接检索
+            return "direct"        # 普通查询直接检索：直接进行混合检索+重排序
 ```
 
 ## HyDE 假设文档检索（增强短查询）
 
 ```python
+# HyDE（假设文档检索）：通过先生成假设答案来增强短查询的语义丰富度
 class HyDERetriever:
     """短查询 → 先生成假设答案 → 用假设答案检索"""
+    # 初始化，接收向量存储实例和大语言模型实例
     def __init__(self, vector_store, llm):
         self.vs = vector_store
         self.llm = llm
 
+    # 执行HyDE检索：先用LLM生成假设答案，再用假设答案替代原查询进行向量检索
     def retrieve(self, query, k=5):
-        # 1. 先生成假设答案
+        # 1. 先生成假设答案：让LLM基于其领域知识对短查询给出一个简要回答（即使可能不准确）
         hyde_prompt = f"请基于你对AI领域的了解，简要回答：{query}"
         hypo_answer = self.llm(hyde_prompt)
 
-        # 2. 用假设答案代替原查询做向量检索
+        # 2. 用假设答案代替原查询做向量检索：假设答案比短查询包含更丰富的语义信息
         return self.vs.hybrid_search_with_rerank(hypo_answer, k=k)
 ```
 
 ## 子查询策略（复杂查询拆解）
 
 ```python
+# 子查询检索器：将复杂多意图查询拆解为多个简单子查询，分别检索后合并去重
 class SubQueryRetriever:
     """复杂查询拆分为多个子查询，分别检索后合并去重"""
+    # 初始化，接收向量存储实例和大语言模型实例
     def __init__(self, vector_store, llm):
         self.vs = vector_store
         self.llm = llm
 
+    # 执行子查询检索：拆解→分别检索→合并去重
     def retrieve(self, query, k=5):
-        # 1. LLM 拆解子查询
+        # 1. LLM 拆解子查询：让LLM将复杂问题分解为3-5个独立的子问题
         prompt = f"将以下问题拆解为3-5个独立的子问题：{query}"
         subqueries_text = self.llm(prompt)
+        # 按换行符分割并去除空白，得到子查询列表
         subqueries = [q.strip() for q in subqueries_text.split("\n") if q.strip()]
 
-        # 2. 每个子查询独立检索
+        # 2. 每个子查询独立检索：对每个子问题分别执行混合检索
         all_docs = []
         for sub_q in subqueries:
             docs = self.vs.hybrid_search_with_rerank(sub_q, k=k)
-            all_docs.extend(docs)
+            all_docs.extend(docs)  # 将各子查询结果合并到一个列表中
 
-        # 3. 按内容去重
+        # 3. 按内容去重：使用字典以文档内容为键去重，保留首次出现的文档
         unique = {doc.page_content: doc for doc in all_docs}
-        return list(unique.values())[:k]
+        return list(unique.values())[:k]  # 取前k篇去重后的文档返回
 ```
 
 ## 完整 RAG 系统
 
 ```python
+# RAG系统主类：整合查询分类、策略选择、混合检索和LLM生成全流程
 class RAGSystem:
+    # 初始化系统，接收向量存储实例和大语言模型实例
     def __init__(self, vector_store, llm):
         self.vs = vector_store
         self.llm = llm
+        # 加载预训练的BERT查询分类器，用于判断查询是"通用"还是"专业"
         self.classifier = QueryClassifier("models/bert_query_classifier")
+        # 初始化策略选择器，用于根据查询特点动态选择检索策略
         self.strategy = StrategySelector()
 
+    # 核心回答方法：接收用户查询，经过分类→检索→生成全流程后返回答案
     def answer(self, query):
-        # Step 1: 查询分类
+        # Step 1: 查询分类：使用BERT模型判断查询所属类型
         q_type = self.classifier.classify(query)
         logger.info(f"查询类型: {'专业' if q_type else '通用'}")
 
-        # Step 2: 策略选择与检索
-        if q_type == 1:           # 专业咨询 → MySQL FAQ
+        # Step 2: 策略选择与检索：根据分类结果选择不同的处理路径
+        if q_type == 1:           # 专业咨询 → MySQL FAQ：直接查询FAQ库获取标准答案
             return self._faq_search(query)
-        else:                      # 通用知识 → RAG
+        else:                      # 通用知识 → RAG：走语义检索+LLM生成路径
             docs = self._rag_retrieve(query)
 
-        # Step 3: 构建 Prompt
+        # Step 3: 构建 Prompt：将检索到的文档片段拼接为上下文，构建提示模板
         context = "\n".join([d.page_content for d in docs])
         prompt = f"""基于以下上下文回答问题。
 如果上下文信息不足，请说"信息不足"。
@@ -123,11 +145,12 @@ class RAGSystem:
 
 问题：{query}
 回答："""
-        # Step 4: LLM 生成
+        # Step 4: LLM 生成：将带上下文的提示送入语言模型，生成基于事实的回答
         return self.llm(prompt)
 
+    # RAG检索策略：根据查询长度和关键词自动选择HyDE、子查询或直接检索
     def _rag_retrieve(self, query):
-        # 自动选择策略
+        # 自动选择策略：短查询（<10字符）使用HyDE增强语义，含连接词的复杂查询拆子查询
         if len(query) < 10:
             return HyDERetriever(self.vs, self.llm).retrieve(query)
         elif "并且" in query or "同时" in query:
@@ -143,16 +166,18 @@ from langchain_core.document_loaders import BaseLoader
 from langchain_core.documents import Document
 
 # 中文递归切分器（按句号→感叹号→问号→分号→逗号 逐级切分）
+# 递归字符文本切分器：按分隔符优先级从高到低逐级切分，确保语义完整性
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 
+# 配置切分器：先按段落切，再按句子边界切，最后按逗号切
 splitter = RecursiveCharacterTextSplitter(
     separators=["\n\n", "\n", "。|！|？", "；|；\s", "，|，\s"],
     chunk_size=500, chunk_overlap=50, keep_separator=True
 )
-chunks = splitter.split_documents(documents)
+chunks = splitter.split_documents(documents)  # 对文档递归切分，返回文档块列表
 
 # 父子块策略（检索子块，返回父块）
-# 子块用于检索 → 找到匹配后返回完整的父块给 LLM
+# 子块用于检索 → 找到匹配后返回完整的父块给 LLM，兼顾检索精度与上下文完整性
 ```
 
 ## 面试追问

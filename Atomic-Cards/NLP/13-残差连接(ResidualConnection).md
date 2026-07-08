@@ -16,6 +16,7 @@ $$ \text{Output} = x + \text{Sublayer}(x) $$
 梯度可通过恒等映射路径无损反向传播，形成"梯度高速公路"（Gradient Highway），确保深层网络至少不劣于其浅层子网络。
 
 ```python
+# 残差连接的核心实现：将输入 x 与子层输出直接相加，梯度可沿恒等路径无损传播到前层
 def residual_block(x, sublayer):
     return x + sublayer(x)   # 梯度可以沿 x 路径直通到输入
 ```

@@ -15,16 +15,18 @@ Matplotlib 是 Python 生态中最基础的数据可视化库。其核心哲学�
 import matplotlib.pyplot as plt
 import numpy as np
 
+# 生成数据：linspace 在 [0, 10] 区间均匀取 100 个点，保证曲线采样足够平滑
 x = np.linspace(0, 10, 100)
 y = np.sin(x)
 
-plt.figure(figsize=(8, 4))    # 创建画布
-plt.plot(x, y, label='sin(x)')
-plt.xlabel('x'); plt.ylabel('y')
-plt.title('Sine Wave')
-plt.legend()
-plt.grid(True)
-plt.show()
+# pyplot 接口：基于全局状态机一步步构建图表，适合快速绘制单幅图
+plt.figure(figsize=(8, 4))    # 创建画布 — 设置宽高比例，默认英寸单位，影响显示和保存比例
+plt.plot(x, y, label='sin(x)')  # 绘制折线图 — 自动连接相邻点，适合展示连续变化趋势
+plt.xlabel('x'); plt.ylabel('y')  # 坐标轴标签 — 说明横纵轴物理含义，图表可读性的基础
+plt.title('Sine Wave')          # 图表标题 — 一句话概括图表内容，方便读者快速理解
+plt.legend()                    # 添加图例 — 当有多条曲线时必须区分不同序列
+plt.grid(True)                  # 显示网格线 — 辅助读者目测数值位置，提高读数精度
+plt.show()                      # 渲染并输出图像，Jupyter 中可省略（自动内联显示）
 ```
 
 ## 常用图表类型
@@ -39,54 +41,63 @@ plt.show()
 | **热力图** | `plt.imshow()` | 矩阵可视化 | 混淆矩阵、相关性矩阵 |
 
 ```python
-# ML 常见组合
-fig, axes = plt.subplots(2, 2, figsize=(12, 8))
+# ML 常见组合：面向对象接口创建 2×2 子图网格，每个子图独立配置，避免状态互相干扰
+fig, axes = plt.subplots(2, 2, figsize=(12, 8))  # 创建 2 行 2 列子图，返回画布和子图数组
 
-axes[0, 0].plot(train_loss, label='Train Loss')
-axes[0, 0].plot(val_loss, label='Val Loss')
+# 左上：训练曲线 — 对比训练集和验证集 loss 趋势，判断是否存在过拟合
+axes[0, 0].plot(train_loss, label='Train Loss')   # 训练损失 — 正常应持续下降
+axes[0, 0].plot(val_loss, label='Val Loss')        # 验证损失 — 若开始上升则预示过拟合
 axes[0, 0].legend()
 axes[0, 0].set_title('Training Curve')
 
-axes[0, 1].scatter(y_test, y_pred, alpha=0.5)
-axes[0, 1].plot([y.min(), y.max()], [y.min(), y.max()], 'r--')
+# 右上：回归散点图 — 预测值 vs 真实值，散点越贴近对角线说明预测越准确
+axes[0, 1].scatter(y_test, y_pred, alpha=0.5)       # alpha=0.5 半透明，防止点重叠过密
+axes[0, 1].plot([y.min(), y.max()], [y.min(), y.max()], 'r--')  # 红色对角线作为完美预测参考线
 axes[0, 1].set_xlabel('True'); axes[0, 1].set_ylabel('Predicted')
 
-axes[1, 0].hist(model.predict_proba(X_test)[:, 1], bins=50)
+# 左下：预测概率分布直方图 — 查看模型对正类的置信度分布，判断是否过于自信或模糊
+axes[1, 0].hist(model.predict_proba(X_test)[:, 1], bins=50)  # bins=50 将概率值分 50 个区间细粒度观察
 
-axes[1, 1].imshow(confusion_matrix, cmap='Blues', interpolation='nearest')
-plt.tight_layout()
+# 右下：混淆矩阵热力图 — 以颜色深浅展示各类别预测正确/错误的数量分布
+axes[1, 1].imshow(confusion_matrix, cmap='Blues', interpolation='nearest')  # 'Blues' 蓝配色色阶直观
+plt.tight_layout()  # 自动调整子图间距和标签位置，防止坐标轴标签互相重叠
 ```
 
 ## 训练过程可视化
 
 ```python
-# 绘制训练过程中的 loss 和准确率
+# 绘制训练过程中的 loss 和准确率：封装为函数，方便在每个训练周期结束后一键调用
 def plot_training(history):
+    # 并排两个子图，分别展示损失和准确率，共享横轴 Epoch 便于对比
     fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 4))
     
+    # 左图：损失曲线 — 训练损失持续下降说明模型在学习
+    # 验证损失不再下降或开始上升时应考虑早停，防止过拟合
     ax1.plot(history['train_loss'], label='Train')
     ax1.plot(history['val_loss'], label='Validation')
     ax1.set_xlabel('Epoch'); ax1.set_ylabel('Loss')
     ax1.legend(); ax1.grid(True)
     
+    # 右图：准确率曲线 — 验证准确率趋于平稳时表明模型容量已用尽
     ax2.plot(history['train_acc'], label='Train')
     ax2.plot(history['val_acc'], label='Validation')
     ax2.set_xlabel('Epoch'); ax2.set_ylabel('Accuracy')
     ax2.legend(); ax2.grid(True)
     
-    plt.tight_layout()
-    plt.show()
+    plt.tight_layout()  # 自动调整子图间距，防止标签和标题互相遮挡
+    plt.show()          # 渲染显示图像
 ```
 
 ## 可视化最佳实践
 
 ```python
-# 1. 使用子图对比
-# 2. 坐标轴标签必须加（别人能看懂）
-# 3. 图例必须加
-# 4. 颜色使用专业配色（viridis / plasma / tab10）
-# 5. 图片用矢量格式保存（SVG/PDF）
-plt.savefig('figure.pdf', bbox_inches='tight', dpi=150)
+# 可视化最佳实践清单 — 确保图表专业、可读、可复现
+# 1. 使用子图对比 — 相关图表并排放置便于比较，避免读者在页面间反复切换
+# 2. 坐标轴标签必须加 — 缺失标签的图表让人无法理解横纵轴含义，信息完全丢失
+# 3. 图例必须加 — 多条曲线时图例是区分不同序列的唯一依据
+# 4. 颜色使用专业配色 — viridis/plasma 色盲友好，tab10 适合区分离散类别
+# 5. 图片用矢量格式保存 — SVG/PDF 缩放不失真，适合论文和报告嵌入
+plt.savefig('figure.pdf', bbox_inches='tight', dpi=150)  # bbox_inches 自动裁剪空白，dpi 控制分辨率
 ```
 
 ## ML 中的可视化

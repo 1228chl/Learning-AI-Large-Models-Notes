@@ -47,20 +47,24 @@ aliases: ["Query改写", "意图识别", "查询重写", "Query Routing"]
 
 ```python
 def rewrite_query(query: str, history: list = None) -> str:
-    """查询改写：补全对话上下文"""
+    """查询改写：补全对话上下文，解决多轮对话中的指代消解问题"""
+    # 如果没有历史对话，说明是首轮查询，直接返回原始查询无需改写
     if not history:
         return query
-    # 使用 LLM 补全不完整 query
+    # 使用 LLM 补全不完整 query，将"它"等指代词替换为具体实体名称
     prompt = f"""对话历史：{history[-3:]}
 当前问题：{query}
 请将当前问题补全为完整的独立问题："""
+    # 调用LLM根据对话历史推断缺失的上下文，生成语义完整的独立查询
     return llm.invoke(prompt)
 
 
 def classify_intent(query: str) -> str:
-    """意图识别：判断路由目标"""
+    """意图识别：判断路由目标（FAQ/知识库/闲聊）"""
+    # 构造分类提示词，引导LLM将查询归入三类路由目标之一
     prompt = f"""判断查询意图，仅返回：FAQ / KNOWLEDGE / CHAT
 查询：{query}"""
+    # 调用LLM进行分类判断，并去除返回文本中的空白字符得到纯净的意图标签
     intent = llm.invoke(prompt).strip()
     return intent
 ```

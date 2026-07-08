@@ -38,12 +38,17 @@ RAGAS 从检索和生成两个维度评估 RAG 系统：
 **Context Recall 计算示例**：
 
 ```python
+# Context Recall计算示例：将标准答案拆解为原子事实，逐一验证检索上下文是否覆盖
 ground_truth: "2010年世界杯的冠军是西班牙。决赛中他们1-0战胜了荷兰。"
 claims: ["2010年世界杯的冠军是西班牙", "决赛中他们1-0战胜了荷兰"]
 
+# 检索到的上下文只覆盖了部分事实
 retrieved context: ["2010年世界杯的决赛中西班牙战胜了荷兰"]
+# claim1"冠军是西班牙"可在检索结果中找到依据 → 覆盖成功
 → claim1 "冠军是西班牙" 可在 context 中找到 ✓
+# claim2"比分1-0"在检索结果中未出现 → 覆盖失败
 → claim2 "比分1-0" 未在 context 中出现 ✗
+# 召回率 = 被覆盖的事实数 / 总事实数 = 1/2 = 0.5
 → Recall = 1/2 = 0.5
 ```
 
@@ -67,19 +72,22 @@ from ragas.metrics import (
 from datasets import Dataset
 
 # 加载评估数据集
+# 构造RAGAS所需的四字段评估数据：用户问题、系统答案、检索上下文和标准答案
 data = {"question": [...], "answer": [...],
         "contexts": [...], "ground_truths": [...]}
+# 将字典格式的数据转为HuggingFace Dataset对象，供RAGAS框架的标准评估流程使用
 dataset = Dataset.from_dict(data)
 
 # 配置评估环境（使用 LangChain OpenAI 接口）
 from langchain_openai import OpenAIEmbeddings, ChatOpenAI
 
-# 执行评估
+# 执行评估，同时传入四个核心指标，全面衡量检索质量和生成质量
 result = evaluate(
     dataset=dataset,
     metrics=[faithfulness, answer_relevancy,
              context_relevancy, context_recall]
 )
+# 输出各指标的评分结果，用于评估RAG系统的整体性能
 print(result)
 ```
 

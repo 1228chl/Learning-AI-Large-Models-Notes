@@ -16,6 +16,7 @@ $$P(\mathbf{y}) = \prod_{t=1}^T P(y_t \mid y_{<t})$$
 ```python
 from transformers import GPT2LMHeadModel
 
+# 从 HuggingFace Hub 加载预训练的 GPT-2 小型模型（124M 参数），用于自回归文本生成
 model = GPT2LMHeadModel.from_pretrained('gpt2')
 # 12 层 Transformer 解码器
 # 12 个注意力头

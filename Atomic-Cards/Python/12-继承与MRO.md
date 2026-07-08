@@ -14,17 +14,20 @@ aliases: ["继承", "Inheritance", "MRO", "多继承", "C3线性化"]
 ## 继承类型
 
 ```python
+# 动物基类：定义所有动物共有的属性和行为模板，子类通过继承复用 name 属性和 speak 方法签名
 class Animal:
     def __init__(self, name):
         self.name = name
     def speak(self):
         pass
 
-class Dog(Animal):                 # 单继承
+# Dog 子类通过单继承获取 Animal 的属性和方法，再重写 speak 实现狗特有的叫声行为
+class Dog(Animal):
     def speak(self):
         return f"{self.name} says Woof!"
 
-class Cat(Animal):                 # 另一个子类
+# Cat 子类同样继承 Animal，但给出与 Dog 不同的 speak 实现——同一接口展现出不同行为
+class Cat(Animal):
     def speak(self):
         return f"{self.name} says Meow!"
 ```
@@ -40,14 +43,16 @@ class Cat(Animal):                 # 另一个子类
 多继承时的方法查找顺序，Python 使用 **C3 线性化算法**：
 
 ```python
+# 定义经典的菱形继承结构：A 是顶层基类，B 和 C 分别继承 A，D 同时继承 B 和 C
 class A: pass
 class B(A): pass
 class C(A): pass
 class D(B, C): pass
 
-# MRO: D → B → C → A → object
+# 查看 D 类的方法解析顺序（MRO），Python 的 C3 线性化算法会输出 [D, B, C, A, object]
+# 遵循三条原则：子类优先于父类、父类按定义从左到右查找、每个类在链中只出现一次
 print(D.__mro__)
-# 或用:
+# 或者使用 mro() 方法获取相同的结果列表
 print(D.mro())
 ```
 
@@ -62,28 +67,33 @@ print(D.mro())
 `super()` 不单纯是"调用父类方法"，而是**沿着 MRO 链调用下一个类的方法**：
 
 ```python
+# 顶层基类 A，作为继承链的末端，负责完成最基础的初始化工作
 class A:
     def __init__(self):
         print("A.__init__")
 
+# 中间类 B，继承 A，通过 super() 将调用委托给 MRO 链中的下一个类（不一定是 A，取决于最终 MRO）
 class B(A):
     def __init__(self):
         print("B.__init__")
         super().__init__()
 
+# 中间类 C，同样继承 A，与 B 构成菱形继承的对称分支，super() 也会沿 MRO 链继续传递
 class C(A):
     def __init__(self):
         print("C.__init__")
         super().__init__()
 
+# 最底层子类 D，同时继承 B 和 C，super() 会沿着 MRO [D, B, C, A, object] 链式调用
+# 每个类的 __init__ 依次被调用，实现多继承场景下所有父类的初始化协作
 class D(B, C):
     def __init__(self):
         print("D.__init__")
         super().__init__()
 
+# 实例化 D 时，输出顺序为 D.__init__ → B.__init__ → C.__init__ → A.__init__
+# 这说明 super() 并非简单地调用"直接父类"，而是交给 MRO 链中的下一个类
 d = D()
-# 输出顺序：D.__init__ → B.__init__ → C.__init__ → A.__init__
-# MRO：[D, B, C, A, object]
 ```
 
 ## 方法重写（Override）
@@ -91,15 +101,19 @@ d = D()
 子类可以重写父类方法以改变或扩展其行为：
 
 ```python
+# 基类模型：定义训练的默认行为，子类可以按需重写或扩展此方法
 class BaseModel:
     def train(self, X, y):
         print("Base training...")
 
 class CustomModel(BaseModel):
-    def train(self, X, y):                   # 完全重写
+    # 完全重写：子类提供全新的训练逻辑，完全替代父类的 train 实现，不依赖父类行为
+    def train(self, X, y):
         print("Custom training...")
         
-    def train(self, X, y):                   # 扩展父类行为
+    # 扩展式重写：通过 super().train() 先执行父类的训练逻辑保留基础行为，
+    # 再添加子类特有的验证步骤，实现"继承+扩展"的增量式定制
+    def train(self, X, y):
         super().train(X, y)
         print("Extra step: validation...")
 ```

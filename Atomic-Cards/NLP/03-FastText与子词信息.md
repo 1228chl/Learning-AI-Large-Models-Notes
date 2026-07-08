@@ -67,13 +67,13 @@ import fasttext
 
 # 训练分类器（数据格式：__label__<标签> <文本>）
 model = fasttext.train_supervised(
-    input="train.txt",
-    lr=1.0, epoch=25, wordNgrams=2
+    input="train.txt",        # 训练数据文件路径，每行格式为 __label__<标签> <文本>
+    lr=1.0, epoch=25, wordNgrams=2  # 学习率、训练轮数、使用的词 n-gram 阶数
 )
 
 # 预测
-labels, probs = model.predict("今天天气真好")
-print(labels, probs)
+labels, probs = model.predict("今天天气真好")  # 输入文本行，返回预测标签列表与概率列表
+print(labels, probs)                           # 输出：[['__label__...']], [0.99]
 ```
 
 ## ML 中的 FastText

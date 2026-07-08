@@ -16,7 +16,7 @@ PyMySQL 是一个纯 Python 实现的 MySQL 客户端库，兼容 Python DB API 
 ```python
 import pymysql
 
-# 1. 建立连接
+# 1. 建立连接 —— charset 使用 utf8mb4 以完整支持 4 字节字符（emoji 等），关闭自动提交让应用控制事务边界
 conn = pymysql.connect(
     host='localhost',
     port=3306,
@@ -24,25 +24,25 @@ conn = pymysql.connect(
     password='root',
     database='ml_data',
     charset='utf8mb4',
-    autocommit=False      # 关闭自动提交，手动管理事务
+    autocommit=False      # 关闭自动提交，由应用层显式控制事务的原子性（多条操作要么全成功要么全回滚）
 )
 
-# 2. 获取游标
+# 2. 获取游标 —— 游标是执行 SQL 和读取结果集的入口，相当于 Python 与数据库之间的管道
 cursor = conn.cursor()
 
-# 3. 执行 SQL
+# 3. 执行 SQL —— 使用 %s 占位符而非字符串拼接，确保用户输入永远被当作值而非 SQL 代码执行
 sql = "SELECT * FROM users WHERE age > %s"
-cursor.execute(sql, (25,))          # 参数化查询防止 SQL 注入
+cursor.execute(sql, (25,))          # 将参数以元组形式传入，由驱动自动转义，彻底消除 SQL 注入风险
 
-# 4. 获取结果
+# 4. 获取结果 —— fetchall() 一次取回所有行（适合小数据集），fetchone() 逐行读取节省内存，fetchmany(n) 分批获取平衡效率与开销
 results = cursor.fetchall()         # 获取全部
 # row = cursor.fetchone()            # 获取一条
 # many = cursor.fetchmany(100)       # 获取 100 条
 
-# 5. 提交事务（如果是写操作）
+# 5. 提交事务（如果是写操作）—— 只有 commit() 后修改才会持久化到数据库；不执行 commit() 则连接关闭时所有更改自动回滚
 conn.commit()
 
-# 6. 关闭连接
+# 6. 关闭连接 —— 先关游标再关连接：游标持有服务器端的结果集资源，必须优先释放，否则可能导致连接无法正常归还或资源泄漏
 cursor.close()
 conn.close()
 ```
@@ -50,10 +50,10 @@ conn.close()
 ## 参数化查询（防止 SQL 注入）
 
 ```python
-# 不安全：字符串拼接 — 有 SQL 注入风险
+# 不安全：字符串拼接 — 用户输入直接嵌入 SQL 语句，恶意值如 "' OR '1'='1" 可改变查询逻辑
 sql = f"SELECT * FROM users WHERE name = '{user_input}'"
 
-# 安全：参数化查询 — 自动转义
+# 安全：参数化查询 — 驱动将 %s 占位符替换为用户输入并自动转义，输入仅作为值传递，永不参与 SQL 解析
 sql = "SELECT * FROM users WHERE name = %s"
 cursor.execute(sql, (user_input,))
 ```
@@ -61,7 +61,7 @@ cursor.execute(sql, (user_input,))
 ## 批量操作
 
 ```python
-# 批量插入（适合导入大量训练数据）
+# 批量插入（适合导入大量训练数据）—— executemany 将多条 INSERT 合并为一次数据库往返，远快于逐条循环插入
 data = [
     ('Alice', 25, 0.85),
     ('Bob', 30, 0.92),
@@ -75,13 +75,14 @@ conn.commit()
 ## 事务管理
 
 ```python
+# 事务保证原子性：转账扣款和收款两条 UPDATE 要么全部执行成功，要么全部回滚，杜绝部分更新导致数据不一致
 try:
-    conn.begin()
+    conn.begin()                        # 显式开启事务
     cursor.execute("UPDATE accounts SET balance = balance - 100 WHERE id = 1")
     cursor.execute("UPDATE accounts SET balance = balance + 100 WHERE id = 2")
-    conn.commit()
+    conn.commit()                       # 两条更新均成功，持久化变更
 except Exception as e:
-    conn.rollback()
+    conn.rollback()                     # 任一更新失败，撤销全部更改，恢复数据到事务开始前的状态
     print(f"Transaction failed: {e}")
 ```
 
@@ -91,16 +92,17 @@ except Exception as e:
 from dbutils.pooled_db import PooledDB
 import pymysql
 
+# 连接池复用数据库连接，避免每次请求都经历 TCP 三次握手和身份认证的开销
 pool = PooledDB(
     creator=pymysql,
-    maxconnections=10,      # 最大连接数
+    maxconnections=10,      # 最大连接数：根据并发量估算，避免超过数据库上限
     host='localhost',
     user='root',
     password='root',
     database='ml_data'
 )
 
-conn = pool.connection()    # 从池中获取连接
+conn = pool.connection()    # 从池中获取可用连接（而非新建），使用后自动归还
 cursor = conn.cursor()
 ```
 

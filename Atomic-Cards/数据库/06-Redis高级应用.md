@@ -10,10 +10,10 @@ aliases: ["缓存策略", "过期时间", "Redis管道", "连接池"]
 ## 过期时间与失效策略
 
 ```python
-# 设置过期时间
-r.setex('cache:key', 300, 'value')         # 300 秒过期
-r.expire('cache:key', 600)                 # 设置/修改过期时间
-r.ttl('cache:key')                         # 查看剩余秒数（-2=已过期）
+# 设置过期时间 —— 避免缓存永久占用内存，自动清理冷数据
+r.setex('cache:key', 300, 'value')         # 300 秒过期（set 与 expire 原子操作）
+r.expire('cache:key', 600)                 # 设置/修改过期时间，适用于已存在的 key
+r.ttl('cache:key')                         # 查看剩余秒数（-2=key 已删除，-1=永不过期）
 ```
 
 | 过期策略 | 说明 | 特点 |
@@ -37,19 +37,21 @@ r.ttl('cache:key')                         # 查看剩余秒数（-2=已过期�
 ## 缓存模式
 
 ```python
-# Cache Aside（旁路缓存）— 最常用
+# Cache Aside（旁路缓存）— 最常用，应用层主动管理缓存，与计算层解耦
 def get_prediction(model_id, input_data):
+    # 拼接唯一缓存键，以模型 ID 和输入哈希为标识，避免不同请求互相覆盖
     cache_key = f"pred:{model_id}:{hash(input_data)}"
 
-    # 1. 查缓存
+    # 1. 先查缓存 —— 利用 Redis 内存高速读取，避免重复的模型推理
     result = r.get(cache_key)
     if result is not None:
+        # 缓存命中，直接返回结果，跳过昂贵的模型推理
         return result
 
-    # 2. 缓存未命中，执行推理
+    # 2. 缓存未命中，执行模型推理（耗时操作，应尽量减少调用次数）
     result = model.predict(input_data)
 
-    # 3. 写入缓存（带过期时间）
+    # 3. 写入缓存并设置过期时间 —— 确保冷数据自动淘汰，防止内存持续膨胀
     r.setex(cache_key, 3600, result)
     return result
 ```
@@ -57,12 +59,14 @@ def get_prediction(model_id, input_data):
 ## 连接池
 
 ```python
+# 创建连接池 —— 复用 TCP 连接，避免每次操作都经历三次握手与四次挥手
 pool = redis.ConnectionPool(
-    host='localhost',
-    port=6379,
-    max_connections=20,
-    decode_responses=True
+    host='localhost',       # Redis 服务器地址，生产环境应改用配置变量替代硬编码
+    port=6379,               # Redis 默认端口
+    max_connections=20,      # 最大连接数，防止突发流量打满单机端口资源
+    decode_responses=True    # 自动将 bytes 解码为 str，避免手动 decode 的繁琐
 )
+# 使用连接池创建客户端，后续所有 Redis 操作自动从池中获取/归还连接
 r = redis.Redis(connection_pool=pool)
 ```
 
@@ -71,22 +75,28 @@ r = redis.Redis(connection_pool=pool)
 在一次网络请求中批量执行多条命令，大幅减少网络开销：
 
 ```python
+# 创建管道对象 —— 将多条命令暂存于客户端缓冲区，而非逐条发送
 pipe = r.pipeline()
 for i in range(1000):
-    pipe.set(f'key:{i}', f'value:{i}')
-pipe.execute()          # 一次性发送到 Redis
+    pipe.set(f'key:{i}', f'value:{i}')      # 仅入队，不实际发送
+# execute() 一次性将所有命令发往 Redis —— 将 1000 次网络往返减少为 1 次
+pipe.execute()
 ```
 
 ## 发布订阅（Pub/Sub）
 
 ```python
-# 发布者
+# ===== 发布者（Publisher）=====
+# 向频道发布消息 —— 所有订阅该频道的客户端会实时收到通知
 r.publish('channel:train', 'start_epoch_10')
 
-# 订阅者
+# ===== 订阅者（Subscriber）=====
+# 创建订阅对象并订阅频道 —— 建立持久连接监听消息
 pubsub = r.pubsub()
 pubsub.subscribe('channel:train')
+# listen() 返回一个阻塞式生成器，持续等待并处理新消息
 for message in pubsub.listen():
+    # message['data'] 为消息体，实际使用前通常需要 decode 为字符串
     print(message['data'])
 ```
 
