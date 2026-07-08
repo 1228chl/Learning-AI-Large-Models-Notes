@@ -8,9 +8,9 @@
   "showViewHeader": true,
   "enabledCssSnippets": [
     "mathlive-light-fix",
-    "image-center",
     "blockquote-color",
-    "inline-code"
+    "inline-code",
+    "image-center"
   ],
   "textFontFamily": "Times New Roman,寒蝉锦书宋",
   "interfaceFontFamily": "Times New Roman,寒蝉锦书宋",
