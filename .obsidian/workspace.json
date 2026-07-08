@@ -13,13 +13,13 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "AI-Large-Modlels-Notes/Project/EduRAG/基于MySQL数据库实现问答系统.md",
+                "file": "AI-Large-Modlels-Notes/Project/EduRAG/MySQL相关知识（RAG）.md",
                 "mode": "source",
                 "source": false,
                 "backlinks": false
               },
               "icon": "lucide-file",
-              "title": "基于MySQL数据库实现问答系统"
+              "title": "MySQL相关知识（RAG）"
             }
           },
           {
@@ -225,8 +225,10 @@
   },
   "active": "e5c6004f44c0e722",
   "lastOpenFiles": [
-    "AI-Large-Modlels-Notes/Project/EduRAG/BM25算法简介与应用.md",
+    "AI-Large-Modlels-Notes/Algorithm/1-两数之和.md",
+    "AI-Large-Modlels-Notes/Project/EduRAG/MySQL相关知识（RAG）.md",
     "AI-Large-Modlels-Notes/Project/EduRAG/基于MySQL数据库实现问答系统.md",
+    "AI-Large-Modlels-Notes/Project/EduRAG/BM25算法简介与应用.md",
     "AI-Large-Modlels-Notes/Project/EduRAG/Milvus向量数据库.md",
     "AI-Large-Modlels-Notes/Project/EduRAG/常见的距离.md",
     "Assets/Image/AI-Large-Modlels-Notes/Project/EduRAG/Milvus向量数据库/1.2.8.3-1.png",
@@ -239,7 +241,6 @@
     "Assets/Image/AI-Large-Modlels-Notes/Project/EduRAG/Milvus向量数据库/1.2.7.6-1.png",
     "Assets/Image/AI-Large-Modlels-Notes/Project/EduRAG/Milvus向量数据库",
     "Assets/Image/AI-Large-Modlels-Notes/Project/EduRAG",
-    "AI-Large-Modlels-Notes/Algorithm/1-两数之和.md",
     "AI-Large-Modlels-Notes/Project/EduRAG/Milvus 的加权排序器.md",
     "AI-Large-Modlels-Notes/Project/EduRAG/Python日志介绍与应用.md",
     "AI-Large-Modlels-Notes/Project/EduRAG/Redis数据库简介与使用.md",
@@ -266,7 +267,6 @@
     "Atomic-Cards/工程实践/07-LLM API调用与ChatBot.md",
     "Atomic-Cards/工程实践/06-Ollama与本地LLM部署.md",
     "Atomic-Cards/工程实践/05-模型保存格式.md",
-    "Atomic-Cards/工程实践/04-Flask与FastAPI模型部署.md",
     "Atomic-Cards/原子化生成提示词.md.tmp.6892.d07290b51192",
     "Atomic-Cards/卡片总览.md.tmp.17160.9b304bb77cc3",
     "Assets/Image/AI-Large-Modlels-Notes/NLP/05-注意力机制和Seq2Seq介绍/1.2.1.4-1 1.png",
