@@ -38,4 +38,4 @@ $$ \text{LayerNorm}(x) = \gamma \odot \frac{x - \mu}{\sigma + \epsilon} + \beta 
 
 ---
 
-> 参见 [13-残差连接(ResidualConnection)](./13-残差连接(ResidualConnection)、[07-多头注意力](./07-多头注意力.md)、[06-自注意力与Transformer](./06-自注意力与Transformer.md)、[14-Layer Normalization](./14-Layer Normalization.md)、[13-残差连接](./13-残差连接(ResidualConnection).md)
+> 理解前置知识可参见 [多头注意力](./07-多头注意力.md)；理解前置知识可参见 [自注意力与Transformer](./06-自注意力与Transformer.md)；理解前置知识可参见 [Layer Normalization](./14-Layer Normalization.md)

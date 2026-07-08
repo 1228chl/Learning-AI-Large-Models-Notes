@@ -125,4 +125,4 @@ GET  /api/v1/health           # 健康检查
 
 **回答要点**：HTTP/1.1 的 SSE（Server-Sent Events）是单向流（服务端→客户端），无法实现双向实时通信；WebSocket 支持全双工通信适合实时交互式对话；gRPC 基于 HTTP/2 的流式传输，协议效率高、支持双向流和强类型接口，适合微服务间高性能通信。
 
-> 参见 [04-Flask与FastAPI模型部署](./04-Flask与FastAPI模型部署.md)、[07-LLM API调用与ChatBot](./07-LLM API调用与ChatBot.md)、[09-Socket网络编程](../Python/09-Socket网络编程.md)
+> 理解前置知识可参见 [Flask与FastAPI模型部署](./04-Flask与FastAPI模型部署.md)；理解前置知识可参见 [LLM API调用与ChatBot](./07-LLM API调用与ChatBot.md)；掌握Socket网络编程的编程实现可参见 [Socket网络编程](../Python/09-Socket网络编程.md)

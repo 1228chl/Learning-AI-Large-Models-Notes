@@ -90,4 +90,4 @@ COMMIT;     -- 提交（两笔都成功）
 
 **回答要点**：① 复合索引违反最左前缀原则（如索引(a,b,c)，但 WHERE 只用了 b 列）。② 对索引列使用函数或计算（WHERE DATE(create_time) = '2024-01-01'或 WHERE age + 1 = 20）。③ LIKE 左模糊匹配（LIKE '%keyword'）；OR 条件中部分列无索引；数据类型隐式转换。④ 失效时 MySQL 退化为全表扫描（type=ALL），性能显著下降。
 
-> 参见 [02-MySQL核心操作](./02-MySQL核心操作.md)、[04-PyMySQL模块](./04-PyMySQL模块.md)、[01-SQL基础与数据库设计](./01-SQL基础与数据库设计.md)
+> 理解前置知识可参见 [MySQL核心操作](./02-MySQL核心操作.md)；理解前置知识可参见 [PyMySQL模块](./04-PyMySQL模块.md)；理解前置知识可参见 [SQL基础与数据库设计](./01-SQL基础与数据库设计.md)

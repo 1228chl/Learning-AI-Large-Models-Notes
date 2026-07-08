@@ -96,4 +96,4 @@ conda deactivate
 
 **回答要点**：团队协作中环境定义不精确（缺少 lock 文件）、CI/CD 中依赖解析过慢、纯 Python 项目过于臃肿。替代方案：UV（Rust 实现、支持 lock 文件）、Poetry（声明式项目管理）、Docker 容器化（操作系统级隔离）。
 
-> 参见 [02-Conda包管理与配置](./02-Conda包管理与配置.md)、[03-UV包管理器](./03-UV包管理器.md)
+> 理解前置知识可参见 [Conda包管理与配置](./02-Conda包管理与配置.md)；理解前置知识可参见 [UV包管理器](./03-UV包管理器.md)；理解Shell脚本基础的系统基础可参见 [Shell脚本基础](../Linux/06-Shell脚本基础.md)
