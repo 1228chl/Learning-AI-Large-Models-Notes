@@ -43,13 +43,13 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Atomic-Cards/NLP/02-词嵌入与分布式表示.md",
+                "file": "AI-Large-Modlels-Notes/Project/EduRAG/RAG学习步骤与流程.md",
                 "mode": "source",
                 "source": false,
                 "backlinks": false
               },
               "icon": "lucide-file",
-              "title": "02-词嵌入与分布式表示"
+              "title": "RAG学习步骤与流程"
             }
           }
         ],
@@ -241,19 +241,20 @@
   },
   "active": "b9c397e9f32ab073",
   "lastOpenFiles": [
-    "Atomic-Cards/NLP/07-多头注意力.md.tmp.27952.81fddc8a370a",
-    "Atomic-Cards/NLP/07-多头注意力.md.tmp.27952.d2208c2b2c35",
-    "Atomic-Cards/NLP/07-多头注意力.md.tmp.27952.dec342d47993",
-    "Atomic-Cards/NLP/13-残差连接(ResidualConnection).md.tmp.27952.c793539627d4",
-    "Atomic-Cards/NLP/05-注意力机制.md.tmp.27952.96ffbe54b41e",
-    "Atomic-Cards/NLP/05-注意力机制.md.tmp.27952.dd112b688843",
-    "Atomic-Cards/NLP/14-Layer Normalization.md.tmp.27952.fffce21f7168",
-    "Atomic-Cards/NLP/05-注意力机制.md.tmp.27952.f70044410c89",
-    "Atomic-Cards/Python/02-继承与多态.md.tmp.27952.0afdbce22f27",
-    "Atomic-Cards/NLP/03-FastText与子词信息.md.tmp.27952.d14ea5e290cd",
-    "Atomic-Cards/NLP/06-自注意力与Transformer.md.tmp.27952.e217195cf824",
-    "Atomic-Cards/NLP/01-分词算法.md",
+    "Atomic-Cards/深度学习/16-光滑损失函数.md.tmp.27952.a069227c2f54",
+    "Atomic-Cards/深度学习/16-光滑损失函数.md.tmp.27952.562497f4a75e",
+    "Atomic-Cards/深度学习/16-光滑损失函数.md.tmp.27952.c2c82dc78e5c",
+    "Atomic-Cards/知识体系/01-核心依赖链与学习路径.md.tmp.27952.9def587bbfdd",
+    "Atomic-Cards/深度学习/19-模型量化(Quantization).md.tmp.27952.a1049feaa21d",
+    "Atomic-Cards/深度学习/07-PyTorch张量与运算.md.tmp.27952.1f3e58de5585",
+    "Atomic-Cards/深度学习/07-PyTorch张量与运算.md.tmp.27952.512d793731a6",
+    "Atomic-Cards/深度学习/01-感知机与多层神经网络.md.tmp.27952.c5bdd21729e6",
+    "Atomic-Cards/深度学习/14-知识蒸馏详解.md.tmp.27952.383a5ae5f7c0",
+    "Atomic-Cards/深度学习/11-RNN与序列建模.md.tmp.27952.f9912eb23a53",
+    "Atomic-Cards/深度学习/05-权重初始化策略.md.tmp.27952.afd59f295829",
     "Atomic-Cards/NLP/02-词嵌入与分布式表示.md",
+    "AI-Large-Modlels-Notes/Project/EduRAG/RAG学习步骤与流程.md",
+    "Atomic-Cards/NLP/01-分词算法.md",
     "Atomic-Cards/NLP/04-Seq2Seq与Encoder-Decoder.md",
     "Atomic-Cards/NLP/07-多头注意力.md",
     "Atomic-Cards/NLP/05-注意力机制.md",
@@ -276,7 +277,6 @@
     "Atomic-Cards/深度学习/18-迁移学习与微调(TransferLearning).md",
     "Atomic-Cards/深度学习/17-迁移学习与微调.md",
     "Atomic-Cards/卡片总览.md",
-    "Atomic-Cards/深度学习/16-光滑损失函数.md",
     "Assets/Image/AI-Large-Modlels-Notes/Project/EduRAG/Milvus向量数据库/1.2.8.3-1.png",
     "Assets/Image/AI-Large-Modlels-Notes/Project/EduRAG/Milvus向量数据库/1.2.8.2-2.png",
     "Assets/Image/AI-Large-Modlels-Notes/Project/EduRAG/Milvus向量数据库/1.2.8.2-1.png",

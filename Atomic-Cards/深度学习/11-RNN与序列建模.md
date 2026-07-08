@@ -15,6 +15,10 @@ $$
 \mathbf{h}_t = \tanh(W_{ih} \mathbf{x}_t + W_{hh} \mathbf{h}_{t-1} + \mathbf{b}_h)
 $$
 
+- $W_{ih}$：输入到隐藏层的权重矩阵
+- $W_{hh}$：隐藏层到隐藏层的权重矩阵（循环权重）
+- $\mathbf{b}_h$：隐藏层的偏置项
+
 ```python
 import torch.nn as nn
 

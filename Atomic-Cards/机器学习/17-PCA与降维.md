@@ -29,7 +29,7 @@ plt.xlabel('PC1'); plt.ylabel('PC2')
 
 ## 数学本质
 
-PCA 对**协方差矩阵** $\Sigma = \frac{1}{n} X^T X$ 做**特征值分解**：
+设 $X$ 为数据矩阵，$n$ 为样本数。PCA 对**协方差矩阵** $\Sigma = \frac{1}{n} X^T X$ 做**特征值分解**：
 
 $$
 \Sigma \mathbf{v}_i = \lambda_i \mathbf{v}_i

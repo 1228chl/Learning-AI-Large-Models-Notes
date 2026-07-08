@@ -15,7 +15,7 @@ $$
 Q(W) = \text{round}\left(\frac{W - \text{min}}{\Delta}\right), \quad \Delta = \frac{\text{max} - \text{min}}{2^b - 1}
 $$
 
-其中 $\Delta$ 为缩放因子（scale）， $b$ 为量化比特数， $2^b - 1$ 为量化等级数。反量化还原为 $\hat{W} = Q(W) \cdot \Delta + \text{min}$ 。
+其中 $\Delta$ 为缩放因子（scale）， $b$ 为量化比特数， $2^b - 1$ 为量化等级数，$\text{min}$ 和 $\text{max}$ 分别为权重 $W$ 的最小值和最大值。反量化还原为 $\hat{W} = Q(W) \cdot \Delta + \text{min}$ ，其中 $\hat{W}$ 为反量化后的近似权重矩阵。
 
 ## 量化方式分类
 

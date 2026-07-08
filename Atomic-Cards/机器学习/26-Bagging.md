@@ -11,7 +11,7 @@ aliases: ["Bagging", "Bootstrap Aggregating", "装袋"]
 
 Bagging（Bootstrap Aggregating）通过对原始训练数据进行**有放回采样**（Bootstrap Sampling）生成 $M$ 个不同的子集，在每个子集上独立训练一个基学习器，最终通过**投票**（分类）或**平均**（回归）整合所有基学习器的输出。
 
-数学上，Bagging 的预测可以表示为：
+设 $x$ 为输入样本，$\hat{f}_m(x)$ 为第 $m$ 个基模型的回归预测值，$\hat{y}_m$ 为第 $m$ 个基模型的分类预测类别，则 Bagging 的预测可以表示为：
 
 $$
  \hat{f}_{\text{bag}}(x) = \frac{1}{M} \sum_{m=1}^{M} \hat{f}_m(x) \quad (\text{回归}) 
@@ -42,10 +42,10 @@ Bagging 的核心优势在于**降低方差**。假设每个基模型方差为 $
 
 | 应用场景 | 数学形式 | 说明 |
 |----------|----------|------|
-| 随机森林 | $\hat{y} = \text{majority vote}\{h_1(x), \ldots, h_T(x)\}$ | 在 Bagging 基础上引入特征随机选择，进一步降低相关性 |
-| 深度集成 | $\hat{y} = \frac{1}{M} \sum_{i=1}^{M} f_{\theta_i}(x)$ | 同一网络结构不同初始化训练多个模型后平均预测 |
-| Dropout | $\hat{y} = \frac{1}{T} \sum_{t=1}^{T} f(x; \theta \odot z_t)$ | 可视为 Bagging 在神经网络中的近似实现（子网络集成） |
-| 置信度校准 | $p(y \vert x) = \frac{1}{M} \sum_{m=1}^{M} p_m(y \vert x)$ | 多模型平均概率输出，提升预测置信度可靠性 |
+| 随机森林 | $\hat{y} = \text{majority vote}\{h_1(x), \ldots, h_T(x)\}$ | 在 Bagging 基础上引入特征随机选择，进一步降低相关性（$h_t(x)$ 为第 $t$ 棵决策树的预测，$T$ 为决策树数量） |
+| 深度集成 | $\hat{y} = \frac{1}{M} \sum_{i=1}^{M} f_{\theta_i}(x)$ | 同一网络结构不同初始化训练多个模型后平均预测（$f_{\theta_i}(x)$ 为参数 $\theta_i$ 对应的网络输出） |
+| Dropout | $\hat{y} = \frac{1}{T} \sum_{t=1}^{T} f(x; \theta \odot z_t)$ | 可视为 Bagging 在神经网络中的近似实现（子网络集成）（$\theta$ 为网络参数，$z_t$ 为第 $t$ 次前向传播的 Dropout 掩码，$\odot$ 为逐元素乘法） |
+| 置信度校准 | $p(y \vert x) = \frac{1}{M} \sum_{m=1}^{M} p_m(y \vert x)$ | 多模型平均概率输出，提升预测置信度可靠性（$p_m(y|x)$ 为第 $m$ 个模型预测的条件概率） |
 
 ## 代码示例
 
@@ -105,7 +105,7 @@ print(f"OOB 分数（泛化误差无偏估计）: {bagging.oob_score_:.4f}")  # 
 **回答要点**：
 
 1. 利用袋外（Out-of-Bag, OOB）样本进行无偏估计
-2. 每个 Bootstrap 子集中约有 36.8% 的样本未被选中（$(1-1/N)^N \approx 1/e \approx 0.368$）
+2. 设 $N$ 为原始样本数，每个 Bootstrap 子集中约有 36.8% 的样本未被选中（$(1-1/N)^N \approx 1/e \approx 0.368$）
 3. 计算所有基模型在 OOB 样本上的平均误差作为泛化性能估计，接近在测试集上的表现
 
 **Q4（边界）**：当基模型之间高度相关时，Bagging 的效果会如何变化？如何增加模型的多样性？

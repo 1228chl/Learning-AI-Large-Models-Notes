@@ -11,6 +11,8 @@ aliases: ["GRU", "门控循环单元", "Gated Recurrent Unit"]
 
 门控循环单元（GRU, Gated Recurrent Unit）是 LSTM 的简化变体，由 Cho 等人于 2014 年提出。它将 LSTM 的三个门**合并为两个门**，去掉独立的细胞状态 $C$ ，参数量更少，计算更快，效果与 LSTM 相当。
 
+设 $x_t$ 为 t 时刻的输入向量，$h_{t-1}$ 为上一时刻的隐藏状态，$W_z$、$W_r$、$W_h$ 分别为更新门、重置门、候选状态的权重矩阵，$\odot$ 为逐元素乘法：
+
 $$
 z_t = \sigma(W_z \cdot [h_{t-1}, x_t]) \quad \text{更新门}
 $$

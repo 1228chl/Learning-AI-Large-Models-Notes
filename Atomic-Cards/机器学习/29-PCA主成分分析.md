@@ -13,7 +13,7 @@ aliases: ["PCA", "主成分分析", "Principal Component Analysis", "特征值�
 
 ## 数学本质
 
-PCA 对**协方差矩阵** $\Sigma = \frac{1}{n} X^T X$ 做**特征值分解**：
+设 $X$ 为已中心化的数据矩阵，$n$ 为样本数。PCA 对**协方差矩阵** $\Sigma = \frac{1}{n} X^T X$ 做**特征值分解**：
 
 $$
 \Sigma \mathbf{v}_i = \lambda_i \mathbf{v}_i
@@ -48,7 +48,7 @@ loadings = pca.components_  # 每行是一个主成分，每列是原始特征�
 2. 计算协方差矩阵 $\Sigma = \frac{1}{n} X^T X$
 3. 对 $\Sigma$ 做特征值分解
 4. 按特征值大小排序，取前 k 个特征向量
-5. 将数据投影到 k 个主成分方向： $X_{\text{new}} = X W_k$
+5. 设 $W_k$ 为由前 $k$ 个特征向量组成的投影矩阵，$X_{\text{new}}$ 为降维后的数据矩阵。将数据投影到 $k$ 个主成分方向：$X_{\text{new}} = X W_k$
 
 ## 主成分数量选择
 

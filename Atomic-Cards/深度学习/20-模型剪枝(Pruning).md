@@ -9,7 +9,7 @@ aliases: ["剪枝", "Pruning", "模型剪枝"]
 
 ## 定义
 
-模型剪枝（Model Pruning）通过移除神经网络中不重要的权重、通道或层，在保持模型精度的前提下减少参数量和计算量。对于权重矩阵 $W \in \mathbb{R}^{m \times n}$ ，剪枝操作定义为一个掩码 $M \in \{0,1\}^{m \times n}$ ：
+模型剪枝（Model Pruning）通过移除神经网络中不重要的权重、通道或层，在保持模型精度的前提下减少参数量和计算量。对于权重矩阵 $W \in \mathbb{R}^{m \times n}$（$m$ 为权重矩阵的行数/输出维度，$n$ 为列数/输入维度），剪枝操作定义为一个掩码 $M \in \{0,1\}^{m \times n}$ ：
 
 $$
 W_{\text{pruned}} = W \odot M, \quad M_{ij} = \begin{cases} 1 & |W_{ij}| > \tau \\ 0 & \text{otherwise} \end{cases}

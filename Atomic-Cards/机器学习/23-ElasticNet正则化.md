@@ -11,11 +11,13 @@ aliases: ["ElasticNet", "弹性网", "L1+L2混合"]
 
 ElasticNet（弹性网）是 L1（Lasso）和 L2（Ridge）正则化的混合，同时具备 L1 的**特征选择能力**和 L2 的**群组效应**（相关特征组一起保留），弥补了 Lasso 在相关特征中随机选择的不足。
 
+设 $L_{\text{enet}}$ 为 ElasticNet 总损失，$L_{\text{data}}$ 为数据拟合损失，$\mathbf{w}$ 为权重向量，$\lambda_1$ 和 $\lambda_2$ 分别为 L1 和 L2 正则化强度：
+
 $$
 L_{\text{enet}} = L_{\text{data}} + \lambda_1 \|\mathbf{w}\|_1 + \lambda_2 \|\mathbf{w}\|_2^2
 $$
 
-实际实现中常用以下参数化形式：
+实际实现中常用以下参数化形式，其中 $\lambda$ 为正则化总强度：
 
 $$
 L_{\text{enet}} = L_{\text{data}} + \lambda \left( \rho \|\mathbf{w}\|_1 + \frac{1-\rho}{2} \|\mathbf{w}\|_2^2 \right)

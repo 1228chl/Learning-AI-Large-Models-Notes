@@ -17,6 +17,10 @@ $$
 \min \sum_{i=1}^n \|\mathbf{x}_i - \mu_{c_i}\|_2^2
 $$
 
+- $n$：样本总数
+- $\mathbf{x}_i$：第 $i$ 个样本的特征向量
+- $\mu_{c_i}$：样本 $\mathbf{x}_i$ 所属簇的中心（$c_i$ 为簇编号）
+
 ```python
 from sklearn.cluster import KMeans
 
@@ -94,7 +98,7 @@ for k in range(2, 11):
 
 | 优点 | 局限 |
 |------|------|
-| 简单快速， $O(n \cdot K \cdot d \cdot I)$ | 需预设 $K$ 值 |
+| 简单快速， $O(n \cdot K \cdot d \cdot I)$（$n$：样本数，$d$：特征维数，$I$：迭代次数） | 需预设 $K$ 值 |
 | 可扩展到大数据集 | 对初始中心敏感 |
 | 容易解释 | 假设球状簇（不能处理复杂形状） |
 | 常用于数据探索第一步 | 对异常值敏感 |

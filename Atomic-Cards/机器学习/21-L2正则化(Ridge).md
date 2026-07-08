@@ -14,6 +14,7 @@ L2 正则化（Ridge / 权重衰减）在损失函数中添加权重的 **平方
 $$
 L_{\text{ridge}} = L_{\text{data}} + \lambda \sum_{j=1}^p w_j^2 = L_{\text{data}} + \lambda \|\mathbf{w}\|_2^2
 $$
+其中 $p$ 为特征数量。
 
 其中 $\lambda$ 控制正则化强度： $\lambda$ 越大 → 权重缩小越强， $\lambda$ 越小 → 越接近普通最小二乘。
 
@@ -24,6 +25,7 @@ $$
 $$
 w_{t+1} = w_t - \eta (\nabla L_{\text{data}} + \lambda w_t) = w_t(1 - \eta\lambda) - \eta \nabla L_{\text{data}}
 $$
+其中 $\eta$ 为学习率。
 
 每一步更新前权重先按 $(1 - \eta\lambda)$ 的比例**衰减**，这就是"权重衰减"名称的来源。
 
@@ -69,10 +71,10 @@ L2 的约束区域是**圆形**：
 
 | 应用场景 | 数学形式 | 说明 |
 |----------|----------|------|
-| 线性回归（Ridge） | $\min \|Xw - y\|^2 + \lambda\|w\|_2^2$ | sklearn `Ridge` / `RidgeCV` |
-| 神经网络权重衰减 | $L + \frac{\lambda}{2}\sum\|W\|_2^2$ | PyTorch `weight_decay` 参数（AdamW 将 weight_decay 与学习率解耦） |
+| 线性回归（Ridge） | $\min \|Xw - y\|^2 + \lambda\|w\|_2^2$ | sklearn `Ridge` / `RidgeCV`（$X$ 为特征矩阵，$y$ 为目标向量） |
+| 神经网络权重衰减 | $L + \frac{\lambda}{2}\sum\|W\|_2^2$ | PyTorch `weight_decay` 参数（$W$ 为权重矩阵，$L$ 为损失函数；AdamW 将 weight_decay 与学习率解耦） |
 | 逻辑回归正则化 | sklearn `LogisticRegression(penalty='l2')` | 默认使用 L2 正则化 |
-| 推荐系统矩阵分解 | $\min\|R-UV\|_F^2 + \lambda(\|U\|_F^2+\|V\|_F^2)$ | 防止用户/物品隐向量过拟合 |
+| 推荐系统矩阵分解 | $\min\|R-UV\|_F^2 + \lambda(\|U\|_F^2+\|V\|_F^2)$ | 防止用户/物品隐向量过拟合（$R$ 为评分矩阵） |
 
 ## 面试追问
 

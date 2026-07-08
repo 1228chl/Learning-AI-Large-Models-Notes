@@ -11,7 +11,7 @@ aliases: ["Stacking", "堆叠", "Stacked Generalization"]
 
 Stacking（Stacked Generalization）通过**层级结构**组合多个不同基模型的输出：第一层训练多个异构基模型，将这些模型的预测结果（或概率）作为新的特征输入到第二层的**元模型**（Meta Model / Meta Learner）中，由元模型学习如何最优地融合基模型的判断。
 
-数学形式，令基模型为 $h_1, h_2, \ldots, h_K$ ，元模型为 $g$ ，对于输入 $x$ ：
+数学形式，令基模型为 $h_1, h_2, \ldots, h_K$ ，元模型为 $g$ ，输入为 $x$ ，预测输出为 $\hat{y}$ ：
 
 $$
  \hat{y} = g\left(h_1(x), h_2(x), \ldots, h_K(x)\right) 
