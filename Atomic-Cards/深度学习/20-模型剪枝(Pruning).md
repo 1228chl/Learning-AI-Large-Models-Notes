@@ -32,6 +32,61 @@ $$
 
 剪枝如同修剪一棵树的枝叶而非砍伐树干：移除对整体输出贡献微弱的权重（细枝末节），保留承载主要信息的通道（主枝干）。非结构化剪枝是随意移除树叶（稀疏分散），结构化剪枝是移除整根枝条（连续块状，硬件友好）。
 
+## 代码示例：PyTorch 剪枝
+
+```python
+import torch
+import torch.nn as nn
+import torch.nn.utils.prune as prune
+
+# ---------- 定义简单模型 ----------
+class SimpleMLP(nn.Module):
+    """一个简单的三层 MLP，用于演示剪枝流程"""
+    def __init__(self):
+        super().__init__()
+        self.fc1 = nn.Linear(784, 256)
+        self.fc2 = nn.Linear(256, 128)
+        self.fc3 = nn.Linear(128, 10)
+
+    def forward(self, x):
+        x = torch.relu(self.fc1(x))
+        x = torch.relu(self.fc2(x))
+        return self.fc3(x)
+
+model = SimpleMLP()
+
+# ---------- 方法一：非结构化剪枝（L1 范数） ----------
+# 对 fc1 的权重进行 50% 稀疏度剪枝（移除绝对值最小的 50% 参数）
+prune.l1_unstructured(model.fc1, name="weight", amount=0.5)
+# 剪枝后权重为 weight_orig（原始）+ weight_mask（掩码）
+# weight = weight_orig * weight_mask
+
+# 查看剪枝效果
+sparsity = 1.0 - model.fc1.weight_mask.mean().item()
+print(f"fc1 权重稀疏度: {sparsity:.1%}")            # 输出: 50.0%
+
+# ---------- 方法二：结构化剪枝（L1 范数，按通道） ----------
+# 对 fc2 的权重按 L1 范数移除 20% 的输入通道
+prune.ln_structured(model.fc2, name="weight", amount=0.2, n=1, dim=0)
+# dim=0 表示沿输出通道维度剪枝（移除整行权重）
+
+# ---------- 方法三：全局剪枝（同时剪枝多个层） ----------
+prune.global_unstructured(
+    [(model.fc1, "weight"), (model.fc2, "weight"), (model.fc3, "weight")],
+    pruning_method=prune.L1Unstructured,
+    amount=0.3,                                     # 整体稀疏度 30%
+)
+
+# ---------- 永久化剪枝（移除掩码，不可逆） ----------
+prune.remove(model.fc1, "weight")                   # weight_orig → weight
+prune.remove(model.fc2, "weight")
+prune.remove(model.fc3, "weight")
+# 注意：remove 后权重不再可继续剪枝（掩码已移除）
+
+print("所有层剪枝完成并永久化")
+print(f"fc1 稀疏度: {1.0 - (model.fc1.weight == 0).float().mean():.1%}")
+```
+
 ## ML/DL 应用场景
 
 | 应用场景 | 剪枝方案 | 效果 |

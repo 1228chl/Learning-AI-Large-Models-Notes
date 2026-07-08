@@ -32,6 +32,63 @@ $$
 
 知识蒸馏就像一位经验丰富的老师（教师模型）将解题思路和思维方式（软标签中的暗知识）传授给学生（学生模型），而不是只让学生背诵标准答案（硬标签）。温度 T 控制老师讲解的详细程度：T 越高，老师对容易混淆的知识点讲解越细（暴露类别间相似关系），学生学得更深入。
 
+## 代码示例：蒸馏损失函数
+
+```python
+import torch
+import torch.nn as nn
+import torch.nn.functional as F
+
+def distillation_loss(student_logits, teacher_logits, labels, T=4.0, alpha=0.7):
+    """
+    知识蒸馏损失函数（KL 散度 + 交叉熵）
+
+    参数:
+        student_logits: 学生模型输出 logits（未经过 softmax）
+        teacher_logits: 教师模型输出 logits（未经过 softmax）
+        labels:         真实硬标签
+        T:              温度参数（控制软标签平滑程度）
+        alpha:          软标签损失的权重
+
+    返回:
+        loss:           蒸馏总损失
+    """
+    # ---------- 软标签损失：KL 散度 ----------
+    # 教师和学生 logits 都除以 T 再做 softmax，获得平滑后的概率分布
+    teacher_soft = F.softmax(teacher_logits / T, dim=-1)         # 教师软标签
+    student_log = F.log_softmax(student_logits / T, dim=-1)      # 学生 log 概率
+    kl_loss = nn.KLDivLoss(reduction="batchmean")(
+        student_log, teacher_soft
+    ) * (T ** 2)            # × T² 恢复梯度尺度，使不同 T 下的梯度量级一致
+
+    # ---------- 硬标签损失：交叉熵 ----------
+    ce_loss = nn.CrossEntropyLoss()(student_logits, labels)
+
+    # ---------- 联合损失 ----------
+    total_loss = alpha * kl_loss + (1 - alpha) * ce_loss
+    return total_loss, kl_loss, ce_loss
+
+# ---------- 使用示例 ----------
+batch_size, num_classes = 4, 10
+student_logits = torch.randn(batch_size, num_classes)   # 模拟学生输出
+teacher_logits = torch.randn(batch_size, num_classes)   # 模拟教师输出
+labels = torch.randint(0, num_classes, (batch_size,))   # 模拟真实标签
+
+loss, kl, ce = distillation_loss(
+    student_logits, teacher_logits, labels,
+    T=4.0,             # 常用 T 范围 2-8
+    alpha=0.7          # 常用 α 范围 0.5-0.9
+)
+print(f"蒸馏总损失: {loss.item():.4f} (KL: {kl.item():.4f}, CE: {ce.item():.4f})")
+
+# ---------- 温度 T 的影响 ----------
+for T in [1.0, 4.0, 8.0, 20.0]:
+    _, kl_loss, _ = distillation_loss(student_logits, teacher_logits, labels, T=T)
+    print(f"T={T:5.1f} -> KL 损失: {kl_loss.item():.4f}")
+# T 越大，软标签越平滑，KL 散度越大（分布差异增大）
+# T=1.0 退化为中心估计，T 过高则分布过于均匀失去信息量
+```
+
 ## ML/DL 应用场景
 
 | 应用场景 | 蒸馏方案 | 效果 |

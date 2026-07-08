@@ -33,6 +33,55 @@ $$
 
 量化相当于将一张照片从 32 位真彩色（FP32）降低到 8 位灰度（INT8）：文件体积缩小 4 倍，但画面整体细节仍可辨识；降到 4 位时色彩块状感明显，但核心轮廓依然保持。
 
+## 代码示例：PyTorch 动态量化
+
+```python
+import torch
+import torch.nn as nn
+
+# ---------- 定义简单模型 ----------
+class TextClassifier(nn.Module):
+    """一个简单的文本分类模型，包含 Embedding + Linear 层"""
+    def __init__(self, vocab_size=10000, embed_dim=256, num_classes=10):
+        super().__init__()
+        self.embedding = nn.Embedding(vocab_size, embed_dim)
+        self.fc1 = nn.Linear(embed_dim, 128)
+        self.fc2 = nn.Linear(128, num_classes)
+
+    def forward(self, x):
+        x = self.embedding(x).mean(dim=1)       # 平均池化
+        x = torch.relu(self.fc1(x))
+        return self.fc2(x)
+
+model = TextClassifier()
+model.eval()                                    # 量化前必须切换为评估模式
+
+# ---------- 训练后动态量化（仅量化 Linear 层，保留 Embedding 为 FP32） ----------
+quantized_model = torch.quantization.quantize_dynamic(
+    model,                                      # 原始 FP32 模型
+    qconfig_spec={nn.Linear},                   # 指定要量化的层类型
+    dtype=torch.qint8                           # 量化精度（INT8）
+)
+
+# ---------- 对比量化前后模型大小 ----------
+def print_model_size(m, label):
+    """计算模型参数量（MB）"""
+    param_size = sum(p.numel() * p.element_size() for p in m.parameters())
+    print(f"{label}: {param_size / 1024 / 1024:.2f} MB")
+
+print_model_size(model, "FP32 原始模型")
+print_model_size(quantized_model, "INT8 动态量化后")
+
+# ---------- 推理（API 完全一致，自动执行量化计算） ----------
+dummy_input = torch.randint(0, 10000, (1, 20))
+with torch.no_grad():
+    fp32_output = model(dummy_input)
+    int8_output = quantized_model(dummy_input)
+
+# 输出差异极小（INT8 量化误差 < 1%）
+print(f"输出差异: {torch.abs(fp32_output - int8_output).max().item():.6f}")
+```
+
 ## ML/DL 应用场景
 
 | 应用场景 | 使用方式 | 效果 |

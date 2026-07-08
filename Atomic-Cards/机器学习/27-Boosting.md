@@ -43,10 +43,54 @@ $$
 
 | 应用场景           | 数学形式                                                                              | 说明                                            |
 | -------------- | --------------------------------------------------------------------------------- | --------------------------------------------- |
-| GBDT / XGBoost | $F_m(x) = F_{m-1}(x) + \eta \cdot \argmin_h \sum_i L(y_i, F_{m-1}(x_i) + h(x_i))$ | 竞赛和工业界最常用的表格数据建模方法                            |
+| GBDT / XGBoost | $F_m(x) = F_{m-1}(x) + \eta \cdot \arg\min_h \sum_i L(y_i, F_{m-1}(x_i) + h(x_i))$ | 竞赛和工业界最常用的表格数据建模方法                            |
 | AdaBoost 人脸检测  | $H(x) = \sum_{t=1}^T \alpha_t h_t(x)$                                             | Viola-Jones 人脸检测器：级联弱分类器实现实时检测                |
 | CatBoost       | 对称决策树 + 有序提升                                                                      | 处理类别特征的专用梯度提升变体                               |
 | 深度 Boosting    | 残差网络（ResNet）                                                                      | $x_{l+1} = x_l + F(x_l)$ 可视为 Boosting 思想的深度实现 |
+
+## 代码示例
+
+```python
+from sklearn.ensemble import AdaBoostClassifier, GradientBoostingClassifier
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.datasets import make_classification
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import accuracy_score
+
+# 生成二分类数据集：1000个样本，20个特征
+X, y = make_classification(n_samples=1000, n_features=20, n_informative=15,
+                           n_redundant=5, random_state=42)
+
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2,
+                                                    random_state=42)
+
+# ========== AdaBoost ==========
+# AdaBoost 使用深度为1的决策树桩（stump）作为弱学习器
+# 每轮训练后增大误分类样本的权重，让下一个弱学习器重点关注这些困难样本
+ada = AdaBoostClassifier(
+    estimator=DecisionTreeClassifier(max_depth=1),  # 弱学习器：单层决策树桩
+    n_estimators=50,                                # 串行训练50个弱学习器
+    learning_rate=1.0,                              # 每个弱学习器的贡献缩系数
+    random_state=42
+)
+ada.fit(X_train, y_train)
+y_pred_ada = ada.predict(X_test)
+print(f"AdaBoost 测试集准确率: {accuracy_score(y_test, y_pred_ada):.4f}")
+
+# ========== Gradient Boosting ==========
+# Gradient Boosting 通过拟合前一轮的负梯度来迭代优化损失函数
+# 学习率 learning_rate 控制每棵树的贡献步长，避免过拟合
+gb = GradientBoostingClassifier(
+    n_estimators=100,          # 100棵决策树，串行训练
+    learning_rate=0.1,         # 学习率：缩小每棵树的贡献，留出更多迭代空间
+    max_depth=3,               # 每棵树的最大深度，控制单个基模型复杂度
+    subsample=0.8,             # 行采样比例：每棵树只用80%样本训练，增加随机性
+    random_state=42
+)
+gb.fit(X_train, y_train)
+y_pred_gb = gb.predict(X_test)
+print(f"Gradient Boosting 测试集准确率: {accuracy_score(y_test, y_pred_gb):.4f}")
+```
 
 ## 面试追问
 

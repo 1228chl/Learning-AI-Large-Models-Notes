@@ -7,6 +7,10 @@ aliases: ["LangChain操作", "LangChain代码"]
 
 # LangChain 组件操作指南
 
+## 定义
+
+LangChain 组件操作指南提供了 LangChain 框架中八大核心组件（Models、Prompts、Chains、Agents、Memory、Indexes、Output Parsers、LCEL）的完整可运行代码示例。本节涵盖从基础模型调用到高级管道编排的全链路实践操作，帮助开发者快速上手 LangChain 开发并理解各组件的协作方式。
+
 > 补充各组件的完整可运行代码。安装：`pip install langchain langchain-openai langchain-community`
 
 ## 1. Models
@@ -177,6 +181,17 @@ from langchain_core.runnables import RunnablePassthrough
 chain = {"subject": RunnablePassthrough()} | prompt | llm | StrOutputParser()
 print(chain.invoke("AI"))  # 执行管道：输入"AI"经模板格式化、LLM生成、解析后输出最终结果
 ```
+
+## ML/DL 应用场景
+
+| 应用场景 | 核心组件 | 说明 |
+|:--------:|:--------|:----|
+| **知识库问答（RAG）** | Indexes + RetrievalQA | 文档加载、切分、向量化存储后构建检索增强问答链 |
+| **对话机器人** | Memory + Chat Model + Prompt | 带对话历史记忆的多轮交互，可持久化到数据库 |
+| **数据分析** | Agent + Python REPL | LLM 自主调用代码解释器执行数据分析任务 |
+| **自动化工作流** | SequentialChain + Tools | 多步任务按顺序自动执行，前一步输出作为后一步输入 |
+| **输出结构约束** | Output Parsers | 将 LLM 非结构化输出解析为 JSON/Pydantic 等结构化格式 |
+| **管道编排** | LCEL（`|` 语法） | 用管道符声明式串联组件，天然支持流式、批量和异步 |
 
 ## 面试追问
 

@@ -47,6 +47,44 @@ Bagging 的核心优势在于**降低方差**。假设每个基模型方差为 $
 | Dropout | $\hat{y} = \frac{1}{T} \sum_{t=1}^{T} f(x; \theta \odot z_t)$ | 可视为 Bagging 在神经网络中的近似实现（子网络集成） |
 | 置信度校准 | $p(y \vert x) = \frac{1}{M} \sum_{m=1}^{M} p_m(y \vert x)$ | 多模型平均概率输出，提升预测置信度可靠性 |
 
+## 代码示例
+
+```python
+from sklearn.ensemble import BaggingClassifier
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.datasets import make_classification
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import accuracy_score
+
+# 生成一个二分类数据集：1000个样本，20个特征，其中15个有信息量
+X, y = make_classification(n_samples=1000, n_features=20, n_informative=15,
+                           n_redundant=5, random_state=42)
+
+# 划分训练集和测试集：80% 训练，20% 测试
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2,
+                                                    random_state=42)
+
+# 创建 Bagging 分类器：
+#   - 基模型：决策树（默认设置，易过拟合—Bagging恰好能缓解）
+#   - n_estimators=50：集成50棵决策树
+#   - max_samples=0.8：每个子采样集取80%的原始样本（有放回）
+#   - oob_score=True：使用袋外样本评估泛化性能，无需单独验证集
+bagging = BaggingClassifier(
+    estimator=DecisionTreeClassifier(),
+    n_estimators=50,
+    max_samples=0.8,
+    oob_score=True,
+    random_state=42
+)
+
+bagging.fit(X_train, y_train)                    # 训练：自动生成子集并训练各基模型
+
+y_pred = bagging.predict(X_test)                 # 预测：各基模型投票决定最终类别
+
+print(f"测试集准确率: {accuracy_score(y_test, y_pred):.4f}")  # 输出模型在测试集上的表现
+print(f"OOB 分数（泛化误差无偏估计）: {bagging.oob_score_:.4f}")  # 袋外评估分数，接近测试集表现
+```
+
 ## 面试追问
 
 **Q1（基础）**：Bagging 的全称是什么？它的训练过程和预测过程分别怎么做？

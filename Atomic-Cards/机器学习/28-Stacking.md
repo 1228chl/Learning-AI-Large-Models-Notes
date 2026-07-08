@@ -41,6 +41,55 @@ $$
 | 多模态融合 | $\hat{y} = g\left(h_{\text{text}}(x), h_{\text{image}}(x), h_{\text{audio}}(x)\right)$ | 不同模态分别建模后，元模型学习跨模态互补关系 |
 | AutoML 模型选择 | $\hat{y} = \text{softmax}\left(\sum_k w_k h_k(x)\right)$ | 元模型学习各算法在特定数据上的权重，动态选择最优组合 |
 
+## 代码示例
+
+```python
+from sklearn.ensemble import StackingClassifier
+from sklearn.ensemble import RandomForestClassifier, GradientBoostingClassifier
+from sklearn.linear_model import LogisticRegression
+from sklearn.svm import SVC
+from sklearn.datasets import make_classification
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import accuracy_score
+
+# 生成二分类数据集：1000个样本，20个特征
+X, y = make_classification(n_samples=1000, n_features=20, n_informative=15,
+                           n_redundant=5, random_state=42)
+
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2,
+                                                    random_state=42)
+
+# 第一层：异构基模型（来自不同算法族，确保多样性）
+base_learners = [
+    ('rf',  RandomForestClassifier(n_estimators=100, random_state=42)),     # 树模型
+    ('gbdt', GradientBoostingClassifier(n_estimators=100, random_state=42)), # 梯度提升
+    ('svm', SVC(probability=True, random_state=42))                         # 核模型
+]
+
+# 第二层：元模型——简单的逻辑回归
+#   - 元模型学习如何最优地融合三个基模型的预测概率
+#   - 简单模型可有效防止过拟合
+#   - cv=5：使用5折交叉验证生成基模型在训练集上的OOF预测，防止信息泄露
+stacking = StackingClassifier(
+    estimators=base_learners,
+    final_estimator=LogisticRegression(),
+    cv=5,
+    stack_method='predict_proba'  # 使用概率输出作为元模型特征，信息更丰富
+)
+
+stacking.fit(X_train, y_train)                   # 训练：自动完成5折交叉验证+元模型训练
+
+y_pred = stacking.predict(X_test)                # 预测：基模型先预测→元模型融合输出最终结果
+
+print(f"Stacking 测试集准确率: {accuracy_score(y_test, y_pred):.4f}")
+
+# 对比单个基模型的表现，验证集成效果
+for name, model in base_learners:
+    model.fit(X_train, y_train)
+    acc = accuracy_score(y_test, model.predict(X_test))
+    print(f"{name} 单独准确率: {acc:.4f}")
+```
+
 ## 面试追问
 
 **Q1（基础）**：Stacking 和 Bagging / Boosting 在结构上有什么本质不同？
