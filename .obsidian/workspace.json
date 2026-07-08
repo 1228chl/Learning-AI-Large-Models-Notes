@@ -217,7 +217,8 @@
               "title": "原子化生成提示词 的出链列表"
             }
           }
-        ]
+        ],
+        "currentTab": 1
       }
     ],
     "direction": "horizontal",
