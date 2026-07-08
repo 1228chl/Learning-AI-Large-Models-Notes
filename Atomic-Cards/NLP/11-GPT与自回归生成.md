@@ -86,4 +86,4 @@ model = GPT2LMHeadModel.from_pretrained('gpt2')
 **Q4（边界）**：自回归生成的根本性局限是什么？为什么说它存在 Exposure Bias 和误差累积问题？
 **回答要点**：训练时 Teacher Forcing 使用真实输入，推理时只能使用自己之前的预测 → 训练/推理分布不一致（Exposure Bias）；长序列生成中早期错误会不断累积放大；单向约束（只能看左侧）使模型无法全局规划输出内容；改进方向包括扩散语言模型、迭代精炼等非自回归方案。
 
-> 参见 [[10-BERT与MLM预训练]]、[[06-自注意力与Transformer]]、[[12-HuggingFace Transformers库]]
+> 参见 [10-BERT与MLM预训练](./10-BERT与MLM预训练.md)、[06-自注意力与Transformer](./06-自注意力与Transformer.md)、[12-HuggingFace Transformers库](./12-HuggingFace Transformers库.md)

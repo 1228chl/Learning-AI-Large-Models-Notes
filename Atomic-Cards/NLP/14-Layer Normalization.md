@@ -90,4 +90,4 @@ LayerNorm 对每个词向量做"标准化"：将其分布拉回到零均值单�
 **Q4（边界）**：LayerNorm 是否在所有场景下都比 BatchNorm 好？哪些场景下 BatchNorm 依然占优？
 **回答要点**：在 CV 任务中 BN 仍是主流——图像固定尺寸、batch 可较大时，BN 计算高效且引入正则化效果；LayerNorm 在 batch size=1 的大模型微调中避免 BN 退化；但 LN 的计算量也比 BN 大（每个样本都要算统计量）；GroupNorm 和 InstanceNorm 等变体在特定情况（如风格迁移、小 batch CV）提供了更多选择。
 
-> 参见 [[06-自注意力与Transformer]]、[[07-多头注意力]]、[[13-残差连接(ResidualConnection)]]
+> 参见 [06-自注意力与Transformer](./06-自注意力与Transformer.md)、[07-多头注意力](./07-多头注意力.md)、[13-残差连接(ResidualConnection)](./13-残差连接(ResidualConnection)、[02-GPU并行与混合精度](../工程实践/02-GPU并行与混合精度.md)

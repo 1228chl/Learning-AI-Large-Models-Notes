@@ -124,4 +124,4 @@ print(response.choices[0].message.content)
 
 **回答要点**：Ollama 缺乏高级批处理（动态 batching）和 PagedAttention 等优化，高并发吞吐不如 vLLM/TGI；大模型（70B+）在消费级 GPU 无法运行；无内置监控和鉴权（需自行反代）；生产级推荐 vLLM + Kubernetes，云场景选 OpenAI API。
 
-> 参见 [[07-LLM API调用与ChatBot]]、[[06-提示词工程核心原则]]
+> 参见 [07-LLM API调用与ChatBot](./07-LLM API调用与ChatBot.md)、[06-提示词工程核心原则](../AI-Agent/06-提示词工程核心原则.md)

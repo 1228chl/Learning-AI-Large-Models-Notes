@@ -33,9 +33,9 @@ $$ \text{LayerNorm}(x) = \gamma \odot \frac{x - \mu}{\sigma + \epsilon} + \beta 
 
 | 概念 | 卡片 | 覆盖内容 |
 |:----:|:----:|:---------|
-| **残差连接** | [[13-残差连接(ResidualConnection)]] | 残差连接、梯度高速公路、Pre-LN vs Post-LN、ResNet/DenseNet |
-| **Layer Normalization** | [[14-Layer Normalization]] | LayerNorm vs BatchNorm、RMS Norm、Transformer/CV 归一化选择 |
+| **残差连接** | [13-残差连接(ResidualConnection)](./13-残差连接(ResidualConnection).md) | 残差连接、梯度高速公路、Pre-LN vs Post-LN、ResNet/DenseNet |
+| **Layer Normalization** | [14-Layer Normalization](./14-Layer Normalization.md) | LayerNorm vs BatchNorm、RMS Norm、Transformer/CV 归一化选择 |
 
 ---
 
-> 参见 [[13-残差连接(ResidualConnection)]]、[[14-Layer Normalization]]、[[06-自注意力与Transformer]]、[[07-多头注意力]]
+> 参见 [13-残差连接(ResidualConnection)](./13-残差连接(ResidualConnection)、[07-多头注意力](./07-多头注意力.md)、[06-自注意力与Transformer](./06-自注意力与Transformer.md)、[14-Layer Normalization](./14-Layer Normalization.md)、[13-残差连接](./13-残差连接(ResidualConnection).md)

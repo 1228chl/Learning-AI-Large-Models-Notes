@@ -145,4 +145,4 @@ curl -X POST http://localhost:8000/predict \
 
 **回答要点**：实时流式视频/音频处理推荐 gRPC（协议效率更高）；需要 GPU 批处理时可用 Triton Inference Server 或 TorchServe；Python GIL 限制 CPU 密集推理（多进程/多副本解决）；边缘端部署推荐 ONNX Runtime 或 TensorRT。
 
-> 参见 [[01-Docker基础与容器化]]、[[15-模型压缩量化剪枝蒸馏]]
+> 参见 [01-Docker基础与容器化](./01-Docker基础与容器化.md)、[15-模型压缩量化剪枝蒸馏](../深度学习/15-模型压缩量化剪枝蒸馏.md)

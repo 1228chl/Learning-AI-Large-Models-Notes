@@ -125,4 +125,4 @@ y = df['target'].values
 
 **回答要点**：数据全部加载到内存易 OOM；单线程执行无法利用多核；优化方案：分块读取 `read_csv(chunksize=)`、使用高效数据类型（category/int32/float32）、用 Dask/Modin/Polars 替代、在 SQL 层预聚合后再读入、利用 `.query()` 和 `.eval()` 通过 numexpr 加速。
 
-> 参见 [[01-NumPy与ndarray]]、[[18-特征工程]]
+> 参见 [01-NumPy与ndarray](./01-NumPy与ndarray.md)、[18-特征工程](../机器学习/18-特征工程.md)

@@ -100,4 +100,4 @@ transformer = nn.Transformer(
 
 **回答要点**：稀疏注意力（Longformer、BigBird 的滑动窗口 + 全局 token）；线性注意力（Performer 用核方法近似）；Flash Attention 通过 IO-aware 算法提升实际速度；Mistral 的滑动窗口注意力。
 
-> 参见 [[07-多头注意力]]、[[08-位置编码]]、[[09-残差连接与LayerNorm]]、[[05-注意力机制]]
+> 参见 [09-残差连接与LayerNorm](./09-残差连接与LayerNorm.md)、[05-注意力机制](./05-注意力机制.md)、[08-位置编码](./08-位置编码.md)、[07-多头注意力](./07-多头注意力.md)、[04-矩阵乘法](../线性代数/04-矩阵乘法.md)、[02-GPU并行与混合精度](../工程实践/02-GPU并行与混合精度.md)

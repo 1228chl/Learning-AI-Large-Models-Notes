@@ -105,4 +105,4 @@ a.argmax()            # 2（索引）
 
 **回答要点**：GPU 加速场景（深度学习）不支持，需改用 PyTorch/TensorFlow；超大数据集无法全部载入内存时，可用 NumPy 的 `np.memmap` 内存映射或 Dask 分布式数组；缺少自动求导功能；大规模分布式计算需用 Spark 等框架。
 
-> 参见 [[02-广播机制]]、[[03-Pandas与DataFrame]]、[[07-PyTorch张量与运算]]
+> 参见 [02-广播机制](./02-广播机制.md)、[03-Pandas与DataFrame](./03-Pandas与DataFrame.md)、[07-PyTorch张量与运算](../深度学习/07-PyTorch张量与运算.md)

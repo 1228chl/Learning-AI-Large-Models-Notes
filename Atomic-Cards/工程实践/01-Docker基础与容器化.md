@@ -126,4 +126,4 @@ services:
 
 **回答要点**：Windows 下 GPU 支持不完善（需 WSL2）；分布式训练的多节点通信配置复杂；大模型镜像体积过大（可用多阶段构建优化）；高性能计算场景考虑 Singularity/Apptainer。
 
-> 参见 [[05-进程管理]]、[[08-Dify平台]]
+> 参见 [05-进程管理](../Linux/05-进程管理.md)、[08-Dify平台](../AI-Agent/08-Dify平台.md)

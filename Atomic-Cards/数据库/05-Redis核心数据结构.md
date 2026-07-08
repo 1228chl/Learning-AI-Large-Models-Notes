@@ -112,4 +112,4 @@ r.zscore('leaderboard', 'model_a')                     # 查分数
 
 **回答要点**：① 存储 GB 级以上的全量数据：Redis 受内存限制成本高昂，应选磁盘数据库。② 复杂结构化查询：Redis 没有 SQL JOIN 和聚合能力，适合简单的键值存取。③ 强事务和一致性要求高的场景：Redis 的持久化机制不是 ACID 级别的。④ 大规模向量相似度搜索：Redis 的 Search 模块能力有限，应选 Milvus 等专用向量数据库。
 
-> 参见 [[06-Redis高级应用]]、[[04-PyMySQL模块]]、[[03-MySQL高级特性]]
+> 参见 [06-Redis高级应用](./06-Redis高级应用.md)、[04-PyMySQL模块](./04-PyMySQL模块.md)、[03-MySQL高级特性](./03-MySQL高级特性.md)

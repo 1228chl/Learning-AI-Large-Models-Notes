@@ -119,4 +119,4 @@ plt.savefig('figure.pdf', bbox_inches='tight', dpi=150)
 
 **回答要点**：百万级散点图渲染慢、交互卡顿、内存占用高；替代方案：Plotly/Bokeh 支持 WebGL 加速交互式可视化；Seaborn 简化统计图表语法；Datashader 先栅格化再渲染适合极大规模数据；ECharts 在商业报表场景下更高效。
 
-> 参见 [[01-NumPy与ndarray]]、[[03-Pandas与DataFrame]]
+> 参见 [01-NumPy与ndarray](./01-NumPy与ndarray.md)、[03-Pandas与DataFrame](./03-Pandas与DataFrame.md)
