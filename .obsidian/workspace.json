@@ -13,13 +13,13 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Atomic-Cards/AI-Agent/27-RAG查询改写与意图识别.md",
+                "file": "Atomic-Cards/机器学习/10-支持向量机.md",
                 "mode": "source",
                 "source": false,
                 "backlinks": false
               },
               "icon": "lucide-file",
-              "title": "27-RAG查询改写与意图识别"
+              "title": "10-支持向量机"
             }
           },
           {
@@ -234,6 +234,8 @@
   },
   "active": "e5c6004f44c0e722",
   "lastOpenFiles": [
+    "Atomic-Cards/机器学习/02-监督学习与非监督学习.md",
+    "Atomic-Cards/AI-Agent/27-RAG查询改写与意图识别.md",
     "Atomic-Cards/AI-Agent/26-FAQ与RAG混合检索架构.md",
     "Atomic-Cards/AI-Agent/25-RAG系统评估(RAGAS).md",
     "Atomic-Cards/AI-Agent/24-BM25完整实现.md",
@@ -249,7 +251,6 @@
     "Atomic-Cards/AI-Agent/03-文档切分策略.md",
     "Atomic-Cards/AI-Agent/02-RAG三阶段流程.md",
     "Atomic-Cards/AI-Agent/01-Agent定义与核心公式.md",
-    "Atomic-Cards/AI-Agent/27-RAG查询改写与意图识别.md",
     "Atomic-Cards/卡片总览.md",
     "AI-Learning-知识点总表.md",
     "Atomic-Cards/原子化生成提示词.md",
@@ -259,7 +260,6 @@
     "Atomic-Cards/Python/12-继承与MRO.md",
     "Atomic-Cards/Python/11-封装(Encapsulation).md",
     "Atomic-Cards/Python/10-协程与asyncio.md",
-    "Atomic-Cards/Python/09-Socket网络编程.md",
     "Assets/Image/AI-Large-Modlels-Notes/Project/EduRAG/Milvus向量数据库/1.2.8.3-1.png",
     "Assets/Image/AI-Large-Modlels-Notes/Project/EduRAG/Milvus向量数据库/1.2.8.2-2.png",
     "Assets/Image/AI-Large-Modlels-Notes/Project/EduRAG/Milvus向量数据库/1.2.8.2-1.png",
