@@ -13,13 +13,13 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "README.md",
+                "file": "AI-Large-Modlels-Notes/Draft/📅 学习日报_LangGraph_Agent与RAG索引构建.md",
                 "mode": "source",
                 "source": false,
                 "backlinks": false
               },
               "icon": "lucide-file",
-              "title": "README"
+              "title": "📅 学习日报_LangGraph_Agent与RAG索引构建"
             }
           },
           {
@@ -104,8 +104,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 292.5,
-    "collapsed": true
+    "width": 292.5
   },
   "right": {
     "id": "f07a0c5b7e11463b",
@@ -217,8 +216,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 408.5,
-    "collapsed": true
+    "width": 408.5
   },
   "left-ribbon": {
     "hiddenItems": {
@@ -234,10 +232,10 @@
       "templater-obsidian:Templater": false
     }
   },
-  "active": "e5c6004f44c0e722",
+  "active": "e83158f79f242826",
   "lastOpenFiles": [
-    "AI-Large-Modlels-Notes/Algorithm/1-两数之和.md",
     "README.md",
+    "AI-Large-Modlels-Notes/Algorithm/1-两数之和.md",
     "AI-Learning-知识点总表.md",
     "New-Notes/README.md",
     "New-Notes/知识体系总表.md",
