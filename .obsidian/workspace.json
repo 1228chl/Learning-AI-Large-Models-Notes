@@ -206,7 +206,8 @@
       }
     ],
     "direction": "horizontal",
-    "width": 408.5
+    "width": 408.5,
+    "collapsed": true
   },
   "left-ribbon": {
     "hiddenItems": {
@@ -222,7 +223,7 @@
       "templater-obsidian:Templater": false
     }
   },
-  "active": "e83158f79f242826",
+  "active": "e5c6004f44c0e722",
   "lastOpenFiles": [
     "Atomic-Cards/AI-Agent/26-FAQ与RAG混合检索架构.md",
     "Atomic-Cards/AI-Agent/25-RAG系统评估(RAGAS).md",
