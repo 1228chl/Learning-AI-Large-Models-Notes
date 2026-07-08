@@ -196,23 +196,35 @@ print(chain.invoke("AI"))  # 执行管道：输入"AI"经模板格式化、LLM�
 ## 面试追问
 
 **Q1（基础）**：LangChain 中 invoke 和 stream 两种调用方式有什么区别？各自的应用场景是什么？
+**回答要点**：
 
-**回答要点**：invoke 一次返回完整结果，适合不需要实时响应的场景（如离线批处理、后端服务）；stream 逐块返回内容（基于 SSE），适合需要实时展示生成过程的场景（如对话 UI、流式文本展示），用户体验更好；stream 需要在调用时刻意逐块处理 content。
+1. invoke 一次返回完整结果，适合无需实时响应的场景（如离线批处理、后端服务）
+2. stream 逐块返回内容（基于 SSE），适合需要实时展示生成过程的场景（如对话 UI）
+3. stream 调用需逐块处理 content，用户体验更好但实现稍复杂
 
 **Q2（深挖）**：LCEL（`|` 管道语法）相比传统 Chain 类有什么优势？为什么推荐在新项目中使用？
+**回答要点**：
 
-**回答要点**：LCEL 语法更简洁直观，用管道符串联组件可读性强；天然内置对流式（stream）、批量（batch）和异步（ainvoke/astream）的支持——无需额外适配代码；支持 RunnablePassthrough、RunnableParallel 等实现参数透传和并行分支；更容易调试——每个中间组件的输出都可以被拦截和检查。
+1. LCEL 语法简洁直观，用管道符串联组件，可读性强
+2. 天然内置对流式、批量和异步的支持，无需额外适配代码
+3. 支持 RunnablePassthrough、RunnableParallel 实现参数透传和并行分支，调试更方便
 
 **Q3（实战）**：用 LangChain 实现一个多用户对话机器人，要求对话历史持久化到 MySQL，需要用到哪些组件？
+**回答要点**：
 
-**回答要点**：ChatOpenAI 作为 LLM 模型；PromptTemplate 设计包含历史轮次的问题模板；SQLChatMessageHistory 实现按 session_id 持久化对话记录到 MySQL；ConversationBufferMemory 配合 return_messages=True 从数据库读取记忆；所有组件通过 LCEL 或 LLMChain 串联。
+1. ChatOpenAI 作为 LLM 模型，PromptTemplate 设计含历史轮次的提示模板
+2. SQLChatMessageHistory 按 session_id 持久化对话记录到 MySQL
+3. ConversationBufferMemory 配合 return_messages=True 读取记忆，通过 LCEL 或 LLMChain 串联
 
 **Q4（边界）**：LangChain 在实际生产环境部署中有哪些典型的问题和风险？如何规避？
+**回答要点**：
 
-**回答要点**：版本兼容性问题——langchain 主包与 langchain-openai、langchain-community 等子包需严格对齐，建议锁定依赖版本并做好兼容性测试；链式调用超时无容错——需设置 request_timeout 和 retry 策略；Agent 的 ReAct 循环可能无限迭代——必须设置 max_iterations 限制；回调/追踪不完善——引入 LangSmith 记录完整调用链路便于排查。
+1. 版本兼容性问题——langchain 子包需严格对齐，建议锁定依赖并做好兼容性测试
+2. 链式调用需设置 request_timeout 和 retry 策略；Agent 的 ReAct 循环必须设 max_iterations 限制
+3. 回调与追踪不完善——引入 LangSmith 记录完整调用链路便于排查
 
 ## 参考引用
 - 需要理解RAG三阶段流程的相关知识，参见 [RAG三阶段流程](./02-RAG三阶段流程.md)
 - 需要理解LangChain六大组件的相关知识，参见 [LangChain六大组件](./04-LangChain六大组件.md)
-- 需要了解嵌入与向量化以理解数据存储与检索技术，参见 [嵌入与向量化](../数据库/10-嵌入与向量化.md)
-- 需要了解Milvus核心概念以理解数据存储与检索技术，参见 [Milvus核心概念](../数据库/08-Milvus核心概念.md)
+- 需要了解嵌入与向量化的相关知识，参见 [嵌入与向量化](../数据库/10-嵌入与向量化.md)
+- 需要了解Milvus核心概念的相关知识，参见 [Milvus核心概念](../数据库/08-Milvus核心概念.md)

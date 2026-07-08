@@ -141,20 +141,33 @@ vectorstore = FAISS.from_documents(splits, embeddings)  # 将文本块向量化�
 ## 面试追问
 
 **Q1（基础）**：LangChain 六大组件中，构建一个 RAG 问答系统最少需要用到哪几个组件？各自的作用是什么？
+**回答要点**：
 
-**回答要点**：Models（LLM 接口，负责生成回答）、Prompts（提示词模板，构造包含检索上下文的查询）、Indexes（文档加载+切分+向量库存储，实现外部知识检索）、Chains（RetrievalQA 串联检索和生成）；Prompts 和 Memory 为可选增强组件。
+1. Models：提供大模型接口，负责根据检索到的上下文和用户问题生成最终回答
+2. Indexes：负责文档加载、文本切分和向量化存储，实现外部知识的检索
+3. Chains：通过 RetrievalQA 将检索和生成串联为端到端的问答管道
+4. Prompts：构造提示词模板，将检索出的上下文与用户问题整合为结构化的 LLM 输入
 
 **Q2（深挖）**：Chain 和 Agent 在 LangChain 中有什么本质区别？各自适用的任务类型是什么？
+**回答要点**：
 
-**回答要点**：Chain 是预定义的固定执行序列，执行路径确定，适合已知步骤的数据管道（如 RAG 检索→生成）；Agent 是 LLM 自主决策选择工具和执行顺序，适合需要动态判断的任务（如多工具选择、条件分支）；Agent 更灵活但不可控性高。
+1. Chain 是预定义的固定执行序列，执行路径确定，适合已知步骤的数据管道（如 RAG 检索到生成）
+2. Agent 由 LLM 自主决策选择工具和执行顺序，执行路径动态，适合需要实时判断的任务
+3. Agent 比 Chain 更灵活但不可控性更高，需要在灵活性和可靠性之间做权衡
 
 **Q3（实战）**：用 LangChain 构建一个带对话历史记忆的知识库问答系统需要如何组合组件？
+**回答要点**：
 
-**回答要点**：用 ChatOpenAI 作为对话模型；用 ConversationBufferMemory 存储多轮对话历史；用 PromptTemplate 将历史上下文、检索结果和当前问题整合为提示词；用 RetrievalQA 或 LCEL 管道串联检索→记忆→生成；可选 SQLChatMessageHistory 实现跨会话持久化。
+1. 选择 ChatOpenAI 作为对话模型，ConversationBufferMemory 存储多轮对话历史
+2. 通过 PromptTemplate 将历史上下文、检索结果和当前问题整合为提示词输入
+3. 使用 RetrievalQA 或 LCEL 管道串联检索、记忆和生成，可选 SQLChatMessageHistory 实现跨会话持久化
 
 **Q4（边界）**：LangChain 的 Chain 在处理超长多步任务时存在哪些问题？如何解决？
+**回答要点**：
 
-**回答要点**：中间结果无法持久化——进程崩溃后需从头重跑，可用 checkpoint 机制或外部存储保存中间状态；链式调用嵌套过深导致调试困难——利用 LangSmith 追踪或自定义回调进行日志记录；流式支持不统一——LCEL 天然支持流式，旧版 Chain 需额外适配。
+1. 中间结果无法持久化——进程崩溃后需从头重跑，可用 checkpoint 机制或外部存储保存中间状态
+2. 链式调用嵌套过深导致调试困难——利用 LangSmith 追踪或自定义回调进行日志记录
+3. 流式支持不统一——LCEL 天然支持流式，旧版 Chain 需额外适配或迁移至 LCEL
 
 ## 参考引用
 - 需要理解RAG三阶段流程的相关知识，参见 [RAG三阶段流程](./02-RAG三阶段流程.md)
