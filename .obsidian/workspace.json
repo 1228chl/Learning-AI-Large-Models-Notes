@@ -13,13 +13,13 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "AI-Large-Modlels-Notes/Draft/📅 学习日报_LangGraph_Agent与RAG索引构建.md",
+                "file": "Atomic-Cards/微积分与优化/06-凸优化基础.md",
                 "mode": "source",
                 "source": false,
                 "backlinks": false
               },
               "icon": "lucide-file",
-              "title": "📅 学习日报_LangGraph_Agent与RAG索引构建"
+              "title": "06-凸优化基础"
             }
           },
           {
@@ -216,7 +216,8 @@
       }
     ],
     "direction": "horizontal",
-    "width": 408.5
+    "width": 408.5,
+    "collapsed": true
   },
   "left-ribbon": {
     "hiddenItems": {
@@ -232,34 +233,34 @@
       "templater-obsidian:Templater": false
     }
   },
-  "active": "e83158f79f242826",
+  "active": "e5c6004f44c0e722",
   "lastOpenFiles": [
-    "README.md",
-    "AI-Large-Modlels-Notes/Algorithm/1-两数之和.md",
-    "AI-Learning-知识点总表.md",
-    "New-Notes/README.md",
-    "New-Notes/知识体系总表.md",
-    "New-Notes/10-RAG与LangChain.md",
-    "New-Notes/09-Python进阶.md",
-    "New-Notes/08-数学基础.md",
-    "New-Notes/07-Agent与提示词工程.md",
-    "New-Notes/06-数据分析基础.md",
-    "New-Notes/05-NLP自然语言处理.md",
-    "New-Notes/04-深度学习基础.md",
-    "New-Notes/03-监督学习算法.md",
-    "New-Notes/02-机器学习基础.md",
-    "New-Notes/01-Markdown与LaTeX语法.md",
-    "New-Notes/Deep-Knowledge/README.md",
-    "New-Notes/Deep-Knowledge/核心依赖链.md",
-    "New-Notes/Deep-Knowledge/01-数学地基/04-微积分.md",
-    "New-Notes/Deep-Knowledge/01-数学地基/03-概率统计.md",
-    "New-Notes/Deep-Knowledge/01-数学地基/02-线性代数-矩阵.md",
-    "New-Notes/Deep-Knowledge/01-数学地基/01-线性代数-向量.md",
-    "New-Notes/Atomic-Cards/README.md",
-    "New-Notes/Atomic-Cards/10-RAG检索增强生成.md",
-    "New-Notes/Atomic-Cards/09-注意力机制.md",
-    "New-Notes/Atomic-Cards/08-过拟合与欠拟合.md",
-    "New-Notes/Atomic-Cards/07-BERT.md",
+    "Atomic-Cards/微积分与优化/05-梯度下降算法.md",
+    "Atomic-Cards/微积分与优化/04-Hessian矩阵与二阶导.md",
+    "Atomic-Cards/微积分与优化/03-梯度与方向导数.md",
+    "Atomic-Cards/微积分与优化/02-链式法则.md",
+    "Atomic-Cards/微积分与优化/01-导数与偏导数.md",
+    "Atomic-Cards/数据库/11-混合检索与重排序.md",
+    "Atomic-Cards/数据库/10-嵌入与向量化.md",
+    "Atomic-Cards/数据库/09-Milvus Python操作指南.md",
+    "Atomic-Cards/数据库/08-Milvus核心概念.md",
+    "Atomic-Cards/数据库/07-向量数据库概述.md",
+    "Atomic-Cards/数据库/06-Redis高级应用.md",
+    "Atomic-Cards/数据库/05-Redis核心数据结构.md",
+    "Atomic-Cards/数据库/04-PyMySQL模块.md",
+    "Atomic-Cards/数据库/03-MySQL高级特性.md",
+    "Atomic-Cards/数据库/02-MySQL核心操作.md",
+    "Atomic-Cards/数据库/01-SQL基础与数据库设计.md",
+    "Atomic-Cards/数据结构与算法/14-回溯算法.md",
+    "Atomic-Cards/数据结构与算法/13-动态规划.md",
+    "Atomic-Cards/数据结构与算法/12-递归与分治.md",
+    "Atomic-Cards/数据结构与算法/11-搜索算法.md",
+    "Atomic-Cards/数据结构与算法/10-排序算法.md",
+    "Atomic-Cards/数据结构与算法/09-图.md",
+    "Atomic-Cards/数据结构与算法/08-堆.md",
+    "Atomic-Cards/数据结构与算法/07-树与二叉树.md",
+    "Atomic-Cards/数据结构与算法/06-哈希表.md",
+    "Atomic-Cards/数据结构与算法/05-队列.md",
     "Assets/Image/AI-Large-Modlels-Notes/Project/EduRAG/Milvus向量数据库/1.2.8.3-1.png",
     "Assets/Image/AI-Large-Modlels-Notes/Project/EduRAG/Milvus向量数据库/1.2.8.2-2.png",
     "Assets/Image/AI-Large-Modlels-Notes/Project/EduRAG/Milvus向量数据库/1.2.8.2-1.png",

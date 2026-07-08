@@ -30,7 +30,9 @@ plt.xlabel('PC1'); plt.ylabel('PC2')
 
 PCA 对**协方差矩阵** $\Sigma = \frac{1}{n} X^T X$ 做**特征值分解**：
 
-$$\Sigma \mathbf{v}_i = \lambda_i \mathbf{v}_i$$
+$$
+\Sigma \mathbf{v}_i = \lambda_i \mathbf{v}_i
+$$
 
 - 特征向量 $\mathbf{v}_i$ → 主成分方向
 - 特征值 $\lambda_i$ → 该方向上的方差大小

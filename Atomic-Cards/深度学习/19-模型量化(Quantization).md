@@ -9,11 +9,13 @@ aliases: ["量化", "Quantization", "模型量化"]
 
 ## 定义
 
-模型量化（Model Quantization）是将神经网络参数从高精度浮点数（如 FP32）映射到低精度表示（如 INT8、FP16、INT4）的过程，以减小模型体积和降低推理延迟。对于权重矩阵 $W \in \mathbb{R}^{m \times n}$，量化映射为：
+模型量化（Model Quantization）是将神经网络参数从高精度浮点数（如 FP32）映射到低精度表示（如 INT8、FP16、INT4）的过程，以减小模型体积和降低推理延迟。对于权重矩阵 $W \in \mathbb{R}^{m \times n}$ ，量化映射为：
 
-$$Q(W) = \text{round}\left(\frac{W - \text{min}}{\Delta}\right), \quad \Delta = \frac{\text{max} - \text{min}}{2^b - 1}$$
+$$
+Q(W) = \text{round}\left(\frac{W - \text{min}}{\Delta}\right), \quad \Delta = \frac{\text{max} - \text{min}}{2^b - 1}
+$$
 
-其中 $\Delta$ 为缩放因子（scale），$b$ 为量化比特数，$2^b - 1$ 为量化等级数。反量化还原为 $\hat{W} = Q(W) \cdot \Delta + \text{min}$。
+其中 $\Delta$ 为缩放因子（scale）， $b$ 为量化比特数， $2^b - 1$ 为量化等级数。反量化还原为 $\hat{W} = Q(W) \cdot \Delta + \text{min}$ 。
 
 ## 量化方式分类
 
@@ -43,15 +45,19 @@ $$Q(W) = \text{round}\left(\frac{W - \text{min}}{\Delta}\right), \quad \Delta = 
 ## 面试追问
 
 **Q1（基础）**：量化和剪枝在减小模型尺寸的原理上有什么本质区别？
+
 **回答要点**：量化降低每个参数的存储精度（FP32→INT8 减少 4 倍），不改变网络结构；剪枝直接移除部分参数（置零），改变网络稀疏度；量化对所有参数等比例压缩，剪枝选择性移除"不重要"的参数。
 
 **Q2（深挖）**：PTQ 和 QAT 的主要区别和各自适用场景是什么？
+
 **回答要点**：PTQ 训练后直接量化，无需数据和重新训练，速度快但大模型低比特下精度下降明显；QAT 在训练中插入伪量化节点（FakeQuant），让模型自适应量化误差，精度更高但需微调计算量大；对 LLM 常用 PTQ（GPTQ/AWQ），对小型 CNN 常用 QAT 以保证精度。
 
 **Q3（实战）**：如何为部署场景选择合适的量化比特数？
+
 **回答要点**：GPU 服务器优先 FP16（0 精度损失）；CPU 边缘端用 INT8（4x 压缩 + 硬件加速）；移动端/浏览器用 INT4 或混合精度（关键层 INT8 + 非关键层 INT4）；需在目标硬件上评测精度-延迟-功耗三者的 trade-off。
 
 **Q4（边界）**：4-bit 量化对 LLM 的生成质量影响有多大？哪些任务损失最明显？
+
 **回答要点**：4-bit 量化通常保持 90\%+ 的原始质量，但数学推理、代码生成等需要精确数值的任务下降明显；量化误差在低比特下累积，长文本生成中可能产生更多幻觉；不同量化方法（GPTQ vs AWQ vs GGML）效果差异显著，需针对任务评测选择。
 
 > 参见 [[15-模型压缩量化剪枝蒸馏]]
