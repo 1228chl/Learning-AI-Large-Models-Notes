@@ -222,8 +222,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 408.5,
-    "collapsed": true
+    "width": 408.5
   },
   "left-ribbon": {
     "hiddenItems": {
@@ -241,8 +240,15 @@
   },
   "active": "b9c397e9f32ab073",
   "lastOpenFiles": [
-    "Atomic-Cards/线性代数/01-向量基础.md",
+    "Atomic-Cards/原子化生成提示词.md.tmp.34424.bf0f3f31d9d2",
+    "Atomic-Cards/工程实践/09-Claude使用指南.md",
     "Atomic-Cards/原子化生成提示词.md",
+    "Atomic-Cards/原子化生成提示词.md.tmp.34424.57634ffc9ad0",
+    "Atomic-Cards/原子化生成提示词.md.tmp.34424.b5aae8874055",
+    "Atomic-Cards/原子化生成提示词.md.tmp.34424.2e6d0dcab969",
+    "Atomic-Cards/原子化生成提示词.md.tmp.34424.657eba584ef3",
+    "Atomic-Cards/原子化生成提示词.md.tmp.34424.a62e13962bcb",
+    "Atomic-Cards/线性代数/01-向量基础.md",
     "Atomic-Cards/原子化生成提示词.md.tmp.34424.e268c7c014b7",
     "Atomic-Cards/原子化生成提示词.md.tmp.34424.f334c86b667b",
     "Atomic-Cards/原子化生成提示词.md.tmp.34424.b827f00ae59f",
@@ -269,13 +275,7 @@
     "Atomic-Cards/NLP/11-GPT与自回归生成.md",
     "Atomic-Cards/NLP/10-BERT与MLM预训练.md",
     "Atomic-Cards/NLP/09-残差连接与LayerNorm.md",
-    "Atomic-Cards/NLP/08-位置编码.md",
     "Atomic-Cards/原子化生成提示词.md.tmp.34424.a9318b8e005f",
-    "Atomic-Cards/原子化生成提示词.md.tmp.34424.d6002d572f7d",
-    "Atomic-Cards/原子化生成提示词.md.tmp.34424.d32665306fad",
-    "Atomic-Cards/原子化生成提示词.md.tmp.34424.a2ca21a05675",
-    "Atomic-Cards/原子化生成提示词.md.tmp.34424.1af06168099b",
-    "Atomic-Cards/机器学习/22-L1正则化(Lasso).md.tmp.34424.92682cc25d12",
     "Assets/Image/AI-Large-Modlels-Notes/Project/EduRAG/Milvus向量数据库/1.2.8.3-1.png",
     "Assets/Image/AI-Large-Modlels-Notes/Project/EduRAG/Milvus向量数据库/1.2.8.2-2.png",
     "Assets/Image/AI-Large-Modlels-Notes/Project/EduRAG/Milvus向量数据库/1.2.8.2-1.png",
