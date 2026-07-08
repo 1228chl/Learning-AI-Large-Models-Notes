@@ -13,13 +13,13 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Atomic-Cards/机器学习/02-监督学习与非监督学习.md",
+                "file": "Atomic-Cards/机器学习/19-模型选择与超参数调优.md",
                 "mode": "source",
                 "source": false,
                 "backlinks": false
               },
               "icon": "lucide-file",
-              "title": "02-监督学习与非监督学习"
+              "title": "19-模型选择与超参数调优"
             }
           },
           {
@@ -41,13 +41,19 @@
             "id": "b9c397e9f32ab073",
             "type": "leaf",
             "state": {
-              "type": "graph",
-              "state": {},
-              "icon": "lucide-git-fork",
-              "title": "关系图谱"
+              "type": "markdown",
+              "state": {
+                "file": "Atomic-Cards/原子化生成提示词.md",
+                "mode": "source",
+                "source": false,
+                "backlinks": false
+              },
+              "icon": "lucide-file",
+              "title": "原子化生成提示词"
             }
           }
-        ]
+        ],
+        "currentTab": 2
       }
     ],
     "direction": "vertical"
@@ -216,8 +222,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 408.5,
-    "collapsed": true
+    "width": 408.5
   },
   "left-ribbon": {
     "hiddenItems": {
@@ -233,8 +238,19 @@
       "templater-obsidian:Templater": false
     }
   },
-  "active": "e5c6004f44c0e722",
+  "active": "a73ebf785a6e6ac6",
   "lastOpenFiles": [
+    "Atomic-Cards/卡片总览.md",
+    "Atomic-Cards/机器学习/19-模型选择与超参数调优.md",
+    "Atomic-Cards/机器学习/03-数据集划分与交叉验证.md",
+    "Atomic-Cards/机器学习/05-过拟合与欠拟合.md",
+    "Atomic-Cards/机器学习/07-逻辑回归.md",
+    "Atomic-Cards/机器学习/20-正则化.md",
+    "Atomic-Cards/机器学习/21-L2正则化(Ridge).md",
+    "Atomic-Cards/原子化生成提示词.md",
+    "Atomic-Cards/机器学习/02-监督学习与非监督学习.md",
+    "Atomic-Cards/原子化生成提示词.md.tmp.16708.54dc1fadface",
+    "Atomic-Cards/机器学习/02-监督学习与非监督学习.md.tmp.16708.3a80a2eb7557",
     "Atomic-Cards/机器学习/01-机器学习概述.md",
     "Atomic-Cards/机器学习/27-Boosting.md",
     "Atomic-Cards/机器学习/27-Boosting.md.tmp.16708.cefbb8dcb5f7",
@@ -245,12 +261,8 @@
     "Atomic-Cards/NLP/09-残差连接与LayerNorm.md.tmp.16708.d5c1cd5fffc7",
     "Atomic-Cards/机器学习/28-Stacking.md.tmp.16708.5cdd37314914",
     "Atomic-Cards/机器学习/27-Boosting.md.tmp.16708.956cb747c188",
-    "Atomic-Cards/AI-Agent/23-RAG系统完整实现.md.tmp.16708.a13653364196",
-    "Atomic-Cards/机器学习/17-PCA与降维.md.tmp.16708.7334ff6d9000",
-    "Atomic-Cards/原子化生成提示词.md",
     "Atomic-Cards/机器学习/26-Bagging.md",
     "Atomic-Cards/机器学习/04-评估指标.md",
-    "Atomic-Cards/机器学习/05-过拟合与欠拟合.md",
     "Atomic-Cards/微积分与优化/04-Hessian矩阵与二阶导.md",
     "Atomic-Cards/微积分与优化/02-链式法则.md",
     "Atomic-Cards/Linux/04-权限管理.md",
@@ -264,13 +276,6 @@
     "Atomic-Cards/工程实践/07-LLM API调用与ChatBot.md",
     "Atomic-Cards/工程实践/03-Git版本控制.md",
     "Atomic-Cards/工程实践/05-模型保存格式.md",
-    "Atomic-Cards/机器学习/19-模型选择与超参数调优.md",
-    "Atomic-Cards/机器学习/03-数据集划分与交叉验证.md",
-    "Atomic-Cards/机器学习/08-KNN算法.md",
-    "Atomic-Cards/机器学习/07-逻辑回归.md",
-    "Atomic-Cards/机器学习/06-线性回归.md",
-    "Atomic-Cards/机器学习/16-层次聚类与DBSCAN.md",
-    "Atomic-Cards/新提示词.md",
     "Assets/Image/AI-Large-Modlels-Notes/Project/EduRAG/Milvus向量数据库/1.2.8.3-1.png",
     "Assets/Image/AI-Large-Modlels-Notes/Project/EduRAG/Milvus向量数据库/1.2.8.2-2.png",
     "Assets/Image/AI-Large-Modlels-Notes/Project/EduRAG/Milvus向量数据库/1.2.8.2-1.png",
