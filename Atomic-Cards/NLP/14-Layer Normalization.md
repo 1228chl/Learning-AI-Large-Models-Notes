@@ -91,7 +91,6 @@ LayerNorm 对每个词向量做"标准化"：将其分布拉回到零均值单�
 **回答要点**：在 CV 任务中 BN 仍是主流——图像固定尺寸、batch 可较大时，BN 计算高效且引入正则化效果；LayerNorm 在 batch size=1 的大模型微调中避免 BN 退化；但 LN 的计算量也比 BN 大（每个样本都要算统计量）；GroupNorm 和 InstanceNorm 等变体在特定情况（如风格迁移、小 batch CV）提供了更多选择。
 
 ## 参考引用
-
+- 需要理解残差连接(ResidualConnection)的相关知识，参见 [残差连接(ResidualConnection)](./13-残差连接(ResidualConnection).md)
+- 需要了解 梯度消失与梯度爆炸的相关知识，参见 [梯度消失与梯度爆炸](../深度学习/06-梯度消失与梯度爆炸.md)
 - 需要理解自注意力与Transformer的相关知识，参见 [自注意力与Transformer](./06-自注意力与Transformer.md)
-- 需要理解多头注意力的相关知识，参见 [多头注意力](./07-多头注意力.md)
-- 需要了解GPU并行与混合精度以理解工程部署与生产环境配置，参见 [GPU并行与混合精度](../工程实践/02-GPU并行与混合精度.md)

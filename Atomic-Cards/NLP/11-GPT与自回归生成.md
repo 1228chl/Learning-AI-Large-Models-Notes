@@ -87,7 +87,6 @@ model = GPT2LMHeadModel.from_pretrained('gpt2')
 **回答要点**：训练时 Teacher Forcing 使用真实输入，推理时只能使用自己之前的预测 → 训练/推理分布不一致（Exposure Bias）；长序列生成中早期错误会不断累积放大；单向约束（只能看左侧）使模型无法全局规划输出内容；改进方向包括扩散语言模型、迭代精炼等非自回归方案。
 
 ## 参考引用
-
 - 需要理解BERT与MLM预训练的相关知识，参见 [BERT与MLM预训练](./10-BERT与MLM预训练.md)
 - 需要理解自注意力与Transformer的相关知识，参见 [自注意力与Transformer](./06-自注意力与Transformer.md)
 - 需要理解HuggingFace Transformers库的相关知识，参见 [HuggingFace Transformers库](./12-HuggingFace Transformers库.md)

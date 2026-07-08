@@ -174,7 +174,6 @@ chunks = splitter.split_documents(documents)
 **回答要点**：向量检索延迟随数据量线性增长——需使用 IVF_FLAT 或 HNSW 等 ANN 索引代替暴力搜索；稠密+稀疏双路检索计算开销大——可考虑先快速向量检索 Top-K 再对候选集做 BM25 评分；Reranker 二次排序成为瓶颈——Reranker 只对 Top-N（如 100 条）候选集做精排而非全量；引入 Redis 缓存高频查询结果避免重复计算。
 
 ## 参考引用
-
 - 需要理解RAG三阶段流程的相关知识，参见 [RAG三阶段流程](./02-RAG三阶段流程.md)
 - 需要了解Milvus核心概念以理解数据存储与检索技术，参见 [Milvus核心概念](../数据库/08-Milvus核心概念.md)
 - 需要理解LangChain组件操作指南的相关知识，参见 [LangChain组件操作指南](./22-LangChain组件操作指南.md)

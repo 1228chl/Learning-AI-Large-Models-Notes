@@ -70,8 +70,6 @@ def residual_block(x, sublayer):
 **回答要点**：残差连接增加了一倍存储（需保留激活值用于反向传播，显存开销大）；现代研究（如 DeepNet、NormFormer）通过改进初始化或归一化实现深层训练而不依赖残差；也出现了"无残差 Transformer"（如 ReZero、T-Fixup）通过特殊初始化替代残差连接。
 
 ## 参考引用
-
+- 需要了解 梯度消失与梯度爆炸的相关知识，参见 [梯度消失与梯度爆炸](../深度学习/06-梯度消失与梯度爆炸.md)
 - 需要理解自注意力与Transformer的相关知识，参见 [自注意力与Transformer](./06-自注意力与Transformer.md)
-- 需要理解多头注意力的相关知识，参见 [多头注意力](./07-多头注意力.md)
-- 需要理解位置编码的相关知识，参见 [位置编码](./08-位置编码.md)
 - 需要理解Layer Normalization的相关知识，参见 [Layer Normalization](./14-Layer Normalization.md)

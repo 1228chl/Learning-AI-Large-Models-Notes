@@ -111,7 +111,6 @@ model = BertForSequenceClassification.from_pretrained(
 **回答要点**：NSP 被 RoBERTa 证明无用，删除后效果更好；静态掩码策略不如动态掩码；BERT 无法生成文本（编码器架构的天生限制）；对句子级理解任务（如语义相似度）的效果不如句子对训练的方式。
 
 ## 参考引用
-
 - 需要理解残差连接与LayerNorm的相关知识，参见 [残差连接与LayerNorm](./09-残差连接与LayerNorm.md)
 - 需要理解HuggingFace Transformers库的相关知识，参见 [HuggingFace Transformers库](./12-HuggingFace Transformers库.md)
 - 需要理解GPT与自回归生成的相关知识，参见 [GPT与自回归生成](./11-GPT与自回归生成.md)

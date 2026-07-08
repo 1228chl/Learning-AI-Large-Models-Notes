@@ -107,7 +107,6 @@ conda install pytorch torchvision torchaudio cpuonly -c pytorch
 **回答要点**：镜像源同步有延迟（新包/新版本可能滞后 1-3 天）；清华源等可能因流量过大限速；部分 conda-forge 包因镜像不完全而缺失。优化方向：关键包用 conda-forge 或官方源 + 代理加速，非关键依赖用 pip 替代，或迁移至更现代的 UV 项目管理器。
 
 ## 参考引用
-
 - 需要理解Conda环境管理的相关知识，参见 [Conda环境管理](./01-Conda环境管理.md)
 - 需要理解UV包管理器的相关知识，参见 [UV包管理器](./03-UV包管理器.md)
 - 需要了解Shell脚本基础以理解操作系统与命令行基础，参见 [Shell脚本基础](../Linux/06-Shell脚本基础.md)
