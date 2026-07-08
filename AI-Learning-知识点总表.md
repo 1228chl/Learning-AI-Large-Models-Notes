@@ -27,7 +27,7 @@
 | **深浅拷贝** | 引用、浅拷贝 vs 深拷贝、`copy` 模块 |
 | **进程** | 多进程、`multiprocessing`、进程池、进程间通信 |
 | **线程** | 多线程、`threading`、GIL、线程锁、线程池 |
-| **迭代器 & 生成器 & 协程** | 可迭代对象、`__iter__`/`__next__`、`yield`、`async/await`、`gevent` |
+| **迭代器 & 生成器 & 协程** | 可迭代对象、`__iter__` / `__next__`、`yield`、`async/await`、`gevent` |
 | **正则表达式** | 元字符、匹配规则、`re` 模块、分组与捕获 |
 | **Python 进阶** | 高阶函数、`map/filter/reduce`、上下文管理器、`with` 语句 |
 

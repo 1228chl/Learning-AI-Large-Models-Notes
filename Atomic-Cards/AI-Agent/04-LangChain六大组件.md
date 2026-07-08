@@ -124,15 +124,19 @@ vectorstore = FAISS.from_documents(splits, embeddings)
 ## 面试追问
 
 **Q1（基础）**：LangChain 六大组件中，构建一个 RAG 问答系统最少需要用到哪几个组件？各自的作用是什么？
+
 **回答要点**：Models（LLM 接口，负责生成回答）、Prompts（提示词模板，构造包含检索上下文的查询）、Indexes（文档加载+切分+向量库存储，实现外部知识检索）、Chains（RetrievalQA 串联检索和生成）；Prompts 和 Memory 为可选增强组件。
 
 **Q2（深挖）**：Chain 和 Agent 在 LangChain 中有什么本质区别？各自适用的任务类型是什么？
+
 **回答要点**：Chain 是预定义的固定执行序列，执行路径确定，适合已知步骤的数据管道（如 RAG 检索→生成）；Agent 是 LLM 自主决策选择工具和执行顺序，适合需要动态判断的任务（如多工具选择、条件分支）；Agent 更灵活但不可控性高。
 
 **Q3（实战）**：用 LangChain 构建一个带对话历史记忆的知识库问答系统需要如何组合组件？
+
 **回答要点**：用 ChatOpenAI 作为对话模型；用 ConversationBufferMemory 存储多轮对话历史；用 PromptTemplate 将历史上下文、检索结果和当前问题整合为提示词；用 RetrievalQA 或 LCEL 管道串联检索→记忆→生成；可选 SQLChatMessageHistory 实现跨会话持久化。
 
 **Q4（边界）**：LangChain 的 Chain 在处理超长多步任务时存在哪些问题？如何解决？
+
 **回答要点**：中间结果无法持久化——进程崩溃后需从头重跑，可用 checkpoint 机制或外部存储保存中间状态；链式调用嵌套过深导致调试困难——利用 LangSmith 追踪或自定义回调进行日志记录；流式支持不统一——LCEL 天然支持流式，旧版 Chain 需额外适配。
 
 > 参见 [[02-RAG三阶段流程]]、[[01-Agent定义与核心公式]]、[[03-文档切分策略]]

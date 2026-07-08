@@ -11,7 +11,9 @@ aliases: ["FastText", "子词", "Subword", "n-gram"]
 
 FastText 是 Facebook 于 2016 年提出的词向量训练工具和文本分类器，由 Word2Vec 的 Skip-gram 改进而来——每个词表示为**字符 n-gram 向量的和**，因此可以处理**未登录词（OOV）**。
 
-$$\text{vec}(\text{"apple"}) = \text{vec}(\text{"apple"}) + \text{vec}(\text{"<ap"}) + \text{vec}(\text{"app"}) + \text{vec}(\text{"ppl"}) + \cdots$$
+$$
+\text{vec}(\text{"apple"}) = \text{vec}(\text{"apple"}) + \text{vec}(\text{"<ap"}) + \text{vec}(\text{"app"}) + \text{vec}(\text{"ppl"}) + \cdots
+$$
 
 ```python
 from gensim.models import FastText
@@ -41,7 +43,7 @@ print(model.wv['自然语言处理'])   # OOV 词也能得到向量！
 
 ## 层次 Softmax（加速训练）
 
-FastText（和 Word2Vec）使用**层次 Softmax**（Huffman Tree）替代标准 Softmax，将计算复杂度从 $O(V)$ 降低到 $O(\log V)$：
+FastText（和 Word2Vec）使用**层次 Softmax**（Huffman Tree）替代标准 Softmax，将计算复杂度从 $O(V)$ 降低到 $O(\log V)$ ：
 
 ```python
 # 标准 Softmax：计算所有 V 个词的概率——O(V)
@@ -83,19 +85,22 @@ print(labels, probs)
 | **多语言 NLP** | 支持 157 种语言的词向量 |
 | **罕见词处理** | 利用子词信息得到合理的向量表示 |
 
-
 ## 面试追问
 
 **Q1（基础）**：FastText 如何解决 Word2Vec 无法处理的未登录词（OOV）问题？它的核心创新点是什么？
+
 **回答要点**：将每个词表示为字符 n-gram 向量的和，而非整个词一个向量；OOV 词的子词片段可与训练语料中的已知子词重叠，从而组合出合理向量；字符 n-gram 信息在罕见词上也有明显提升。
 
 **Q2（深挖）**：FastText 相对于 Word2Vec 在参数量、训练速度和内存占用上的代价是什么？这种权衡值不值？
+
 **回答要点**：需要额外存储所有字符 n-gram 的向量，参数量显著增加；训练速度慢于 Word2Vec；对于形态丰富的语言或含大量 OOV/罕见词的场景，收益远大于代价。
 
 **Q3（实战）**：在一个领域专有术语极多的文本分类项目中，你会选择 FastText 还是 BERT？说说你的考量。
+
 **回答要点**：FastText 训练极快，适合做基线快速验证；BERT 精度更高但需要 GPU；工业级实践常先用 FastText 建立基线，再用知识蒸馏或小模型替代；FastText 的可解释性也更好（可直接看词向量）。
 
 **Q4（边界）**：FastText 的子词策略在什么情况下反而会损害性能？举例说明。
+
 **回答要点**：对于形态简单的语言（如中文），字符 n-gram 的信息增益有限；当 n-gram 长度范围选得不好时可能引入噪声；语料覆盖已很完整时子词造成不必要的存储开销；部分语言中超长的 n-gram 组合量爆炸。
 
 > 参见 [[02-词嵌入与分布式表示]]、[[01-分词算法]]
