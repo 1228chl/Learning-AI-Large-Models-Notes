@@ -13,13 +13,13 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "AI-Large-Modlels-Notes/Draft/原子化生成提示词.md",
+                "file": "AI-Large-Modlels-Notes/Project/EduRAG/RAG学习步骤与流程.md",
                 "mode": "source",
                 "source": false,
                 "backlinks": false
               },
               "icon": "lucide-file",
-              "title": "原子化生成提示词"
+              "title": "RAG学习步骤与流程"
             }
           },
           {
@@ -52,8 +52,7 @@
               "title": "原子化生成提示词"
             }
           }
-        ],
-        "currentTab": 1
+        ]
       }
     ],
     "direction": "vertical"
@@ -239,12 +238,16 @@
       "templater-obsidian:Templater": false
     }
   },
-  "active": "9dddde49a2d5eb85",
+  "active": "e5c6004f44c0e722",
   "lastOpenFiles": [
+    "AI-Large-Modlels-Notes/Project/EduRAG/MySQL相关知识（RAG）.md",
+    "AI-Large-Modlels-Notes/Project/EduRAG/基于MySQL数据库实现问答系统.md",
+    "AI-Large-Modlels-Notes/Draft/原子化生成提示词.md",
+    "AI-Large-Modlels-Notes/Algorithm/1-两数之和.md",
+    "Assets/LangChain组件图.drawio.png",
     "Atomic-Cards/工程实践/09-Claude使用指南.md",
     "AI-Large-Modlels-Notes/DL/基础/03Pytorch自动微分.md",
     "AI-Large-Modlels-Notes/Draft/dfadfafa.md",
-    "AI-Large-Modlels-Notes/Draft/原子化生成提示词.md",
     "Atomic-Cards/原子化生成提示词.md",
     "AI-Learning-知识点总表.md",
     "Atomic-Cards/线性代数/01-向量基础.md",
@@ -274,9 +277,6 @@
     "Atomic-Cards/Python/02-继承与多态.md",
     "Atomic-Cards/Python/01-类与对象.md",
     "Atomic-Cards/NLP/14-Layer Normalization.md",
-    "Atomic-Cards/NLP/13-残差连接(ResidualConnection).md",
-    "Atomic-Cards/NLP/12-HuggingFace Transformers库.md",
-    "Atomic-Cards/NLP/11-GPT与自回归生成.md",
     "Assets/Image/AI-Large-Modlels-Notes/Project/EduRAG/Milvus向量数据库/1.2.8.3-1.png",
     "Assets/Image/AI-Large-Modlels-Notes/Project/EduRAG/Milvus向量数据库/1.2.8.2-2.png",
     "Assets/Image/AI-Large-Modlels-Notes/Project/EduRAG/Milvus向量数据库/1.2.8.2-1.png",
@@ -286,7 +286,6 @@
     "Assets/Image/AI-Large-Modlels-Notes/Project/EduRAG/Milvus向量数据库/1.2.8-1.png",
     "Assets/Image/AI-Large-Modlels-Notes/Project/EduRAG/Milvus向量数据库/1.2.7.6-1.png",
     "Assets/Image/AI-Large-Modlels-Notes/NLP/05-注意力机制和Seq2Seq介绍/1.2.1.4-1 1.png",
-    "Assets/Image/AI-Large-Modlels-Notes/ML/监督学习/线性回归/02线性回归(改进版)/5.2.2-2.png",
     "未命名.canvas"
   ]
 }
