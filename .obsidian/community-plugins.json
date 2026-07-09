@@ -4,7 +4,6 @@
   "obsidian-linter",
   "obsidian-minimal-settings",
   "templater-obsidian",
-  "easy-typing-obsidian",
   "mathlive",
   "obsidian-pandoc",
   "obsidian-style-settings",
@@ -12,5 +11,6 @@
   "table-editor-obsidian",
   "obsidian-outliner",
   "local-image-manager",
-  "cjk-bold-fix"
+  "cjk-bold-fix",
+  "easy-typing-obsidian"
 ]

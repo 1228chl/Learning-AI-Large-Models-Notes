@@ -1,10 +1,10 @@
 {
   "Tabout": true,
-  "SmartPaste": true,
+  "SmartPaste": false,
   "BetterCodeEdit": true,
   "BetterBackspace": true,
   "AutoFormat": true,
-  "AutoFormatPaste": true,
+  "AutoFormatPaste": false,
   "ExcludeFiles": "",
   "AutoCapital": false,
   "languagePairs": [
