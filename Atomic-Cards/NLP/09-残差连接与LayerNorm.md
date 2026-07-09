@@ -75,6 +75,6 @@ $$ \text{LayerNorm}(x) = \gamma \odot \frac{x - \mu}{\sigma + \epsilon} + \beta 
 3. 两者同时存在才能保证深度 Transformer 的稳定训练，残差保证梯度流通，LayerNorm 保证数值稳定
 
 ## 参考引用
-- 需要理解残差连接的相关知识，参见 [残差连接(ResidualConnection)](./13-残差连接(ResidualConnection).md)
+- 需要理解残差连接的相关知识，参见 [残差连接(ResidualConnection)](./13-残差连接%28ResidualConnection%29.md)
 - 需要理解自注意力与Transformer的相关知识，参见 [自注意力与Transformer](./06-自注意力与Transformer.md)
 - 需要理解Layer Normalization的相关知识，参见 [Layer Normalization](./14-Layer Normalization.md)

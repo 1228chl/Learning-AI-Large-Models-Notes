@@ -122,6 +122,6 @@ print(f"输出差异: {torch.abs(fp32_output - int8_output).max().item():.6f}")
 3. 不同量化方法（GPTQ vs AWQ vs GGML）效果差异显著，需针对任务评测选择
 
 ## 参考引用
-- 需要理解知识蒸馏(Distillation)的相关知识，参见 [知识蒸馏(Distillation)](./21-知识蒸馏(Distillation).md)
-- 需要理解模型剪枝(Pruning)的相关知识，参见 [模型剪枝(Pruning)](./20-模型剪枝(Pruning).md)
+- 需要理解知识蒸馏(Distillation)的相关知识，参见 [知识蒸馏(Distillation)](./21-知识蒸馏%28Distillation%29.md)
+- 需要理解模型剪枝(Pruning)的相关知识，参见 [模型剪枝(Pruning)](./20-模型剪枝%28Pruning%29.md)
 - 需要了解模型压缩总览以理解量化在压缩中的定位的相关知识，参见 [模型压缩量化剪枝蒸馏](./15-模型压缩量化剪枝蒸馏.md)

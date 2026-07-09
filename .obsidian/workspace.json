@@ -239,8 +239,9 @@
       "templater-obsidian:Templater": false
     }
   },
-  "active": "9dddde49a2d5eb85",
+  "active": "a73ebf785a6e6ac6",
   "lastOpenFiles": [
+    "Atomic-Cards/原子化生成提示词.md.tmp.21624.4e41bc476b03",
     "Atomic-Cards/NLP/17-序列标注与NER.md.tmp.18016.b05294c5875d",
     "Atomic-Cards/NLP/16-文本语义匹配.md.tmp.18016.ff846dcc46ff",
     "Atomic-Cards/深度学习/23-Scaling Law与涌现能力.md.tmp.18016.6de5d2984774",
@@ -254,7 +255,6 @@
     "Atomic-Cards/数据库/15-BGE-M3与BGE-Reranker模型.md.tmp.18016.646531003674",
     "Atomic-Cards/数据库/15-BGE-M3与BGE-Reranker模型.md.tmp.18016.7c61ca43cc81",
     "Atomic-Cards/卡片总览.md.tmp.25892.d8b3122a6e04",
-    "Atomic-Cards/卡片总览.md.tmp.25892.6031ab8974b7",
     "Atomic-Cards/AI-Agent/30-思维链(CoT).md",
     "Atomic-Cards/数据库/12-RAG向量库Collection设计.md",
     "Atomic-Cards/工程实践/10-WebSocket与SSE流式输出.md",

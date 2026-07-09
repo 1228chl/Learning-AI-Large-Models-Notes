@@ -110,6 +110,6 @@ LayerNorm 对每个词向量做"标准化"：将其分布拉回到零均值单�
 3. GroupNorm 和 InstanceNorm 等变体在风格迁移、小 batch CV 等特定场景提供更多选择
 
 ## 参考引用
-- 需要理解残差连接(ResidualConnection)的相关知识，参见 [残差连接(ResidualConnection)](./13-残差连接(ResidualConnection).md)
+- 需要理解残差连接(ResidualConnection)的相关知识，参见 [残差连接(ResidualConnection)](./13-残差连接%28ResidualConnection%29.md)
 - 需要了解梯度消失与梯度爆炸的相关知识，参见 [梯度消失与梯度爆炸](../深度学习/06-梯度消失与梯度爆炸.md)
 - 需要理解自注意力与Transformer的相关知识，参见 [自注意力与Transformer](./06-自注意力与Transformer.md)

@@ -128,6 +128,6 @@ print(f"fc1 稀疏度: {1.0 - (model.fc1.weight == 0).float().mean():.1%}")
 3. 可采用迭代式剪枝、学习率回退、结合知识蒸馏等策略缓解
 
 ## 参考引用
-- 需要理解知识蒸馏(Distillation)的相关知识，参见 [知识蒸馏(Distillation)](./21-知识蒸馏(Distillation).md)
-- 需要理解模型量化(Quantization)的相关知识，参见 [模型量化(Quantization)](./19-模型量化(Quantization).md)
+- 需要理解知识蒸馏(Distillation)的相关知识，参见 [知识蒸馏(Distillation)](./21-知识蒸馏%28Distillation%29.md)
+- 需要理解模型量化(Quantization)的相关知识，参见 [模型量化(Quantization)](./19-模型量化%28Quantization%29.md)
 - 需要了解模型压缩总览的相关知识，参见 [模型压缩量化剪枝蒸馏](./15-模型压缩量化剪枝蒸馏.md)
