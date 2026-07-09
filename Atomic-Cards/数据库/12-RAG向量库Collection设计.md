@@ -140,12 +140,12 @@ collection.flush()   # 刷新缓冲区，确保数据持久化
 
 ## ML/DL 应用场景
 
-| 应用场景 | 数学形式 | 说明 |
-|:---------|:---------|:------|
+| 应用场景     | 数学形式                                                                                      | 说明                                        |
+| :------- | :---------------------------------------------------------------------------------------- | :---------------------------------------- |
 | RAG 混合检索 | $score = \alpha \cdot \text{sim}_{\text{dense}} + \beta \cdot \text{sim}_{\text{sparse}}$ | dense_vector + sparse_vector 双字段支撑稠密+稀疏检索 |
-| 学科过滤 | $\text{predicate} = \text{source} \in S$ | source 字段用于按学科范围缩小检索空间 |
-| 答案溯源引用 | $\text{citation} = (file\_path, page\_no)$ | file_path + page_no 字段组合提供精确来源引用 |
-| 增量知识库更新 | $\text{delete}(source, file\_path) \rightarrow \text{insert}(new\_data)$ | 利用主键 id 和条件删除实现知识库的增量刷新 |
+| 学科过滤     | $\text{predicate} = \text{source} \in S$                                                  | source 字段用于按学科范围缩小检索空间                    |
+| 答案溯源引用   | $\text{citation} = (file\_path, page\_no)$                                                | file_path + page_no 字段组合提供精确来源引用          |
+| 增量知识库更新  | $\text{delete}(source, file\_path) \rightarrow \text{insert}(new\_data)$                  | 利用主键 id 和条件删除实现知识库的增量刷新                   |
 
 ## 面试追问
 

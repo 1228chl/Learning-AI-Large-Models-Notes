@@ -223,7 +223,8 @@
       }
     ],
     "direction": "horizontal",
-    "width": 307.5
+    "width": 307.5,
+    "collapsed": true
   },
   "left-ribbon": {
     "hiddenItems": {
@@ -241,18 +242,21 @@
   },
   "active": "9dddde49a2d5eb85",
   "lastOpenFiles": [
+    "Atomic-Cards/原子化生成提示词.md.tmp.39580.67f422de24ec",
+    "Atomic-Cards/卡片总览.md",
+    "AI-Large-Modlels-Notes/Project/EduRAG/BGE-M3与BGE-Reranker模型原理详解笔记.md",
+    "Atomic-Cards/原子化生成提示词.md",
+    "AI-Large-Modlels-Notes/Draft/ANN笔记草稿1.md",
+    "Atomic-Cards/数据库/12-RAG向量库Collection设计.md",
     "AI-Large-Modlels-Notes/Algorithm/1-两数之和.md",
     "Atomic-Cards/数据库/12-RAG向量库Collection设计.md.tmp.39580.156d22b3ff14",
     "Atomic-Cards/AI-Agent/28-多格式文档加载与OCR解析.md.tmp.39580.93fad0805306",
-    "Atomic-Cards/原子化生成提示词.md",
     "Atomic-Cards/原子化生成提示词.md.tmp.39580.4966663bb8e8",
     "Atomic-Cards/数据库/12-RAG向量库Collection设计.md.tmp.39580.1d635eeca4d4",
     "Atomic-Cards/AI-Agent/28-多格式文档加载与OCR解析.md.tmp.39580.b11d99961ce7",
-    "Atomic-Cards/数据库/12-RAG向量库Collection设计.md",
     "Atomic-Cards/数据库/12-RAG向量库Collection设计.md.tmp.39580.b6519b81becd",
     "Atomic-Cards/AI-Agent/28-多格式文档加载与OCR解析.md",
     "Atomic-Cards/AI-Agent/28-多格式文档加载与OCR解析.md.tmp.39580.8a04c9b36435",
-    "AI-Large-Modlels-Notes/Project/EduRAG/BGE-M3与BGE-Reranker模型原理详解笔记.md",
     "AI-Large-Modlels-Notes/Project/EduRAG/基于MySQL数据库实现问答系统.md",
     "AI-Large-Modlels-Notes/Project/EduRAG/Redis数据库简介与使用.md",
     "AI-Large-Modlels-Notes/Project/EduRAG/RAG学习步骤与流程.md",
@@ -270,10 +274,8 @@
     "Atomic-Cards/AI-Agent/04-LangChain六大组件.md",
     "Atomic-Cards/AI-Agent/12-文本分类全流程.md",
     "Atomic-Cards/AI-Agent/22-LangChain组件操作指南.md",
-    "AI-Large-Modlels-Notes/Draft/原子化生成提示词.md",
+    "AI-Large-Modlels-Notes/Draft/原子化生成提示词-废弃版.md",
     "Assets/LangChain组件图.drawio.png",
-    "Atomic-Cards/工程实践/09-Claude使用指南.md",
-    "AI-Large-Modlels-Notes/DL/基础/03Pytorch自动微分.md",
     "Atomic-Cards/原子化生成提示词.md.tmp.34424.bf0f3f31d9d2",
     "Atomic-Cards/原子化生成提示词.md.tmp.34424.57634ffc9ad0",
     "Atomic-Cards/原子化生成提示词.md.tmp.34424.b5aae8874055",
