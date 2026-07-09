@@ -1,8 +1,4 @@
-
-
----
-
-# UV 基础命令
+# UV 基础命令速查表（完整版）
 
 ## 1. 安装与版本
 
@@ -25,6 +21,8 @@
 | 激活（Mac/Linux） | `source .venv/bin/activate` |
 | 激活（Windows） | `.venv\Scripts\Activate.ps1` |
 | 退出环境 | `deactivate` |
+| **删除虚拟环境**（仅删除目录） | `rm -rf .venv`（Mac/Linux）<br> `rmdir /s .venv`（Windows） |
+| **清空并重建环境**（项目依赖） | `rm -rf .venv && uv sync`（等价于重置） |
 
 ---
 
@@ -34,6 +32,8 @@
 |------|------|
 | 安装包 | `uv pip install requests` |
 | 批量安装 | `uv pip install -r requirements.txt` |
+| **卸载包**（仅从当前环境移除） | `uv pip uninstall <package>` |
+| **查看已安装包** | `uv pip list` |
 | 导出依赖清单 | `uv pip freeze > requirements.txt` |
 
 ---
@@ -45,7 +45,7 @@
 | 初始化项目 | `uv init` |
 | 添加依赖 | `uv add requests` |
 | 添加开发依赖 | `uv add pytest --dev` |
-| 移除依赖 | `uv remove requests` |
+| 移除依赖（同时更新 `pyproject.toml` 和锁文件） | `uv remove requests` |
 | 锁定版本 | `uv lock` |
 | 同步所有依赖 | `uv sync` |
 | 更新全部依赖 | `uv sync --upgrade` |
@@ -86,9 +86,17 @@
 | 功能 | 命令 |
 |------|------|
 | 清理缓存 | `uv clean` |
-| 重置虚拟环境 | `rm -rf .venv && uv sync` |
+| **重置虚拟环境**（删除并重建） | `rm -rf .venv && uv sync`（同第 2 节） |
 | 查看帮助 | `uv help` |
 
 ---
 
-> 所有命令均保留了核心参数，覆盖日常开发全流程。如有特定场景需求，可组合使用参数。
+> **补充说明**  
+> - 若项目仅使用 `requirements.txt` 而无 `pyproject.toml`，清空环境可手动执行：  
+>   `rm -rf .venv && uv venv && source .venv/bin/activate && uv pip install -r requirements.txt`  
+> - `uv pip uninstall` 仅影响当前环境，不会修改项目声明文件；若要从项目中彻底移除依赖，请使用 `uv remove`。  
+> - 所有命令均保留了核心参数，覆盖日常开发全流程。如有特定场景需求，可组合使用参数。
+
+---
+
+这份速查表现在已包含您关心的所有操作，您可以保存为 `.md` 文件随时参考。如果还需要其他命令，随时告诉我。 😊
