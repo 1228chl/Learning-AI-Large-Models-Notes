@@ -96,7 +96,3 @@
 >   `rm -rf .venv && uv venv && source .venv/bin/activate && uv pip install -r requirements.txt`  
 > - `uv pip uninstall` 仅影响当前环境，不会修改项目声明文件；若要从项目中彻底移除依赖，请使用 `uv remove`。  
 > - 所有命令均保留了核心参数，覆盖日常开发全流程。如有特定场景需求，可组合使用参数。
-
----
-
-这份速查表现在已包含您关心的所有操作，您可以保存为 `.md` 文件随时参考。如果还需要其他命令，随时告诉我。 😊
