@@ -78,6 +78,15 @@ model = BertForTokenClassification.from_pretrained(
 )
 ```
 
+## ML/DL 应用场景
+
+| 应用场景 | 数学形式 | 说明 |
+|:---------|:---------|:-----|
+| 命名实体识别 | $\hat{y}_i = \arg\max_c P(y_i=c \mid \mathbf{X}; \theta)$ | 识别文本中的人名、地名、机构名等实体，是信息抽取的基础 |
+| 分词任务 | $\hat{y}_i \in \{\text{分割}, \text{不分割}\}$ | 确定每个 token 是否需要分割，如"南京市长江大桥"的分词消歧 |
+| 词性标注 | $\hat{y}_i = \arg\max_c P(\text{POS}_i=c \mid \mathbf{X})$ | 标注每个词的词性（名词、动词、形容词等），是语法分析的前置任务 |
+| 生物医学 NER | $\hat{y}_i \in \{\text{B-gene}, \text{I-gene}, \text{B-protein}, \dots\}$ | 抽取基因、蛋白质、药物等生物医学实体，使用复杂标签体系（如 BIOES） |
+
 ## 面试追问
 
 **Q1（基础）**：BIO 标注法中的 B、I、O 各代表什么含义？为什么不能只用一个标签来标记实体？
