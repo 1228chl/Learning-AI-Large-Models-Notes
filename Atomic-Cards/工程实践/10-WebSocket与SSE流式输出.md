@@ -121,6 +121,6 @@ async def websocket_endpoint(websocket: WebSocket):
 ## 参考引用
 
 - 需要理解 Flask 与 FastAPI 模型部署的相关知识，参见 [Flask与FastAPI模型部署](./04-Flask与FastAPI模型部署.md)
-- 需要理解 LLM API 调用与 ChatBot 的相关知识，参见 [LLM API调用与ChatBot](./07-LLM%20API调用与ChatBot.md)
+- 需要理解 LLM API 调用与 ChatBot 的相关知识，参见 [LLM API调用与ChatBot](./07-LLM API调用与ChatBot.md)
 - 需要理解 Docker 基础与容器化的相关知识，参见 [Docker基础与容器化](./01-Docker基础与容器化.md)
 - 需要理解 HTTP 基础与 API 设计的相关知识，参见 [HTTP基础与API设计](./08-HTTP基础与API设计.md)

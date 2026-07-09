@@ -223,8 +223,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 307.5,
-    "collapsed": true
+    "width": 307.5
   },
   "left-ribbon": {
     "hiddenItems": {
@@ -242,6 +241,14 @@
   },
   "active": "9dddde49a2d5eb85",
   "lastOpenFiles": [
+    "Atomic-Cards/卡片总览.md.tmp.25892.d8b3122a6e04",
+    "Atomic-Cards/卡片总览.md.tmp.25892.6031ab8974b7",
+    "Atomic-Cards/卡片总览.md.tmp.25892.daa445ea5931",
+    "Atomic-Cards/卡片总览.md.tmp.25892.cee42bd421e8",
+    "Atomic-Cards/卡片总览.md.tmp.25892.a0632f0ba82a",
+    "Atomic-Cards/卡片总览.md.tmp.25892.1a681852688d",
+    "Atomic-Cards/工程实践/10-WebSocket与SSE流式输出.md.tmp.25892.da94ef1ef214",
+    "Atomic-Cards/AI-Agent/29-LLM推理解码参数.md.tmp.25892.19b433b36b12",
     "Atomic-Cards/AI-Agent/30-思维链(CoT).md",
     "Atomic-Cards/数据库/12-RAG向量库Collection设计.md",
     "Atomic-Cards/工程实践/10-WebSocket与SSE流式输出.md",
@@ -251,19 +258,12 @@
     "Atomic-Cards/NLP/16-文本语义匹配.md.tmp.25892.eb7fe2a5c03f",
     "Atomic-Cards/NLP/17-序列标注与NER.md",
     "Atomic-Cards/NLP/17-序列标注与NER.md.tmp.25892.657f1e3244f4",
-    "token-skill.zip",
     "Atomic-Cards/数据库/15-BGE-M3与BGE-Reranker模型.md",
-    "Atomic-Cards/数据库/15-BGE-M3与BGE-Reranker模型.md.tmp.25892.f9f2c8f5089f",
     "Atomic-Cards/数据库/13-TF-IDF算法.md",
-    "Atomic-Cards/数据库/13-TF-IDF算法.md.tmp.25892.b83831006496",
     "Atomic-Cards/数据库/14-RRF排序器与加权排序.md",
-    "Atomic-Cards/数据库/14-RRF排序器与加权排序.md.tmp.25892.e3dd1de3ae80",
-    "Atomic-Cards/AI-Agent/30-思维链(CoT).md.tmp.25892.9cfe97cab34c",
     "Atomic-Cards/NLP/15-N-gram统计语言模型.md",
     "Atomic-Cards/机器学习/31-LLM评估指标.md",
-    "Atomic-Cards/机器学习/31-LLM评估指标.md.tmp.25892.c55a4055ca83",
     "Atomic-Cards/深度学习/22-语言模型发展史.md",
-    "Atomic-Cards/深度学习/22-语言模型发展史.md.tmp.25892.445bf8254894",
     "Atomic-Cards/AI-Agent/29-LLM推理解码参数.md",
     "Atomic-Cards/深度学习/23-Scaling Law与涌现能力.md",
     "token-skill.md",
@@ -277,7 +277,6 @@
     "AI-Large-Modlels-Notes/Project/EduRAG/基于MySQL数据库实现问答系统.md",
     "AI-Large-Modlels-Notes/Project/EduRAG/Redis数据库简介与使用.md",
     "AI-Large-Modlels-Notes/Project/EduRAG/RAG学习步骤与流程.md",
-    "AI-Large-Modlels-Notes/Project/EduRAG/Python日志介绍与应用.md",
     "Assets/LangChain组件图.drawio.png",
     "Assets/Image/AI-Large-Modlels-Notes/Project/EduRAG/Milvus向量数据库/1.2.8.3-1.png",
     "Assets/Image/AI-Large-Modlels-Notes/Project/EduRAG/Milvus向量数据库/1.2.8.2-2.png",

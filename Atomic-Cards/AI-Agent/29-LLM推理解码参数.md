@@ -214,5 +214,5 @@ response_translation = client.chat.completions.create(
 - 需要理解 GPT 与自回归生成的相关知识，参见 [GPT与自回归生成](../NLP/11-GPT与自回归生成.md)
 - 需要理解提示词工程核心原则的相关知识，参见 [提示词工程核心原则](./06-提示词工程核心原则.md)
 - 需要理解 Agent 定义与核心公式的相关知识，参见 [Agent定义与核心公式](./01-Agent定义与核心公式.md)
-- 需要理解 Transformer 中 Softmax 归一化的数学根基，参见 [Softmax回归与最大熵模型](../Math/12-Softmax回归与最大熵模型.md)
+- 需要理解 Transformer 中 Softmax 归一化的数学根基，参见 [逻辑回归与Softmax](../机器学习/07-逻辑回归.md)
 - 需要理解 ChatGPT/GPT 系列模型的工程实践，参见 [GPT与自回归生成](../NLP/11-GPT与自回归生成.md)
