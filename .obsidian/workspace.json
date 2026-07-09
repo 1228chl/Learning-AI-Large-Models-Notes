@@ -28,13 +28,13 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Atomic-Cards/数据库/15-BGE-M3与BGE-Reranker模型.md",
+                "file": "Atomic-Cards/数据库/01-SQL基础与数据库设计.md",
                 "mode": "source",
                 "source": false,
                 "backlinks": false
               },
               "icon": "lucide-file",
-              "title": "15-BGE-M3与BGE-Reranker模型"
+              "title": "01-SQL基础与数据库设计"
             }
           },
           {
@@ -110,8 +110,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 292.5,
-    "collapsed": true
+    "width": 292.5
   },
   "right": {
     "id": "f07a0c5b7e11463b",
@@ -223,7 +222,8 @@
       }
     ],
     "direction": "horizontal",
-    "width": 307.5
+    "width": 307.5,
+    "collapsed": true
   },
   "left-ribbon": {
     "hiddenItems": {
@@ -239,8 +239,9 @@
       "templater-obsidian:Templater": false
     }
   },
-  "active": "a73ebf785a6e6ac6",
+  "active": "9dddde49a2d5eb85",
   "lastOpenFiles": [
+    "Atomic-Cards/数据库/15-BGE-M3与BGE-Reranker模型.md",
     "Atomic-Cards/原子化生成提示词.md.tmp.21624.4e41bc476b03",
     "Atomic-Cards/NLP/17-序列标注与NER.md.tmp.18016.b05294c5875d",
     "Atomic-Cards/NLP/16-文本语义匹配.md.tmp.18016.ff846dcc46ff",
@@ -250,11 +251,9 @@
     "Atomic-Cards/数据库/15-BGE-M3与BGE-Reranker模型.md.tmp.18016.26c846853212",
     "Atomic-Cards/NLP/11-GPT与自回归生成.md",
     "AI-Large-Modlels-Notes/Project/EduRAG/BGE-M3与BGE-Reranker模型原理详解笔记.md",
-    "Atomic-Cards/数据库/15-BGE-M3与BGE-Reranker模型.md",
     "Atomic-Cards/数据库/15-BGE-M3与BGE-Reranker模型.md.tmp.18016.37865e6933e5",
     "Atomic-Cards/数据库/15-BGE-M3与BGE-Reranker模型.md.tmp.18016.646531003674",
     "Atomic-Cards/数据库/15-BGE-M3与BGE-Reranker模型.md.tmp.18016.7c61ca43cc81",
-    "Atomic-Cards/卡片总览.md.tmp.25892.d8b3122a6e04",
     "Atomic-Cards/AI-Agent/30-思维链(CoT).md",
     "Atomic-Cards/数据库/12-RAG向量库Collection设计.md",
     "Atomic-Cards/工程实践/10-WebSocket与SSE流式输出.md",
