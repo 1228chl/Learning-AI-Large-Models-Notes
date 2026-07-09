@@ -28,13 +28,13 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "AI-Large-Modlels-Notes/Algorithm/1-两数之和.md",
+                "file": "Atomic-Cards/数据库/12-RAG向量库Collection设计.md",
                 "mode": "source",
                 "source": false,
                 "backlinks": false
               },
               "icon": "lucide-file",
-              "title": "1-两数之和"
+              "title": "12-RAG向量库Collection设计"
             }
           },
           {
@@ -53,7 +53,7 @@
             }
           }
         ],
-        "currentTab": 2
+        "currentTab": 1
       }
     ],
     "direction": "vertical"
@@ -223,8 +223,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 408.5,
-    "collapsed": true
+    "width": 307.5
   },
   "left-ribbon": {
     "hiddenItems": {
@@ -240,8 +239,19 @@
       "templater-obsidian:Templater": false
     }
   },
-  "active": "b9c397e9f32ab073",
+  "active": "9dddde49a2d5eb85",
   "lastOpenFiles": [
+    "AI-Large-Modlels-Notes/Algorithm/1-两数之和.md",
+    "Atomic-Cards/数据库/12-RAG向量库Collection设计.md.tmp.39580.156d22b3ff14",
+    "Atomic-Cards/AI-Agent/28-多格式文档加载与OCR解析.md.tmp.39580.93fad0805306",
+    "Atomic-Cards/原子化生成提示词.md",
+    "Atomic-Cards/原子化生成提示词.md.tmp.39580.4966663bb8e8",
+    "Atomic-Cards/数据库/12-RAG向量库Collection设计.md.tmp.39580.1d635eeca4d4",
+    "Atomic-Cards/AI-Agent/28-多格式文档加载与OCR解析.md.tmp.39580.b11d99961ce7",
+    "Atomic-Cards/数据库/12-RAG向量库Collection设计.md",
+    "Atomic-Cards/数据库/12-RAG向量库Collection设计.md.tmp.39580.b6519b81becd",
+    "Atomic-Cards/AI-Agent/28-多格式文档加载与OCR解析.md",
+    "Atomic-Cards/AI-Agent/28-多格式文档加载与OCR解析.md.tmp.39580.8a04c9b36435",
     "AI-Large-Modlels-Notes/Project/EduRAG/BGE-M3与BGE-Reranker模型原理详解笔记.md",
     "AI-Large-Modlels-Notes/Project/EduRAG/基于MySQL数据库实现问答系统.md",
     "AI-Large-Modlels-Notes/Project/EduRAG/Redis数据库简介与使用.md",
@@ -261,24 +271,12 @@
     "Atomic-Cards/AI-Agent/12-文本分类全流程.md",
     "Atomic-Cards/AI-Agent/22-LangChain组件操作指南.md",
     "AI-Large-Modlels-Notes/Draft/原子化生成提示词.md",
-    "AI-Large-Modlels-Notes/Algorithm/1-两数之和.md",
     "Assets/LangChain组件图.drawio.png",
     "Atomic-Cards/工程实践/09-Claude使用指南.md",
     "AI-Large-Modlels-Notes/DL/基础/03Pytorch自动微分.md",
-    "AI-Large-Modlels-Notes/Draft/dfadfafa.md",
-    "Atomic-Cards/原子化生成提示词.md",
-    "AI-Learning-知识点总表.md",
-    "Atomic-Cards/线性代数/01-向量基础.md",
     "Atomic-Cards/原子化生成提示词.md.tmp.34424.bf0f3f31d9d2",
     "Atomic-Cards/原子化生成提示词.md.tmp.34424.57634ffc9ad0",
     "Atomic-Cards/原子化生成提示词.md.tmp.34424.b5aae8874055",
-    "Atomic-Cards/原子化生成提示词.md.tmp.34424.2e6d0dcab969",
-    "Atomic-Cards/原子化生成提示词.md.tmp.34424.657eba584ef3",
-    "Atomic-Cards/原子化生成提示词.md.tmp.34424.a62e13962bcb",
-    "Atomic-Cards/原子化生成提示词.md.tmp.34424.e268c7c014b7",
-    "Atomic-Cards/原子化生成提示词.md.tmp.34424.f334c86b667b",
-    "Atomic-Cards/原子化生成提示词.md.tmp.34424.b827f00ae59f",
-    "Atomic-Cards/原子化生成提示词.md.tmp.34424.85f3d8beeed2",
     "Assets/Image/AI-Large-Modlels-Notes/Project/EduRAG/Milvus向量数据库/1.2.8.3-1.png",
     "Assets/Image/AI-Large-Modlels-Notes/Project/EduRAG/Milvus向量数据库/1.2.8.2-2.png",
     "Assets/Image/AI-Large-Modlels-Notes/Project/EduRAG/Milvus向量数据库/1.2.8.2-1.png",
