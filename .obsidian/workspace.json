@@ -67,8 +67,7 @@
               "title": "原子化生成提示词"
             }
           }
-        ],
-        "currentTab": 1
+        ]
       }
     ],
     "direction": "vertical"
@@ -237,7 +236,8 @@
       }
     ],
     "direction": "horizontal",
-    "width": 408.5
+    "width": 408.5,
+    "collapsed": true
   },
   "left-ribbon": {
     "hiddenItems": {
@@ -253,11 +253,11 @@
       "templater-obsidian:Templater": false
     }
   },
-  "active": "c932495fb0d0559f",
+  "active": "e5c6004f44c0e722",
   "lastOpenFiles": [
+    "AI-Large-Modlels-Notes/PackageManager/UV基础命令.md",
     "AI-Large-Modlels-Notes/Project/EduRAG/RAG学习步骤与流程.md",
     "AI-Large-Modlels-Notes/PackageManager/Conda基础命令.md",
-    "AI-Large-Modlels-Notes/PackageManager/UV基础命令.md",
     "AI-Large-Modlels-Notes/Project/EduRAG/Python日志介绍与应用.md",
     "AI-Large-Modlels-Notes/Project/EduRAG/Milvus向量数据库.md",
     "Atomic-Cards/AI-Agent/27-RAG查询改写与意图识别.md",
