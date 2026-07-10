@@ -119,6 +119,6 @@ conda install pytorch torchvision torchaudio cpuonly -c pytorch
 3. 非关键依赖可改用 pip 安装，或迁移至更现代的包管理器（如 UV）以提升整体体验。
 
 ## 参考引用
-- 需要理解 Conda 环境管理的相关知识，参见 [Conda环境管理](./01-Conda环境管理.md)
-- 需要理解 UV 包管理器的相关知识，参见 [UV包管理器](./03-UV包管理器.md)
+- 需要理解 Conda 环境管理的相关知识，参见 [Conda环境管理](01-Conda环境管理.md)
+- 需要理解 UV 包管理器的相关知识，参见 [UV包管理器](03-UV包管理器.md)
 - 需要了解 Shell 脚本基础的相关知识，参见 [Shell脚本基础](../Linux/06-Shell脚本基础.md)
