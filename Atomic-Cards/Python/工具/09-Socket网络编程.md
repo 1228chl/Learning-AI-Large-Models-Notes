@@ -90,6 +90,20 @@ server = HTTPServer(('0.0.0.0', 8000), Handler)
 server.serve_forever()
 ```
 
+## TCP 连接管理
+
+**三次握手**发生在 `connect()` 和 `accept()` 之间：客户端发 SYN → 服务端回 SYN+ACK → 客户端发 ACK，连接建立。
+
+**四次挥手**在任意一方调用 `close()` 时触发：主动方发 FIN → 被动方回 ACK → 被动方发 FIN → 主动方回 ACK。主动关闭方会进入 **TIME_WAIT** 状态（约 2MSL，通常 60 秒），期间端口可能被占用。高并发服务端频繁创建/关闭连接时，大量 TIME_WAIT 连接会耗尽端口资源，建议使用**连接池**复用连接。
+
+## 高并发替代方案
+
+原生 Socket 阻塞模型每连接需一个线程，在 C10K（万级并发）场景下线程资源耗尽、上下文切换开销巨大。工程中通常使用：
+
+- **select/poll/epoll**：事件驱动 I/O 多路复用，单线程处理数万并发
+- **FastAPI（ASGI）**：基于 Starlette 的异步框架，封装了底层的异步 I/O
+- **aiohttp / Tornado**：Python 异步 HTTP 框架
+
 > 在实际 ML 工程中，很少直接使用原生 Socket。但理解其底层原理对调试分布式训练的网络问题、配置推理服务的超时参数至关重要。
 
 ## 面试追问

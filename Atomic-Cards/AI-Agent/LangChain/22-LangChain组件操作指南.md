@@ -201,6 +201,16 @@ chain = {"subject": RunnablePassthrough()} | prompt | llm | StrOutputParser()
 print(chain.invoke("AI"))  # 执行管道：输入"AI"经模板格式化、LLM生成、解析后输出最终结果
 ```
 
+## 生产环境注意事项
+
+| 关注点 | 建议 | 说明 |
+|:------|:-----|:-----|
+| **版本兼容** | 锁定依赖版本 | `langchain` 子包版本需严格对齐，`langchain-openai`/`langchain-community` 等子包与主包版本不匹配会导致诡异错误 |
+| **超时控制** | 设置 `request_timeout` | LLM 调用可能因网络波动或模型过载而挂起，需设置合理的超时时间（如 30s）并配合重试策略 |
+| **Agent 循环限制** | 设 `max_iterations` | ReAct 循环可能陷入无限推理-行动死循环，设置最大迭代次数（如 10）作为安全阀 |
+| **调用追踪** | 接入 LangSmith | 生产环境需记录完整调用链路（Prompt → LLM → Parsing），便于排查问题 |
+| **流式处理** | 配合 SSE 协议 | 对话 UI 使用 `stream` + Server-Sent Events 实现逐 token 实时显示 |
+
 ## ML/DL 应用场景
 
 | 应用场景 | 核心组件 | 说明 |

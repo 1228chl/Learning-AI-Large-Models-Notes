@@ -64,6 +64,17 @@ ORDER BY total_amount DESC;
 
 **执行顺序**：`FROM` → `WHERE` → `GROUP BY` → `HAVING` → `SELECT` → `ORDER BY` → `LIMIT`
 
+理解执行顺序的意义：WHERE 在 GROUP BY 之前执行，因此 WHERE 中应过滤尽可能多的行以减少后续聚合的计算量；HAVING 在 GROUP BY 之后执行，只能用于聚合后的条件过滤；SELECT 别名在 WHERE 中不可用（因为 WHERE 在 SELECT 之前执行）。
+
+## JOIN 性能要点
+
+JOIN 操作在关联字段无索引时会导致全表扫描 + 嵌套循环，性能极差。大数据量下的优化原则：
+
+1. **关联字段必须加索引**：JOIN 的 ON 条件字段必须建索引，否则百万级表 JOIN 可能耗时数秒
+2. **只 SELECT 需要的列**：避免 `SELECT *`，减少数据传输和临时表大小
+3. **多表 JOIN 超过 3-4 张时**：考虑分步创建中间结果表或预聚合子查询
+4. **EXPLAIN 分析**：用 `EXPLAIN SELECT ...` 查看执行计划，确认是否使用了索引
+
 ## 常用聚合函数
 
 | 函数 | 作用 | 函数 | 作用 |

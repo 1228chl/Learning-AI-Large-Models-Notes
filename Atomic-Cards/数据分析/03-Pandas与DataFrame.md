@@ -11,6 +11,35 @@ aliases: ["Pandas", "DataFrame", "数据清洗"]
 
 Pandas 是 Python 生态中最核心的**结构化数据处理**库。核心数据结构有两个：**DataFrame**（表格，类似 Excel）和 **Series**（单列，类似数组）。
 
+## 设计哲学
+
+### 矢量化操作 vs for 循环
+
+Pandas 的核心设计哲学是**矢量化操作**：用一次 `df['col'].mean()` 代替 `for` 循环逐行累加。原因：
+
+1. **底层调用 NumPy/C 扩展**：矢量化操作在 C 层执行，免去了 Python 逐行循环的 GIL 开销和解释器开销
+2. **表达力更强**：`df.groupby('cat')['val'].mean()` 一行表达"按 cat 分组计算 val 均值"，等价于 10+ 行 for 循环
+3. **链式调用**：Pandas 方法返回 DataFrame 本身，支持 `.dropna().groupby().agg().reset_index()` 链式写法
+
+**经验法则**：如果在 Pandas 中写了 `for i in range(len(df))`，大概率有更快的矢量化替代方案。
+
+### DataFrame 的内存布局
+
+DataFrame 采用**列式存储**（按列连续排列），而非 SQL 数据库的行式存储。这意味着 `df['col']` 取单列的内存读取是连续的、高效的；而逐行操作（`df.iterrows()`）需要跨列跳跃读取，慢 100x+。
+
+### 大规模数据的内存瓶颈
+
+Pandas 将所有数据加载到内存，且 Python 对象的内存开销远大于 C 原生类型：
+
+| 问题 | 原因 | 优化手段 |
+|:----|:-----|:---------|
+| **OOM** | 全部数据读入内存 | 分块读取 `chunksize=`、SQL 预聚合后导入 |
+| **内存浪费** | 默认 `float64`/`int64` | 降级为 `float32`/`int32` / `category` 类型 |
+| **单线程慢** | Pandas 操作是单线程的 | 用 `polars`/`dask`/`modin` 获得并行加速 |
+| **表达式慢** | Python 层逐元素计算 | `df.eval()` / `df.query()` 通过 numexpr 在 C 层计算 |
+
+经验法则：当 DataFrame 超过内存 1/3 时，考虑分块处理或换用 polars。
+
 ```python
 import pandas as pd
 import numpy as np

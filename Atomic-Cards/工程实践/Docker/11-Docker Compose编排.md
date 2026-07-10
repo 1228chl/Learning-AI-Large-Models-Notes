@@ -11,6 +11,31 @@ aliases: ["Docker Compose", "容器编排", "多服务部署"]
 
 Docker Compose 是一个用于**定义和运行多容器 Docker 应用**的工具。通过一个 YAML 文件（`docker-compose.yml`）集中配置所有服务的镜像、端口映射、环境变量、依赖关系、存储卷和网络通信，实现**一条命令启动整个系统**。
 
+## 编排设计原理
+
+### depends_on + healthcheck 的设计哲学
+
+`depends_on` 仅保证容器的启动顺序，不保证容器内部服务已就绪。例如 MySQL 容器已启动但 InnoDB 仍在初始化，此时 App 连接必定失败。`healthcheck` 弥补了这一缺口：通过定期执行探测命令确认服务真正可用后才标记为 healthy。
+
+**正确用法**：`depends_on` 配合 `condition: service_healthy`，确保基础服务完全就绪后才启动依赖服务。
+
+### Docker 网络模型
+
+Compose 自动为项目创建 bridge 网络，容器间通过服务名（DNS 解析）互相访问。同一网络内的容器所有端口互通，无需通过 `ports` 暴露。不同网络间的容器默认隔离——这是多租户部署的安全基础。
+
+### Compose vs Kubernetes 的架构分界线
+
+| 维度 | Docker Compose | Kubernetes |
+|:----|:--------------|:-----------|
+| **节点数** | 单机 | 多节点集群 |
+| **自动伸缩** | 无 | HPA 按 CPU/内存/自定义指标扩缩容 |
+| **自愈** | 仅容器崩溃重启 | 节点宕机后 Pod 自动迁移 |
+| **滚动更新** | 简单替换 | 灰度发布、蓝绿部署、金丝雀发布 |
+| **服务发现** | DNS 服务名 | Service + Ingress + 负载均衡 |
+| **学习成本** | 低（1 天） | 高（数周） |
+
+**迁移时机**：单机部署够用时先保持 Compose；当需要多节点集群、自动扩缩容、灰度发布时再迁移到 K8s。
+
 ```bash
 # 验证安装
 docker compose version

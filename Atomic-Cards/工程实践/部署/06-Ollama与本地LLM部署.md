@@ -11,6 +11,29 @@ aliases: ["Ollama", "本地模型", "LLM部署"]
 
 Ollama 是一个**本地运行大语言模型**的开源工具，将模型下载、管理和推理封装为简单的命令行操作，无需 GPU 也可运行（CPU 模式），适合开发测试和私有化部署。
 
+## 架构原理
+
+### Ollama 的技术栈
+
+Ollama 的核心是 **Go 语言外壳 + llama.cpp 推理引擎 + GGUF 模型格式**：
+
+1. **llama.cpp**：C++ 实现的轻量推理引擎，支持 CPU（量化后 4-bit）和 GPU（CUDA/Metal/Vulkan）推理，无需 Python 依赖
+2. **GGUF 格式**：将模型权重、分词器和配置打包为单个文件，支持 2-8 bit 量化，比 HuggingFace 的 safetensors 格式体积缩小 4-8x
+3. **OpenAI 兼容 API**：`/v1/chat/completions` 端点与 OpenAI SDK 对接，本地开发和云端部署可共用同一套 Python 代码
+
+### 本地推理 vs 云端 API
+
+| 维度 | Ollama 本地 | OpenAI/云端 API |
+|:----|:-----------|:---------------|
+| **延迟** | 无网络开销，首 token 快 | 有网络传输延迟 |
+| **吞吐量** | 单机 GPU 有限 | 弹性伸缩，高并发 |
+| **数据隐私** | 数据不出本机 | 数据需传输到云端 |
+| **模型选择** | 社区模型（略滞后） | 最新最强模型 |
+| **成本** | 固定硬件成本 | 按 token 付费 |
+| **高级优化** | 缺乏 PagedAttention / 动态 batching | vLLM/TGI 原生支持 |
+
+**选型建议**：开发调试、私有数据处理、无网环境用 Ollama；高并发生产、需要最新大模型时用云 API 或 vLLM。
+
 ## 安装与基础命令
 
 ```bash

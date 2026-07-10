@@ -11,6 +11,34 @@ aliases: ["HuggingFace", "Transformers", "Pipeline"]
 
 HuggingFace Transformers 是目前最主流的 NLP/DL 模型库，提供统一的 API 来使用 **BERT、GPT、T5、LLaMA** 等数万个预训练模型。
 
+## 架构设计原理
+
+### AutoClasses 工厂模式
+
+`AutoTokenizer`、`AutoModel` 等 Auto 类采用**工厂模式 + 注册表**设计：
+
+1. 每个模型上传 Hub 时附带 `config.json`，其中 `model_type` 字段记录架构类型（如 `"bert"`、`"gpt2"`、`"t5"`）
+2. `from_pretrained` 读取 config → 查内部注册表 → 实例化对应的具体类（如 `BertModel`）
+3. 这层抽象使开发者切换模型只需改 `model_name`，无需修改任何调用代码
+
+### Pipeline 的分层架构
+
+Pipeline 将推理流程分为三层：
+
+```
+任务层（Task API）: pipeline("sentiment-analysis") → 定义任务目标
+    ↓
+模型层（Model Hub）: 自动选择适合该任务的默认模型
+    ↓
+处理层（Pre/Post）: 自动匹配 tokenizer 和输出后处理
+```
+
+每层可单独定制：`pipeline("text-generation", model="gpt2", tokenizer="gpt2", device=0)`。Pipeline 适合快速验证，生产环境推荐直接使用 AutoModel + 自定义预处理以获得更高控制力。
+
+### from_pretrained 的缓存机制
+
+`from_pretrained` 首次下载模型权重到 `~/.cache/huggingface/hub/`，后续直接加载缓存。缓存按模型名称索引，支持符号链接和分片下载。可通过 `HF_HOME` 或 `TRANSFORMERS_CACHE` 环境变量重定向缓存路径（如挂载到 SSD 加速加载）。
+
 ## Pipeline — 一行代码完成推理
 
 ```python

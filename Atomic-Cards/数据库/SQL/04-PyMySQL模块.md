@@ -11,6 +11,40 @@ aliases: ["PyMySQL", "Python操作MySQL"]
 
 PyMySQL 是一个纯 Python 实现的 MySQL 客户端库，兼容 Python DB API 2.0 规范，用于在 Python 中连接和操作 MySQL 数据库。
 
+## 核心原理
+
+### 参数化查询为什么能防 SQL 注入
+
+```python
+# 用户输入: "'; DROP TABLE users; --"
+# 字符串拼接（危险）:
+sql = f"SELECT * FROM users WHERE name = ''; DROP TABLE users; --'"
+# 参数化查询（安全）:
+sql = "SELECT * FROM users WHERE name = %s"
+cursor.execute(sql, ("'; DROP TABLE users; --",))
+```
+
+参数化查询将 SQL 语句和用户数据**分通道传输**：SQL 模板先被解析编译，数据作为纯值绑定到已编译的语句中——用户输入中的任何 SQL 关键字都被转义为普通字符，永远不参与 SQL 解析过程。
+
+### 连接池原理
+
+每次创建数据库连接涉及 TCP 三次握手 + MySQL 身份认证，耗时约 10-50ms。连接池预创建一组连接，使用后归还而非关闭，将连接建立开销从每次请求的路径中移除。
+
+**关键参数**：`maxconnections` 设置上限保护数据库不被打满；`blocking=True` 使连接耗尽时请求排队等待而非立即报错。
+
+### PyMySQL vs ORM 的选型依据
+
+| 维度 | PyMySQL（手写 SQL） | SQLAlchemy（ORM） |
+|:----|:-------------------|:-----------------|
+| **灵活性** | 完全控制 SQL，可优化每个查询 | 受限于 ORM 生成的 SQL，复杂查询需回退到 raw SQL |
+| **性能** | 批量插入/导出最高效 | N+1 查询问题，自动生成 SQL 可能不优 |
+| **开发效率** | 表结构变化需手动维护 SQL | 仅改模型定义，迁移工具自动同步 |
+| **学习成本** | 需懂 SQL，Python 代码简洁 | 需学习 ORM 概念（会话/懒加载/级联） |
+
+**选型建议**：ML 数据导出/批量导入用 PyMySQL（性能优先）；业务系统/快速原型用 ORM（开发效率优先）。
+
+## 核心操作六步法
+
 ## 核心操作六步法
 
 ```python
