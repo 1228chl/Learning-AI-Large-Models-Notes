@@ -41,7 +41,7 @@
   "UserDefinedRegExp": "{{.*?}}|++\n<.*?>|--\n\\[\\!.*?\\][-+]{0,1}|-+\n(file:///|https?://|ftp://|obsidian://|zotero://|www.)[^\\s（）《》。,，！？;；：“”‘’\\)\\(\\[\\]\\{\\}']+|--\n\n[a-zA-Z0-9_\\-.]+@[a-zA-Z0-9_\\-.]+|++\n// Tags in Obsidian//(?<!#)#[\\u4e00-\\u9fa5\\w-\\/]+|++",
   "UserRulesRespectUserDefinedRegexBlocks": false,
   "debug": false,
-  "StrictModeEnter": false,
+  "StrictModeEnter": true,
   "StrictLineMode": "enter_twice",
   "EnhanceModA": true,
   "TryFixChineseIM": true,

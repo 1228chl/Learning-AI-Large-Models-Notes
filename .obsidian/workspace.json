@@ -43,13 +43,13 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "CLAUDE.md",
+                "file": "Atomic-Cards/NLP/基础/00-NLP概述.md",
                 "mode": "source",
                 "source": false,
                 "backlinks": false
               },
               "icon": "lucide-file",
-              "title": "CLAUDE"
+              "title": "00-NLP概述"
             }
           },
           {
@@ -236,7 +236,8 @@
       }
     ],
     "direction": "horizontal",
-    "width": 363.5
+    "width": 363.5,
+    "collapsed": true
   },
   "left-ribbon": {
     "hiddenItems": {
@@ -252,8 +253,12 @@
       "templater-obsidian:Templater": false
     }
   },
-  "active": "a73ebf785a6e6ac6",
+  "active": "b9c397e9f32ab073",
   "lastOpenFiles": [
+    "Atomic-Cards/NLP/基础/00-NLP概述.md",
+    "Atomic-Cards/卡片总览.md",
+    "CLAUDE.md",
+    "Atomic-Cards/原子化生成提示词.md",
     "README.md.tmp.33540.aa625c2437f5",
     "README.md.tmp.33540.e34d80359f7d",
     "README.md.tmp.33540.4b67399af0e2",
@@ -264,8 +269,6 @@
     "README.md.tmp.33540.3847f057d0d9",
     "Atomic-Cards/原子化生成提示词.md.tmp.33540.03d6be6136ca",
     "README.md.tmp.33540.f965b67697b2",
-    "README.md.tmp.33540.8586e1bdc90b",
-    "Atomic-Cards/NLP/基础/00-NLP概述.md",
     "知识点.md",
     "AI-Learning-知识点总表.md",
     "AI-Large-Modlels-Notes/NLP/04-RNN及其变体.md",
@@ -287,9 +290,7 @@
     "AI-Large-Modlels-Notes/Project/EduRAG/demo/03-向量数据库与距离计算.md",
     "AI-Large-Modlels-Notes/Project/EduRAG/demo/02-RAG系统架构与原理.md",
     "AI-Large-Modlels-Notes/Project/EduRAG/demo/01-LangChain框架介绍.md",
-    "CLAUDE.md",
     "token-saver.md",
-    "Atomic-Cards/原子化生成提示词.md",
     "Assets/LangChain组件图.drawio.png",
     "Assets/Image/AI-Large-Modlels-Notes/Project/EduRAG/Milvus向量数据库/1.2.8.3-1.png",
     "Assets/Image/AI-Large-Modlels-Notes/Project/EduRAG/Milvus向量数据库/1.2.8.2-2.png",
