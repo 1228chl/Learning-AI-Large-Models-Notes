@@ -43,13 +43,13 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "README.md",
+                "file": "Atomic-Cards/工程实践/硬件/09-Claude使用指南.md",
                 "mode": "source",
                 "source": false,
                 "backlinks": false
               },
               "icon": "lucide-file",
-              "title": "README"
+              "title": "09-Claude使用指南"
             }
           }
         ],
@@ -110,8 +110,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 292.5,
-    "collapsed": true
+    "width": 292.5
   },
   "right": {
     "id": "f07a0c5b7e11463b",
@@ -221,7 +220,8 @@
       }
     ],
     "direction": "horizontal",
-    "width": 363.5
+    "width": 363.5,
+    "collapsed": true
   },
   "left-ribbon": {
     "hiddenItems": {
@@ -239,21 +239,20 @@
   },
   "active": "8dae5ec31b5739fc",
   "lastOpenFiles": [
+    "Atomic-Cards/NLP/任务/16-文本语义匹配.md",
+    "Atomic-Cards/工程实践/硬件/09-Claude使用指南.md.tmp.33540.497d0f079dd0",
+    "Atomic-Cards/工程实践/硬件/09-Claude使用指南.md.tmp.33540.b8c00de3ca8b",
+    "Atomic-Cards/工程实践/硬件/09-Claude使用指南.md.tmp.33540.d3ec5e3d1071",
+    "Atomic-Cards/工程实践/硬件/09-Claude使用指南.md.tmp.33540.e506c1dcf664",
+    "Atomic-Cards/工程实践/硬件/09-Claude使用指南.md",
+    "README.md",
+    "CLAUDE.md",
     "README.md.tmp.33540.a61b0d55a981",
     "README.md.tmp.33540.d1f431e8a904",
     "README.md.tmp.33540.729907f22668",
     "README.md.tmp.33540.05689f7e236b",
     "README.md.tmp.33540.648a4d82ae63",
     "README.md.tmp.33540.3ebda83ad347",
-    "README.md.tmp.33540.3f6f32a202fe",
-    "engnore.txt",
-    "新建 文本文档.txt",
-    "README.md.tmp.5512.04a7c96c7b7d",
-    "CLAUDE.md",
-    "README.md",
-    "Atomic-Cards/工程实践/硬件/09-Claude使用指南.md",
-    "README.md.tmp.5512.7e737453dcd0",
-    "Atomic-Cards/NLP/任务/16-文本语义匹配.md",
     "Atomic-Cards/原子化生成提示词.md",
     "Atomic-Cards/数据结构与算法/基础结构/02-数组与动态数组.md",
     "Atomic-Cards/NLP/任务/17-序列标注与NER.md",

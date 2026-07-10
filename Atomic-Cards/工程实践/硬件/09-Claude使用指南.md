@@ -76,14 +76,40 @@ claude --no-tools                                 # 纯聊天模式，不读写�
 claude --allowed-tools "Read,Edit,Bash"           # 只允许指定工具，其余禁用。逗号分隔，大小写不敏感
 claude --dangerously-skip-permissions             # 跳过所有权限确认弹窗。仅适用于可控自动环境（如 CI），日常开发勿用
 
+# 启动时通过 settings.json 设置权限模式：
+# 编辑 ~/.claude/settings.json 或项目 .claude/settings.json：
+# {
+#   "permissions": {
+#     "edits": "accept",             # accept edits on：自动接受编辑操作
+#     "reads": "accept",             # accept reads on：自动接受读操作
+#     "bash": "accept",              # accept bash on：自动接受命令执行
+#   }
+# }
+
 # ════════════════════════════════════════
-# 7. 会话与历史
+# 7. 自动模式（Auto Mode）
+# ════════════════════════════════════════
+claude --auto                                     # 自动模式：无需逐条确认，Claude 自主执行多步操作
+claude -a                                         # --auto 的简写
+                                                  # 适用于：已信任的自动化流程、批量处理、CI 场景
+                                                  # 注意：与 --dangerously-skip-permissions 不同，
+                                                  # auto mode 仍遵循 settings.json 中的权限白名单
+
+# 等价设置（在 settings.json 中）：
+# {
+#   "permissions": {
+#     "tool_calls": "accept" 
+#   }
+# }
+
+# ════════════════════════════════════════
+# 8. 会话与历史
 # ════════════════════════════════════════
 claude --session-tags "bugfix,api"                # 给本次会话打标签，便于后续搜索和管理
 claude 2>&1 | tee claude.log                      # 将完整会话输出同时写入文件和终端（标准 shell 技巧）
 
 # ════════════════════════════════════════
-# 8. 监视模式（Watch Mode）
+# 9. 监视模式（Watch Mode）
 # ════════════════════════════════════════
 claude --watch "**/*.py" -p "检查语法错误"        # 监视文件变更，自动执行指令。适合 TDD/持续测试
 claude --watch "src/**/*.rs" --debounce-ms 2000   # 防抖间隔 2000ms，避免保存时频繁触发
@@ -114,6 +140,11 @@ claude --watch "src/**/*.rs" --debounce-ms 2000   # 防抖间隔 2000ms，避免
                                 # 该文件包含项目描述和 Claude 行为指令，会被自动加载到每次会话中
 
 /reset                          # 完全重置：清除会话历史 + 重新加载 CLAUDE.md 和所有技能
+
+/permissions                    # 查看当前权限模式状态
+/permissions edits accept       # accept edits on：后续编辑操作自动接受
+/permissions reads accept       # accept reads on：后续读操作自动接受
+/permissions reset              # 恢复默认（每步都确认）
 
 # ════════════════════════════════════════
 # 技能（Skills）
