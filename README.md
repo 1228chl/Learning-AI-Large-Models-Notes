@@ -16,7 +16,7 @@
 | 微积分与优化 | -- | 6 | 导数、链式法则、梯度下降、凸优化 |
 | 概率统计 | -- | 8 | 概率空间、贝叶斯公式、协方差、贝叶斯推断 |
 | 机器学习 | 基础 / 监督学习 / 集成学习 / 聚类 / 降维 / 特征工程 / 正则化 / LLM 评估 | 31 | 回归、SVM、决策树、K-means、PCA、L1/L2 正则化等 |
-| 深度学习 | 基础 / PyTorch / CNN-RNN / 迁移学习 / 模型压缩 / LLM | 24 | 感知机、激活函数、反向传播、CNN、RNN、LSTM、Transformer 等 |
+| 深度学习 | 基础 / PyTorch / CNN-RNN / 迁移学习 / 训练优化 / 模型压缩 / LLM | 25 | 感知机、激活函数、反向传播、CNN、RNN、LSTM、Transformer、GPU并行与混合精度等 |
 | NLP | 基础 / 架构 / 预训练 / 组件 / 任务 | 17 | 分词、词嵌入、Seq2Seq、注意力机制、BERT、GPT 等 |
 | Python | OOP / 并发 / 工具 | 17 | 类与对象、进程线程、装饰器、Socket 等 |
 | Linux | -- | 8 | 基础命令、文件管理、进程、网络监控 |
@@ -25,7 +25,7 @@
 | 数据结构与算法 | 基础结构 / 树堆图 / 算法 | 15 | 数组、链表、栈、树、图、排序、动态规划 |
 | AI-Agent | 基础 / RAG 流程 / 检索 / LangChain / 平台 / 协作 / 系统 | 25 | Agent 定义、RAG 实现、BM25、Coze、多 Agent、CoT 等 |
 | 数据分析 | -- | 4 | NumPy、Pandas、Matplotlib |
-| 工程实践 | Docker / 部署 / 网络 / 硬件 | 11 | Docker 基础、Git、LLM API 部署、HTTP/WebSocket、GPU |
+| 工程实践 | Docker / 部署 / 工具 / 网络 | 10 | Docker 基础、Git、LLM API 部署、Claude、HTTP/WebSocket |
 | 知识体系 | -- | 2 | 核心依赖链、面试追问树 |
 
 > 如需增加新卡片，注意保持格式规范（参照已有卡片模板）。

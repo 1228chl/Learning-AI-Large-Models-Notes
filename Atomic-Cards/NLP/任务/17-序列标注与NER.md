@@ -122,6 +122,6 @@ model = BertForTokenClassification.from_pretrained(
 ## 参考引用
 
 - 需要理解BERT与MLM预训练的相关知识，参见 [BERT与MLM预训练](../预训练/10-BERT与MLM预训练.md)
-- 需要理解文本分类全流程的相关知识，参见 [文本分类全流程](../../AI-Agent/协作/12-文本分类全流程.md)
+- 需要理解文本分类全流程的相关知识，参见 [文本分类全流程](../../机器学习/实践/12-文本分类全流程.md)
 - 需要理解分词算法的相关知识，参见 [分词算法](../基础/01-分词算法.md)
 - 需要理解HuggingFace Transformers库的相关知识，参见 [HuggingFace Transformers库](../预训练/12-HuggingFace Transformers库.md)
