@@ -41,14 +41,15 @@
             "id": "8dae5ec31b5739fc",
             "type": "leaf",
             "state": {
-              "type": "split-diff-view",
+              "type": "markdown",
               "state": {
-                "aFile": "README.md",
-                "bFile": "README.md",
-                "aRef": ""
+                "file": "README.md",
+                "mode": "source",
+                "source": false,
+                "backlinks": false
               },
-              "icon": "diff",
-              "title": "Diff: README  (Working Tree)"
+              "icon": "lucide-file",
+              "title": "README"
             }
           }
         ],
@@ -238,6 +239,9 @@
   },
   "active": "8dae5ec31b5739fc",
   "lastOpenFiles": [
+    "README.md.tmp.5512.04a7c96c7b7d",
+    "CLAUDE.md",
+    "README.md",
     "Atomic-Cards/工程实践/硬件/09-Claude使用指南.md",
     "README.md.tmp.5512.7e737453dcd0",
     "Atomic-Cards/NLP/任务/16-文本语义匹配.md",
@@ -271,9 +275,6 @@
     "Atomic-Cards/NLP/预训练/12-HuggingFace Transformers库.md",
     "Atomic-Cards/NLP/基础/15-N-gram统计语言模型.md",
     "Atomic-Cards/卡片总览.md",
-    "Atomic-Cards/卡片诊断报告.md",
-    "Atomic-Cards/NLP/基础/03-FastText与子词信息.md",
-    "Atomic-Cards/NLP/基础/02-词嵌入与分布式表示.md",
     "Assets/LangChain组件图.drawio.png",
     "Assets/Image/AI-Large-Modlels-Notes/Project/EduRAG/Milvus向量数据库/1.2.8.3-1.png",
     "Assets/Image/AI-Large-Modlels-Notes/Project/EduRAG/Milvus向量数据库/1.2.8.2-2.png",
