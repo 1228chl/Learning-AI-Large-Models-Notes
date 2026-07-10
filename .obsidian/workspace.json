@@ -41,19 +41,18 @@
             "id": "8dae5ec31b5739fc",
             "type": "leaf",
             "state": {
-              "type": "markdown",
+              "type": "split-diff-view",
               "state": {
-                "file": "Atomic-Cards/NLP/任务/16-文本语义匹配.md",
-                "mode": "source",
-                "source": false,
-                "backlinks": false
+                "aFile": "README.md",
+                "bFile": "README.md",
+                "aRef": ""
               },
-              "icon": "lucide-file",
-              "title": "16-文本语义匹配"
+              "icon": "diff",
+              "title": "Diff: README  (Working Tree)"
             }
           }
         ],
-        "currentTab": 1
+        "currentTab": 2
       }
     ],
     "direction": "vertical"
@@ -237,11 +236,13 @@
       "templater-obsidian:Templater": false
     }
   },
-  "active": "b9c397e9f32ab073",
+  "active": "8dae5ec31b5739fc",
   "lastOpenFiles": [
+    "Atomic-Cards/工程实践/硬件/09-Claude使用指南.md",
+    "README.md.tmp.5512.7e737453dcd0",
     "Atomic-Cards/NLP/任务/16-文本语义匹配.md",
-    "Atomic-Cards/数据结构与算法/基础结构/02-数组与动态数组.md",
     "Atomic-Cards/原子化生成提示词.md",
+    "Atomic-Cards/数据结构与算法/基础结构/02-数组与动态数组.md",
     "Atomic-Cards/NLP/任务/17-序列标注与NER.md",
     "Atomic-Cards/NLP/预训练/10-BERT与MLM预训练.md",
     "Atomic-Cards/NLP/组件/14-Layer Normalization.md",
@@ -255,7 +256,6 @@
     "Atomic-Cards/机器学习/正则化/21-L2正则化(Ridge).md.tmp.5512.222a4723a1a9",
     "Atomic-Cards/机器学习/集成学习/14-梯度提升机.md.tmp.5512.e4162521bfbb",
     "Atomic-Cards/数据结构与算法/算法/10-排序算法.md.tmp.5512.7b4656a211ad",
-    "Atomic-Cards/数据结构与算法/树堆图/09-图.md.tmp.5512.6144d3ba1d23",
     "Atomic-Cards/机器学习/监督学习/07-逻辑回归.md",
     "Atomic-Cards/机器学习/监督学习/08-KNN算法.md",
     "Atomic-Cards/机器学习/监督学习/11-决策树.md",
@@ -274,7 +274,6 @@
     "Atomic-Cards/卡片诊断报告.md",
     "Atomic-Cards/NLP/基础/03-FastText与子词信息.md",
     "Atomic-Cards/NLP/基础/02-词嵌入与分布式表示.md",
-    "Atomic-Cards/NLP/基础/01-分词算法.md",
     "Assets/LangChain组件图.drawio.png",
     "Assets/Image/AI-Large-Modlels-Notes/Project/EduRAG/Milvus向量数据库/1.2.8.3-1.png",
     "Assets/Image/AI-Large-Modlels-Notes/Project/EduRAG/Milvus向量数据库/1.2.8.2-2.png",

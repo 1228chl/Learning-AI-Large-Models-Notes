@@ -1,44 +1,75 @@
-# Learning-AI-Large-Models-Notes
+# AI-Learning
 
-**Learning-AI-Large-Models-Notes** 是一个系统的 AI 大模型学习笔记仓库，主要包含以下几个部分：
+AI-Learning 是一个系统的 AI 知识学习仓库，涵盖机器学习、深度学习、自然语言处理、AI Agent 等领域的知识笔记和原子卡片。仓库分为两大部分：原子卡片库和传统笔记库。
 
-## 📚 主要内容模块（AI-Large-Modlels-Notes）
+---
 
-| 模块 | 说明 |
-|------|------|
-| **Agent** | AI 代理相关的笔记和研究 |
-| **NLP** | 自然语言处理相关内容 |
-| **DL** | 深度学习基础理论 |
-| **ML** | 机器学习算法和技术 |
-| **Math** | 数学基础（线性代数、概率等） |
-| **Python** | Python 编程语言笔记 |
-| **Linux** | Linux 系统使用和命令 |
-| **Conda** | Conda 环境管理工具使用 |
-| **SQL** | 数据库 SQL 相关笔记 |
-| **DataAnalysis** | 数据分析方法和工具 |
-| **Modify-Obsidian-Plugin** | Obsidian 笔记软件插件开发与修改 |
-| **Draft** | 草稿和正在进行的工作 |
+## 原子卡片库 (Atomic-Cards)
+
+原子卡片是基于原子化知识理念设计的知识点卡片，每张卡片围绕一个独立概念展开，包含定义（含 LaTeX 公式）、核心公式、直观理解、ML/DL 应用场景、面试追问 Q1-Q4 以及跨域引用链接。共 **211 张卡片**，覆盖 15 个分类。
+
+| 分类 | 子分类 | 卡片数 | 说明 |
+|:-----|:-------|:------:|:-----|
+| 线性代数 | 向量 / 矩阵 / 特征分解 / 应用 | 18 | 向量空间、矩阵运算、特征值、正交投影等 |
+| 微积分与优化 | -- | 6 | 导数、链式法则、梯度下降、凸优化 |
+| 概率统计 | -- | 8 | 概率空间、贝叶斯公式、协方差、贝叶斯推断 |
+| 机器学习 | 基础 / 监督学习 / 集成学习 / 聚类 / 降维 / 特征工程 / 正则化 / LLM 评估 | 31 | 回归、SVM、决策树、K-means、PCA、L1/L2 正则化等 |
+| 深度学习 | 基础 / PyTorch / CNN-RNN / 迁移学习 / 模型压缩 / LLM | 24 | 感知机、激活函数、反向传播、CNN、RNN、LSTM、Transformer 等 |
+| NLP | 基础 / 架构 / 预训练 / 组件 / 任务 | 17 | 分词、词嵌入、Seq2Seq、注意力机制、BERT、GPT 等 |
+| Python | OOP / 并发 / 工具 | 17 | 类与对象、进程线程、装饰器、Socket 等 |
+| Linux | -- | 8 | 基础命令、文件管理、进程、网络监控 |
+| 包管理 | -- | 3 | Conda、pip、UV |
+| 数据库 | SQL / Redis / Milvus / 检索 | 20 | SQL 基础、Redis 数据结构、向量数据库、嵌入与检索 |
+| 数据结构与算法 | 基础结构 / 树堆图 / 算法 | 15 | 数组、链表、栈、树、图、排序、动态规划 |
+| AI-Agent | 基础 / RAG 流程 / 检索 / LangChain / 平台 / 协作 / 系统 | 25 | Agent 定义、RAG 实现、BM25、Coze、多 Agent、CoT 等 |
+| 数据分析 | -- | 4 | NumPy、Pandas、Matplotlib |
+| 工程实践 | Docker / 部署 / 网络 / 硬件 | 11 | Docker 基础、Git、LLM API 部署、HTTP/WebSocket、GPU |
+| 知识体系 | -- | 2 | 核心依赖链、面试追问树 |
+
+## 传统笔记库 (AI-Large-Modlels-Notes)
+
+原始学习笔记，共 **123 篇**，覆盖更广泛的主题，包含完整的项目实战记录。
+
+| 模块 | 内容 |
+|:-----|:-----|
+| **Agent** | 提示词工程、Coze/Dify 平台使用、RAG 构建 |
+| **NLP** | NLP 概述、文本预处理、FastText、RNN、Transformer、BERT 系列（含精简版） |
+| **DL** | 深度学习概述、PyTorch 教程、ANN/CNN/RNN 理论与实践 |
+| **ML** | 机器学习基础、监督学习（线性回归、KNN、决策树、随机森林）、无监督学习 |
+| **Math** | 线性代数、微积分、统计学、向量距离计算 |
+| **Project** | EduRAG（教育领域 RAG 系统）、当当图书分类器、满分项目实践 |
+| **Python** | 面向对象、装饰器、网络编程、进程线程、协程、正则 |
+| **Algorithm** | 算法题解（如两数之和） |
+| **Linux** | Linux 命令整理 |
+| **SQL** | MySQL、PyMySQL、Redis 操作 |
+| **DataAnalysis** | 数据分析方法 |
+| **PackageManager** | Conda 基础命令 |
+| **Modify-Obsidian-Plugin** | MathLive、NotePix 插件修改 |
+| **Draft** | 进行中的草稿 |
 | **Question** | 常见问题整理 |
-| **Markdown语法.md** | Markdown 格式化语法参考 |
 
-## 🎨 辅助资源（Assets）
+## 其他目录
 
-| 文件 | 用途 |
-|------|------|
-| **mathlive-fix-main.js** | 数学公式渲染库（MathLive 修复版） |
-| **notepix-fix-main.js** | 笔记像素处理库（NotePix 修复版） |
-| **Image/** | 图片资源文件夹 |
+| 目录 | 说明 |
+|:-----|:-----|
+| **Assets/** | 图片资源（Agent/Coze 等截图） |
+| **Templates/** | Obsidian 笔记模板 |
+| **.claude/** | Claude Code 配置文件与工具脚本 |
 
-## 📋 模板文件（Templates）
+## 仓库统计
 
-| 文件 | 说明 |
-|------|------|
-| **Note_Templater.md** | 笔记模板，用于快速创建新笔记 |
+| 指标 | 数值 |
+|:-----|:----:|
+| 原子卡片总数 | 211 张 |
+| 原子卡片分类 | 15 个 |
+| 传统笔记总数 | 123 篇 |
+| 项目实战记录 | 3 个（EduRAG、图书分类器、满分项目） |
+| 仓库总文件数 | 340+ |
 
-## 📄 其他文件
+## 使用说明
 
-- **README.md** - 项目说明文档（当前浏览）
-- **LICENSE** - 开源许可证
-- **.obsidian/** - Obsidian 软件的配置文件夹
+本仓库使用 **Obsidian** 笔记软件组织管理。原子卡片之间通过相对路径链接相互引用，形成知识网络。推荐的学习路径：
 
-这个仓库是使用 **Obsidian** 笔记软件组织管理的学习资源库，涵盖了 AI 和大模型学习的全面内容。
+1. 从 **知识体系/核心依赖链** 卡片了解整体结构
+2. 按 **线性代数 -> 微积分 -> 概率统计 -> 机器学习 -> 深度学习 -> NLP -> AI-Agent** 顺序学习
+3. 每个知识点配合 **面试追问** 检验理解深度
