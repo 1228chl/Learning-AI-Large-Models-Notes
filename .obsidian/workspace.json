@@ -13,13 +13,13 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Atomic-Cards/卡片总览.md",
+                "file": "Atomic-Cards/AI-Agent/RAG流程/31-父文档与子文档分块策略.md",
                 "mode": "source",
                 "source": false,
                 "backlinks": false
               },
               "icon": "lucide-file",
-              "title": "卡片总览"
+              "title": "31-父文档与子文档分块策略"
             }
           },
           {
@@ -58,16 +58,17 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "AI-Learning-知识点总表.md",
+                "file": "README.md",
                 "mode": "source",
                 "source": false,
                 "backlinks": false
               },
               "icon": "lucide-file",
-              "title": "AI-Learning-知识点总表"
+              "title": "README"
             }
           }
-        ]
+        ],
+        "currentTab": 3
       }
     ],
     "direction": "vertical"
@@ -124,8 +125,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 292.5,
-    "collapsed": true
+    "width": 292.5
   },
   "right": {
     "id": "f07a0c5b7e11463b",
@@ -205,6 +205,7 @@
             "state": {
               "type": "backlink",
               "state": {
+                "file": "README.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -214,7 +215,7 @@
                 "unlinkedCollapsed": true
               },
               "icon": "links-coming-in",
-              "title": "反向链接"
+              "title": "README 的反向链接列表"
             }
           },
           {
@@ -251,44 +252,44 @@
       "templater-obsidian:Templater": false
     }
   },
-  "active": "a73ebf785a6e6ac6",
+  "active": "cbb23648d019f3e9",
   "lastOpenFiles": [
-    "Atomic-Cards/深度学习/基础/04-反向传播算法.md.tmp.33540.1fb370c6f50e",
-    "Atomic-Cards/深度学习/PyTorch/07-PyTorch张量与运算.md.tmp.33540.bc3a5286046a",
-    "Atomic-Cards/深度学习/PyTorch/07-PyTorch张量与运算.md.tmp.33540.403211f224f1",
-    "heima-extracted-content.json",
-    "heima-compare-log.txt",
-    "heima-file-tree.txt",
-    "Atomic-Cards/原子化生成提示词.md.tmp.33540.816dc09e9c44",
-    "Atomic-Cards/原子化生成提示词.md.tmp.33540.6229f0350ea0",
-    "Atomic-Cards/原子化生成提示词.md.tmp.33540.45156b04a9ea",
-    "Atomic-Cards/原子化生成提示词.md.tmp.33540.ebf281e1367b",
-    "README.md.tmp.33540.68605ad4c82a",
+    "Atomic-Cards/卡片总览.md.tmp.33540.0ab8996037de",
+    "Atomic-Cards/卡片总览.md.tmp.33540.64f17e5bcf03",
+    "Atomic-Cards/卡片总览.md.tmp.33540.a46ac3c14ac9",
+    "Atomic-Cards/卡片总览.md.tmp.33540.1cee7f915c3f",
+    "Atomic-Cards/卡片总览.md.tmp.33540.574922171ce6",
+    "Atomic-Cards/卡片总览.md.tmp.33540.5af031d7c35e",
+    "Atomic-Cards/工程实践/工具/10-MLOps与实验跟踪.md",
+    "Atomic-Cards/工程实践/工具/10-MLOps与实验跟踪.md.tmp.33540.01dab0690504",
+    "Atomic-Cards/工程实践/部署/08-ONNX模型部署.md",
+    "Atomic-Cards/工程实践/部署/08-ONNX模型部署.md.tmp.33540.17e8229dbcb4",
+    "Atomic-Cards/深度学习/CNN-RNN/16-卷积变体.md",
+    "Atomic-Cards/深度学习/CNN-RNN/16-卷积变体.md.tmp.33540.d84c509c23ee",
+    "AI-Learning-知识点总表.md",
+    "Atomic-Cards/AI-Agent/RAG流程/31-父文档与子文档分块策略.md",
+    "Atomic-Cards/深度学习/基础/15-对比学习.md",
+    "Atomic-Cards/深度学习/基础/15-对比学习.md.tmp.33540.d4cb034f1156",
+    "Atomic-Cards/机器学习/聚类/26-K-means++与聚类评估.md",
+    "Atomic-Cards/机器学习/聚类/26-K-means++与聚类评估.md.tmp.33540.9356445413b4",
+    "Atomic-Cards/AI-Agent/基础/31-Prompt工程进阶.md",
+    "Atomic-Cards/深度学习/基础/14-多模态基础.md",
+    "Atomic-Cards/深度学习/训练优化/09-分布式训练.md",
+    "Atomic-Cards/机器学习/集成学习/29-XGBoost与LightGBM.md",
+    "Atomic-Cards/深度学习/CNN-RNN/15-目标检测基础.md",
+    "Atomic-Cards/机器学习/基础/08-模型可解释性.md",
+    "Atomic-Cards/深度学习/LLM/30-RLHF与人类偏好对齐.md",
+    "Atomic-Cards/深度学习/迁移学习/19-PEFT高效微调.md",
+    "Atomic-Cards/概率统计/09-信息论基础.md",
+    "Atomic-Cards/卡片总览.md",
+    "Atomic-Cards/深度学习/基础/13-数据增强.md",
+    "Atomic-Cards/深度学习/基础/12-Batch Normalization.md",
     "Atomic-Cards/原子化生成提示词.md",
     "Atomic-Cards/深度学习/基础/11-图神经网络.md",
     "Atomic-Cards/深度学习/基础/10-生成对抗网络.md",
     "Atomic-Cards/深度学习/CNN-RNN/14-经典CNN架构.md",
     "Atomic-Cards/深度学习/训练优化/08-早停与学习率调度.md",
     "Atomic-Cards/深度学习/基础/09-Dropout随机失活.md",
-    "Atomic-Cards/机器学习/基础/07-强化学习基础.md",
-    "Atomic-Cards/机器学习/基础/06-半监督学习.md",
-    "heima-comparison-report.md",
-    "Atomic-Cards/卡片总览.md",
-    "Atomic-Cards/NLP/基础/00-NLP概述.md",
-    "CLAUDE.md",
-    "知识点.md",
-    "AI-Learning-知识点总表.md",
-    "AI-Large-Modlels-Notes/NLP/04-RNN及其变体.md",
-    "AI-Large-Modlels-Notes/NLP/03-FastText分类任务.md",
-    "AI-Large-Modlels-Notes/NLP/02-文本预处理-分词-张量.md",
-    "AI-Large-Modlels-Notes/NLP/01-自然语言处理概述.md",
-    "AI-Large-Modlels-Notes/Project/EduRAG/Milvus 的加权排序器.md",
-    "AI-Large-Modlels-Notes/Project/EduRAG/BM25算法简介与应用.md",
-    "AI-Large-Modlels-Notes/Project/EduRAG/BGE-M3与BGE-Reranker模型原理详解笔记.md",
-    "AI-Large-Modlels-Notes/Project/EduRAG/基于MySQL数据库实现问答系统.md",
-    "AI-Large-Modlels-Notes/Project/EduRAG/常见的距离.md",
-    "AI-Large-Modlels-Notes/Project/EduRAG/demo/10-补充知识点（混合检索重排序父子块策略选择）.md",
-    "AI-Large-Modlels-Notes/Project/EduRAG/demo/09-补充知识点（日志Redis文档处理RAG评估Docker）.md",
     "Assets/LangChain组件图.drawio.png",
     "Assets/Image/AI-Large-Modlels-Notes/Project/EduRAG/Milvus向量数据库/1.2.8.3-1.png",
     "Assets/Image/AI-Large-Modlels-Notes/Project/EduRAG/Milvus向量数据库/1.2.8.2-2.png",
