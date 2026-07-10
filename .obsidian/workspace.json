@@ -43,13 +43,13 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Atomic-Cards/Linux/03-文本处理三剑客.md",
+                "file": "Atomic-Cards/深度学习/基础/03-损失函数.md",
                 "mode": "source",
                 "source": false,
                 "backlinks": false
               },
               "icon": "lucide-file",
-              "title": "03-文本处理三剑客"
+              "title": "03-损失函数"
             }
           }
         ],
@@ -237,8 +237,14 @@
       "templater-obsidian:Templater": false
     }
   },
-  "active": "e83158f79f242826",
+  "active": "8dae5ec31b5739fc",
   "lastOpenFiles": [
+    "Atomic-Cards/原子化生成提示词.md.tmp.5512.42e7d925a7a8",
+    "Atomic-Cards/原子化生成提示词.md.tmp.5512.c7dd1fad9f6a",
+    "Atomic-Cards/深度学习/基础/01-感知机与多层神经网络.md",
+    "Atomic-Cards/深度学习/模型压缩/15-模型压缩量化剪枝蒸馏.md",
+    "Atomic-Cards/深度学习/模型压缩/14-知识蒸馏详解.md",
+    "Atomic-Cards/Linux/03-文本处理三剑客.md",
     "Atomic-Cards/线性代数/向量/02-向量空间与线性空间.md.tmp.5512.cdc0d8c568bc",
     "Atomic-Cards/Python/并发/06-进程与线程.md.tmp.5512.00a4e8ef8812",
     "Atomic-Cards/知识体系/02-面试追问树.md.tmp.5512.757a368a53d6",
@@ -248,8 +254,6 @@
     "Atomic-Cards/工程实践/Docker/01-Docker基础与容器化.md.tmp.5512.5c4d2927b78a",
     "Atomic-Cards/Python/工具/05-上下文管理器.md.tmp.5512.fd34d5317b83",
     "Atomic-Cards/数据库/检索/17-倒排索引.md.tmp.5512.f0ef6196c545",
-    "Atomic-Cards/数据结构与算法/树堆图/07-树与二叉树.md.tmp.5512.7efa3719b96b",
-    "Atomic-Cards/Linux/03-文本处理三剑客.md.tmp.5512.3292b6e0f496",
     "Atomic-Cards/NLP/预训练/11-GPT与自回归生成.md",
     "Atomic-Cards/NLP/预训练/12-HuggingFace Transformers库.md",
     "Atomic-Cards/NLP/基础/15-N-gram统计语言模型.md",
@@ -264,7 +268,6 @@
     "Atomic-Cards/Linux/06-Shell脚本基础.md",
     "Atomic-Cards/Linux/05-进程管理.md",
     "Atomic-Cards/Linux/04-权限管理.md",
-    "Atomic-Cards/Linux/03-文本处理三剑客.md",
     "Atomic-Cards/Linux/02-文件与目录操作.md",
     "Atomic-Cards/Linux/01-Linux基础与哲学.md",
     "Atomic-Cards/AI-Agent/RAG流程/34-中文递归文本分割器.md",
@@ -272,9 +275,6 @@
     "Atomic-Cards/AI-Agent/RAG流程/28-多格式文档加载与OCR解析.md",
     "Atomic-Cards/AI-Agent/RAG流程/03-文档切分策略.md",
     "Atomic-Cards/AI-Agent/RAG流程/02-RAG三阶段流程.md",
-    "Atomic-Cards/AI-Agent/LangChain/22-LangChain组件操作指南.md",
-    "Atomic-Cards/AI-Agent/LangChain/04-LangChain六大组件.md",
-    "Atomic-Cards/AI-Agent/协作/12-文本分类全流程.md",
     "Assets/LangChain组件图.drawio.png",
     "Assets/Image/AI-Large-Modlels-Notes/Project/EduRAG/Milvus向量数据库/1.2.8.3-1.png",
     "Assets/Image/AI-Large-Modlels-Notes/Project/EduRAG/Milvus向量数据库/1.2.8.2-2.png",
