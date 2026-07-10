@@ -236,11 +236,10 @@ print("Hello World")
 - 数据分析
 - 机器学习
 - Web开发
-"""
 
 chunks = markdown_splitter.split_text(md_text)
 # 按标题和代码块结构切分，保持语义完整
-```
+
 
 ### 4.2 分层切分的工程价值
 

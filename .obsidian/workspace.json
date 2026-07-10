@@ -58,17 +58,17 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "AI-Large-Modlels-Notes/Project/EduRAG/demo/01-LangChain框架介绍.md",
+                "file": "知识点.md",
                 "mode": "source",
                 "source": false,
                 "backlinks": false
               },
               "icon": "lucide-file",
-              "title": "01-LangChain框架介绍"
+              "title": "知识点"
             }
           }
         ],
-        "currentTab": 3
+        "currentTab": 1
       }
     ],
     "direction": "vertical"
@@ -125,7 +125,8 @@
       }
     ],
     "direction": "horizontal",
-    "width": 292.5
+    "width": 292.5,
+    "collapsed": true
   },
   "right": {
     "id": "f07a0c5b7e11463b",
@@ -235,8 +236,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 363.5,
-    "collapsed": true
+    "width": 363.5
   },
   "left-ribbon": {
     "hiddenItems": {
@@ -252,44 +252,44 @@
       "templater-obsidian:Templater": false
     }
   },
-  "active": "cbb23648d019f3e9",
+  "active": "b9c397e9f32ab073",
   "lastOpenFiles": [
     "知识点.md",
+    "AI-Learning-知识点总表.md",
+    "AI-Large-Modlels-Notes/NLP/04-RNN及其变体.md",
+    "AI-Large-Modlels-Notes/NLP/03-FastText分类任务.md",
+    "AI-Large-Modlels-Notes/NLP/02-文本预处理-分词-张量.md",
+    "AI-Large-Modlels-Notes/NLP/01-自然语言处理概述.md",
+    "AI-Large-Modlels-Notes/Project/EduRAG/Milvus 的加权排序器.md",
+    "AI-Large-Modlels-Notes/Project/EduRAG/BM25算法简介与应用.md",
+    "AI-Large-Modlels-Notes/Project/EduRAG/BGE-M3与BGE-Reranker模型原理详解笔记.md",
+    "AI-Large-Modlels-Notes/Project/EduRAG/基于MySQL数据库实现问答系统.md",
+    "AI-Large-Modlels-Notes/Project/EduRAG/常见的距离.md",
+    "AI-Large-Modlels-Notes/Project/EduRAG/demo/10-补充知识点（混合检索重排序父子块策略选择）.md",
+    "AI-Large-Modlels-Notes/Project/EduRAG/demo/09-补充知识点（日志Redis文档处理RAG评估Docker）.md",
+    "AI-Large-Modlels-Notes/Project/EduRAG/demo/08-项目源码深度分析.md",
+    "AI-Large-Modlels-Notes/Project/EduRAG/demo/07-学习总结与项目要点.md",
+    "AI-Large-Modlels-Notes/Project/EduRAG/demo/06-Docker部署与项目实践.md",
+    "AI-Large-Modlels-Notes/Project/EduRAG/demo/05-BM25算法与Redis缓存.md",
+    "AI-Large-Modlels-Notes/Project/EduRAG/demo/04-项目代码结构与API接口.md",
+    "AI-Large-Modlels-Notes/Project/EduRAG/demo/03-向量数据库与距离计算.md",
+    "AI-Large-Modlels-Notes/Project/EduRAG/demo/02-RAG系统架构与原理.md",
+    "AI-Large-Modlels-Notes/Project/EduRAG/demo/01-LangChain框架介绍.md",
     "CLAUDE.md",
     "token-saver.md",
     "Atomic-Cards/原子化生成提示词.md",
     "Atomic-Cards/原子化生成提示词.md.tmp.33540.9233a9dcaf01",
     "Atomic-Cards/原子化生成提示词.md.tmp.33540.1e97c0436e93",
-    "AI-Large-Modlels-Notes/Project/EduRAG/基于MySQL数据库实现问答系统.md",
     "Atomic-Cards/AI-Agent/基础/30-思维链(CoT).md",
     "Atomic-Cards/AI-Agent/基础/01-Agent定义与核心公式.md",
-    "Atomic-Cards/概率统计/08-假设检验.md",
-    "Atomic-Cards/概率统计/02-条件概率与贝叶斯公式.md",
     "AI-Learning-知识点总表.md.tmp.33540.bec5855e19a7",
     "AI-Learning-知识点总表.md.tmp.33540.80ccc3375bc2",
-    "Atomic-Cards/概率统计/01-概率空间与事件运算.md",
-    "Atomic-Cards/NLP/任务/16-文本语义匹配.md",
     "README.md.tmp.33540.89d9f611614a",
     "README.md.tmp.33540.ced6cff1ab2d",
     "README.md.tmp.33540.b5933be5b5c3",
-    "Atomic-Cards/卡片总览.md",
     "README.md.tmp.33540.782e84803b7b",
     "README.md.tmp.33540.814400414894",
     "README.md.tmp.33540.515f6f6d9b81",
-    "Atomic-Cards/工程实践/工具/03-UV包管理器.md",
-    "Atomic-Cards/工程实践/工具/02-Conda包管理与配置.md",
-    "Atomic-Cards/工程实践/工具/01-Conda环境管理.md",
-    "Atomic-Cards/深度学习/训练优化/07-完整模型训练流程.md",
-    "Atomic-Cards/深度学习/LLM/29-LLM推理解码参数.md",
-    "Atomic-Cards/机器学习/实践/12-文本分类全流程.md",
-    "Atomic-Cards/AI-Agent/系统/10-RAG系统双架构.md",
-    "Atomic-Cards/深度学习/基础/08-光滑损失函数.md",
-    "Atomic-Cards/工程实践/硬件/09-Claude使用指南.md",
-    "Atomic-Cards/工程实践/工具/09-Claude使用指南.md",
-    "Atomic-Cards/深度学习/训练优化/02-GPU并行与混合精度.md",
-    "README.md",
-    "Atomic-Cards/数据结构与算法/基础结构/02-数组与动态数组.md",
-    "Atomic-Cards/NLP/任务/17-序列标注与NER.md",
     "Assets/LangChain组件图.drawio.png",
     "Assets/Image/AI-Large-Modlels-Notes/Project/EduRAG/Milvus向量数据库/1.2.8.3-1.png",
     "Assets/Image/AI-Large-Modlels-Notes/Project/EduRAG/Milvus向量数据库/1.2.8.2-2.png",

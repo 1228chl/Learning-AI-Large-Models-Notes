@@ -184,14 +184,14 @@ Reranker 的核心是**交叉编码器（Cross-Encoder）** 架构：
 
 BGE-Reranker 系列包含多个版本：
 
-| 模型 | 参数量 | 基础模型 | 特点 |
-|------|--------|----------|------|
-| **bge-reranker-base** | 278M | XLM-RoBERTa-Base | 轻量级，速度快 |
-| **bge-reranker-large** | 560M | XLM-RoBERTa-Large | 精度更高 |
-| **bge-reranker-v2-m3** | 568M | BGE-M3 | 多语言能力强，轻量易部署 |
-| **bge-reranker-v2-minicpm** | 2.72B | MiniCPM-2B | 支持选择不同层输出以加速推理 |
-| **bge-reranker-v2-gemma** | 2.51B | Gemma2-2B | 多语言场景表现优异 |
-| **bge-reranker-v2-gemma-9B** | 9.24B | Gemma2-9B | 性能最强 |
+| 模型                           | 参数量   | 基础模型              | 特点             |
+| ---------------------------- | ----- | ----------------- | -------------- |
+| **bge-reranker-base**        | 278M  | XLM-RoBERTa-Base  | 轻量级，速度快        |
+| **bge-reranker-large**       | 560M  | XLM-RoBERTa-Large | 精度更高           |
+| **bge-reranker-v2-m3**       | 568M  | BGE-M3            | 多语言能力强，轻量易部署   |
+| **bge-reranker-v2-minicpm**  | 2.72B | MiniCPM-2B        | 支持选择不同层输出以加速推理 |
+| **bge-reranker-v2-gemma**    | 2.51B | Gemma2-2B         | 多语言场景表现优异      |
+| **bge-reranker-v2-gemma-9B** | 9.24B | Gemma2-9B         | 性能最强           |
 
 ### 6.4 BGE-Reranker v2.0 的技术亮点
 
