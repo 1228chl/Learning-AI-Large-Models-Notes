@@ -53,7 +53,7 @@
             }
           }
         ],
-        "currentTab": 2
+        "currentTab": 1
       }
     ],
     "direction": "vertical"
@@ -237,19 +237,22 @@
       "templater-obsidian:Templater": false
     }
   },
-  "active": "a73ebf785a6e6ac6",
+  "active": "b9c397e9f32ab073",
   "lastOpenFiles": [
-    "Atomic-Cards/卡片总览.md.tmp.33540.bc93c315daa7",
-    "Atomic-Cards/卡片总览.md.tmp.33540.1b111038411f",
-    "Atomic-Cards/卡片总览.md.tmp.33540.5adc60fbaf12",
-    "Atomic-Cards/卡片总览.md.tmp.33540.2718b5abc8c9",
-    "Atomic-Cards/卡片总览.md.tmp.33540.b3b5a301c3b5",
-    "Atomic-Cards/卡片总览.md.tmp.33540.769aaf3de2c6",
-    "Atomic-Cards/卡片总览.md.tmp.33540.4ba9151035e2",
-    "Atomic-Cards/NLP/任务/17-序列标注与NER.md.tmp.33540.3b0fbb88d05c",
-    "Atomic-Cards/NLP/任务/16-文本语义匹配.md.tmp.33540.df91591c5988",
-    "Atomic-Cards/AI-Agent/检索/26-FAQ与RAG混合检索架构.md.tmp.33540.c0948e91a9ce",
-    "Atomic-Cards/AI-Agent/系统/25-RAG系统评估(RAGAS).md.tmp.33540.2330699ee2c7",
+    "README.md.tmp.33540.89d9f611614a",
+    "README.md.tmp.33540.ced6cff1ab2d",
+    "README.md.tmp.33540.b5933be5b5c3",
+    "Atomic-Cards/卡片总览.md",
+    "Atomic-Cards/原子化生成提示词.md",
+    "README.md.tmp.33540.782e84803b7b",
+    "README.md.tmp.33540.814400414894",
+    "README.md.tmp.33540.515f6f6d9b81",
+    "README.md.tmp.33540.e31c3665aaab",
+    "Atomic-Cards/NLP/任务/16-文本语义匹配.md",
+    "Atomic-Cards/原子化生成提示词.md.tmp.33540.1b4f88b6d892",
+    "Atomic-Cards/原子化生成提示词.md.tmp.33540.ee2a6f05c5e1",
+    "Atomic-Cards/原子化生成提示词.md.tmp.33540.1536e061cb83",
+    "Atomic-Cards/卡片总览.md.tmp.33540.d1e8cec200e6",
     "Atomic-Cards/工程实践/工具/03-UV包管理器.md",
     "Atomic-Cards/工程实践/工具/02-Conda包管理与配置.md",
     "Atomic-Cards/工程实践/工具/01-Conda环境管理.md",
@@ -258,8 +261,6 @@
     "Atomic-Cards/机器学习/实践/12-文本分类全流程.md",
     "Atomic-Cards/AI-Agent/系统/10-RAG系统双架构.md",
     "Atomic-Cards/深度学习/基础/08-光滑损失函数.md",
-    "Atomic-Cards/原子化生成提示词.md",
-    "Atomic-Cards/NLP/任务/16-文本语义匹配.md",
     "token-saver.md",
     "Atomic-Cards/工程实践/硬件/09-Claude使用指南.md",
     "Atomic-Cards/工程实践/工具/09-Claude使用指南.md",
@@ -274,7 +275,6 @@
     "Atomic-Cards/机器学习/监督学习/07-逻辑回归.md",
     "Atomic-Cards/机器学习/监督学习/08-KNN算法.md",
     "Atomic-Cards/机器学习/监督学习/11-决策树.md",
-    "Atomic-Cards/机器学习/监督学习/06-线性回归.md",
     "Assets/LangChain组件图.drawio.png",
     "Assets/Image/AI-Large-Modlels-Notes/Project/EduRAG/Milvus向量数据库/1.2.8.3-1.png",
     "Assets/Image/AI-Large-Modlels-Notes/Project/EduRAG/Milvus向量数据库/1.2.8.2-2.png",
