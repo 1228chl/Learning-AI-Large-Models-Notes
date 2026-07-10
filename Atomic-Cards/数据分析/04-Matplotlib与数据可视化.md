@@ -150,3 +150,4 @@ plt.savefig('figure.pdf', bbox_inches='tight', dpi=150)  # bbox_inches 自动裁
 ## 参考引用
 - 需要理解NumPy与ndarray的相关知识，参见 [NumPy与ndarray](01-NumPy与ndarray.md)
 - 需要理解Pandas与DataFrame的相关知识，参见 [Pandas与DataFrame](03-Pandas与DataFrame.md)
+- 需要理解PCA与降维的相关知识，参见 [PCA与降维](../机器学习/降维/17-PCA与降维.md)
