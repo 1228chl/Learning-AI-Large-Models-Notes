@@ -43,17 +43,17 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Atomic-Cards/数据库/SQL/01-SQL基础与数据库设计.md",
+                "file": "Atomic-Cards/数据结构与算法/基础结构/05-队列.md",
                 "mode": "source",
                 "source": false,
                 "backlinks": false
               },
               "icon": "lucide-file",
-              "title": "01-SQL基础与数据库设计"
+              "title": "05-队列"
             }
           }
         ],
-        "currentTab": 1
+        "currentTab": 2
       }
     ],
     "direction": "vertical"
@@ -110,8 +110,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 292.5,
-    "collapsed": true
+    "width": 292.5
   },
   "right": {
     "id": "f07a0c5b7e11463b",
@@ -238,44 +237,44 @@
       "templater-obsidian:Templater": false
     }
   },
-  "active": "b9c397e9f32ab073",
+  "active": "8dae5ec31b5739fc",
   "lastOpenFiles": [
-    "CLAUDE.md",
+    "Atomic-Cards/数据结构与算法/基础结构/04-栈.md",
+    "Atomic-Cards/数据结构与算法/基础结构/03-链表.md",
+    "Atomic-Cards/数据结构与算法/基础结构/02-数组与动态数组.md",
+    "Atomic-Cards/数据结构与算法/基础结构/01-算法复杂度分析.md",
+    "Atomic-Cards/数据分析/04-Matplotlib与数据可视化.md",
+    "Atomic-Cards/数据分析/03-Pandas与DataFrame.md",
+    "Atomic-Cards/数据分析/02-广播机制.md",
+    "Atomic-Cards/数据分析/01-NumPy与ndarray.md",
+    "Atomic-Cards/深度学习/PyTorch/08-自动微分机制.md",
+    "Atomic-Cards/深度学习/PyTorch/07-PyTorch张量与运算.md",
+    "Atomic-Cards/深度学习/LLM/23-Scaling Law与涌现能力.md",
+    "Atomic-Cards/深度学习/LLM/22-语言模型发展史.md",
+    "Atomic-Cards/深度学习/CNN-RNN/13-GRU.md",
+    "Atomic-Cards/深度学习/模型压缩/15-模型压缩量化剪枝蒸馏.md",
+    "Atomic-Cards/深度学习/CNN-RNN/12-LSTM与门控机制.md",
+    "Atomic-Cards/深度学习/CNN-RNN/11-RNN与序列建模.md",
+    "Atomic-Cards/深度学习/CNN-RNN/10-池化层.md",
+    "Atomic-Cards/深度学习/CNN-RNN/09-卷积运算.md",
+    "Atomic-Cards/深度学习/迁移学习/18-迁移学习与微调(TransferLearning).md",
+    "Atomic-Cards/深度学习/迁移学习/17-迁移学习与微调.md",
+    "Atomic-Cards/深度学习/模型压缩/21-知识蒸馏(Distillation).md",
+    "Atomic-Cards/深度学习/模型压缩/20-模型剪枝(Pruning).md",
+    "Atomic-Cards/深度学习/模型压缩/19-模型量化(Quantization).md",
+    "Atomic-Cards/深度学习/模型压缩/16-光滑损失函数.md",
+    "Atomic-Cards/深度学习/模型压缩/14-知识蒸馏详解.md",
+    "Atomic-Cards/深度学习/基础/07-完整模型训练流程.md",
     "CLAUDE.md.tmp.40556.e3f7d6b40339",
     "Atomic-Cards/卡片总览.md.tmp.40556.5775d5d222a7",
     "Atomic-Cards/卡片总览.md.tmp.40556.9db7fadab81b",
     "Atomic-Cards/卡片总览.md.tmp.40556.c15f1ac8d38b",
     "Atomic-Cards/数据库/检索/15-BGE-M3与BGE-Reranker模型.md.tmp.40556.fa83b0ee56e7",
     "Atomic-Cards/数据库/检索/18-BGE-Reranker重排序模型.md.tmp.40556.ae4e020f2f49",
-    "Atomic-Cards/数据库/检索/18-BGE-Reranker重排序模型.md",
     "Atomic-Cards/原子化生成提示词.md.tmp.40556.ec1c38fc34bb",
-    "Atomic-Cards/数据库/检索/15-BGE-M3与BGE-Reranker模型.md",
     "Atomic-Cards/卡片总览.md.tmp.40556.b4bdc035d96a",
     "Atomic-Cards/卡片总览.md.tmp.40556.1bf2f9c909fe",
     "Atomic-Cards/卡片总览.md.tmp.40556.95d3d5fd522f",
-    "Atomic-Cards/卡片总览.md",
-    "Atomic-Cards/数据库/检索/17-倒排索引.md",
-    "Atomic-Cards/深度学习/基础/07-完整模型训练流程.md",
-    "Atomic-Cards/Python/工具/11-Python日志模块.md",
-    "Atomic-Cards/Python/工具/10-Python高阶函数.md",
-    "Atomic-Cards/概率统计/08-假设检验.md",
-    "Atomic-Cards/数据库/检索/16-稠密向量与稀疏向量.md",
-    "Atomic-Cards/数据库/检索/11-混合检索与重排序.md",
-    "AI-Large-Modlels-Notes/Project/EduRAG/BGE-M3与BGE-Reranker模型原理详解笔记.md",
-    "Atomic-Cards/工程实践/01-Docker基础与容器化.md",
-    "Atomic-Cards/工程实践/04-Flask与FastAPI模型部署.md",
-    "Atomic-Cards/工程实践/03-Git版本控制.md",
-    "Atomic-Cards/原子化生成提示词.md",
-    "Atomic-Cards/数据库/SQL/01-SQL基础与数据库设计.md",
-    "Atomic-Cards/AI-Agent/32-策略选择与多路径RAG检索.md",
-    "Atomic-Cards/线性代数/矩阵/08-逆矩阵.md",
-    "Atomic-Cards/线性代数/矩阵/07-行列式.md",
-    "Atomic-Cards/线性代数/矩阵/06-线性变换.md",
-    "Atomic-Cards/线性代数/矩阵/05-特殊矩阵.md",
-    "Atomic-Cards/线性代数/矩阵/04-矩阵乘法.md",
-    "Atomic-Cards/线性代数/矩阵/03-矩阵基础.md",
-    "Atomic-Cards/线性代数/应用/18-线性代数与神经网络的连接.md",
-    "Atomic-Cards/线性代数/特征分解/16-正定矩阵与二次型.md",
     "Assets/LangChain组件图.drawio.png",
     "Assets/Image/AI-Large-Modlels-Notes/Project/EduRAG/Milvus向量数据库/1.2.8.3-1.png",
     "Assets/Image/AI-Large-Modlels-Notes/Project/EduRAG/Milvus向量数据库/1.2.8.2-2.png",
