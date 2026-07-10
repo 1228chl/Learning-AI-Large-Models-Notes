@@ -52,12 +52,13 @@
 
 ---
 
-## 五、包管理工具（PackageManager）
+## 五、工程实践（Engineering Practice）
 
 | 知识点 | 子知识点 |
 |:-------|:---------|
-| **Conda** | 环境创建/管理、包安装/更新/删除、换源、环境导出 |
-| **UV（Rust 包管理器）** | 极速 pip 替代、虚拟环境、依赖解析、lock 文件 |
+| **Conda 环境管理** | 环境创建/管理、包安装/更新/删除、换源、环境导出、环境克隆 |
+| **UV 包管理器** | 极速 pip 替代（Rust）、虚拟环境、依赖解析、lock 文件 |
+| **Docker 容器化** | 镜像与容器、Dockerfile、Docker Compose、部署 |
 
 ---
 
@@ -281,7 +282,8 @@
 
 | 分类 | 模块数 | 主要笔记文件数 |
 |:-----|:------:|:--------------:|
-| 基础（Math/Python/Linux/SQL/PackageManager/Algorithm） | 6 | ~30 |
+| 基础（Math/Python/Linux/SQL/Algorithm） | 5 | ~25 |
+| 工程实践（Docker/Conda/UV/部署） | 4 | ~8 |
 | 机器学习（ML） | 4 个子方向 | ~15 |
 | 深度学习（DL） | 4 个子方向 | ~10 |
 | 自然语言处理（NLP） | 8 个模块 + 8 个精简版 | ~20 |
