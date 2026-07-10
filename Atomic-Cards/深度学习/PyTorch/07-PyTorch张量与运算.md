@@ -42,6 +42,49 @@ x_back = x_gpu.cpu()                        # 将张量从GPU显存移回CPU内�
 | **拼接** | `torch.cat([a, b], dim=0)` | 沿指定维度拼接 |
 | **堆叠** | `torch.stack([a, b], dim=0)` | 创建新维度堆叠 |
 | **扩维** | `x.unsqueeze(0)`、`x.squeeze()` | 增/删尺寸为 1 的维度 |
+| **切分** | `torch.chunk(x, 4, dim=0)`、`torch.split(x, 10, dim=0)` | 沿指定维度均分/按大小切分张量 |
+| **转置** | `x.permute(2, 0, 1)`、`x.transpose(0, 1)` | 任意维度重排 / 交换两指定维度 |
+| **广播** | `a + b`（形状不匹配时自动扩展） | 小张量自动扩展到大张量的形状进行逐元素运算 |
+
+### 张量操作代码示例
+
+```python
+import torch
+
+# ==================== 变形 ====================
+x = torch.randn(2, 3, 4)                    # 创建 2x3x4 的三维张量
+y = x.view(2, -1)                           # view: 变形为 2x12，-1 自动推断
+z = x.reshape(2, -1)                        # reshape: 同 view，自动处理内存不连续
+w = x.flatten()                              # flatten: 展平为一维
+
+# view vs reshape：view 要求内存连续
+x_t = x.transpose(0, 1)                     # 转置后内存不连续
+y_t = x_t.reshape(3, 8)                     # reshape 自动处理连续性，推荐
+
+# ==================== 拼接与堆叠 ====================
+a, b = torch.randn(3, 4), torch.randn(3, 4)
+c0 = torch.cat([a, b], dim=0)               # cat: 沿行拼接 → (6, 4)
+c1 = torch.cat([a, b], dim=1)               # cat: 沿列拼接 → (3, 8)
+s = torch.stack([a, b], dim=0)              # stack: 新维堆叠 → (2, 3, 4)
+
+# ==================== 扩维与压缩 ====================
+x = torch.randn(3, 1, 4)
+sq = x.squeeze()                             # squeeze: 删所有尺寸为 1 的维度 → (3, 4)
+us = sq.unsqueeze(0)                         # unsqueeze(0): 在第 0 维插入新维 → (1, 3, 4)
+
+# ==================== 切分 ====================
+x = torch.randn(8, 4)
+chunks = torch.chunk(x, 4, dim=0)           # chunk: 均分 4 块，每块 (2, 4)
+splits = torch.split(x, [2, 3, 3], dim=0)   # split: 按大小切分
+
+# ==================== 设备 ====================
+if torch.cuda.is_available():
+    x = torch.randn(3, 3)
+    x_gpu = x.to('cuda')                     # to(device): 通用设备迁移
+    x_back = x_gpu.cpu()                     # cpu(): 移回 CPU
+    if torch.cuda.device_count() > 1:
+        x_gpu_1 = x.to('cuda:0')             # 指定第一块 GPU
+```
 
 ## 设备与数据类型
 
