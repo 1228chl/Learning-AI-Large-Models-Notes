@@ -58,11 +58,13 @@ BIO 是最常用的序列标注编码方案，将每个 token 标注为三类之
 
 1. **取每个 token 的向量**：BERT 输出每个 token 的表征，维度为 $[B, L, H]$，其中 $B$ 为批次大小，$L$ 为序列长度，$H$ 为隐藏层维度（BERT-base 为 768）。
 2. **线性变换**：接入分类层 $\mathbf{W} \in \mathbb{R}^{H \times C}$ 将 $H$ 维向量映射到 $C$ 个标签类别：
+
    $$
    \mathbf{z}_i = \mathbf{h}_i \mathbf{W} + \mathbf{b}
    $$
    其中 $\mathbf{h}_i \in \mathbb{R}^H$ 为第 $i$ 个 token 的 BERT 输出向量，$\mathbf{W} \in \mathbb{R}^{H \times C}$ 为权重矩阵，$\mathbf{b} \in \mathbb{R}^C$ 为偏置项。
 3. **归一化概率**：通过 softmax（多分类）或 sigmoid（多标签）得到每个类别的概率分布：
+
    $$
    P(y_i = c \mid \mathbf{X}) = \frac{\exp(z_{i,c})}{\sum_{k=1}^{C} \exp(z_{i,k})}
    $$
