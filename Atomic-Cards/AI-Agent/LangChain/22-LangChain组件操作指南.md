@@ -13,6 +13,25 @@ LangChain 组件操作指南提供了 LangChain 框架中八大核心组件（Mo
 
 > 补充各组件的完整可运行代码。安装：`pip install langchain langchain-openai langchain-community`
 
+## 组件设计原理
+
+LangChain 通过**组件化抽象**将 LLM 应用的共性需求拆解为可组合的模块，每个模块解决一个独立问题：
+
+| 组件 | 解决的问题 | 核心抽象 |
+|:----|:-----------|:---------|
+| **Models** | 统一不同 LLM/Embedding 提供商的 API 差异 | `BaseLLM` / `BaseEmbeddings` 接口 |
+| **Prompts** | 模板化提示管理，避免硬编码 | `PromptTemplate` / `FewShotPromptTemplate` |
+| **Chains** | 多步任务编排，前一步输出自动传给下一步 | `LLMChain` / `SequentialChain` / `LCEL` |
+| **Agents** | 让 LLM 自主选择工具和行动路径 | `ReAct` / `OpenAI Function Calling` / `Plan-and-Execute` |
+| **Memory** | 多轮对话的状态保持和持久化 | `BufferMemory` / `SummaryMemory` / `VectorStoreMemory` |
+| **Indexes** | 外部知识的加载、切分、检索 | `DocumentLoader` → `TextSplitter` → `VectorStore` |
+| **Output Parsers** | 将 LLM 自由文本约束为结构化输出 | `StrOutputParser` / `JsonOutputParser` / `PydanticOutputParser` |
+| **LCEL** | 声明式管道编排，替代传统 Chain 类 | `|` 管道运算符 + `Runnable` 协议 |
+
+**Agent 类型选型**：ReAct（推理+行动）适合需要中间推理步骤的场景，但循环次数不可控；OpenAI Function Calling 延迟更低且输出更稳定，但仅限 OpenAI 系模型；Plan-and-Execute 先规划再执行，适合复杂多步任务。
+
+**Memory 选型**：`ConversationBufferMemory` 简单直接但上下文随轮次线性增长；`SummaryMemory` 用 LLM 压缩历史，适合长对话但丢失细节；`VectorStoreMemory` 按相关性检索历史，适合需要回顾特定细节的场景。
+
 ## 1. Models
 
 ```python
