@@ -11,6 +11,14 @@ aliases: ["L2正则化", "Ridge", "权重衰减", "Weight Decay", "岭回归"]
 
 L2 正则化（Ridge / 权重衰减）在损失函数中添加权重的 **平方和** 作为惩罚项，迫使权重趋向于较小的值但**不压为零**。所有特征都保留但贡献被均匀减弱。
 
+## 直观理解
+
+### L2 的几何：圆形约束 + 等比缩小
+
+L2 正则化的约束区域 $\|w\|_2^2 \leq t$ 是圆形（二维）或球体（高维）。损失函数的等高线与圆相切时，切点通常不在坐标轴上——这意味着所有权重都非零，但都缩小了。
+
+L2 的梯度更新等价于 SGD 中每次更新前先将权重乘以 $(1-\eta\lambda)$：$\mathbf{w} \leftarrow (1-\eta\lambda)\mathbf{w} - \eta \nabla L_{\text{data}}$。这就是"权重衰减"名称的来源——每一步都对权重做等比缩小，衰减率由 $\lambda$ 控制。
+
 $$
 L_{\text{ridge}} = L_{\text{data}} + \lambda \sum_{j=1}^p w_j^2 = L_{\text{data}} + \lambda \|\mathbf{w}\|_2^2
 $$
