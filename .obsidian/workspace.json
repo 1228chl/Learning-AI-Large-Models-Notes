@@ -28,13 +28,13 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Atomic-Cards/数据库/01-SQL基础与数据库设计.md",
+                "file": "Atomic-Cards/数据库/15-BGE-M3与BGE-Reranker模型.md",
                 "mode": "source",
                 "source": false,
                 "backlinks": false
               },
               "icon": "lucide-file",
-              "title": "01-SQL基础与数据库设计"
+              "title": "15-BGE-M3与BGE-Reranker模型"
             }
           },
           {
@@ -52,8 +52,7 @@
               "title": "原子化生成提示词"
             }
           }
-        ],
-        "currentTab": 1
+        ]
       }
     ],
     "direction": "vertical"
@@ -110,7 +109,8 @@
       }
     ],
     "direction": "horizontal",
-    "width": 292.5
+    "width": 292.5,
+    "collapsed": true
   },
   "right": {
     "id": "f07a0c5b7e11463b",
@@ -239,9 +239,16 @@
       "templater-obsidian:Templater": false
     }
   },
-  "active": "9dddde49a2d5eb85",
+  "active": "e5c6004f44c0e722",
   "lastOpenFiles": [
+    "Atomic-Cards/数据库/17-Milvus集合创建与字段设计.md",
+    "Atomic-Cards/数据库/17-Milvus集合创建与字段设计.md.tmp.40332.c41685e095e0",
+    "Atomic-Cards/数据库/16-稠密向量与稀疏向量.md",
+    "Atomic-Cards/数据库/16-稠密向量与稀疏向量.md.tmp.40332.b5ff92834743",
+    "Atomic-Cards/AI-Agent/31-父文档与子文档分块策略.md",
+    "Atomic-Cards/AI-Agent/31-父文档与子文档分块策略.md.tmp.40332.ce431309a258",
     "Atomic-Cards/数据库/15-BGE-M3与BGE-Reranker模型.md",
+    "Atomic-Cards/数据库/01-SQL基础与数据库设计.md",
     "Atomic-Cards/原子化生成提示词.md.tmp.21624.4e41bc476b03",
     "Atomic-Cards/NLP/17-序列标注与NER.md.tmp.18016.b05294c5875d",
     "Atomic-Cards/NLP/16-文本语义匹配.md.tmp.18016.ff846dcc46ff",
@@ -251,9 +258,6 @@
     "Atomic-Cards/数据库/15-BGE-M3与BGE-Reranker模型.md.tmp.18016.26c846853212",
     "Atomic-Cards/NLP/11-GPT与自回归生成.md",
     "AI-Large-Modlels-Notes/Project/EduRAG/BGE-M3与BGE-Reranker模型原理详解笔记.md",
-    "Atomic-Cards/数据库/15-BGE-M3与BGE-Reranker模型.md.tmp.18016.37865e6933e5",
-    "Atomic-Cards/数据库/15-BGE-M3与BGE-Reranker模型.md.tmp.18016.646531003674",
-    "Atomic-Cards/数据库/15-BGE-M3与BGE-Reranker模型.md.tmp.18016.7c61ca43cc81",
     "Atomic-Cards/AI-Agent/30-思维链(CoT).md",
     "Atomic-Cards/数据库/12-RAG向量库Collection设计.md",
     "Atomic-Cards/工程实践/10-WebSocket与SSE流式输出.md",
@@ -273,9 +277,6 @@
     "Atomic-Cards/原子化生成提示词.md",
     "AI-Large-Modlels-Notes/Draft/ANN笔记草稿1.md",
     "AI-Large-Modlels-Notes/Algorithm/1-两数之和.md",
-    "Atomic-Cards/AI-Agent/28-多格式文档加载与OCR解析.md",
-    "AI-Large-Modlels-Notes/Project/EduRAG/基于MySQL数据库实现问答系统.md",
-    "AI-Large-Modlels-Notes/Project/EduRAG/Redis数据库简介与使用.md",
     "Assets/LangChain组件图.drawio.png",
     "Assets/Image/AI-Large-Modlels-Notes/Project/EduRAG/Milvus向量数据库/1.2.8.3-1.png",
     "Assets/Image/AI-Large-Modlels-Notes/Project/EduRAG/Milvus向量数据库/1.2.8.2-2.png",
