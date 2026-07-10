@@ -28,13 +28,13 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Atomic-Cards/数据库/检索/15-BGE-M3与BGE-Reranker模型.md",
+                "file": "Atomic-Cards/原子化生成提示词.md",
                 "mode": "source",
                 "source": false,
                 "backlinks": false
               },
               "icon": "lucide-file",
-              "title": "15-BGE-M3与BGE-Reranker模型"
+              "title": "原子化生成提示词"
             }
           },
           {
@@ -110,7 +110,8 @@
       }
     ],
     "direction": "horizontal",
-    "width": 292.5
+    "width": 292.5,
+    "collapsed": true
   },
   "right": {
     "id": "f07a0c5b7e11463b",
@@ -239,6 +240,8 @@
   },
   "active": "b9c397e9f32ab073",
   "lastOpenFiles": [
+    "Atomic-Cards/原子化生成提示词.md.tmp.40556.ec1c38fc34bb",
+    "Atomic-Cards/数据库/检索/15-BGE-M3与BGE-Reranker模型.md",
     "Atomic-Cards/卡片总览.md.tmp.40556.b4bdc035d96a",
     "Atomic-Cards/卡片总览.md.tmp.40556.1bf2f9c909fe",
     "Atomic-Cards/卡片总览.md.tmp.40556.95d3d5fd522f",
@@ -252,8 +255,6 @@
     "Atomic-Cards/数据库/检索/17-倒排索引.md",
     "Atomic-Cards/数据库/检索/17-倒排索引.md.tmp.40556.2790c1fa5088",
     "Atomic-Cards/深度学习/基础/07-完整模型训练流程.md",
-    "Atomic-Cards/深度学习/基础/07-完整模型训练流程.md.tmp.40556.244225b77e1e",
-    "Atomic-Cards/数据库/检索/15-BGE-M3与BGE-Reranker模型.md",
     "Atomic-Cards/Python/工具/11-Python日志模块.md",
     "Atomic-Cards/Python/工具/10-Python高阶函数.md",
     "Atomic-Cards/概率统计/08-假设检验.md",
