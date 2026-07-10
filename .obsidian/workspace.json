@@ -109,8 +109,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 292.5,
-    "collapsed": true
+    "width": 292.5
   },
   "right": {
     "id": "f07a0c5b7e11463b",
@@ -190,7 +189,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "Atomic-Cards/原子化生成提示词.md",
+                "file": "Atomic-Cards/AI-Agent/31-父文档与子文档分块策略.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -200,7 +199,7 @@
                 "unlinkedCollapsed": true
               },
               "icon": "links-coming-in",
-              "title": "原子化生成提示词 的反向链接列表"
+              "title": "31-父文档与子文档分块策略 的反向链接列表"
             }
           },
           {
@@ -209,12 +208,12 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "Atomic-Cards/原子化生成提示词.md",
+                "file": "Atomic-Cards/AI-Agent/31-父文档与子文档分块策略.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               },
               "icon": "links-going-out",
-              "title": "原子化生成提示词 的出链列表"
+              "title": "31-父文档与子文档分块策略 的出链列表"
             }
           }
         ],
@@ -222,7 +221,8 @@
       }
     ],
     "direction": "horizontal",
-    "width": 307.5
+    "width": 363.5,
+    "collapsed": true
   },
   "left-ribbon": {
     "hiddenItems": {
@@ -240,6 +240,13 @@
   },
   "active": "e5c6004f44c0e722",
   "lastOpenFiles": [
+    "Atomic-Cards/原子化生成提示词.md",
+    "Atomic-Cards/AI-Agent/31-父文档与子文档分块策略.md",
+    "Atomic-Cards/原子化生成提示词.md.tmp.40332.688810e948ac",
+    "Atomic-Cards/卡片总览.md.tmp.40332.3ecda57c8520",
+    "Atomic-Cards/卡片总览.md.tmp.40332.716172223977",
+    "Atomic-Cards/卡片总览.md.tmp.40332.d27d34bf9b9b",
+    "Atomic-Cards/卡片总览.md.tmp.40332.b4e293f89c5f",
     "Atomic-Cards/数据库/18-分块文档存储到Milvus.md",
     "AI-Large-Modlels-Notes/Project/EduRAG/BGE-M3与BGE-Reranker模型原理详解笔记.md",
     "Atomic-Cards/数据库/18-分块文档存储到Milvus.md.tmp.40332.0bb00d17ce37",
@@ -247,16 +254,10 @@
     "Atomic-Cards/数据库/17-Milvus集合创建与字段设计.md.tmp.40332.c41685e095e0",
     "Atomic-Cards/数据库/16-稠密向量与稀疏向量.md",
     "Atomic-Cards/数据库/16-稠密向量与稀疏向量.md.tmp.40332.b5ff92834743",
-    "Atomic-Cards/AI-Agent/31-父文档与子文档分块策略.md",
     "Atomic-Cards/AI-Agent/31-父文档与子文档分块策略.md.tmp.40332.ce431309a258",
     "Atomic-Cards/数据库/15-BGE-M3与BGE-Reranker模型.md",
     "Atomic-Cards/数据库/01-SQL基础与数据库设计.md",
     "Atomic-Cards/原子化生成提示词.md.tmp.21624.4e41bc476b03",
-    "Atomic-Cards/NLP/17-序列标注与NER.md.tmp.18016.b05294c5875d",
-    "Atomic-Cards/NLP/16-文本语义匹配.md.tmp.18016.ff846dcc46ff",
-    "Atomic-Cards/深度学习/23-Scaling Law与涌现能力.md.tmp.18016.6de5d2984774",
-    "token-skill.md.tmp.18016.1c72344b3fdc",
-    "token-skill.md.tmp.18016.41274eee3964",
     "Atomic-Cards/NLP/11-GPT与自回归生成.md",
     "Atomic-Cards/AI-Agent/30-思维链(CoT).md",
     "Atomic-Cards/数据库/12-RAG向量库Collection设计.md",
@@ -274,8 +275,6 @@
     "token-skill.md",
     "token-saver.md",
     "Atomic-Cards/卡片总览.md",
-    "Atomic-Cards/原子化生成提示词.md",
-    "AI-Large-Modlels-Notes/Draft/ANN笔记草稿1.md",
     "Assets/LangChain组件图.drawio.png",
     "Assets/Image/AI-Large-Modlels-Notes/Project/EduRAG/Milvus向量数据库/1.2.8.3-1.png",
     "Assets/Image/AI-Large-Modlels-Notes/Project/EduRAG/Milvus向量数据库/1.2.8.2-2.png",
