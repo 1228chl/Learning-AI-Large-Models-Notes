@@ -28,13 +28,13 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Atomic-Cards/原子化生成提示词.md",
+                "file": "AI-Large-Modlels-Notes/Project/EduRAG/BGE-M3与BGE-Reranker模型原理详解笔记.md",
                 "mode": "source",
                 "source": false,
                 "backlinks": false
               },
               "icon": "lucide-file",
-              "title": "原子化生成提示词"
+              "title": "BGE-M3与BGE-Reranker模型原理详解笔记"
             }
           },
           {
@@ -190,7 +190,6 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "Atomic-Cards/原子化生成提示词.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -200,7 +199,7 @@
                 "unlinkedCollapsed": true
               },
               "icon": "links-coming-in",
-              "title": "原子化生成提示词 的反向链接列表"
+              "title": "反向链接"
             }
           },
           {
@@ -209,12 +208,11 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "Atomic-Cards/原子化生成提示词.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               },
               "icon": "links-going-out",
-              "title": "原子化生成提示词 的出链列表"
+              "title": "出链"
             }
           }
         ],
@@ -222,7 +220,8 @@
       }
     ],
     "direction": "horizontal",
-    "width": 363.5
+    "width": 363.5,
+    "collapsed": true
   },
   "left-ribbon": {
     "hiddenItems": {
@@ -240,11 +239,16 @@
   },
   "active": "b9c397e9f32ab073",
   "lastOpenFiles": [
+    "Atomic-Cards/工程实践/01-Docker基础与容器化.md",
+    "Atomic-Cards/工程实践/04-Flask与FastAPI模型部署.md",
+    "Atomic-Cards/工程实践/03-Git版本控制.md",
+    "Atomic-Cards/原子化生成提示词.md",
+    "Atomic-Cards/原子化生成提示词.md.tmp.40556.4fac615ac5e3",
+    "Atomic-Cards/原子化生成提示词.md.tmp.40556.08c9eb7c01e8",
     "Atomic-Cards/原子化生成提示词.md.tmp.40556.c60f6e68d115",
     "Atomic-Cards/原子化生成提示词.md.tmp.40556.395f88419044",
     "Atomic-Cards/数据库/SQL/01-SQL基础与数据库设计.md",
     "Atomic-Cards/原子化生成提示词.md.tmp.40556.b97bb382bbeb",
-    "Atomic-Cards/原子化生成提示词.md",
     "Atomic-Cards/卡片总览.md",
     "Atomic-Cards/AI-Agent/协作/11-多Agent协作(Multi-Agent).md.tmp.40556.a377b6f943aa",
     "Atomic-Cards/AI-Agent/32-策略选择与多路径RAG检索.md",
@@ -271,11 +275,6 @@
     "Atomic-Cards/线性代数/向量/01-向量基础.md",
     "Atomic-Cards/线性代数/向量",
     "Atomic-Cards/深度学习/模型压缩/21-知识蒸馏(Distillation).md",
-    "Atomic-Cards/深度学习/模型压缩/20-模型剪枝(Pruning).md",
-    "Atomic-Cards/深度学习/模型压缩/16-光滑损失函数.md",
-    "Atomic-Cards/深度学习/模型压缩",
-    "Atomic-Cards/深度学习/迁移学习",
-    "Atomic-Cards/深度学习/基础",
     "Assets/LangChain组件图.drawio.png",
     "Assets/Image/AI-Large-Modlels-Notes/Project/EduRAG/Milvus向量数据库/1.2.8.3-1.png",
     "Assets/Image/AI-Large-Modlels-Notes/Project/EduRAG/Milvus向量数据库/1.2.8.2-2.png",
