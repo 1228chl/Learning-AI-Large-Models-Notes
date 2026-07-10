@@ -53,7 +53,7 @@
             }
           }
         ],
-        "currentTab": 2
+        "currentTab": 1
       }
     ],
     "direction": "vertical"
@@ -110,7 +110,8 @@
       }
     ],
     "direction": "horizontal",
-    "width": 292.5
+    "width": 292.5,
+    "collapsed": true
   },
   "right": {
     "id": "f07a0c5b7e11463b",
@@ -236,8 +237,11 @@
       "templater-obsidian:Templater": false
     }
   },
-  "active": "e83158f79f242826",
+  "active": "b9c397e9f32ab073",
   "lastOpenFiles": [
+    "Atomic-Cards/NLP/任务/16-文本语义匹配.md",
+    "Atomic-Cards/数据结构与算法/基础结构/02-数组与动态数组.md",
+    "Atomic-Cards/原子化生成提示词.md",
     "Atomic-Cards/NLP/任务/17-序列标注与NER.md",
     "Atomic-Cards/NLP/预训练/10-BERT与MLM预训练.md",
     "Atomic-Cards/NLP/组件/14-Layer Normalization.md",
@@ -257,7 +261,6 @@
     "Atomic-Cards/机器学习/监督学习/11-决策树.md",
     "Atomic-Cards/机器学习/监督学习/06-线性回归.md",
     "Atomic-Cards/线性代数/向量/01-向量基础.md",
-    "Atomic-Cards/原子化生成提示词.md",
     "Atomic-Cards/线性代数/向量/13-点积与余弦相似度.md",
     "Atomic-Cards/深度学习/基础/03-损失函数.md",
     "Atomic-Cards/深度学习/基础/01-感知机与多层神经网络.md",
@@ -272,8 +275,6 @@
     "Atomic-Cards/NLP/基础/03-FastText与子词信息.md",
     "Atomic-Cards/NLP/基础/02-词嵌入与分布式表示.md",
     "Atomic-Cards/NLP/基础/01-分词算法.md",
-    "Atomic-Cards/Linux/08-网络与系统监控.md",
-    "Atomic-Cards/Linux/07-文件查看与编辑.md",
     "Assets/LangChain组件图.drawio.png",
     "Assets/Image/AI-Large-Modlels-Notes/Project/EduRAG/Milvus向量数据库/1.2.8.3-1.png",
     "Assets/Image/AI-Large-Modlels-Notes/Project/EduRAG/Milvus向量数据库/1.2.8.2-2.png",

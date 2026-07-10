@@ -11,13 +11,13 @@ aliases: ["残差连接与LayerNorm", "Residual and LayerNorm"]
 
 ## 直观理解
 
-### 残差连接 = 梯度的"高速公路"
+### 残差连接的梯度直通路径
 
 深层网络面临的核心矛盾：**网络越深，表达能力越强，但梯度越难传回浅层**。残差连接的解决方案直接而优雅：在正常计算路径旁开一条"旁路"，让输入直接加到输出上。
 
 数学上，$\text{Output} = x + F(x)$ 意味着梯度 $\partial L / \partial x = \partial L / \partial \text{Output} \cdot (1 + \partial F / \partial x)$。其中恒等项 "1" 确保梯度始终有一条直接路径从输出流回输入，不受 $F$ 的影响。即使 $F$ 的梯度为零（如 ReLU 死亡），梯度仍能通过恒等路径回流。
 
-### LayerNorm = 特征维度的"校准器"
+### LayerNorm 的特征归一化作用
 
 LayerNorm 对每个样本的每个位置独立做归一化：$(\mathbf{x} - \mu) / \sigma$。其作用是**消除各层激活值的量纲和偏移差异**。不进行归一化时，各层激活值的分布会随着深度积累偏移（Internal Covariate Shift），导致训练不稳定。LayerNorm 将激活值拉回到零均值单位方差的标准分布，再通过可学习的 $\gamma$ 和 $\beta$ 恢复必要的表达范围（"学习到什么范围最适合当前任务"）。
 
