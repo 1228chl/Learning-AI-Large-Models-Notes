@@ -43,13 +43,13 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Atomic-Cards/机器学习/监督学习/10-支持向量机.md",
+                "file": "Atomic-Cards/NLP/任务/16-文本语义匹配.md",
                 "mode": "source",
                 "source": false,
                 "backlinks": false
               },
               "icon": "lucide-file",
-              "title": "10-支持向量机"
+              "title": "16-文本语义匹配"
             }
           }
         ],
@@ -220,8 +220,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 363.5,
-    "collapsed": true
+    "width": 363.5
   },
   "left-ribbon": {
     "hiddenItems": {
@@ -237,8 +236,13 @@
       "templater-obsidian:Templater": false
     }
   },
-  "active": "8dae5ec31b5739fc",
+  "active": "e83158f79f242826",
   "lastOpenFiles": [
+    "Atomic-Cards/NLP/任务/17-序列标注与NER.md",
+    "Atomic-Cards/NLP/预训练/10-BERT与MLM预训练.md",
+    "Atomic-Cards/NLP/组件/14-Layer Normalization.md",
+    "Atomic-Cards/机器学习/监督学习/10-支持向量机.md",
+    "Atomic-Cards/深度学习/LLM/22-语言模型发展史.md.tmp.5512.a9e1e8e39ddb",
     "Atomic-Cards/机器学习/基础/02-监督学习与非监督学习.md.tmp.5512.7f13c17e56aa",
     "Atomic-Cards/机器学习/基础/03-数据集划分与交叉验证.md.tmp.5512.7ea7c25b2854",
     "Atomic-Cards/机器学习/基础/01-机器学习概述.md.tmp.5512.ccf2022e5c22",
@@ -248,12 +252,9 @@
     "Atomic-Cards/机器学习/集成学习/14-梯度提升机.md.tmp.5512.e4162521bfbb",
     "Atomic-Cards/数据结构与算法/算法/10-排序算法.md.tmp.5512.7b4656a211ad",
     "Atomic-Cards/数据结构与算法/树堆图/09-图.md.tmp.5512.6144d3ba1d23",
-    "Atomic-Cards/数据结构与算法/树堆图/08-堆.md.tmp.5512.335153903172",
-    "Atomic-Cards/NLP/架构/07-多头注意力.md.tmp.5512.4bde04eb18d2",
     "Atomic-Cards/机器学习/监督学习/07-逻辑回归.md",
     "Atomic-Cards/机器学习/监督学习/08-KNN算法.md",
     "Atomic-Cards/机器学习/监督学习/11-决策树.md",
-    "Atomic-Cards/机器学习/监督学习/10-支持向量机.md",
     "Atomic-Cards/机器学习/监督学习/06-线性回归.md",
     "Atomic-Cards/线性代数/向量/01-向量基础.md",
     "Atomic-Cards/原子化生成提示词.md",
@@ -273,8 +274,6 @@
     "Atomic-Cards/NLP/基础/01-分词算法.md",
     "Atomic-Cards/Linux/08-网络与系统监控.md",
     "Atomic-Cards/Linux/07-文件查看与编辑.md",
-    "Atomic-Cards/Linux/06-Shell脚本基础.md",
-    "Atomic-Cards/Linux/05-进程管理.md",
     "Assets/LangChain组件图.drawio.png",
     "Assets/Image/AI-Large-Modlels-Notes/Project/EduRAG/Milvus向量数据库/1.2.8.3-1.png",
     "Assets/Image/AI-Large-Modlels-Notes/Project/EduRAG/Milvus向量数据库/1.2.8.2-2.png",
