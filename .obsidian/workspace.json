@@ -58,17 +58,16 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "知识点.md",
+                "file": "AI-Learning-知识点总表.md",
                 "mode": "source",
                 "source": false,
                 "backlinks": false
               },
               "icon": "lucide-file",
-              "title": "知识点"
+              "title": "AI-Learning-知识点总表"
             }
           }
-        ],
-        "currentTab": 1
+        ]
       }
     ],
     "direction": "vertical"
@@ -236,8 +235,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 363.5,
-    "collapsed": true
+    "width": 363.5
   },
   "left-ribbon": {
     "hiddenItems": {
@@ -253,22 +251,31 @@
       "templater-obsidian:Templater": false
     }
   },
-  "active": "b9c397e9f32ab073",
+  "active": "a73ebf785a6e6ac6",
   "lastOpenFiles": [
-    "Atomic-Cards/NLP/基础/00-NLP概述.md",
-    "Atomic-Cards/卡片总览.md",
-    "CLAUDE.md",
+    "Atomic-Cards/原子化生成提示词.md.tmp.33540.816dc09e9c44",
+    "Atomic-Cards/原子化生成提示词.md.tmp.33540.6229f0350ea0",
+    "Atomic-Cards/原子化生成提示词.md.tmp.33540.45156b04a9ea",
+    "Atomic-Cards/原子化生成提示词.md.tmp.33540.ebf281e1367b",
+    "README.md.tmp.33540.68605ad4c82a",
+    "README.md.tmp.33540.5877fa94b3dd",
+    "README.md.tmp.33540.72bd0cbfae71",
+    "README.md.tmp.33540.b0f6608590d8",
+    "README.md.tmp.33540.75f4a6381e75",
+    "Atomic-Cards/卡片总览.md.tmp.33540.7ce849484b0d",
+    "Atomic-Cards/卡片总览.md.tmp.33540.e8221cbffff5",
     "Atomic-Cards/原子化生成提示词.md",
-    "README.md.tmp.33540.aa625c2437f5",
-    "README.md.tmp.33540.e34d80359f7d",
-    "README.md.tmp.33540.4b67399af0e2",
-    "Atomic-Cards/卡片总览.md.tmp.33540.b12497ead6a2",
-    "README.md.tmp.33540.cea1bf18c179",
-    "Atomic-Cards/卡片总览.md.tmp.33540.8827c78048de",
-    "README.md.tmp.33540.00d2ee30c147",
-    "README.md.tmp.33540.3847f057d0d9",
-    "Atomic-Cards/原子化生成提示词.md.tmp.33540.03d6be6136ca",
-    "README.md.tmp.33540.f965b67697b2",
+    "Atomic-Cards/深度学习/基础/11-图神经网络.md",
+    "Atomic-Cards/深度学习/基础/10-生成对抗网络.md",
+    "Atomic-Cards/深度学习/CNN-RNN/14-经典CNN架构.md",
+    "Atomic-Cards/深度学习/训练优化/08-早停与学习率调度.md",
+    "Atomic-Cards/深度学习/基础/09-Dropout随机失活.md",
+    "Atomic-Cards/机器学习/基础/07-强化学习基础.md",
+    "Atomic-Cards/机器学习/基础/06-半监督学习.md",
+    "heima-comparison-report.md",
+    "Atomic-Cards/卡片总览.md",
+    "Atomic-Cards/NLP/基础/00-NLP概述.md",
+    "CLAUDE.md",
     "知识点.md",
     "AI-Learning-知识点总表.md",
     "AI-Large-Modlels-Notes/NLP/04-RNN及其变体.md",
@@ -282,15 +289,6 @@
     "AI-Large-Modlels-Notes/Project/EduRAG/常见的距离.md",
     "AI-Large-Modlels-Notes/Project/EduRAG/demo/10-补充知识点（混合检索重排序父子块策略选择）.md",
     "AI-Large-Modlels-Notes/Project/EduRAG/demo/09-补充知识点（日志Redis文档处理RAG评估Docker）.md",
-    "AI-Large-Modlels-Notes/Project/EduRAG/demo/08-项目源码深度分析.md",
-    "AI-Large-Modlels-Notes/Project/EduRAG/demo/07-学习总结与项目要点.md",
-    "AI-Large-Modlels-Notes/Project/EduRAG/demo/06-Docker部署与项目实践.md",
-    "AI-Large-Modlels-Notes/Project/EduRAG/demo/05-BM25算法与Redis缓存.md",
-    "AI-Large-Modlels-Notes/Project/EduRAG/demo/04-项目代码结构与API接口.md",
-    "AI-Large-Modlels-Notes/Project/EduRAG/demo/03-向量数据库与距离计算.md",
-    "AI-Large-Modlels-Notes/Project/EduRAG/demo/02-RAG系统架构与原理.md",
-    "AI-Large-Modlels-Notes/Project/EduRAG/demo/01-LangChain框架介绍.md",
-    "token-saver.md",
     "Assets/LangChain组件图.drawio.png",
     "Assets/Image/AI-Large-Modlels-Notes/Project/EduRAG/Milvus向量数据库/1.2.8.3-1.png",
     "Assets/Image/AI-Large-Modlels-Notes/Project/EduRAG/Milvus向量数据库/1.2.8.2-2.png",
