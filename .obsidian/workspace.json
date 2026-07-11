@@ -67,7 +67,8 @@
               "title": "README"
             }
           }
-        ]
+        ],
+        "currentTab": 3
       }
     ],
     "direction": "vertical"
@@ -252,8 +253,12 @@
       "templater-obsidian:Templater": false
     }
   },
-  "active": "9dddde49a2d5eb85",
+  "active": "cbb23648d019f3e9",
   "lastOpenFiles": [
+    "_check_format.py",
+    "_check_format.py.tmp.12372.f3bab64a5b83",
+    "Atomic-Cards/数据库/Milvus/08-Milvus核心概念.md",
+    "README.md",
     "Atomic-Cards/数据库/检索/15-BGE-M3与BGE-Reranker模型.md",
     "Atomic-Cards/AI-Agent/RAG流程/28-多格式文档加载与OCR解析.md.tmp.12372.dcc01575d753",
     "Atomic-Cards/NLP/架构/04-Seq2Seq与Encoder-Decoder.md.tmp.12372.3b94a8ad2180",
@@ -266,7 +271,6 @@
     "Atomic-Cards/数据库/检索/16-稠密向量与稀疏向量.md",
     "Atomic-Cards/数据库/检索/17-倒排索引.md",
     "Atomic-Cards/AI-Agent/系统/33-意图识别(BERT微调分类模型).md.tmp.12372.62448c9e3bbf",
-    "Atomic-Cards/AI-Agent/系统/33-意图识别(BERT微调分类模型).md.tmp.12372.3d0cf91fe8cd",
     "Atomic-Cards/AI-Agent/系统/32-策略选择与多路径RAG检索.md",
     "Atomic-Cards/AI-Agent/系统/25-RAG系统评估(RAGAS).md",
     "Atomic-Cards/AI-Agent/系统/27-RAG查询改写与意图识别.md",
@@ -279,7 +283,6 @@
     "Atomic-Cards/AI-Agent/检索/26-FAQ与RAG混合检索架构.md",
     "Atomic-Cards/AI-Agent/基础/01-Agent定义与核心公式.md",
     "Atomic-Cards/AI-Agent/RAG流程/31-父文档与子文档分块策略.md",
-    "README.md",
     "Atomic-Cards/AI-Agent/基础/06-提示词工程核心原则.md",
     "Atomic-Cards/工程实践/工具/10-MLOps与实验跟踪.md",
     "Atomic-Cards/工程实践/部署/08-ONNX模型部署.md",
@@ -288,8 +291,6 @@
     "Atomic-Cards/深度学习/基础/15-对比学习.md",
     "Atomic-Cards/机器学习/聚类/26-K-means++与聚类评估.md",
     "Atomic-Cards/AI-Agent/基础/31-Prompt工程进阶.md",
-    "Atomic-Cards/深度学习/基础/14-多模态基础.md",
-    "Atomic-Cards/深度学习/训练优化/09-分布式训练.md",
     "Assets/LangChain组件图.drawio.png",
     "Assets/Image/AI-Large-Modlels-Notes/Project/EduRAG/Milvus向量数据库/1.2.8.3-1.png",
     "Assets/Image/AI-Large-Modlels-Notes/Project/EduRAG/Milvus向量数据库/1.2.8.2-2.png",
