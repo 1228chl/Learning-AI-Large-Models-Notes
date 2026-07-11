@@ -12,45 +12,60 @@ aliases: ["双系统架构", "MySQL问答", "Milvus RAG"]
 生产级 RAG 系统常采用**双系统架构**——同时维护两条问答路径，根据查询类型动态选择：
 
 ```python
-# 双架构路由流程图：查询分类器将用户问题分为两条处理路径
-用户查询 → 查询分类器 → 通用知识 → Milvus RAG 系统
-                       ↘ 专业知识 → MySQL FAQ 系统
+# 双架构级联路由流程图：按 Redis → MySQL → BERT 分类的顺序逐级分流
+用户查询 → Redis缓存 → 命中 → 返回答案
+                      → 未命中 → MySQL FAQ (BM25 + Softmax)
+                                 → 匹配 > 阈值 → 返回答案 + 写入 Redis
+                                 → 未匹配 → BERT 意图分类
+                                            → 通用问题 → LLM 直接回答
+                                            → 专业问题 → Milvus RAG 系统
 ```
 
-两条路径互补：MySQL 负责高频标准问答（精确匹配），Milvus RAG 负责开放语义搜索（泛化理解）。
+三条路径互补：MySQL FAQ 拦截高频标准问题（精确匹配），Redis 作为其前置缓存加速；未匹配时 BERT 分类器区分"通用"与"专业"——通用走 LLM 直接回答免去向量检索开销，专业走 Milvus RAG 深度语义检索。
 
-## 双系统设计
+## 级联路由设计
 
 ```python
-# 查询分类（BERT 二分类）
-# 定义查询分类函数，判断用户输入属于"通用知识"还是"专业咨询"
-def classify_query(query):
-    """区分"通用知识"和"专业咨询"两种类型"""
-    # 调用预训练的BERT分类器进行预测，返回0或1
-    result = query_classifier.predict(query)
-    # 将数值结果映射为可读的类型标签字符串
+# BERT 意图分类器：MySQL FAQ 未匹配后，区分"通用"和"专业"两类
+def classify_intent(query):
+    """MySQL FAQ 未命中时，用 BERT 区分 0=通用问题 和 1=专业问题"""
+    result = bert_classifier.predict(query)
     return "general" if result == 0 else "professional"
 
-# 路由
-# 主回答函数，根据查询类型动态路由到不同的后端系统
+# 级联路由
+# 主回答函数：Redis → MySQL → BERT → (LLM 直接回答 | Milvus RAG)
 def answer(query):
-    # 先对查询进行分类，确定走哪条处理路径
-    q_type = classify_query(query)
+    # Step 1: 查 Redis 缓存（已验证的高频问答缓存）
+    cached = redis_cache.get(query)
+    if cached:
+        return cached
 
-    if q_type == "professional":
-        # 专业问题走MySQL FAQ精确匹配，快速返回标准答案
-        return mysql_faq.search(query)       # 精确匹配
+    # Step 2: 查 MySQL FAQ（BM25 + Softmax 阈值判断）
+    faq_answer = mysql_faq.search(query)   # BM25 匹配，超阈值则返回答案
+    if faq_answer:
+        redis_cache.set(query, faq_answer)  # 缓存高置信度结果
+        return faq_answer
+
+    # Step 3: FAQ 未匹配 → BERT 意图分类，决定走哪条路径
+    intent = classify_intent(query)
+
+    if intent == "general":
+        # 通用开放问题 → LLM 直接回答（免去向量检索开销）
+        return llm.answer(query)
     else:
-        # 通用问题走Milvus RAG语义检索+LLM生成，提供开放域回答
-        return milvus_rag.search(query)      # 语义检索 + LLM
+        # 专业/复杂问题 → Milvus RAG 语义检索 + LLM 生成
+        return milvus_rag.search(query)
 ```
 
-| 系统 | 存储 | 检索方式 | 适用查询 |
-|:----:|:----|:--------|:--------|
-| **MySQL FAQ** | 结构化 FAQ 表（问题+答案） | SQL 精确匹配 / BM25 | 标准高频问题 |
-| **Milvus RAG** | 向量库（文档 Embedding） | 语义相似度搜索 | 开放式、泛化问题 |
+| 系统 | 存储 | 检索方式 | 触发条件 | 角色 |
+|:----:|:----|:--------|:--------|:----|
+| **Redis** | 缓存（FAQ 结果缓存） | Key-Value 精确匹配 | 任意查询先查缓存 | 热点缓存层，加速高频问答返回 |
+| **MySQL FAQ** | 结构化 FAQ 表（问题+答案） | SQL 精确匹配 / BM25 | Redis 未命中后 | 标准问答库，高置信度匹配直接返回 |
+| **BERT 分类器** | — | 微调 BERT 二分类 | MySQL FAQ 未匹配后 | 区分通用/专业，决定走 LLM 还是 Milvus |
+| **LLM 直接回答** | — | 模型自身知识 | BERT 判定为通用问题 | 无固定答案的通用查询（闲聊、常识） |
+| **Milvus RAG** | 向量库（文档 Embedding） | 语义相似度搜索 | BERT 判定为专业问题 | 专业知识库，深度语义检索 + LLM 生成 |
 
-## Milvus RAG 系统（开放问答）
+## Milvus RAG 系统（专业问答）
 
 ```python
 # 定义Milvus RAG系统类，负责开放域语义搜索问答
@@ -111,34 +126,36 @@ class MySQLFAQ:
 
 | 场景 | 使用方式 |
 |:----|:--------|
-| **企业客服** | FAQ 处理高频问题，RAG 处理复杂咨询 |
-| **教育问答** | 标准题库 FAQ + 教材文档 RAG |
-| **技术支持** | 已知 Bug 的解决方案 FAQ + RAG 技术文档 |
-| **混合架构最佳实践** | 先用分类器分流，提高响应速度同时保证覆盖率 |
+| **企业客服** | FAQ 处理高频问题，Milvus RAG 处理专业咨询，Redis 缓存热点答案 |
+| **教育问答** | 标准题库 FAQ + 教材文档专业检索 + 通用问题 LLM 直接答 |
+| **技术支持** | 已知 Bug 解决方案走 FAQ，技术文档走 Milvus RAG 检索 |
+| **混合架构最佳实践** | Redis 缓存加速 → MySQL FAQ 拦截高频 → BERT 分流 → LLM 托底 / Milvus 深入 |
 
 ## 面试追问
 
-**Q1（基础）**：RAG 系统双架构的设计思路是什么？为什么需要同时维护 MySQL FAQ 和 Milvus RAG 两条路径？
+**Q1（基础）**：RAG 系统双架构的完整级联流程是怎样的？为什么需要这种设计？
 **回答要点**：
 
-1. 双架构将查询分为"高频标准问答"和"开放语义搜索"两类分别处理
-2. FAQ 路径对标准问题可做到毫秒级精确返回（SQL/BM25 匹配），RAG 路径处理泛化开放问题（向量检索+LLM 生成）
-3. 通过查询分类器路由，兼顾响应速度和语义覆盖范围的平衡
+1. 完整流程为四级级联：Redis 缓存 → MySQL FAQ（BM25） → BERT 意图分类 → LLM 直接回答或 Milvus RAG
+2. Redis 拦截已验证的高频问答（毫秒级返回）；未命中则查 MySQL FAQ 做 BM25 匹配，超阈值直接返回并回写缓存
+3. FAQ 未匹配时才进入意图分类：通用问题由 LLM 直接回答（免向量检索成本），专业问题走 Milvus RAG 深度检索
+4. 这种设计确保简单问题最高效响应，专业问题得到深度解答，通用问题不浪费检索资源
 
-**Q2（深挖）**：双架构中的查询分类器可以用哪些方案实现？各自的优缺点是什么？
+**Q2（深挖）**：双架构中 BERT 二分类的定位是什么？有哪些实现方案？
 **回答要点**：
 
-1. 规则方案——基于关键词和正则匹配（如含"怎么办理"→专业咨询），简单快速但泛化能力差
-2. BERT 二分类微调——准确率高但需要标注数据和计算资源
-3. LLM Prompt 分类——零标注成本但延迟较高且有额外 API 费用
-4. 生产实践中常用"快速规则过滤 + BERT 兜底"的级联方案
+1. BERT 分类器是级联的第三级——在 Redis 和 MySQL FAQ 都未命中后才触发，决定走 LLM 直接回答还是 Milvus RAG
+2. 规则方案——基于关键词和正则（如含"Transformer"→专业，含"你好"→通用），简单快速但泛化差
+3. BERT 微调二分类——准确率高（95%+），推理延迟低（3-5ms），适合类别固定的场景
+4. LLM Prompt 分类——零标注成本但延迟较高（秒级），适合类别动态变化的场景
+5. 生产实践中常用"快速规则过滤 + BERT 兜底"的级联方案
 
 **Q3（实战）**：当 MySQL FAQ 和 Milvus RAG 对同一查询给出不同答案时，如何设计决策机制来决定采用哪个答案？
 **回答要点**：
 
-1. 优先级策略——FAQ 优先（标准问题答案权威性更高，经人工审核）
-2. 置信度比较——对比 BM25 匹配分数和向量检索分数的归一化值，取置信度高者
-3. 级联策略——先查 FAQ 有超过阈值的匹配就直接返回，未匹配再走 RAG 路径
+1. 优先级策略——FAQ 优先（标准问题答案权威性更高，经人工审核），以 Redis 缓存的中转结果作为快速判断依据
+2. 级联策略——先查 Redis 缓存，命中直接返回；未命中再查 MySQL FAQ（BM25 匹配），超过阈值直接返回；未匹配则根据分类结果走 Milvus RAG（专业）或 LLM（通用）
+3. 置信度兜底——当分类器置信度低于阈值时，默认走 Milvus RAG 深度检索，同时将低置信度样本记录用于后续分类器微调
 4. 低置信度场景可考虑两结果同时展示或转人工
 
 **Q4（边界）**：双架构系统长期运行后查询分类器的准确率为什么会下降？如何维护？

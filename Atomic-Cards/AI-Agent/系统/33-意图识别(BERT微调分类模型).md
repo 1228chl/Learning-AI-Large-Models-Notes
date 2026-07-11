@@ -9,7 +9,7 @@ aliases: ["BERT微调", "意图分类", "BERT Fine-tuning", "Intent Classificati
 
 ## 定义
 
-意图识别（Intent Classification）是 RAG 系统的第一道关卡，在检索前判断用户查询属于哪一类意图，从而路由到对应的处理模块。通过微调 BERT 分类模型实现意图识别，比使用 LLM Prompt 分类更快、更稳定、更便宜。
+意图识别（Intent Classification）是 RAG 系统的第三道关卡，在 Redis 缓存和 MySQL FAQ 均未命中后触发，判断用户查询属于"通用问题"还是"专业问题"——通用走 LLM 直接回答，专业走 Milvus RAG 检索生成。通过微调 BERT 分类模型实现意图识别，比使用 LLM Prompt 分类更快、更稳定、更便宜。
 
 ### 形式化定义
 

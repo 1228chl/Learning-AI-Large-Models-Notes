@@ -13,13 +13,13 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Atomic-Cards/AI-Agent/RAG流程/31-父文档与子文档分块策略.md",
+                "file": "Atomic-Cards/AI-Agent/系统/32-策略选择与多路径RAG检索.md",
                 "mode": "source",
                 "source": false,
                 "backlinks": false
               },
               "icon": "lucide-file",
-              "title": "31-父文档与子文档分块策略"
+              "title": "32-策略选择与多路径RAG检索"
             }
           },
           {
@@ -67,8 +67,7 @@
               "title": "README"
             }
           }
-        ],
-        "currentTab": 3
+        ]
       }
     ],
     "direction": "vertical"
@@ -236,7 +235,8 @@
       }
     ],
     "direction": "horizontal",
-    "width": 363.5
+    "width": 363.5,
+    "collapsed": true
   },
   "left-ribbon": {
     "hiddenItems": {
@@ -252,27 +252,36 @@
       "templater-obsidian:Templater": false
     }
   },
-  "active": "a73ebf785a6e6ac6",
+  "active": "9dddde49a2d5eb85",
   "lastOpenFiles": [
-    "README.md.tmp.33540.b3b21c5f36db",
-    "README.md.tmp.33540.832ef2c9539c",
-    "README.md.tmp.33540.cf3eea760535",
-    "README.md.tmp.33540.63a4e72326a0",
+    "Atomic-Cards/AI-Agent/系统/25-RAG系统评估(RAGAS).md",
+    "Atomic-Cards/AI-Agent/系统/27-RAG查询改写与意图识别.md",
+    "Atomic-Cards/AI-Agent/系统/32-策略选择与多路径RAG检索.md",
+    "Atomic-Cards/AI-Agent/系统/33-意图识别(BERT微调分类模型).md",
+    "Atomic-Cards/AI-Agent/系统/23-RAG系统完整实现.md",
+    "Atomic-Cards/AI-Agent/检索/26-FAQ与RAG混合检索架构.md.tmp.12372.6057b62df1f4",
+    "Atomic-Cards/AI-Agent/检索/26-FAQ与RAG混合检索架构.md.tmp.12372.a23b049c2c31",
+    "Atomic-Cards/AI-Agent/检索/26-FAQ与RAG混合检索架构.md.tmp.12372.b4a623abb15d",
+    "Atomic-Cards/AI-Agent/系统/23-RAG系统完整实现.md.tmp.12372.faaf45a8a4b3",
+    "Atomic-Cards/AI-Agent/系统/23-RAG系统完整实现.md.tmp.12372.b14f93e4f4bd",
+    "Atomic-Cards/AI-Agent/系统/23-RAG系统完整实现.md.tmp.12372.a934669d6a8c",
+    "Atomic-Cards/AI-Agent/系统/23-RAG系统完整实现.md.tmp.12372.00984ad61e31",
+    "Atomic-Cards/AI-Agent/系统/23-RAG系统完整实现.md.tmp.12372.dbba3f9aa3df",
+    "Atomic-Cards/AI-Agent/系统/23-RAG系统完整实现.md.tmp.12372.f50a20391cd7",
+    "Atomic-Cards/AI-Agent/系统/23-RAG系统完整实现.md.tmp.12372.660afe81ae7b",
+    "Atomic-Cards/AI-Agent/系统/10-RAG系统双架构.md",
+    "Atomic-Cards/AI-Agent/LangChain/04-LangChain六大组件.md",
+    "Atomic-Cards/AI-Agent/LangChain/22-LangChain组件操作指南.md",
+    "Atomic-Cards/AI-Agent/RAG流程/02-RAG三阶段流程.md",
+    "Atomic-Cards/AI-Agent/检索/26-FAQ与RAG混合检索架构.md",
     "Atomic-Cards/AI-Agent/基础/01-Agent定义与核心公式.md",
-    "README.md.tmp.33540.687dfa6fe637",
+    "Atomic-Cards/AI-Agent/RAG流程/31-父文档与子文档分块策略.md",
     "README.md",
-    "README.md.tmp.33540.71e28205d9db",
-    "README.md.tmp.33540.b0be8af36fb1",
     "Atomic-Cards/AI-Agent/基础/06-提示词工程核心原则.md",
-    "Atomic-Cards/卡片总览.md.tmp.33540.1510fd652c95",
-    "Atomic-Cards/卡片总览.md.tmp.33540.b6ee67803c8b",
-    "Atomic-Cards/卡片总览.md.tmp.33540.90828364c39e",
-    "Atomic-Cards/卡片总览.md.tmp.33540.2a291170b12e",
     "Atomic-Cards/工程实践/工具/10-MLOps与实验跟踪.md",
     "Atomic-Cards/工程实践/部署/08-ONNX模型部署.md",
     "Atomic-Cards/深度学习/CNN-RNN/16-卷积变体.md",
     "AI-Learning-知识点总表.md",
-    "Atomic-Cards/AI-Agent/RAG流程/31-父文档与子文档分块策略.md",
     "Atomic-Cards/深度学习/基础/15-对比学习.md",
     "Atomic-Cards/机器学习/聚类/26-K-means++与聚类评估.md",
     "Atomic-Cards/AI-Agent/基础/31-Prompt工程进阶.md",
@@ -281,15 +290,6 @@
     "Atomic-Cards/机器学习/集成学习/29-XGBoost与LightGBM.md",
     "Atomic-Cards/深度学习/CNN-RNN/15-目标检测基础.md",
     "Atomic-Cards/机器学习/基础/08-模型可解释性.md",
-    "Atomic-Cards/深度学习/LLM/30-RLHF与人类偏好对齐.md",
-    "Atomic-Cards/深度学习/迁移学习/19-PEFT高效微调.md",
-    "Atomic-Cards/概率统计/09-信息论基础.md",
-    "Atomic-Cards/卡片总览.md",
-    "Atomic-Cards/深度学习/基础/13-数据增强.md",
-    "Atomic-Cards/深度学习/基础/12-Batch Normalization.md",
-    "Atomic-Cards/原子化生成提示词.md",
-    "Atomic-Cards/深度学习/基础/11-图神经网络.md",
-    "Atomic-Cards/深度学习/基础/10-生成对抗网络.md",
     "Assets/LangChain组件图.drawio.png",
     "Assets/Image/AI-Large-Modlels-Notes/Project/EduRAG/Milvus向量数据库/1.2.8.3-1.png",
     "Assets/Image/AI-Large-Modlels-Notes/Project/EduRAG/Milvus向量数据库/1.2.8.2-2.png",
