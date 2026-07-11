@@ -79,6 +79,24 @@ model = BertModel.from_pretrained('bert-base-uncased')
 | **BERT-base** | 12 | 12 | 768 | 110M |
 | **BERT-large** | 24 | 16 | 1024 | 340M |
 
+### 激活函数：GELU
+
+BERT 在前馈网络（FFN）中使用 **GELU（Gaussian Error Linear Unit）** 而非 ReLU，使负值区域的梯度更平滑：
+
+$$
+\text{GELU}(x) = x \cdot \Phi(x)
+$$
+
+- $\Phi(x)$：标准正态分布的累积分布函数
+
+计算中采用近似公式（RoBERTa / GPT-1/2 均使用该版本）：
+
+$$
+\text{GELU}(x) \approx 0.5x\left(1 + \tanh\left(\sqrt{\frac{2}{\pi}}(x + 0.044715x^3)\right)\right)
+$$
+
+相比 ReLU 在负值区域直接截断为零，GELU 在负值区域保留软性的非线性变换，有助于提升模型表达能力和训练稳定性。
+
 ## BERT 的输入表示
 
 ```

@@ -85,6 +85,17 @@ class Seq2Seq(nn.Module):                                 # 定义 Seq2Seq 模�
 
 **解决方案**：注意力机制（Attention）——解码时"关注"输入序列的不同部分，打破上下文向量的信息瓶颈。
 
+### T5：统一框架的 Encoder-Decoder 代表
+
+T5（Text-to-Text Transfer Transformer）是 Google 2020 年提出的模型，将所有 NLP 任务统一为 **Text-to-Text** 格式——输入和输出都是文本字符串。例如翻译任务输入"translate English to German: That is good."，模型直接输出"Das ist gut."。
+
+T5 对原始 Transformer 做了以下改动：
+
+- **简化 LayerNorm**：去除 LayerNorm 的 bias 项，并将 LayerNorm 放在残差连接外部（Post-LN → Pre-LN 变体）
+- **简化相对位置编码**：使用 32 个可学习的标量 Embedding，对应 key-query 位置差 $\in [0, 31]$，超过 31 的位置差使用同一个 Embedding。同一层内不同注意力头独立学习，各层共享
+
+这种设计使 T5 能用同一模型、损失函数和解码过程处理分类、生成、回归等所有 NLP 任务。
+
 ## ML 中的 Seq2Seq
 
 | 应用场景 | 编码器 | 解码器 | 说明 |
