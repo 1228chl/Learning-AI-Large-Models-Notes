@@ -67,8 +67,7 @@
               "title": "README"
             }
           }
-        ],
-        "currentTab": 2
+        ]
       }
     ],
     "direction": "vertical"
@@ -253,8 +252,10 @@
       "templater-obsidian:Templater": false
     }
   },
-  "active": "8dae5ec31b5739fc",
+  "active": "9dddde49a2d5eb85",
   "lastOpenFiles": [
+    "Atomic-Cards/NLP/架构/08-位置编码.md",
+    "Atomic-Cards/卡片总览.md",
     "Atomic-Cards/NLP/基础/00-NLP概述.md",
     "README.md",
     "_check_format.py",
@@ -289,8 +290,6 @@
     "Atomic-Cards/深度学习/CNN-RNN/16-卷积变体.md",
     "AI-Learning-知识点总表.md",
     "Atomic-Cards/深度学习/基础/15-对比学习.md",
-    "Atomic-Cards/机器学习/聚类/26-K-means++与聚类评估.md",
-    "Atomic-Cards/AI-Agent/基础/31-Prompt工程进阶.md",
     "Assets/LangChain组件图.drawio.png",
     "Assets/Image/AI-Large-Modlels-Notes/Project/EduRAG/Milvus向量数据库/1.2.8.3-1.png",
     "Assets/Image/AI-Large-Modlels-Notes/Project/EduRAG/Milvus向量数据库/1.2.8.2-2.png",
