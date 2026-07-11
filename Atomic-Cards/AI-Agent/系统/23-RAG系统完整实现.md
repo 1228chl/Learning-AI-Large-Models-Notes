@@ -33,7 +33,7 @@ HyDE（假设文档检索）的核心思想是"用生成填补检索鸿沟"。�
 
 ### 3. 查询分类的设计权衡
 
-本系统用 BERT 二分类将查询分为"通用问题"和"专业问题"两类（在 MySQL FAQ 未匹配后触发），但这只是多种方案之一：
+本系统用 BERT 二分类将查询分为"通用知识"和"专业咨询"两类（在 MySQL FAQ 未匹配后触发），但这只是多种方案之一：
 
 | 方案 | 精度 | 延迟 | 成本 | 适用场景 |
 |:----|:----:|:----:|:----:|:--------|
@@ -55,10 +55,10 @@ HyDE（假设文档检索）的核心思想是"用生成填补检索鸿沟"。�
 ## 查询分类器
 
 ```python
-# BERT二分类查询分类器：将用户查询分为"通用问题(0)"和"专业问题(1)"两类
+# BERT二分类查询分类器：将用户查询分为"通用知识(0)"和"专业咨询(1)"两类
 # 触发时机：MySQL FAQ 未匹配后，用于决定走 LLM 直接回答还是 Milvus RAG
 class QueryClassifier:
-    """BERT 二分类：通用问题(0) vs 专业问题(1)"""
+    """BERT 二分类：通用知识(0) vs 专业咨询(1)"""
     # 初始化分类器，加载预训练的BERT模型和对应的分词器
     def __init__(self, model_path):
         from transformers import BertTokenizer, BertForSequenceClassification
@@ -67,7 +67,7 @@ class QueryClassifier:
         # 加载BERT序列分类模型，包含预训练权重和分类头
         self.model = BertForSequenceClassification.from_pretrained(model_path)
 
-    # 对查询进行分类，返回0（通用问题）或1（专业问题）
+    # 对查询进行分类，返回0（通用知识）或1（专业咨询）
     def classify(self, query: str) -> int:
         # 将查询文本编码为PyTorch张量，截断至128个token以控制计算量
         inputs = self.tokenizer(query, return_tensors="pt", truncation=True, max_length=128)
@@ -166,7 +166,7 @@ class RAGSystem:
         self.vs = vector_store
 
         self.llm = llm
-        # 加载预训练的BERT查询分类器，用于在FAQ未匹配后区分"通用问题"和"专业问题"
+        # 加载预训练的BERT查询分类器，用于在FAQ未匹配后区分"通用知识"和"专业咨询"
         self.classifier = QueryClassifier("models/bert_query_classifier")
         # 初始化策略选择器，用于根据查询特点动态选择检索策略
         self.strategy = StrategySelector()
@@ -186,12 +186,12 @@ class RAGSystem:
 
         # Step 3: FAQ 未匹配 → BERT 意图分类，区分通用/专业
         q_type = self.classifier.classify(query)
-        logger.info(f"查询类型: {'专业问题' if q_type else '通用问题'}")
+        logger.info(f"查询类型: {'专业咨询' if q_type else '通用知识'}")
 
-        if q_type == 0:           # 通用问题 → LLM 直接回答（免向量检索成本）
+        if q_type == 0:           # 通用知识 → LLM 直接回答（免向量检索成本）
             return self.llm(f"请简洁回答：{query}")
 
-        # Step 4: 专业问题 → RAG 检索 + LLM 生成
+        # Step 4: 专业咨询 → RAG 检索 + LLM 生成
         docs = self._rag_retrieve(query)
 
         # 构建 Prompt：将检索到的文档片段拼接为上下文，构建提示模板
@@ -248,7 +248,7 @@ chunks = splitter.split_documents(documents)  # 对文档递归切分，返回�
 | 应用场景 | 推荐策略 | 说明 |
 |:--------:|:--------|:----|
 | **通用知识问答** | LLM 直接回答 | BERT 分类为通用后，省去向量检索，由 LLM 直接回答 |
-| **短查询专业问题** | HyDE（假设文档检索） | BERT 分类为专业后，先让 LLM 生成假设答案再检索，弥补短查询语义不足 |
+| **短查询专业咨询** | HyDE（假设文档检索） | BERT 分类为专业后，先让 LLM 生成假设答案再检索，弥补短查询语义不足 |
 | **复合多维度查询** | 子查询 | 将多意图复杂问题拆解为多个子问题分别检索后合并去重 |
 | **标准高频问题** | Redis 缓存 → MySQL FAQ | 在分类器之前，Redis/FAQ 两级拦截高频问答，毫秒级高精度响应 |
 | **父块上下文补全** | 父子块策略 | 检索子块后返回完整父块给 LLM，兼顾检索精度与上下文丰富度 |
@@ -259,8 +259,8 @@ chunks = splitter.split_documents(documents)  # 对文档递归切分，返回�
 **回答要点**：
 
 1. 查询分类器在 MySQL FAQ 未匹配后才触发，而非第一级路由
-2. 它将未匹配的查询分为"通用问题（general）"和"专业问题（professional）"两类
-3. 通用问题由 LLM 直接回答（免向量检索成本），专业问题走 Milvus RAG 语义检索+LLM 生成路径
+2. 它将未匹配的查询分为"通用知识（general）"和"专业咨询（professional）"两类
+3. 通用知识由 LLM 直接回答（免向量检索成本），专业咨询走 Milvus RAG 语义检索+LLM 生成路径
 4. 分类器前置 Redis 和 FAQ 两级过滤，确保大多数高频问题不经过分类器，节省计算资源
 
 **Q2（深挖）**：HyDE（假设文档检索）的核心思想是什么？为什么它对短查询场景特别有效？

@@ -9,7 +9,7 @@ aliases: ["BERT微调", "意图分类", "BERT Fine-tuning", "Intent Classificati
 
 ## 定义
 
-意图识别（Intent Classification）是 RAG 系统的第三道关卡，在 Redis 缓存和 MySQL FAQ 均未命中后触发，判断用户查询属于"通用问题"还是"专业问题"——通用走 LLM 直接回答，专业走 Milvus RAG 检索生成。通过微调 BERT 分类模型实现意图识别，比使用 LLM Prompt 分类更快、更稳定、更便宜。
+意图识别（Intent Classification）是 RAG 系统的第三道关卡，在 Redis 缓存和 MySQL FAQ 均未命中后触发，判断用户查询属于"通用知识"还是"专业咨询"——通用走 LLM 直接回答，专业走 Milvus RAG 检索生成。通过微调 BERT 分类模型实现意图识别，比使用 LLM Prompt 分类更快、更稳定、更便宜。
 
 ### 形式化定义
 
@@ -22,7 +22,7 @@ $$
 其中 $P(y \mid q; \theta)$ 是 BERT 模型预测查询 $q$ 属于类别 $y$ 的概率，$\theta$ 为 BERT 微调后的模型参数。$\mathcal{Y}$ 为预定义的意图类别集合：
 
 $$
-\mathcal{Y} = \{\text{FAQ}, \text{KnowledgeBase}, \text{SmallTalk}, \dots\}
+\mathcal{Y} = \{\text{通用知识}, \text{专业咨询}\}
 $$
 
 - $\mathcal{Y}$：意图类别集合，根据业务需求定义
@@ -42,9 +42,10 @@ from sklearn.model_selection import train_test_split
 
 data = [
     # (query, intent)
-    ("黑马课程有哪些", "FAQ"),
-    ("什么是 Transformer 的自注意力机制", "KnowledgeBase"),
-    ("你好", "SmallTalk"),
+    ("什么是神经网络", "通用知识"),
+    ("Transformer 自注意力机制原理", "专业咨询"),
+    ("你好", "通用知识"),
+    ("JAVA课程费用多少", "专业咨询"),
     # ... 约 5000 条
 ]
 
@@ -146,7 +147,7 @@ def classify_intent(query: str) -> dict:
         probs = torch.softmax(outputs.logits, dim=-1)
         pred_id = torch.argmax(probs, dim=-1).item()
 
-    intent_labels = {0: "FAQ", 1: "KnowledgeBase", 2: "SmallTalk"}
+    intent_labels = {0: "通用知识", 1: "专业咨询"}
     return {
         "intent": intent_labels[pred_id],
         "confidence": probs[0][pred_id].item()
@@ -155,7 +156,7 @@ def classify_intent(query: str) -> dict:
 # 使用示例
 result = classify_intent("Transformer 为什么需要多头注意力")
 print(f"意图: {result['intent']}, 置信度: {result['confidence']:.2%}")
-# 输出: 意图: KnowledgeBase, 置信度: 98.50%
+# 输出: 意图: 专业咨询, 置信度: 98.50%
 ```
 
 ## BERT vs LLM Prompt 分类对比
@@ -174,7 +175,7 @@ print(f"意图: {result['intent']}, 置信度: {result['confidence']:.2%}")
 
 | 应用场景 | BERT 意图类别 | 路由目标 |
 |:--------|:-------------|:---------|
-| **EduRAG 问答系统** | FAQ / KnowledgeBase / SmallTalk | MySQL → Milvus → LLM 直答 |
+| **EduRAG 问答系统** | 通用知识 / 专业咨询 | MySQL → BERT → (LLM 直答 \| Milvus RAG) |
 | **客服系统** | 退换货 / 投诉 / 咨询 / 闲聊 | 各业务子系统 |
 | **智能文档检索** | 精确定位 / 概念理解 / 对比分析 | Direct / HyDE / SubQuery |
 | **多轮对话路由** | 追问 / 新话题 / 闲聊 | 保留对话历史 / 重置检索 |
@@ -200,7 +201,7 @@ print(f"意图: {result['intent']}, 置信度: {result['confidence']:.2%}")
 
 1. 从真实用户日志中采样查询，保证数据分布的"真实性"，而非人工编造
 2. 多人交叉标注+一致性校验：同一查询至少由两人标注，不一致的讨论确定
-3. 类别平衡：若某些类别天然稀疏（如 SmallTalk），通过数据增强（同义改写、回译）补充样本
+3. 类别平衡：若某些类别天然稀疏，通过数据增强（同义改写、回译）补充样本
 4. 分层抽样划分训练/测试集，保证各类别在测试集中也有代表性
 
 **Q4（边界）**：BERT 意图分类在实际部署中会面临哪些挑战？如何应对？

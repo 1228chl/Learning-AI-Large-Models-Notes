@@ -17,8 +17,8 @@ aliases: ["双系统架构", "MySQL问答", "Milvus RAG"]
                       → 未命中 → MySQL FAQ (BM25 + Softmax)
                                  → 匹配 > 阈值 → 返回答案 + 写入 Redis
                                  → 未匹配 → BERT 意图分类
-                                            → 通用问题 → LLM 直接回答
-                                            → 专业问题 → Milvus RAG 系统
+                                            → 通用知识 → LLM 直接回答
+                                            → 专业咨询 → Milvus RAG 系统
 ```
 
 三条路径互补：MySQL FAQ 拦截高频标准问题（精确匹配），Redis 作为其前置缓存加速；未匹配时 BERT 分类器区分"通用"与"专业"——通用走 LLM 直接回答免去向量检索开销，专业走 Milvus RAG 深度语义检索。
@@ -28,7 +28,7 @@ aliases: ["双系统架构", "MySQL问答", "Milvus RAG"]
 ```python
 # BERT 意图分类器：MySQL FAQ 未匹配后，区分"通用"和"专业"两类
 def classify_intent(query):
-    """MySQL FAQ 未命中时，用 BERT 区分 0=通用问题 和 1=专业问题"""
+    """MySQL FAQ 未命中时，用 BERT 区分 0=通用知识 和 1=专业咨询"""
     result = bert_classifier.predict(query)
     return "general" if result == 0 else "professional"
 
@@ -62,8 +62,8 @@ def answer(query):
 | **Redis** | 缓存（FAQ 结果缓存） | Key-Value 精确匹配 | 任意查询先查缓存 | 热点缓存层，加速高频问答返回 |
 | **MySQL FAQ** | 结构化 FAQ 表（问题+答案） | SQL 精确匹配 / BM25 | Redis 未命中后 | 标准问答库，高置信度匹配直接返回 |
 | **BERT 分类器** | — | 微调 BERT 二分类 | MySQL FAQ 未匹配后 | 区分通用/专业，决定走 LLM 还是 Milvus |
-| **LLM 直接回答** | — | 模型自身知识 | BERT 判定为通用问题 | 无固定答案的通用查询（闲聊、常识） |
-| **Milvus RAG** | 向量库（文档 Embedding） | 语义相似度搜索 | BERT 判定为专业问题 | 专业知识库，深度语义检索 + LLM 生成 |
+| **LLM 直接回答** | — | 模型自身知识 | BERT 判定为通用知识 | 无固定答案的通用查询（闲聊、常识） |
+| **Milvus RAG** | 向量库（文档 Embedding） | 语义相似度搜索 | BERT 判定为专业咨询 | 专业知识库，深度语义检索 + LLM 生成 |
 
 ## Milvus RAG 系统（专业问答）
 
@@ -127,7 +127,7 @@ class MySQLFAQ:
 | 场景 | 使用方式 |
 |:----|:--------|
 | **企业客服** | FAQ 处理高频问题，Milvus RAG 处理专业咨询，Redis 缓存热点答案 |
-| **教育问答** | 标准题库 FAQ + 教材文档专业检索 + 通用问题 LLM 直接答 |
+| **教育问答** | 标准题库 FAQ + 教材文档专业检索 + 通用知识 LLM 直接答 |
 | **技术支持** | 已知 Bug 解决方案走 FAQ，技术文档走 Milvus RAG 检索 |
 | **混合架构最佳实践** | Redis 缓存加速 → MySQL FAQ 拦截高频 → BERT 分流 → LLM 托底 / Milvus 深入 |
 
@@ -138,8 +138,8 @@ class MySQLFAQ:
 
 1. 完整流程为四级级联：Redis 缓存 → MySQL FAQ（BM25） → BERT 意图分类 → LLM 直接回答或 Milvus RAG
 2. Redis 拦截已验证的高频问答（毫秒级返回）；未命中则查 MySQL FAQ 做 BM25 匹配，超阈值直接返回并回写缓存
-3. FAQ 未匹配时才进入意图分类：通用问题由 LLM 直接回答（免向量检索成本），专业问题走 Milvus RAG 深度检索
-4. 这种设计确保简单问题最高效响应，专业问题得到深度解答，通用问题不浪费检索资源
+3. FAQ 未匹配时才进入意图分类：通用知识由 LLM 直接回答（免向量检索成本），专业咨询走 Milvus RAG 深度检索
+4. 这种设计确保简单问题最高效响应，专业咨询得到深度解答，通用知识不浪费检索资源
 
 **Q2（深挖）**：双架构中 BERT 二分类的定位是什么？有哪些实现方案？
 **回答要点**：
