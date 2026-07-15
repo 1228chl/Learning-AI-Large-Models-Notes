@@ -58,16 +58,17 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "README.md",
+                "file": "Atomic-Cards/工程实践/工具/09-Claude使用指南.md",
                 "mode": "source",
                 "source": false,
                 "backlinks": false
               },
               "icon": "lucide-file",
-              "title": "README"
+              "title": "09-Claude使用指南"
             }
           }
-        ]
+        ],
+        "currentTab": 3
       }
     ],
     "direction": "vertical"
@@ -252,16 +253,18 @@
       "templater-obsidian:Templater": false
     }
   },
-  "active": "9dddde49a2d5eb85",
+  "active": "cbb23648d019f3e9",
   "lastOpenFiles": [
-    "AI-Large-Modlels-Notes/Project/EduRAG/RAG学习步骤与流程.md",
+    "Atomic-Cards/工程实践/工具/10-MLOps与实验跟踪.md",
     "Atomic-Cards/工程实践/工具/09-Claude使用指南.md",
+    "README.md",
+    "AI-Large-Modlels-Notes/Project/EduRAG/demo/07-学习总结与项目要点.md",
+    "AI-Large-Modlels-Notes/Project/EduRAG/RAG学习步骤与流程.md",
     "AI-Large-Modlels-Notes/Project/EduRAG/基于MySQL数据库实现问答系统.md",
     "Atomic-Cards/数据库/Milvus/08-Milvus核心概念.md",
     "Atomic-Cards/NLP/架构/08-位置编码.md",
     "Atomic-Cards/卡片总览.md",
     "Atomic-Cards/NLP/基础/00-NLP概述.md",
-    "README.md",
     "_check_format.py",
     "_check_format.py.tmp.12372.f3bab64a5b83",
     "Atomic-Cards/数据库/检索/15-BGE-M3与BGE-Reranker模型.md",
@@ -288,8 +291,6 @@
     "Atomic-Cards/AI-Agent/基础/01-Agent定义与核心公式.md",
     "Atomic-Cards/AI-Agent/RAG流程/31-父文档与子文档分块策略.md",
     "Atomic-Cards/AI-Agent/基础/06-提示词工程核心原则.md",
-    "Atomic-Cards/工程实践/工具/10-MLOps与实验跟踪.md",
-    "Atomic-Cards/工程实践/部署/08-ONNX模型部署.md",
     "Assets/LangChain组件图.drawio.png",
     "Assets/Image/AI-Large-Modlels-Notes/Project/EduRAG/Milvus向量数据库/1.2.8.3-1.png",
     "Assets/Image/AI-Large-Modlels-Notes/Project/EduRAG/Milvus向量数据库/1.2.8.2-2.png",
