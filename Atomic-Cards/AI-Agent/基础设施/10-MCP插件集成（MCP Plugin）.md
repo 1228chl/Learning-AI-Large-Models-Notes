@@ -106,3 +106,4 @@ MCP 就像 USB 协议——外部设备只要符合 USB 标准（实现了 MCP �
 - 需要了解权限系统对 MCP 工具的拦截参见 [权限系统](./04-权限系统（Permission%20System）.md)
 - 需要掌握 Agent 团队中 MCP 工具的共享参见 [消息总线与 Agent 团队](./09-消息总线与Agent团队（MessageBus）.md)
 - 需要了解 Harness 整体架构参见 [Agent Harness（基础设施层）](./01-Agent%20Harness（基础设施层）.md)
+- 需要了解该机制在 Claude Code 中的工程实现参见 [Claude 使用指南](../../工程实践/工具/09-Claude使用指南.md)

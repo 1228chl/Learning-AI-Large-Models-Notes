@@ -94,3 +94,4 @@ if estimate_size(messages) > CONTEXT_LIMIT:
 - 需要掌握错误恢复中的 reactive_compact 参见 [错误恢复与重试](./08-错误恢复与重试（Error%20Recovery）.md)
 - 需要理解 Harness 整体设计参见 [Agent Harness（基础设施层）](./01-Agent%20Harness（基础设施层）.md)
 - 需要了解系统提示词组装中的上下文管理参见 [系统提示词组装](./12-系统提示词组装（System%20Prompt%20Assembly）.md)
+- 需要了解该机制在 Claude Code 中的工程实现参见 [Claude 使用指南](../../工程实践/工具/09-Claude使用指南.md)

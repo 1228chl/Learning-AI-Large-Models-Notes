@@ -13,13 +13,13 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Atomic-Cards/AI-Agent/基础设施/03-工具分发系统（Tool Dispatch）.md",
+                "file": "Atomic-Cards/AI-Agent/RAG流程/35-BGE-M3嵌入模型与混合检索.md",
                 "mode": "source",
                 "source": false,
                 "backlinks": false
               },
               "icon": "lucide-file",
-              "title": "03-工具分发系统（Tool Dispatch）"
+              "title": "35-BGE-M3嵌入模型与混合检索"
             }
           },
           {
@@ -119,8 +119,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 292.5,
-    "collapsed": true
+    "width": 292.5
   },
   "right": {
     "id": "f07a0c5b7e11463b",
@@ -136,13 +135,13 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "Atomic-Cards/AI-Agent/基础设施/03-工具分发系统（Tool Dispatch）.md",
+                "file": "Atomic-Cards/AI-Agent/RAG流程/35-BGE-M3嵌入模型与混合检索.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "03-工具分发系统（Tool Dispatch） 的大纲"
+              "title": "35-BGE-M3嵌入模型与混合检索 的大纲"
             }
           },
           {
@@ -241,7 +240,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 634.5
+    "width": 370.5
   },
   "left-ribbon": {
     "hiddenItems": {
@@ -260,15 +259,23 @@
   },
   "active": "4c73286640237a1e",
   "lastOpenFiles": [
-    "Atomic-Cards/AI-Agent/基础设施/06-子Agent（Subagent）.md.tmp.40460.010e0e9b3992",
-    "Atomic-Cards/AI-Agent/基础设施/02-Agent循环（Agent Loop）.md",
+    "Atomic-Cards/原子化生成提示词.md",
     "Atomic-Cards/AI-Agent/基础设施/03-工具分发系统（Tool Dispatch）.md",
+    "Atomic-Cards/AI-Agent/RAG流程/35-BGE-M3嵌入模型与混合检索.md",
+    "Atomic-Cards/AI-Agent/基础设施/02-Agent循环（Agent Loop）.md",
+    "Atomic-Cards/AI-Agent/基础设施/01-Agent Harness（基础设施层）.md",
+    "Atomic-Cards/AI-Agent/基础设施/15-自主Agent（Autonomous Agent）.md.tmp.40460.f6f5e9b9a10d",
+    "Atomic-Cards/AI-Agent/基础设施/06-子Agent（Subagent）.md.tmp.40460.ae475e82f7c8",
+    "Atomic-Cards/AI-Agent/基础设施/20-工作树隔离（Worktree Isolation）.md",
+    "Atomic-Cards/AI-Agent/基础设施/19-Cron调度器（Cron Scheduler）.md",
+    "Atomic-Cards/AI-Agent/基础设施/18-后台任务系统（Background Tasks）.md",
+    "Atomic-Cards/AI-Agent/基础设施/17-技能加载系统（Skill Loading）.md",
+    "Atomic-Cards/AI-Agent/基础设施/16-TodoWrite任务规划（TodoWrite）.md",
+    "Atomic-Cards/AI-Agent/基础设施/06-子Agent（Subagent）.md.tmp.40460.010e0e9b3992",
     "Atomic-Cards/AI-Agent/基础设施/04-权限系统（Permission System）.md",
     "Atomic-Cards/AI-Agent/基础设施/05-Hooks系统（Hooks System）.md",
     "Atomic-Cards/AI-Agent/基础设施/09-消息总线与Agent团队（MessageBus）.md",
-    "Atomic-Cards/AI-Agent/基础设施/01-Agent Harness（基础设施层）.md",
     "AI-Large-Modlels-Notes/Project/EduRAG/demo/07-学习总结与项目要点.md",
-    "Atomic-Cards/原子化生成提示词.md",
     "Atomic-Cards/AI-Agent/基础设施/15-自主Agent（Autonomous Agent）.md",
     "Atomic-Cards/AI-Agent/基础设施/14-团队协议（Team Protocols）.md",
     "Atomic-Cards/AI-Agent/基础设施/13-任务系统（Task System）.md",
@@ -284,18 +291,10 @@
     "Atomic-Cards/数据库/Milvus/08-Milvus核心概念.md",
     "Atomic-Cards/卡片总览.md",
     "Atomic-Cards/数据库/Milvus/07-向量数据库概述.md",
-    "AI-Large-Modlels-Notes/Project/EduRAG/基于MySQL数据库实现问答系统.md",
-    "Atomic-Cards/工程实践/工具/09-Claude使用指南.md",
-    "Atomic-Cards/工程实践/工具/10-MLOps与实验跟踪.md",
-    "README.md",
-    "AI-Large-Modlels-Notes/Project/EduRAG/RAG学习步骤与流程.md",
     "_check_format.py",
     "_check_format.py.tmp.12372.f3bab64a5b83",
     "Atomic-Cards/AI-Agent/RAG流程/28-多格式文档加载与OCR解析.md.tmp.12372.dcc01575d753",
     "Atomic-Cards/NLP/架构/04-Seq2Seq与Encoder-Decoder.md.tmp.12372.3b94a8ad2180",
-    "Atomic-Cards/NLP/预训练/10-BERT与MLM预训练.md.tmp.12372.a2b5d203f111",
-    "Atomic-Cards/AI-Agent/系统/33-意图识别(BERT微调分类模型).md.tmp.12372.6e45cfcb8e6f",
-    "Atomic-Cards/AI-Agent/系统/33-意图识别(BERT微调分类模型).md.tmp.12372.f8066d48ba1e",
     "Assets/LangChain组件图.drawio.png",
     "Assets/Image/AI-Large-Modlels-Notes/Project/EduRAG/Milvus向量数据库/1.2.8.3-1.png",
     "Assets/Image/AI-Large-Modlels-Notes/Project/EduRAG/Milvus向量数据库/1.2.8.2-2.png",

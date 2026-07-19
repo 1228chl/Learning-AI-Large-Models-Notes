@@ -103,3 +103,4 @@ class ProtocolState:
 - 需要掌握自主 Agent 的生命周期管理参见 [自主 Agent](./15-自主Agent（Autonomous%20Agent）.md)
 - 需要理解权限系统在计划审批中的应用参见 [权限系统](./04-权限系统（Permission%20System）.md)
 - 需要了解 Harness 整体架构参见 [Agent Harness（基础设施层）](./01-Agent%20Harness（基础设施层）.md)
+- 需要了解该机制在 Claude Code 中的工程实现参见 [Claude 使用指南](../../工程实践/工具/09-Claude使用指南.md)

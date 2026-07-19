@@ -119,3 +119,4 @@ def get_system_prompt(context: dict) -> str:
 - 需要理解技能加载中的两级注入参见 [上下文压缩管线](./07-上下文压缩管线（Context%20Compression）.md)
 - 需要掌握 Agent 循环中 System Prompt 的使用参见 [Agent 循环](./02-Agent循环（Agent%20Loop）.md)
 - 需要了解提示词工程核心原则参见 [提示词工程核心原则](../基础/06-提示词工程核心原则.md)
+- 需要了解该机制在 Claude Code 中的工程实现参见 [Claude 使用指南](../../工程实践/工具/09-Claude使用指南.md)

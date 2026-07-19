@@ -45,8 +45,51 @@ HyDE（假设文档检索）的核心思想是"用生成填补检索鸿沟"。�
 
 ## 系统架构
 
+RAGSystem 作为编排器（Orchestrator），整合所有模块完成从查询到答案的完整流程：
+
+```
+用户查询
+  → QueryClassifier（BERT 二分类：通用知识/专业咨询）
+    → 通用知识 → LLM 直接回答（无检索）
+    → 专业咨询 → StrategySelector（LLM 动态选择策略）
+      → 四种策略之一：直接检索 / HyDE / 子查询 / 回溯
+      → VectorStore.hybrid_search_with_rerank（混合检索+重排序）
+      → 检索结果去重 → 拼接上下文
+      → RAGPrompts 组装 → LLM 生成答案
+```
+
+### RAGSystem 编排器核心代码
+
 ```python
-# RAG系统完整流程图：MySQL FAQ 未匹配后，BERT 区分通用/专业，专业走 RAG 检索+生成
+class RAGSystem:
+    def __init__(self, vector_store, llm):
+        self.vector_store = vector_store
+        self.llm = llm
+        self.rag_prompt = RAGPrompts.rag_prompt()
+        self.query_classifier = QueryClassifier(model_path)
+        self.strategy_selector = StrategySelector()
+
+    def generate_answer(self, query, source_filter=None):
+        # 1. 查询分类：判断是通用知识还是专业咨询
+        query_category = self.query_classifier.predict_category(query)
+        if query_category == "通用知识":
+            return self.llm(self.rag_prompt.format(context="", question=query))
+
+        # 2. 策略选择：LLM 动态选择检索策略
+        strategy = self.strategy_selector.select_strategy(query)
+
+        # 3. 检索：根据策略选择对应检索方法
+        context_docs = self.retrieve_and_merge(query, strategy=strategy)
+
+        # 4. 生成：拼接上下文 + 调用 LLM
+        context = "\n\n".join([doc.page_content for doc in context_docs])
+        prompt = self.rag_prompt.format(context=context, question=query)
+        return self.llm(prompt)
+```
+
+## 完整 RAG 流程
+
+```python
 用户查询 → MySQL FAQ (BM25) → 匹配? → YES → 返回
                               → NO → BERT分类器 → 通用 → LLM直接回答
                                                   → 专业 → 策略选择器 → 检索(混合检索+重排序) → LLM生成

@@ -30,10 +30,10 @@ RAGAS 从检索和生成两个维度评估 RAG 系统：
 
 ### 检索侧指标
 
-| 指标 | 衡量内容 | 说明 |
-|:----|:---------|:-----|
-| **Context Relevancy**（上下文相关性） | 检索到的上下文是否与问题相关 | 惩罚包含无关信息，提取上下文中对回答问题必要的句子比例 |
-| **Context Recall**（上下文召回率） | 上下文是否覆盖标准答案所需的所有信息 | 将 ground_truth 拆分为 claims，检查每个 claim 是否能从 context 中找到依据 |
+| 指标 | 衡量内容 | 计算方法 | 公式 |
+|:----|:---------|:---------|:-----|
+| **Context Relevancy**（上下文相关性） | 检索到的上下文是否与问题相关 | LLM 从上下文中抽取对回答问题至关重要的句子，计算抽取句子与原始上下文的字符比例 | $\text{CR} = \frac{\text{len(extracted sentences)}}{\text{len(original context)}}$ |
+| **Context Recall**（上下文召回率） | 上下文是否覆盖标准答案所需的所有信息 | 将 ground_truth 拆分为 claims，检查每个 claim 是否能从 context 中找到依据 | $\text{CRecall} = \frac{\text{claims supported by context}}{\text{total claims}}$ |
 
 **Context Recall 计算示例**：
 
@@ -54,10 +54,10 @@ retrieved context: ["2010年世界杯的决赛中西班牙战胜了荷兰"]
 
 ### 生成侧指标
 
-| 指标 | 衡量内容 | 说明 |
-|:----|:---------|:-----|
-| **Faithfulness**（忠实度） | 生成的答案是否忠于检索到的上下文 | 答案中的每个陈述是否都能从 context 中找到依据，防止 LLM 幻觉 |
-| **Answer Relevancy**（答案相关性） | 生成的答案与问题的匹配程度 | 答案是否针对问题回答，而非答非所问 |
+| 指标 | 衡量内容 | 计算方法 | 公式 |
+|:----|:---------|:---------|:-----|
+| **Faithfulness**（忠实度） | 生成的答案是否忠于检索到的上下文 | 将答案拆分为独立陈述，逐一判断每个陈述是否能从 context 推断出来 | $F = \frac{|V|}{|S|}$，其中 $|V|$ 是能从 context 推断的陈述数，$|S|$ 是答案中陈述总数 |
+| **Answer Relevancy**（答案相关性） | 生成的答案与问题的匹配程度 | LLM 根据答案反向生成 n 个问题，计算生成问题与原始问题的语义相似度 | $\text{AR} = \frac{1}{n}\sum_{i=1}^{n} \cos(E(q_i), E(q_{\text{orig}}))$，其中 $E$ 为嵌入函数，$q_i$ 为反向生成的问题 |
 
 ## 评估实现流程
 
