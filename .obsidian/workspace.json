@@ -13,28 +13,23 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "AI-Large-Modlels-Notes/Project/EduRAG/demo/07-学习总结与项目要点.md",
+                "file": "Atomic-Cards/AI-Agent/基础设施/03-工具分发系统（Tool Dispatch）.md",
                 "mode": "source",
                 "source": false,
                 "backlinks": false
               },
               "icon": "lucide-file",
-              "title": "07-学习总结与项目要点"
+              "title": "03-工具分发系统（Tool Dispatch）"
             }
           },
           {
             "id": "b9c397e9f32ab073",
             "type": "leaf",
             "state": {
-              "type": "markdown",
-              "state": {
-                "file": "Atomic-Cards/原子化生成提示词.md",
-                "mode": "source",
-                "source": false,
-                "backlinks": false
-              },
-              "icon": "lucide-file",
-              "title": "原子化生成提示词"
+              "type": "graph",
+              "state": {},
+              "icon": "lucide-git-fork",
+              "title": "关系图谱"
             }
           },
           {
@@ -58,17 +53,16 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Atomic-Cards/工程实践/工具/09-Claude使用指南.md",
+                "file": "Atomic-Cards/原子化生成提示词.md",
                 "mode": "source",
                 "source": false,
                 "backlinks": false
               },
               "icon": "lucide-file",
-              "title": "09-Claude使用指南"
+              "title": "原子化生成提示词"
             }
           }
-        ],
-        "currentTab": 3
+        ]
       }
     ],
     "direction": "vertical"
@@ -125,7 +119,8 @@
       }
     ],
     "direction": "horizontal",
-    "width": 292.5
+    "width": 292.5,
+    "collapsed": true
   },
   "right": {
     "id": "f07a0c5b7e11463b",
@@ -141,13 +136,13 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "AI-Large-Modlels-Notes/Algorithm/1-两数之和.md",
+                "file": "Atomic-Cards/AI-Agent/基础设施/03-工具分发系统（Tool Dispatch）.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "1-两数之和 的大纲"
+              "title": "03-工具分发系统（Tool Dispatch） 的大纲"
             }
           },
           {
@@ -158,6 +153,16 @@
               "state": {},
               "icon": "git-pull-request",
               "title": "Source Control"
+            }
+          },
+          {
+            "id": "4c73286640237a1e",
+            "type": "leaf",
+            "state": {
+              "type": "claudian-view",
+              "state": {},
+              "icon": "bot",
+              "title": "Claudian"
             }
           },
           {
@@ -232,12 +237,11 @@
             }
           }
         ],
-        "currentTab": 1
+        "currentTab": 2
       }
     ],
     "direction": "horizontal",
-    "width": 363.5,
-    "collapsed": true
+    "width": 634.5
   },
   "left-ribbon": {
     "hiddenItems": {
@@ -250,47 +254,48 @@
       "bases:新建数据库": false,
       "obsidian-git:Open Git source control": true,
       "table-editor-obsidian:Advanced Tables Toolbar": false,
-      "templater-obsidian:Templater": false
+      "templater-obsidian:Templater": false,
+      "realclaudian:Open Claudian": false
     }
   },
-  "active": "cbb23648d019f3e9",
+  "active": "4c73286640237a1e",
   "lastOpenFiles": [
-    "Atomic-Cards/工程实践/工具/10-MLOps与实验跟踪.md",
-    "Atomic-Cards/工程实践/工具/09-Claude使用指南.md",
-    "README.md",
+    "Atomic-Cards/AI-Agent/基础设施/06-子Agent（Subagent）.md.tmp.40460.010e0e9b3992",
+    "Atomic-Cards/AI-Agent/基础设施/02-Agent循环（Agent Loop）.md",
+    "Atomic-Cards/AI-Agent/基础设施/03-工具分发系统（Tool Dispatch）.md",
+    "Atomic-Cards/AI-Agent/基础设施/04-权限系统（Permission System）.md",
+    "Atomic-Cards/AI-Agent/基础设施/05-Hooks系统（Hooks System）.md",
+    "Atomic-Cards/AI-Agent/基础设施/09-消息总线与Agent团队（MessageBus）.md",
+    "Atomic-Cards/AI-Agent/基础设施/01-Agent Harness（基础设施层）.md",
     "AI-Large-Modlels-Notes/Project/EduRAG/demo/07-学习总结与项目要点.md",
-    "AI-Large-Modlels-Notes/Project/EduRAG/RAG学习步骤与流程.md",
-    "AI-Large-Modlels-Notes/Project/EduRAG/基于MySQL数据库实现问答系统.md",
+    "Atomic-Cards/原子化生成提示词.md",
+    "Atomic-Cards/AI-Agent/基础设施/15-自主Agent（Autonomous Agent）.md",
+    "Atomic-Cards/AI-Agent/基础设施/14-团队协议（Team Protocols）.md",
+    "Atomic-Cards/AI-Agent/基础设施/13-任务系统（Task System）.md",
+    "Atomic-Cards/AI-Agent/基础设施/12-系统提示词组装（System Prompt Assembly）.md",
+    "Atomic-Cards/AI-Agent/基础设施/11-记忆系统（Memory System）.md",
+    "Atomic-Cards/AI-Agent/基础设施/11-记忆系统（Memory System）.md.tmp.40460.1ba4a8caa354",
+    "Atomic-Cards/AI-Agent/基础设施/10-MCP插件集成（MCP Plugin）.md",
+    "Atomic-Cards/AI-Agent/基础设施/08-错误恢复与重试（Error Recovery）.md",
+    "Atomic-Cards/AI-Agent/基础设施/07-上下文压缩管线（Context Compression）.md",
+    "Atomic-Cards/AI-Agent/基础设施/06-子Agent（Subagent）.md",
+    "Atomic-Cards/AI-Agent/基础设施/01-Agent Harness（基础设施层）.md.tmp.40460.e6a8d25be0ef",
+    "Atomic-Cards/AI-Agent/基础设施",
     "Atomic-Cards/数据库/Milvus/08-Milvus核心概念.md",
-    "Atomic-Cards/NLP/架构/08-位置编码.md",
     "Atomic-Cards/卡片总览.md",
-    "Atomic-Cards/NLP/基础/00-NLP概述.md",
+    "Atomic-Cards/数据库/Milvus/07-向量数据库概述.md",
+    "AI-Large-Modlels-Notes/Project/EduRAG/基于MySQL数据库实现问答系统.md",
+    "Atomic-Cards/工程实践/工具/09-Claude使用指南.md",
+    "Atomic-Cards/工程实践/工具/10-MLOps与实验跟踪.md",
+    "README.md",
+    "AI-Large-Modlels-Notes/Project/EduRAG/RAG学习步骤与流程.md",
     "_check_format.py",
     "_check_format.py.tmp.12372.f3bab64a5b83",
-    "Atomic-Cards/数据库/检索/15-BGE-M3与BGE-Reranker模型.md",
     "Atomic-Cards/AI-Agent/RAG流程/28-多格式文档加载与OCR解析.md.tmp.12372.dcc01575d753",
     "Atomic-Cards/NLP/架构/04-Seq2Seq与Encoder-Decoder.md.tmp.12372.3b94a8ad2180",
     "Atomic-Cards/NLP/预训练/10-BERT与MLM预训练.md.tmp.12372.a2b5d203f111",
     "Atomic-Cards/AI-Agent/系统/33-意图识别(BERT微调分类模型).md.tmp.12372.6e45cfcb8e6f",
     "Atomic-Cards/AI-Agent/系统/33-意图识别(BERT微调分类模型).md.tmp.12372.f8066d48ba1e",
-    "Atomic-Cards/AI-Agent/系统/33-意图识别(BERT微调分类模型).md.tmp.12372.134b79348ac7",
-    "Atomic-Cards/AI-Agent/系统/33-意图识别(BERT微调分类模型).md.tmp.12372.e2304b64bb52",
-    "Atomic-Cards/AI-Agent/系统/33-意图识别(BERT微调分类模型).md.tmp.12372.fd75921e8181",
-    "Atomic-Cards/数据库/检索/16-稠密向量与稀疏向量.md",
-    "Atomic-Cards/数据库/检索/17-倒排索引.md",
-    "Atomic-Cards/AI-Agent/系统/32-策略选择与多路径RAG检索.md",
-    "Atomic-Cards/AI-Agent/系统/25-RAG系统评估(RAGAS).md",
-    "Atomic-Cards/AI-Agent/系统/27-RAG查询改写与意图识别.md",
-    "Atomic-Cards/AI-Agent/系统/33-意图识别(BERT微调分类模型).md",
-    "Atomic-Cards/AI-Agent/系统/23-RAG系统完整实现.md",
-    "Atomic-Cards/AI-Agent/系统/10-RAG系统双架构.md",
-    "Atomic-Cards/AI-Agent/LangChain/04-LangChain六大组件.md",
-    "Atomic-Cards/AI-Agent/LangChain/22-LangChain组件操作指南.md",
-    "Atomic-Cards/AI-Agent/RAG流程/02-RAG三阶段流程.md",
-    "Atomic-Cards/AI-Agent/检索/26-FAQ与RAG混合检索架构.md",
-    "Atomic-Cards/AI-Agent/基础/01-Agent定义与核心公式.md",
-    "Atomic-Cards/AI-Agent/RAG流程/31-父文档与子文档分块策略.md",
-    "Atomic-Cards/AI-Agent/基础/06-提示词工程核心原则.md",
     "Assets/LangChain组件图.drawio.png",
     "Assets/Image/AI-Large-Modlels-Notes/Project/EduRAG/Milvus向量数据库/1.2.8.3-1.png",
     "Assets/Image/AI-Large-Modlels-Notes/Project/EduRAG/Milvus向量数据库/1.2.8.2-2.png",
