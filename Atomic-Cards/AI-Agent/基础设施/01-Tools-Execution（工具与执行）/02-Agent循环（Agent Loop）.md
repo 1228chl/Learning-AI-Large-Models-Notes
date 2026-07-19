@@ -15,6 +15,13 @@ $$
 \text{Agent Loop} = \text{LLM 调用} \rightarrow \text{工具执行} \rightarrow \text{结果追加} \rightarrow \text{继续/停止}
 $$
 
+
+## 问题描述
+
+你向大模型提问：“帮我读取目录下有哪些文件，并且执行 XXX.py”。模型能输出一条 bash 命令，但输出完了就停了——它不会自己跑，也不会看到结果后继续推理。你可以手动把命令复制到终端执行，再把输出粘贴回对话框，让它接着干。下一个命令出来，你再跑一遍、再贴回去。
+
+每一个来回，你都在做中间层——而把它自动化，就是 Agent 循环要做的事。
+
 ### 核心代码
 
 ```python
@@ -100,9 +107,9 @@ Agent 循环就像一个"思考→行动→观察→再思考"的认知闭环：
 
 ## 参考引用
 
-- 需要理解 Harness 整体架构参见 [Agent Harness（基础设施层）](./01-Agent%20Harness（基础设施层）.md)
-- 需要了解工具分发实现参见 [工具分发系统](./03-工具分发系统（Tool%20Dispatch）.md)
-- 需要掌握权限控制参见 [权限系统](./04-权限系统（Permission%20System）.md)
-- 需要了解子 Agent 的独立循环参见 [子 Agent](./06-子Agent（Subagent）.md)
-- 需要理解错误恢复对循环的影响参见 [错误恢复与重试](./08-错误恢复与重试（Error%20Recovery）.md)
+- 需要理解 Harness 整体架构参见 [Agent Harness（基础设施层）](../05-Multi-Agent-Platform（多Agent平台）/01-Agent%20Harness（基础设施层）.md)
+- 需要了解工具分发实现参见 [工具分发系统](../01-Tools-Execution（工具与执行）/03-工具分发系统（Tool%20Dispatch）.md)
+- 需要掌握权限控制参见 [权限系统](../01-Tools-Execution（工具与执行）/04-权限系统（Permission%20System）.md)
+- 需要了解子 Agent 的独立循环参见 [子 Agent](../02-Planning-Control（规划与控制）/06-子Agent（Subagent）.md)
+- 需要理解错误恢复对循环的影响参见 [错误恢复与重试](../02-Planning-Control（规划与控制）/08-错误恢复与重试（Error%20Recovery）.md)
 - 需要了解该机制在 Claude Code 中的工程实现参见 [Claude 使用指南](../../工程实践/工具/09-Claude使用指南.md)

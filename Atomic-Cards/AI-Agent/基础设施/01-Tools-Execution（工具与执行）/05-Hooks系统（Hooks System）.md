@@ -15,6 +15,13 @@ $$
 \text{Hook System} = \text{Event Registry} + \text{Callback Functions} + \text{Trigger Pipeline}
 $$
 
+
+## 问题描述
+
+每次加一个新功能——比如“记录每次 bash 调用”、“操作后自动 git add”、“通知 Slack”——都要修改 agent_loop 函数。循环很快就从 10 行变成 50 行，横切关注点（日志、权限、通知）和核心逻辑（调用模型、执行工具）纠缠在一起。
+
+你想扩展的是 Agent 的行为，但你改的却是循环本身。循环应该是一个稳定的核心，扩展应该挂在外面。
+
 ### 核心代码
 
 ```python
@@ -102,8 +109,8 @@ Hooks 系统像电器上的"插座口"——循环体是电器本体，Hooks 是
 
 ## 参考引用
 
-- 需要理解权限系统如何作为 Hook 实现参见 [权限系统](./04-权限系统（Permission%20System）.md)
-- 需要了解 Agent 循环中 Hook 的触发位置参见 [Agent 循环](./02-Agent循环（Agent%20Loop）.md)
-- 需要掌握工具分发流程参见 [工具分发系统](./03-工具分发系统（Tool%20Dispatch）.md)
-- 需要了解 Agent 整体架构参见 [Agent Harness（基础设施层）](./01-Agent%20Harness（基础设施层）.md)
+- 需要理解权限系统如何作为 Hook 实现参见 [权限系统](../01-Tools-Execution（工具与执行）/04-权限系统（Permission%20System）.md)
+- 需要了解 Agent 循环中 Hook 的触发位置参见 [Agent 循环](../01-Tools-Execution（工具与执行）/02-Agent循环（Agent%20Loop）.md)
+- 需要掌握工具分发流程参见 [工具分发系统](../01-Tools-Execution（工具与执行）/03-工具分发系统（Tool%20Dispatch）.md)
+- 需要了解 Agent 整体架构参见 [Agent Harness（基础设施层）](../05-Multi-Agent-Platform（多Agent平台）/01-Agent%20Harness（基础设施层）.md)
 - 需要了解该机制在 Claude Code 中的工程实现参见 [Claude 使用指南](../../工程实践/工具/09-Claude使用指南.md)

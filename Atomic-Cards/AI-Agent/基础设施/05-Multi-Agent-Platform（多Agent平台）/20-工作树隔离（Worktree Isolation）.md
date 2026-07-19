@@ -15,6 +15,13 @@ $$
 \text{Worktree Isolation} = \text{Git Worktree} + \text{Independent Branch} + \text{Task Binding}
 $$
 
+
+## 问题描述
+
+多个 Agent 并行工作时，它们在同一个文件系统上操作——Agent A 正在修改的文件被 Agent B 覆盖，Agent C 创建的临时目录和 Agent D 的冲突。并发写入导致数据损坏，并行工作变成互相破坏。
+
+工作树隔离为每个 Agent 创建独立的文件系统副本——每个 Agent 有自己的工作目录，互不干扰。完成后将变更合并回主工作区。
+
 ### 核心代码
 
 ```python
@@ -101,8 +108,8 @@ def validate_worktree_name(name: str):
 
 ## 参考引用
 
-- 需要了解任务系统与 worktree 的绑定参见 [任务系统](./13-任务系统（Task%20System）.md)
-- 需要掌握自主 Agent 在 worktree 中的工作方式参见 [自主 Agent](./15-自主Agent（Autonomous%20Agent）.md)
-- 需要理解子 Agent 的隔离执行参见 [子 Agent](./06-子Agent（Subagent）.md)
-- 需要了解 Harness 整体设计参见 [Agent Harness（基础设施层）](./01-Agent%20Harness（基础设施层）.md)
+- 需要了解任务系统与 worktree 的绑定参见 [任务系统](../05-Multi-Agent-Platform（多Agent平台）/13-任务系统（Task%20System）.md)
+- 需要掌握自主 Agent 在 worktree 中的工作方式参见 [自主 Agent](../05-Multi-Agent-Platform（多Agent平台）/15-自主Agent（Autonomous%20Agent）.md)
+- 需要理解子 Agent 的隔离执行参见 [子 Agent](../02-Planning-Control（规划与控制）/06-子Agent（Subagent）.md)
+- 需要了解 Harness 整体设计参见 [Agent Harness（基础设施层）](../05-Multi-Agent-Platform（多Agent平台）/01-Agent%20Harness（基础设施层）.md)
 - 需要了解该机制在 Claude Code 中的工程实现参见 [Claude 使用指南](../../工程实践/工具/09-Claude使用指南.md)

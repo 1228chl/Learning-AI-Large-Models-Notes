@@ -15,6 +15,13 @@ $$
 \text{System Prompt} = \sum_{\text{section} \in \text{active}} \text{section\_content}
 $$
 
+
+## 问题描述
+
+System Prompt 包含了模型行为的所有约束和指导：工具定义、权限规则、技能知识、记忆内容……手动维护这个庞大字符串，容易遗漏、冲突、重复。
+
+更糟糕的是，这些内容来自不同来源——内置规则、加载的技能、记忆系统提取的信息——需要一种机制在运行时动态组装 System Prompt，按需注入、自动合并、去重排序。
+
 ### 核心代码
 
 ```python
@@ -115,8 +122,8 @@ def get_system_prompt(context: dict) -> str:
 
 ## 参考引用
 
-- 需要了解记忆系统注入到 System Prompt 的方式参见 [记忆系统](./11-记忆系统（Memory%20System）.md)
-- 需要理解技能加载中的两级注入参见 [上下文压缩管线](./07-上下文压缩管线（Context%20Compression）.md)
-- 需要掌握 Agent 循环中 System Prompt 的使用参见 [Agent 循环](./02-Agent循环（Agent%20Loop）.md)
+- 需要了解记忆系统注入到 System Prompt 的方式参见 [记忆系统](../03-Memory-Management（记忆管理）/11-记忆系统（Memory%20System）.md)
+- 需要理解技能加载中的两级注入参见 [上下文压缩管线](../03-Memory-Management（记忆管理）/07-上下文压缩管线（Context%20Compression）.md)
+- 需要掌握 Agent 循环中 System Prompt 的使用参见 [Agent 循环](../01-Tools-Execution（工具与执行）/02-Agent循环（Agent%20Loop）.md)
 - 需要了解提示词工程核心原则参见 [提示词工程核心原则](../基础/06-提示词工程核心原则.md)
 - 需要了解该机制在 Claude Code 中的工程实现参见 [Claude 使用指南](../../工程实践/工具/09-Claude使用指南.md)

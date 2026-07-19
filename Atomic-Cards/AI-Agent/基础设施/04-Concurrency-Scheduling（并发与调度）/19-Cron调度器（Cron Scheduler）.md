@@ -24,6 +24,13 @@ Scheduler（daemon 线程，每秒轮询）
     → Consumer（agent_loop 将任务注入 messages）
 ```
 
+
+## 问题描述
+
+定期任务需要人为记住和执行——“每天早上检查 CI 状态”、“每小时同步数据”、“每周清理日志”。这些重复劳动消耗用户的注意力和时间，而且容易遗忘。
+
+Cron 调度器让 Harness 自身管理定时任务：注册一个 cron 表达式 + 任务描述，Harness 在指定时间自动触发，无需用户介入。
+
 ### 核心数据结构
 
 ```python
@@ -110,8 +117,8 @@ Cron 调度器像一个"定时闹钟"——你设置好时间（cron 表达式�
 
 ## 参考引用
 
-- 需要了解后台任务与 Cron 调度的区别参见 [后台任务系统](./18-后台任务系统（Background%20Tasks）.md)
-- 需要掌握消息总线中的队列机制参见 [消息总线与 Agent 团队](./09-消息总线与Agent团队（MessageBus）.md)
-- 需要理解自主 Agent 的轮询机制参见 [自主 Agent](./15-自主Agent（Autonomous%20Agent）.md)
-- 需要了解 Harness 整体设计参见 [Agent Harness（基础设施层）](./01-Agent%20Harness（基础设施层）.md)
+- 需要了解后台任务与 Cron 调度的区别参见 [后台任务系统](../04-Concurrency-Scheduling（并发与调度）/18-后台任务系统（Background%20Tasks）.md)
+- 需要掌握消息总线中的队列机制参见 [消息总线与 Agent 团队](../05-Multi-Agent-Platform（多Agent平台）/09-消息总线与Agent团队（MessageBus）.md)
+- 需要理解自主 Agent 的轮询机制参见 [自主 Agent](../05-Multi-Agent-Platform（多Agent平台）/15-自主Agent（Autonomous%20Agent）.md)
+- 需要了解 Harness 整体设计参见 [Agent Harness（基础设施层）](../05-Multi-Agent-Platform（多Agent平台）/01-Agent%20Harness（基础设施层）.md)
 - 需要了解该机制在 Claude Code 中的工程实现参见 [Claude 使用指南](../../工程实践/工具/09-Claude使用指南.md)

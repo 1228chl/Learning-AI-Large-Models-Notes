@@ -15,6 +15,13 @@ $$
 \text{Memory System} = \text{提取（Extract）} + \text{索引（Index）} + \text{选择（Select）} + \text{合并（Merge）}
 $$
 
+
+## 问题描述
+
+上下文压缩会丢失重要信息——用户的偏好设置、项目关键决策、已完成的里程碑……压缩后这些信息就消失了，下一轮对话需要重新告诉模型。跨会话更是如此：每次新会话都是“白纸一张”。
+
+需要一种机制，从对话中提取关键信息，持久化存储，并在需要时自动注入到上下文中。让 Agent 有“长期记忆”，而不是“每次见面都重新认识”。
+
 ### 核心代码
 
 ```python
@@ -117,8 +124,8 @@ def select_relevant_memories(messages: list) -> list[str]:
 
 ## 参考引用
 
-- 需要理解上下文压缩与记忆的配合参见 [上下文压缩管线](./07-上下文压缩管线（Context%20Compression）.md)
-- 需要了解系统提示词中记忆的注入方式参见 [系统提示词组装](./12-系统提示词组装（System%20Prompt%20Assembly）.md)
-- 需要掌握 Agent 循环中记忆的提取时机参见 [Agent 循环](./02-Agent循环（Agent%20Loop）.md)
-- 需要了解 Harness 整体设计参见 [Agent Harness（基础设施层）](./01-Agent%20Harness（基础设施层）.md)
+- 需要理解上下文压缩与记忆的配合参见 [上下文压缩管线](../03-Memory-Management（记忆管理）/07-上下文压缩管线（Context%20Compression）.md)
+- 需要了解系统提示词中记忆的注入方式参见 [系统提示词组装](../02-Planning-Control（规划与控制）/12-系统提示词组装（System%20Prompt%20Assembly）.md)
+- 需要掌握 Agent 循环中记忆的提取时机参见 [Agent 循环](../01-Tools-Execution（工具与执行）/02-Agent循环（Agent%20Loop）.md)
+- 需要了解 Harness 整体设计参见 [Agent Harness（基础设施层）](../05-Multi-Agent-Platform（多Agent平台）/01-Agent%20Harness（基础设施层）.md)
 - 需要了解该机制在 Claude Code 中的工程实现参见 [Claude 使用指南](../../工程实践/工具/09-Claude使用指南.md)

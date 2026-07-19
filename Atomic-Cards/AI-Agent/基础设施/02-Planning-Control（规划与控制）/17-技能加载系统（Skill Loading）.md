@@ -15,6 +15,13 @@ $$
 \text{Skill Loading} = \text{L1: 目录（SYSTEM 注入）} + \text{L2: 内容（按需 load\_skill）}
 $$
 
+
+## 问题描述
+
+所有知识都塞进 System Prompt——项目规范、领域知识、代码风格指南……无关知识浪费 token，还稀释了模型对关键指令的注意力。
+
+技能加载系统实现“按需注入”：只有在任务需要时才加载特定知识。就像工具箱——你不会把所有工具都摆在桌面上，而是根据工作需要取出相应的工具。
+
 ### 核心代码
 
 ```python
@@ -133,8 +140,8 @@ description: "审查代码变更，查找 bug 和改进机会"
 
 ## 参考引用
 
-- 需要了解系统提示词组装中的技能注入参见 [系统提示词组装](./12-系统提示词组装（System%20Prompt%20Assembly）.md)
-- 需要理解上下文压缩与技能加载的配合参见 [上下文压缩管线](./07-上下文压缩管线（Context%20Compression）.md)
-- 需要掌握工具分发系统参见 [工具分发系统](./03-工具分发系统（Tool%20Dispatch）.md)
-- 需要了解 Harness 整体设计参见 [Agent Harness（基础设施层）](./01-Agent%20Harness（基础设施层）.md)
+- 需要了解系统提示词组装中的技能注入参见 [系统提示词组装](../02-Planning-Control（规划与控制）/12-系统提示词组装（System%20Prompt%20Assembly）.md)
+- 需要理解上下文压缩与技能加载的配合参见 [上下文压缩管线](../03-Memory-Management（记忆管理）/07-上下文压缩管线（Context%20Compression）.md)
+- 需要掌握工具分发系统参见 [工具分发系统](../01-Tools-Execution（工具与执行）/03-工具分发系统（Tool%20Dispatch）.md)
+- 需要了解 Harness 整体设计参见 [Agent Harness（基础设施层）](../05-Multi-Agent-Platform（多Agent平台）/01-Agent%20Harness（基础设施层）.md)
 - 需要了解该机制在 Claude Code 中的工程实现参见 [Claude 使用指南](../../工程实践/工具/09-Claude使用指南.md)

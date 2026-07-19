@@ -15,6 +15,13 @@ $$
 \text{Security Pipeline} = \text{Deny List} \rightarrow \text{Rule Matching} \rightarrow \text{User Confirmation}
 $$
 
+
+## 问题描述
+
+Agent 可以执行任意命令——rm -rf / 删除系统文件、sudo 提权操作、curl 外传数据——模型的一个错误决策就可能导致严重后果。没有权限系统，Agent 就像一把没有保险栓的枪。
+
+但简单的“全部禁止”也不可行——Agent 需要 git push 提交代码、需要 pip install 安装依赖。权限系统需要在“安全”和“可用”之间找到平衡：自动拦截已知危险操作，同时允许合法的开发行为。
+
 ### 核心代码
 
 ```python
@@ -96,7 +103,7 @@ def check_permission(block) -> bool:
 
 ## 参考引用
 
-- 需要了解 Hooks 如何实现权限检查的插拔参见 [Hooks 系统](./05-Hooks系统（Hooks%20System）.md)
-- 需要理解工具分发与权限的关系参见 [工具分发系统](./03-工具分发系统（Tool%20Dispatch）.md)
-- 需要掌握 Agent 循环整体流程参见 [Agent 循环](./02-Agent循环（Agent%20Loop）.md)
+- 需要了解 Hooks 如何实现权限检查的插拔参见 [Hooks 系统](../01-Tools-Execution（工具与执行）/05-Hooks系统（Hooks%20System）.md)
+- 需要理解工具分发与权限的关系参见 [工具分发系统](../01-Tools-Execution（工具与执行）/03-工具分发系统（Tool%20Dispatch）.md)
+- 需要掌握 Agent 循环整体流程参见 [Agent 循环](../01-Tools-Execution（工具与执行）/02-Agent循环（Agent%20Loop）.md)
 - 需要了解生产部署中的权限管理参见 [LLM API 部署](../../工程实践/部署/07-LLM%20API调用与ChatBot.md)

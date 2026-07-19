@@ -15,6 +15,13 @@ $$
 \text{Background Task} = \text{Daemon Thread} + \text{背景 ID} + \text{Notification}
 $$
 
+
+## 问题描述
+
+Agent 等待慢工具（编译、运行测试、部署）时只能干等着——Agent 循环被阻塞，无法处理其他任务。一个耗时 30 秒的编译命令，Agent 就发呆 30 秒。
+
+后台任务系统让 Agent 可以“同时做多件事”：启动一个后台任务后立即继续推理，后台任务完成后通知 Agent 处理结果。把等待时间利用起来，提高整体效率。
+
 ### 核心代码
 
 ```python
@@ -126,8 +133,8 @@ def collect_background_results() -> list[str]:
 
 ## 参考引用
 
-- 需要了解子 Agent 与后台任务的区别参见 [子 Agent](./06-子Agent（Subagent）.md)
-- 需要掌握消息总线中的通知机制参见 [消息总线与 Agent 团队](./09-消息总线与Agent团队（MessageBus）.md)
-- 需要理解 Cron 调度器与后台任务的关系参见 [Cron 调度器](./19-Cron调度器（Cron%20Scheduler）.md)
-- 需要了解 Harness 整体设计参见 [Agent Harness（基础设施层）](./01-Agent%20Harness（基础设施层）.md)
+- 需要了解子 Agent 与后台任务的区别参见 [子 Agent](../02-Planning-Control（规划与控制）/06-子Agent（Subagent）.md)
+- 需要掌握消息总线中的通知机制参见 [消息总线与 Agent 团队](../05-Multi-Agent-Platform（多Agent平台）/09-消息总线与Agent团队（MessageBus）.md)
+- 需要理解 Cron 调度器与后台任务的关系参见 [Cron 调度器](../04-Concurrency-Scheduling（并发与调度）/19-Cron调度器（Cron%20Scheduler）.md)
+- 需要了解 Harness 整体设计参见 [Agent Harness（基础设施层）](../05-Multi-Agent-Platform（多Agent平台）/01-Agent%20Harness（基础设施层）.md)
 - 需要了解该机制在 Claude Code 中的工程实现参见 [Claude 使用指南](../../工程实践/工具/09-Claude使用指南.md)

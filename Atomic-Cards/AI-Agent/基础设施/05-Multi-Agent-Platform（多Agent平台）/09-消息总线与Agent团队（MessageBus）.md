@@ -15,6 +15,13 @@ $$
 \text{MessageBus} = \text{JSONL file} + \text{Append Write} + \text{Consume Read}
 $$
 
+
+## 问题描述
+
+所有工作挤在一个上下文里：Agent A 正在写代码，Agent B 要运行测试，Agent C 在审查——它们共用同一个消息历史，互相干扰、互相等待。一个 Agent 的 bash 输出变成了另一个 Agent 的“背景噪音”。
+
+多 Agent 需要独立的消息空间，但又需要一种方式互相通信。消息总线就是 Agent 之间的“通信管道”，让每个 Agent 独立工作但又能协同。
+
 ### 核心代码
 
 ```python
@@ -111,8 +118,8 @@ class MessageBus:
 
 ## 参考引用
 
-- 需要了解子 Agent 的隔离执行参见 [子 Agent](./06-子Agent（Subagent）.md)
-- 需要掌握团队通信协议参见 [团队协议](./14-团队协议（Team%20Protocols）.md)
-- 需要理解自主 Agent 的空闲轮询参见 [自主 Agent](./15-自主Agent（Autonomous%20Agent）.md)
-- 需要了解 Harness 整体架构参见 [Agent Harness（基础设施层）](./01-Agent%20Harness（基础设施层）.md)
+- 需要了解子 Agent 的隔离执行参见 [子 Agent](../02-Planning-Control（规划与控制）/06-子Agent（Subagent）.md)
+- 需要掌握团队通信协议参见 [团队协议](../05-Multi-Agent-Platform（多Agent平台）/14-团队协议（Team%20Protocols）.md)
+- 需要理解自主 Agent 的空闲轮询参见 [自主 Agent](../05-Multi-Agent-Platform（多Agent平台）/15-自主Agent（Autonomous%20Agent）.md)
+- 需要了解 Harness 整体架构参见 [Agent Harness（基础设施层）](../05-Multi-Agent-Platform（多Agent平台）/01-Agent%20Harness（基础设施层）.md)
 - 需要了解该机制在 Claude Code 中的工程实现参见 [Claude 使用指南](../../工程实践/工具/09-Claude使用指南.md)

@@ -28,6 +28,13 @@ class Task:
     blockedBy: list[str]       # 依赖的任务 ID 列表，形成 DAG
 ```
 
+
+## 问题描述
+
+模糊的目标“优化这个项目”难以跟踪和观察——Agent 做什么了？做到哪一步了？还有多少没做？用户和 Agent 都没有一个清晰的“任务地图”。
+
+任务系统把模糊目标转化为结构化的任务图（Task Graph）：任务分解为子任务，子任务有明确的状态（待处理/进行中/已完成/阻塞），每个步骤都可观察、可追踪。
+
 ## 任务工具
 
 | 工具 | 功能 | 关键参数 | 副作用 |
@@ -97,8 +104,8 @@ pending ──claim（依赖全部完成）──→ in_progress ──complete�
 
 ## 参考引用
 
-- 需要了解子 Agent 的任务执行方式参见 [子 Agent](./06-子Agent（Subagent）.md)
-- 需要掌握消息总线中的任务通知机制参见 [消息总线与 Agent 团队](./09-消息总线与Agent团队（MessageBus）.md)
-- 需要理解自主 Agent 如何扫描任务看板参见 [自主 Agent](./15-自主Agent（Autonomous%20Agent）.md)
-- 需要了解 Harness 整体设计参见 [Agent Harness（基础设施层）](./01-Agent%20Harness（基础设施层）.md)
+- 需要了解子 Agent 的任务执行方式参见 [子 Agent](../02-Planning-Control（规划与控制）/06-子Agent（Subagent）.md)
+- 需要掌握消息总线中的任务通知机制参见 [消息总线与 Agent 团队](../05-Multi-Agent-Platform（多Agent平台）/09-消息总线与Agent团队（MessageBus）.md)
+- 需要理解自主 Agent 如何扫描任务看板参见 [自主 Agent](../05-Multi-Agent-Platform（多Agent平台）/15-自主Agent（Autonomous%20Agent）.md)
+- 需要了解 Harness 整体设计参见 [Agent Harness（基础设施层）](../05-Multi-Agent-Platform（多Agent平台）/01-Agent%20Harness（基础设施层）.md)
 - 需要了解该机制在 Claude Code 中的工程实现参见 [Claude 使用指南](../../工程实践/工具/09-Claude使用指南.md)

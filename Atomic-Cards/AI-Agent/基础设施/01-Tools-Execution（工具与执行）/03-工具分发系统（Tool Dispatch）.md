@@ -15,6 +15,13 @@ $$
 \text{dispatch}(\text{name}, \text{input}) = \text{handlers[name]}(\text{**input})
 $$
 
+
+## 问题描述
+
+Agent 循环中只有 bash 一个工具。读文件要 cat，写文件要 echo "..." > file.py，改文件要 sed。模型想的是“读这个文件”，却要拼出 cat path/to/file——多了一层翻译，浪费 token，还容易拼错。
+
+给 Agent 加一个工具，就需要改循环体。工具多了，循环体里全是 if-elif-else 的分发逻辑，代码越来越臃肿，新增工具要改核心代码，不符合开闭原则。
+
 ### 核心代码
 
 ```python
@@ -116,9 +123,9 @@ TOOLS = [
 
 ## 参考引用
 
-- 需要理解 Agent 循环整体架构参见 [Agent 循环](./02-Agent循环（Agent%20Loop）.md)
-- 需要了解权限系统对工具执行的拦截参见 [权限系统](./04-权限系统（Permission%20System）.md)
-- 需要理解 Hooks 对工具执行的前后扩展参见 [Hooks 系统](./05-Hooks系统（Hooks%20System）.md)
-- 需要了解 MCP 动态工具池参见 [MCP 插件集成](./10-MCP插件集成（MCP%20Plugin）.md)
+- 需要理解 Agent 循环整体架构参见 [Agent 循环](../01-Tools-Execution（工具与执行）/02-Agent循环（Agent%20Loop）.md)
+- 需要了解权限系统对工具执行的拦截参见 [权限系统](../01-Tools-Execution（工具与执行）/04-权限系统（Permission%20System）.md)
+- 需要理解 Hooks 对工具执行的前后扩展参见 [Hooks 系统](../01-Tools-Execution（工具与执行）/05-Hooks系统（Hooks%20System）.md)
+- 需要了解 MCP 动态工具池参见 [MCP 插件集成](../05-Multi-Agent-Platform（多Agent平台）/10-MCP插件集成（MCP%20Plugin）.md)
 - 需要理解 Agent 定义参见 [Agent 定义与核心公式](../基础/01-Agent定义与核心公式.md)
 - 需要了解该机制在 Claude Code 中的工程实现参见 [Claude 使用指南](../../工程实践/工具/09-Claude使用指南.md)

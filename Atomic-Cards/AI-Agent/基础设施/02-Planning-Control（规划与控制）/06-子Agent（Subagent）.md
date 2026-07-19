@@ -15,6 +15,13 @@ $$
 \text{Subagent} = \text{Fresh messages} + \text{Independent System Prompt} + \text{30-round Cap} + \text{Summary Return}
 $$
 
+
+## 问题描述
+
+多步骤任务（如“搜索资料→分析→写报告”）放在一个上下文里，后续步骤的中间结果会污染消息历史。每轮循环的 token 消耗线性增长，上下文窗口很快被填满，模型开始“遗忘”早期的关键信息。
+
+子任务之间的消息互相干扰——收集资料的 bash 输出混杂在写报告的思考中，既浪费 token 又影响模型注意力。需要为每个子任务创建独立的“工作台”，让它们互不干扰。
+
 ### 核心代码
 
 ```python
@@ -99,8 +106,8 @@ def spawn_subagent(description: str) -> str:
 
 ## 参考引用
 
-- 需要理解 Agent 循环的整体架构参见 [Agent 循环](./02-Agent循环（Agent%20Loop）.md)
-- 需要了解后台任务与子 Agent 的区别参见 [后台任务系统](./18-后台任务系统（Background%20Tasks）.md)
-- 需要掌握消息总线通信参见 [消息总线与 Agent 团队](./09-消息总线与Agent团队（MessageBus）.md)
-- 需要了解 Harness 整体设计参见 [Agent Harness（基础设施层）](./01-Agent%20Harness（基础设施层）.md)
+- 需要理解 Agent 循环的整体架构参见 [Agent 循环](../01-Tools-Execution（工具与执行）/02-Agent循环（Agent%20Loop）.md)
+- 需要了解后台任务与子 Agent 的区别参见 [后台任务系统](../04-Concurrency-Scheduling（并发与调度）/18-后台任务系统（Background%20Tasks）.md)
+- 需要掌握消息总线通信参见 [消息总线与 Agent 团队](../05-Multi-Agent-Platform（多Agent平台）/09-消息总线与Agent团队（MessageBus）.md)
+- 需要了解 Harness 整体设计参见 [Agent Harness（基础设施层）](../05-Multi-Agent-Platform（多Agent平台）/01-Agent%20Harness（基础设施层）.md)
 - 需要了解该机制在 Claude Code 中的工程实现参见 [Claude 使用指南](../../工程实践/工具/09-Claude使用指南.md)

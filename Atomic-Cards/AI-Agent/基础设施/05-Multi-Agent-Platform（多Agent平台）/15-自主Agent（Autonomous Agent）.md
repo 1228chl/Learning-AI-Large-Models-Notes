@@ -21,6 +21,13 @@ $$
 WORK（工作）→ IDLE（空闲轮询）→ SHUTDOWN（关闭）
 ```
 
+
+## 问题描述
+
+Agent 只能被动等待分配任务——用户说一步，Agent 做一步。当用户说“优化这个项目”，Agent 等着用户分解任务，而不是主动去发现可做的工作。
+
+自主 Agent 能主动查看任务看板，发现待处理的任务，评估自己是否适合执行，然后领取并执行。从“等活干”变成“找活干”，才能真正解放用户。
+
 ### 核心代码
 
 ```python
@@ -110,8 +117,8 @@ def idle_poll(name, messages, role) -> str:
 
 ## 参考引用
 
-- 需要了解消息总线在空闲轮询中的作用参见 [消息总线与 Agent 团队](./09-消息总线与Agent团队（MessageBus）.md)
-- 需要掌握团队协议中的关闭握手参见 [团队协议](./14-团队协议（Team%20Protocols）.md)
-- 需要理解任务系统的认领机制参见 [任务系统](./13-任务系统（Task%20System）.md)
-- 需要了解 Agent 团队整体架构参见 [Agent Harness（基础设施层）](./01-Agent%20Harness（基础设施层）.md)
+- 需要了解消息总线在空闲轮询中的作用参见 [消息总线与 Agent 团队](../05-Multi-Agent-Platform（多Agent平台）/09-消息总线与Agent团队（MessageBus）.md)
+- 需要掌握团队协议中的关闭握手参见 [团队协议](../05-Multi-Agent-Platform（多Agent平台）/14-团队协议（Team%20Protocols）.md)
+- 需要理解任务系统的认领机制参见 [任务系统](../05-Multi-Agent-Platform（多Agent平台）/13-任务系统（Task%20System）.md)
+- 需要了解 Agent 团队整体架构参见 [Agent Harness（基础设施层）](../05-Multi-Agent-Platform（多Agent平台）/01-Agent%20Harness（基础设施层）.md)
 - 需要了解该机制在 Claude Code 中的工程实现参见 [Claude 使用指南](../../工程实践/工具/09-Claude使用指南.md)

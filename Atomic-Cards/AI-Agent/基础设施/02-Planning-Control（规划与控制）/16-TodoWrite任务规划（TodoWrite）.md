@@ -15,6 +15,13 @@ $$
 \text{TodoWrite} = \text{任务清单} + \text{轮次计数器} + \text{催办提醒}
 $$
 
+
+## 问题描述
+
+长任务（如“重构这个模块”）没有可见的计划——用户不知道 Agent 在做什么、做到哪一步了、还需要多久。Agent 可能在错误的道路上越走越远，用户却无法及时发现和纠正。
+
+需要 Agent 在执行前先输出一份明确的计划（Todo List），每完成一步标记进度。用户可以看到计划、修改计划、在 Agent 偏离方向时及时纠正。
+
 ### 核心代码
 
 ```python
@@ -108,8 +115,8 @@ TodoWrite 像一个"项目进度白板"——Agent 动手前先在白板上写�
 
 ## 参考引用
 
-- 需要理解 Agent 循环中 TodoWrite 的位置参见 [Agent 循环](./02-Agent循环（Agent%20Loop）.md)
-- 需要了解任务系统与 TodoWrite 的区别参见 [任务系统](./13-任务系统（Task%20System）.md)
-- 需要了解 Hooks 系统如何与 TodoWrite 配合参见 [Hooks 系统](./05-Hooks系统（Hooks%20System）.md)
-- 需要掌握 Harness 整体设计参见 [Agent Harness（基础设施层）](./01-Agent%20Harness（基础设施层）.md)
+- 需要理解 Agent 循环中 TodoWrite 的位置参见 [Agent 循环](../01-Tools-Execution（工具与执行）/02-Agent循环（Agent%20Loop）.md)
+- 需要了解任务系统与 TodoWrite 的区别参见 [任务系统](../05-Multi-Agent-Platform（多Agent平台）/13-任务系统（Task%20System）.md)
+- 需要了解 Hooks 系统如何与 TodoWrite 配合参见 [Hooks 系统](../01-Tools-Execution（工具与执行）/05-Hooks系统（Hooks%20System）.md)
+- 需要掌握 Harness 整体设计参见 [Agent Harness（基础设施层）](../05-Multi-Agent-Platform（多Agent平台）/01-Agent%20Harness（基础设施层）.md)
 - 需要了解该机制在 Claude Code 中的工程实现参见 [Claude 使用指南](../../工程实践/工具/09-Claude使用指南.md)

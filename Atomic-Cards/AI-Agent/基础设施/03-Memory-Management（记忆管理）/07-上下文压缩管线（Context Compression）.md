@@ -28,6 +28,13 @@ if estimate_size(messages) > CONTEXT_LIMIT:
     messages[:] = compact_history(messages)   # L4: LLM 生成摘要替换全部历史
 ```
 
+
+## 问题描述
+
+长对话中，消息数组不断膨胀：用户输入、模型思考、工具调用、执行结果……每轮循环都在追加。当上下文窗口接近上限时，模型开始“遗忘”早期内容——用户的需求、已经完成的步骤、关键决策。
+
+简单截断最旧的消息会丢失重要信息，而全部保留又超出 token 限制。需要一套策略性的压缩管线，按优先级决定保留什么、丢弃什么、摘要什么。
+
 ## 四层压缩对比
 
 | 层级 | 方法 | 成本 | 触发条件 | 关键参数 |
@@ -89,9 +96,9 @@ if estimate_size(messages) > CONTEXT_LIMIT:
 
 ## 参考引用
 
-- 需要理解 Agent 循环中压缩的触发时机参见 [Agent 循环](./02-Agent循环（Agent%20Loop）.md)
-- 需要了解记忆系统与压缩管线的配合参见 [记忆系统](./11-记忆系统（Memory%20System）.md)
-- 需要掌握错误恢复中的 reactive_compact 参见 [错误恢复与重试](./08-错误恢复与重试（Error%20Recovery）.md)
-- 需要理解 Harness 整体设计参见 [Agent Harness（基础设施层）](./01-Agent%20Harness（基础设施层）.md)
-- 需要了解系统提示词组装中的上下文管理参见 [系统提示词组装](./12-系统提示词组装（System%20Prompt%20Assembly）.md)
+- 需要理解 Agent 循环中压缩的触发时机参见 [Agent 循环](../01-Tools-Execution（工具与执行）/02-Agent循环（Agent%20Loop）.md)
+- 需要了解记忆系统与压缩管线的配合参见 [记忆系统](../03-Memory-Management（记忆管理）/11-记忆系统（Memory%20System）.md)
+- 需要掌握错误恢复中的 reactive_compact 参见 [错误恢复与重试](../02-Planning-Control（规划与控制）/08-错误恢复与重试（Error%20Recovery）.md)
+- 需要理解 Harness 整体设计参见 [Agent Harness（基础设施层）](../05-Multi-Agent-Platform（多Agent平台）/01-Agent%20Harness（基础设施层）.md)
+- 需要了解系统提示词组装中的上下文管理参见 [系统提示词组装](../02-Planning-Control（规划与控制）/12-系统提示词组装（System%20Prompt%20Assembly）.md)
 - 需要了解该机制在 Claude Code 中的工程实现参见 [Claude 使用指南](../../工程实践/工具/09-Claude使用指南.md)

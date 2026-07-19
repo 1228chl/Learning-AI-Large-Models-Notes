@@ -15,6 +15,13 @@ $$
 \text{Protocol} = \text{request\_id} + \text{type} + \text{sender} + \text{target} + \text{status} + \text{payload}
 $$
 
+
+## 问题描述
+
+多 Agent 系统里，每个 Agent 各自为政——没有标准的通信格式，A 发消息用 JSON，B 理解 Markdown，C 只会喊“帮帮我”。Agent 之间无法可靠地协作，消息格式混乱、意图不明确、协作效率低下。
+
+需要一套明确的通信协议（Message Contract）：定义消息格式、路由规则、生命周期，让多 Agent 之间的通信像 API 调用一样规范可靠。
+
 ### 核心数据结构
 
 ```python
@@ -99,8 +106,8 @@ class ProtocolState:
 
 ## 参考引用
 
-- 需要了解消息总线的基础通信机制参见 [消息总线与 Agent 团队](./09-消息总线与Agent团队（MessageBus）.md)
-- 需要掌握自主 Agent 的生命周期管理参见 [自主 Agent](./15-自主Agent（Autonomous%20Agent）.md)
-- 需要理解权限系统在计划审批中的应用参见 [权限系统](./04-权限系统（Permission%20System）.md)
-- 需要了解 Harness 整体架构参见 [Agent Harness（基础设施层）](./01-Agent%20Harness（基础设施层）.md)
+- 需要了解消息总线的基础通信机制参见 [消息总线与 Agent 团队](../05-Multi-Agent-Platform（多Agent平台）/09-消息总线与Agent团队（MessageBus）.md)
+- 需要掌握自主 Agent 的生命周期管理参见 [自主 Agent](../05-Multi-Agent-Platform（多Agent平台）/15-自主Agent（Autonomous%20Agent）.md)
+- 需要理解权限系统在计划审批中的应用参见 [权限系统](../01-Tools-Execution（工具与执行）/04-权限系统（Permission%20System）.md)
+- 需要了解 Harness 整体架构参见 [Agent Harness（基础设施层）](../05-Multi-Agent-Platform（多Agent平台）/01-Agent%20Harness（基础设施层）.md)
 - 需要了解该机制在 Claude Code 中的工程实现参见 [Claude 使用指南](../../工程实践/工具/09-Claude使用指南.md)

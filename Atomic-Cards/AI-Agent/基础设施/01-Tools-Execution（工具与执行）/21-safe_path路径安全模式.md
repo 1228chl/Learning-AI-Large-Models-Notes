@@ -18,6 +18,13 @@ $$
 \end{cases}
 $$
 
+
+## 问题描述
+
+Agent 的文件操作工具（read_file、write_file、edit_file）接收用户和模型提供的路径参数。如果不对路径做安全校验，恶意构造的路径（如 ../../etc/passwd）可能导致敏感文件泄露或系统文件被篡改。
+
+路径穿越（Path Traversal）是最常见的文件系统攻击方式之一，所有文件操作工具都需要统一的路径安全校验机制。
+
 ### 核心代码
 
 ```python
@@ -99,8 +106,8 @@ def safe_path(p: str) -> Path:
 
 ## 参考引用
 
-- 需要了解权限系统的整体架构参见 [权限系统](./04-权限系统（Permission%20System）.md)
-- 需要掌握工具分发中 safe_path 的使用参见 [工具分发系统](./03-工具分发系统（Tool%20Dispatch）.md)
-- 需要了解 Deny List 与 safe_path 的配合参见 [权限系统](./04-权限系统（Permission%20System）.md)
-- 需要了解 Harness 整体安全设计参见 [Agent Harness（基础设施层）](./01-Agent%20Harness（基础设施层）.md)
+- 需要了解权限系统的整体架构参见 [权限系统](../01-Tools-Execution（工具与执行）/04-权限系统（Permission%20System）.md)
+- 需要掌握工具分发中 safe_path 的使用参见 [工具分发系统](../01-Tools-Execution（工具与执行）/03-工具分发系统（Tool%20Dispatch）.md)
+- 需要了解 Deny List 与 safe_path 的配合参见 [权限系统](../01-Tools-Execution（工具与执行）/04-权限系统（Permission%20System）.md)
+- 需要了解 Harness 整体安全设计参见 [Agent Harness（基础设施层）](../05-Multi-Agent-Platform（多Agent平台）/01-Agent%20Harness（基础设施层）.md)
 - 需要了解 Python 路径处理的最佳实践参见 [工具体系](../../工程实践/工具/09-Claude使用指南.md)

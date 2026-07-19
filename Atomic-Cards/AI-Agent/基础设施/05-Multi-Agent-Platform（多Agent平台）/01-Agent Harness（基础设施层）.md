@@ -21,6 +21,13 @@ $$
 - **行动接口**：工具执行和结果返回的通信机制（TOOL_HANDLERS、MCP 协议）
 - **权限**：安全边界和操作控制（拒绝列表、规则匹配、用户确认）
 
+
+## 问题描述
+
+Agent 的各个组件（循环、工具、权限、记忆、任务系统）各自独立工作时，缺少一个统一的框架将它们整合为完整的系统。就像汽车的发动机、方向盘、刹车分别造好了，但没有底盘把它们装在一起，这些部件无法协同工作。
+
+Harness 层就是 Agent 的“底盘”，将模型能力与外部世界连接起来，让模型能感知、推理和行动。没有 Harness，模型只是一个“大脑”——能思考但无法触碰世界。
+
 ## 核心组件对比
 
 | 组件 | 功能 | 工程实现 | 引入章节 |
@@ -85,8 +92,8 @@ Harness 是 Agent 的"车辆"，模型是"驾驶员"——车辆提供操控装�
 ## 参考引用
 
 - 需要理解 Agent 基本定义参见 [Agent 定义与核心公式](../基础/01-Agent定义与核心公式.md)
-- 需要了解 Agent 循环具体实现参见 [Agent 循环](./02-Agent循环（Agent%20Loop）.md)
-- 需要了解工具分发机制参见 [工具分发系统](./03-工具分发系统（Tool%20Dispatch）.md)
-- 需要掌握权限系统设计参见 [权限系统](./04-权限系统（Permission%20System）.md)
-- 需要理解 Hooks 扩展机制参见 [Hooks 系统](./05-Hooks系统（Hooks%20System）.md)
+- 需要了解 Agent 循环具体实现参见 [Agent 循环](../01-Tools-Execution（工具与执行）/02-Agent循环（Agent%20Loop）.md)
+- 需要了解工具分发机制参见 [工具分发系统](../01-Tools-Execution（工具与执行）/03-工具分发系统（Tool%20Dispatch）.md)
+- 需要掌握权限系统设计参见 [权限系统](../01-Tools-Execution（工具与执行）/04-权限系统（Permission%20System）.md)
+- 需要理解 Hooks 扩展机制参见 [Hooks 系统](../01-Tools-Execution（工具与执行）/05-Hooks系统（Hooks%20System）.md)
 - 需要了解该机制在 Claude Code 中的工程实现参见 [Claude 使用指南](../../工程实践/工具/09-Claude使用指南.md)

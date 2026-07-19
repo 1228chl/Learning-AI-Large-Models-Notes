@@ -11,6 +11,13 @@ aliases: ["Error Recovery", "错误恢复", "重试", "退避"]
 
 错误恢复系统是 Agent Harness 中处理 API 调用失败的鲁棒性机制，包含指数退避重试、max_tokens 自动升级、备用模型切换三种模式，确保 Agent 在不可靠的网络和服务环境中仍能正常工作。
 
+
+## 问题描述
+
+工具调用失败就崩溃——API 超时、网络抖动、Shell 命令出错、文件不存在……任何单点故障都导致整个任务失败。真实环境中，外部调用失败是常态而非异常。
+
+不加区分的立即重试可能适得其反——对 API 限速错误立即重试只会加剧问题，而对 Shell 语法错误重试 10 次也是浪费。需要一套分类机制，针对不同错误类型采取不同的恢复策略。
+
 ### 核心公式
 
 $$
@@ -122,8 +129,8 @@ class RecoveryState:
 
 ## 参考引用
 
-- 需要了解 Agent 循环中错误处理的位置参见 [Agent 循环](./02-Agent循环（Agent%20Loop）.md)
-- 需要理解上下文压缩在错误恢复中的作用参见 [上下文压缩管线](./07-上下文压缩管线（Context%20Compression）.md)
-- 需要掌握权限系统的错误处理参见 [权限系统](./04-权限系统（Permission%20System）.md)
-- 需要了解 Harness 整体设计参见 [Agent Harness（基础设施层）](./01-Agent%20Harness（基础设施层）.md)
+- 需要了解 Agent 循环中错误处理的位置参见 [Agent 循环](../01-Tools-Execution（工具与执行）/02-Agent循环（Agent%20Loop）.md)
+- 需要理解上下文压缩在错误恢复中的作用参见 [上下文压缩管线](../03-Memory-Management（记忆管理）/07-上下文压缩管线（Context%20Compression）.md)
+- 需要掌握权限系统的错误处理参见 [权限系统](../01-Tools-Execution（工具与执行）/04-权限系统（Permission%20System）.md)
+- 需要了解 Harness 整体设计参见 [Agent Harness（基础设施层）](../05-Multi-Agent-Platform（多Agent平台）/01-Agent%20Harness（基础设施层）.md)
 - 需要了解该机制在 Claude Code 中的工程实现参见 [Claude 使用指南](../../工程实践/工具/09-Claude使用指南.md)
