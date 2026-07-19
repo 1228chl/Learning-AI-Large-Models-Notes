@@ -1,0 +1,84 @@
+{
+  "id": "conv-1784435108834-glxv10qmy",
+  "providerId": "claude",
+  "title": "https://learn",
+  "titleGenerationStatus": "failed",
+  "createdAt": 1784435108834,
+  "updatedAt": 1784435144787,
+  "sessionId": "ed453275-c04b-4634-a130-380b1b4f01a3",
+  "selectedModel": "opus",
+  "providerState": {
+    "providerSessionId": "ed453275-c04b-4634-a130-380b1b4f01a3",
+    "subagentData": {
+      "call_9f7fbf80623d46739e64fd80": {
+        "id": "call_9f7fbf80623d46739e64fd80",
+        "description": "探索基础设施卡片目录",
+        "prompt": "List all files under the Atomic-Cards/AI-Agent/基础设施/ directory. Show me the full file list with creation/modification order. Also read the linked note \"Atomic-Cards/AI-Agent/基础设施/05-Hooks系统（Hooks System）.md\" to understand the card format.",
+        "mode": "async",
+        "isExpanded": false,
+        "status": "completed",
+        "toolCalls": [
+          {
+            "id": "call_e0d662f538124831bda39259",
+            "name": "Bash",
+            "input": {
+              "command": "ls -lt --time=modified \"G:/AI-Learning/Atomic-Cards/AI-Agent/基础设施/\"",
+              "description": "List files in 基础设施/ sorted by modification time"
+            },
+            "status": "error",
+            "isExpanded": false,
+            "result": "Exit code 1\nls: invalid argument 'modified' for '--time'\nValid arguments are:\n  - 'atime', 'access', 'use'\n  - 'ctime', 'status'\n  - 'birth', 'creation'\nTry 'ls --help' for more information."
+          },
+          {
+            "id": "call_7efe179640db4fc9bed9b554",
+            "name": "Bash",
+            "input": {
+              "command": "ls -lt --time=birth \"G:/AI-Learning/Atomic-Cards/AI-Agent/基础设施/\" 2>/dev/null || ls -ltr \"G:/AI-Learning/Atomic-Cards/AI-Agent/基础设施/\"",
+              "description": "List files in 基础设施/ sorted by creation time"
+            },
+            "status": "completed",
+            "isExpanded": false,
+            "result": "total 192\n-rw-r--r-- 1 21241 197609 5319 Jul 19 12:05 24-消费式文件读取模式.md\n-rw-r--r-- 1 21241 197609 6357 Jul 19 12:05 23-Daemon线程与Lock并发模式.md\n-rw-r--r-- 1 21241 197609 5670 Jul 19 12:04 22-Messages API消息结构.md\n-rw-r--r-- 1 21241 197609 5515 Jul 19 12:04 21-safe_path路径安全模式.md\n-rw-r--r-- 1 21241 197609 5625 Jul 19 11:30 20-工作树隔离（Worktree Isolation）.md\n-rw-r--r-- 1 21241 197609 5298 Jul 19 11:30 19-Cron调度器（Cron Scheduler）.md\n-rw-r--r-- 1 21241 197609 6182 Jul 19 11:30 18-后台任务系统（Background Tasks）.md\n-rw-r--r-- 1 21241 197609 5931 Jul 19 11:30 17-技能加载系统（Skill Loading）.md\n-rw-r--r-- 1 21241 197609 5120 Jul 19 11:30 16-TodoWrite任务规划（TodoWrite）.md\n-rw-r--r-- 1 21241 197609 5940 Jul 19 11:30 15-自主Agent（Autonomous Agent）.md\n-rw-r--r-- 1 21241 197609 5263 Jul 19 11:30 14-团队协议（Team Protocols）.md\n-rw-r--r-- 1 21241 197609 5429 Jul 19 11:30 13-任务系统（Task System）.md\n-rw-r--r-- 1 21241 197609 6400 Jul 19 11:30 12-系统提示词组装（System Prompt Assembly）.md\n-rw-r--r-- 1 21241 197609 6306 Jul 19 11:30 11-记忆系统（Memory System）.md\n-rw-r--r-- 1 21241 197609 5531 Jul 19 11:30 10-MCP插件集成（MCP Plugin）.md\n-rw-r--r-- 1 21241 197609 6193 Jul 19 11:30 09-消息总线与Agent团队（MessageBus）.md\n-rw-r--r-- 1 21241 197609 6483 Jul 19 11:29 08-错误恢复与重试（Error Recovery）.md\n-rw-r--r-- 1 21241 197609 5822 Jul 19 11:29 07-上下文压缩管线（Context Compression）.md\n-rw-r--r-- 1 21241 197609 5518 Jul 19 11:29 06-子Agent（Subagent）.md\n-rw-r--r-- 1 21241 197609 5498 Jul 19 11:29 05-Hooks系统（Hooks System）.md\n-rw-r--r-- 1 21241 197609 5727 Jul 19 11:29 03-工具分发系统（Tool Dispatch）.md\n-rw-r--r-- 1 21241 197609 5435 Jul 19 11:29 02-Agent循环（Agent Loop）.md\n-rw-r--r-- 1 21241 197609 5226 Jul 19 11:29 01-Agent Harness（基础设施层）.md\n-rw-r--r-- 1 21241 197609 5214 Jul 19 11:23 04-权限系统（Permission System）.md"
+          },
+          {
+            "id": "call_1304b1601509448da3330012",
+            "name": "Bash",
+            "input": {
+              "command": "ls -1 \"G:/AI-Learning/Atomic-Cards/AI-Agent/基础设施/\"",
+              "description": "List all file names in 基础设施/"
+            },
+            "status": "completed",
+            "isExpanded": false,
+            "result": "01-Agent Harness（基础设施层）.md\n02-Agent循环（Agent Loop）.md\n03-工具分发系统（Tool Dispatch）.md\n04-权限系统（Permission System）.md\n05-Hooks系统（Hooks System）.md\n06-子Agent（Subagent）.md\n07-上下文压缩管线（Context Compression）.md\n08-错误恢复与重试（Error Recovery）.md\n09-消息总线与Agent团队（MessageBus）.md\n10-MCP插件集成（MCP Plugin）.md\n11-记忆系统（Memory System）.md\n12-系统提示词组装（System Prompt Assembly）.md\n13-任务系统（Task System）.md\n14-团队协议（Team Protocols）.md\n15-自主Agent（Autonomous Agent）.md\n16-TodoWrite任务规划（TodoWrite）.md\n17-技能加载系统（Skill Loading）.md\n18-后台任务系统（Background Tasks）.md\n19-Cron调度器（Cron Scheduler）.md\n20-工作树隔离（Worktree Isolation）.md\n21-safe_path路径安全模式.md\n22-Messages API消息结构.md\n23-Daemon线程与Lock并发模式.md\n24-消费式文件读取模式.md"
+          },
+          {
+            "id": "call_3ea754157a534131ba5a32e3",
+            "name": "Read",
+            "input": {
+              "file_path": "G:/AI-Learning/Atomic-Cards/AI-Agent/基础设施/05-Hooks系统（Hooks System）.md"
+            },
+            "status": "completed",
+            "isExpanded": false,
+            "result": "1\t---\n2\tauthor: \"XunZong\"\n3\tcreated: \"2026-07-19\"\n4\ttags: [\"AI-Agent\", \"Harness\", \"扩展机制\"]\n5\taliases: [\"Hooks System\", \"Hooks系统\", \"钩子系统\", \"事件驱动\"]\n6\t---\n7\t\n8\t# Hooks 系统（Hooks System）\n9\t\n10\t## 定义\n11\t\n12\tHooks 系统是一种基于事件注册表的扩展机制，将 Agent 循环中的横切关注点（权限检查、日志、审计、统计）从循环体代码中分离出来，通过注册回调函数的方式实现可插拔扩展。\n13\t\n14\t$$\n15\t\\text{Hook System} = \\text{Event Registry} + \\text{Callback Functions} + \\text{Trigger Pipeline}\n16\t$$\n17\t\n18\t### 核心代码\n19\t\n20\t```python\n21\t# 事件注册表：事件类型 → 回调函数列表\n22\tHOOKS = {\n23\t    \"UserPromptSubmit\": [],  # 用户输入后、LLM 调用前\n24\t    \"PreToolUse\": [],        # 工具执行前\n25\t    \"PostToolUse\": [],       # 工具执行后\n26\t    \"Stop\": [],              # 循环结束时\n27\t}\n28\t\n29\tdef register_hook(event: str, callback):\n30\t    \"\"\"注册一个 Hook：将回调函数挂载到指定事件\"\"\"\n31\t    HOOKS[event].append(callback)\n32\t\n33\tdef trigger_hooks(event: str, *args):\n34\t    \"\"\"触发事件：依次执行所有注册的回调\"\"\"\n35\t    for callback in HOOKS[event]:\n36\t        result = callback(*args)\n37\t        if result is not None:  # 返回非 None 即阻断该事件\n38\t            return result\n39\t    return None\n40\t```\n41\t\n42\t- `register_hook(event, callback)`：将回调函数注册到指定事件类型，可多次注册\n43\t- `trigger_hooks(event, *args)`：遍历执行该事件的所有回调，按注册顺序\n44\t- **非阻断 vs 阻断**：回调返回 `None` 继续执行后续回调；返回非 `None` 值立即阻断整个事件\n45\t\n46\t## 事件类型对比\n47\t\n48\t| 事件 | 触发时机 | 参数 | 用途 | 阻断行为 |\n49\t|:-----|:---------|:-----|:-----|:---------|\n50\t| UserPromptSubmit | 用户输入后、LLM 前 | 用户消息 | 上下文注入、输入日志 | 可阻止输入提交 |\n51\t| PreToolUse | 工具执行前 | tool_use block | 权限检查、操作日志 | 可阻止工具执行 |\n52\t| PostToolUse | 工具执行后 | tool_use block, result | 大输出告警、审计 | 可修改结果 |\n53\t| Stop | 循环结束时 | 最终消息列表 | 统计、清理、审计 | 无法阻断 |\n54\t\n55\t## 直观理解\n56\t\n57\tHooks 系统像电器上的\"插座口\"——循环体是电器本体，Hooks 是插座（扩展接口）。权限系统是插上去的\"漏电保护器\"，日志系统是\"电量监测仪\"。新增功能不需要拆开电器，只需要插上对应的扩展模块。\n58\t\n59\t## Agent 工程应用场景\n60\t\n61\t| 应用场景 | Hook 事件 | 实现 |\n62\t|:---------|:----------|:-----|\n63\t| 权限检查 | PreToolUse | 注册权限检查回调，返回 False 阻断危险操作 |\n64\t| 操作日志 | PreToolUse + PostToolUse | 记录每次工具调用的时间、参数和结果 |\n65\t| 大输出告警 | PostToolUse | 检查工具返回结果是否超过阈值，注入告警提醒 |\n66\t| 使用统计 | Stop | 统计本轮会话的工具调用次数、token 消耗 |\n67\t| 上下文注入 | UserPromptSubmit | 注入当前时间、工作目录等上下文信息 |\n68\t\n69\t## 面试追问\n70\t\n71\t**Q1（基础）**：Hooks 系统的核心机制是什么？事件注册表如何工作？\n72\t**回答要点**：\n73\t\n74\t1. 核心是事件驱动 + 回调注册：先定义事件类型，再注册回调函数，最后在对应时机触发\n75\t2. 注册表是 `dict[event_name] -> list[callable]` 的结构，每个事件可挂多个回调\n76\t3. 触发时按注册顺序依次执行，回调返回非 None 值即阻断后续执行\n77\t4. 阻断机制使 Hook 不仅可以\"观察\"，还可以\"干预\"循环流程\n78\t\n79\t**Q2（深挖）**：Hooks 系统和直接在循环体写 if-else 有什么本质区别？\n80\t**回答要点**：\n81\t\n82\t1. 关注点分离：Hooks 把横切关注点（权限、日志、审计）从核心业务逻辑中拆出\n83\t2. 可组合性：功能模块通过 Hook 注册组合，无需修改循环体代码\n84\t3. 可测试性：每个 Hook 可独立测试，无需启动完整 Agent 循环\n85\t4. 运行时灵活性：理论上可在运行时注册/注销 Hook（实现动态行为变更）\n86\t\n87\t**Q3（实战）**：如何实现一个 Hook 的执行时间阈值告警——当某个工具执行超过 30 秒时发出告警？\n88\t**回答要点**：\n89\t\n90\t1. 在 PreToolUse 中记录开始时间：`start_time = time.time()`\n91\t2. 将开始时间存入当前上下文的临时存储（如 `threading.local()`）\n92\t3. 在 PostToolUse 中计算耗时：`elapsed = time.time() - start_time`\n93\t4. 如果 `elapsed > 30`，返回告警消息注入到下一轮对话中\n94\t\n95\t**Q4（边界）**：如果注册了多个 Hook 且它们之间有依赖关系，如何处理执行顺序？\n96\t**回答要点**：\n97\t\n98\t1. 当前实现按注册顺序执行，无显式优先级控制\n99\t2. 改进方案：为每个 Hook 添加 `priority` 字段，触发时按优先级排序\n100\t3. 依赖关系更复杂时：引入 DAG 来声明 Hook 间的前置条件\n101\t4. 实际工程建议：保持 Hook 间无状态依赖，让每个 Hook 独立工作，避免耦合\n102\t\n103\t## 参考引用\n104\t\n105\t- 需要理解权限系统如何作为 Hook 实现参见 [权限系统](./04-权限系统（Permission%20System）.md)\n106\t- 需要了解 Agent 循环中 Hook 的触发位置参见 [Agent 循环](./02-Agent循环（Agent%20Loop）.md)\n107\t- 需要掌握工具分发流程参见 [工具分发系统](./03-工具分发系统（Tool%20Dispatch）.md)\n108\t- 需要了解 Agent 整体架构参见 [Agent Harness（基础设施层）](./01-Agent%20Harness（基础设施层）.md)\n109\t- 需要了解该机制在 Claude Code 中的工程实现参见 [Claude 使用指南](../../工程实践/工具/09-Claude使用指南.md)"
+          }
+        ],
+        "asyncStatus": "completed",
+        "agentId": "aec014cf9435af567",
+        "startedAt": 1784435123319,
+        "result": "Here are the results.\n\n---\n\n## Full File List (24 files)\n\nAll files reside under:\n`G:\\AI-Learning\\Atomic-Cards\\AI-Agent\\基础设施\\`\n\n### Ordered by Creation/Modification Time (oldest first)\n\n| # | File Name | Time |\n|---|-----------|------|\n| 1 | `04-权限系统（Permission System）.md` | 11:23 |\n| 2 | `01-Agent Harness（基础设施层）.md` | 11:29 |\n| 3 | `02-Agent循环（Agent Loop）.md` | 11:29 |\n| 4 | `03-工具分发系统（Tool Dispatch）.md` | 11:29 |\n| 5 | `05-Hooks系统（Hooks System）.md` | 11:29 |\n| 6 | `06-子Agent（Subagent）.md` | 11:29 |\n| 7 | `07-上下文压缩管线（Context Compression）.md` | 11:29 |\n| 8 | `08-错误恢复与重试（Error Recovery）.md` | 11:29 |\n| 9 | `09-消息总线与Agent团队（MessageBus）.md` | 11:30 |\n| 10 | `10-MCP插件集成（MCP Plugin）.md` | 11:30 |\n| 11 | `11-记忆系统（Memory System）.md` | 11:30 |\n| 12 | `12-系统提示词组装（System Prompt Assembly）.md` | 11:30 |\n| 13 | `13-任务系统（Task System）.md` | 11:30 |\n| 14 | `14-团队协议（Team Protocols）.md` | 11:30 |\n| 15 | `15-自主Agent（Autonomous Agent）.md` | 11:30 |\n| 16 | `16-TodoWrite任务规划（TodoWrite）.md` | 11:30 |\n| 17 | `17-技能加载系统（Skill Loading）.md` | 11:30 |\n| 18 | `18-后台任务系统（Background Tasks）.md` | 11:30 |\n| 19 | `19-Cron调度器（Cron Scheduler）.md` | 11:30 |\n| 20 | `20-工作树隔离（Worktree Isolation）.md` | 11:30 |\n| 21 | `21-safe_path路径安全模式.md` | 12:04 |\n| 22 | `22-Messages API消息结构.md` | 12:04 |\n| 23 | `23-Daemon线程与Lock并发模式.md` | 12:05 |\n| 24 | `24-消费式文件读取模式.md` | 12:05 |\n\n---\n\n## Card Format (from 05-Hooks System)\n\nThe Hooks System card follows a consistent **atomic card format** with these sections:\n\n1. **Frontmatter** (YAML metadata) -- `author`, `created`, `tags`, `aliases`\n2. **Title** -- `# Hooks 系统（Hooks System）`\n3. **Definition** -- a concise one-sentence summary, plus a formula:\n   `Hook System = Event Registry + Callback Functions + Trigger Pipeline`\n4. **Core Code** -- a Python code block demonstrating the core interface (here: `register_hook` and `trigger_hooks`), with bullet-point explanations of each function's behavior\n5. **Comparison Table** -- a markdown table comparing event types on: trigger timing, parameters, use cases, and blocking behavior\n6. **Intuitive Understanding** -- an analogy/metaphor to make the concept concrete (here: \"Hooks are like electrical sockets on an appliance\")\n7. **Application Scenarios** -- a table mapping real use cases to specific events and implementations\n8. **Interview Questions (Q&A)** -- 4 levels of depth:\n   - **Q1 (Basic)**: core mechanism\n   - **Q2 (Deep)**: comparison with alternative approaches (e.g., `if-else` in the loop)\n   - **Q3 (Practical)**: how to implement a specific feature\n   - **Q4 (Edge Case)**: dependency ordering between multiple hooks\n9. **References** -- cross-links to other cards in the directory (permission system, agent loop, tool dispatch, etc.)\n\nThe format is essentially: **definition -> code interface -> concepts (tables/analogies) -> applied scenarios -> interview prep -> cross-references**. Each card is self-contained while linking to others, adhering to the \"atomic\" card principle.",
+        "completedAt": 1784435144758
+      }
+    }
+  },
+  "currentNote": "Atomic-Cards/AI-Agent/基础设施/05-Hooks系统（Hooks System）.md",
+  "usage": {
+    "model": "opus",
+    "inputTokens": 0,
+    "cacheCreationInputTokens": 0,
+    "cacheReadInputTokens": 0,
+    "contextWindow": 1000000,
+    "contextWindowIsAuthoritative": true,
+    "contextTokens": 0,
+    "percentage": 0
+  }
+}
