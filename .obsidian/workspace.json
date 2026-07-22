@@ -13,7 +13,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "AI-Large-Modlels-Notes/Project/EduAgent/01-项目简介.md",
+                "file": "AI-Large-Modlels-Notes/Project/EduAgent/精简版/01-项目简介.md",
                 "mode": "source",
                 "source": false,
                 "backlinks": false
@@ -230,7 +230,8 @@
       }
     ],
     "direction": "horizontal",
-    "width": 396.5
+    "width": 396.5,
+    "collapsed": true
   },
   "left-ribbon": {
     "hiddenItems": {
@@ -249,6 +250,7 @@
   },
   "active": "9dddde49a2d5eb85",
   "lastOpenFiles": [
+    "AI-Large-Modlels-Notes/Project/EduAgent/01-项目简介.md",
     "AI-Large-Modlels-Notes/Project/EduAgent/精简版.zip",
     "AI-Large-Modlels-Notes/Project/EduAgent/精简版/01-项目简介.md",
     "AI-Large-Modlels-Notes/Project/EduAgent/精简版/10-收尾与扩展.md",
@@ -263,7 +265,6 @@
     "AI-Large-Modlels-Notes/Project/EduAgent/精简版",
     "AI-Large-Modlels-Notes/Project/EduAgent/03-环境搭建与工程地基.md",
     "AI-Large-Modlels-Notes/Project/EduAgent/02-工具介绍.md",
-    "AI-Large-Modlels-Notes/Project/EduAgent/01-项目简介.md",
     "Atomic-Cards/卡片总览.md",
     "AI-Large-Modlels-Notes/Project/EduAgent/课堂知识点记录.md",
     "AI-Large-Modlels-Notes/Project/EduAgent/10-收尾与扩展.md",
@@ -284,7 +285,6 @@
     "Atomic-Cards/AI-Agent/基础设施/03-Memory-Management（记忆管理）",
     "Atomic-Cards/AI-Agent/基础设施/02-Planning-Control（规划与控制）",
     "Atomic-Cards/AI-Agent/基础设施/01-Tools-Execution（工具与执行）",
-    "Atomic-Cards/原子化生成提示词.md.tmp.40460.e1939aa9e9d7",
     "Assets/LangChain组件图.drawio.png",
     "Assets/Image/AI-Large-Modlels-Notes/Project/EduRAG/Milvus向量数据库/1.2.8.3-1.png",
     "Assets/Image/AI-Large-Modlels-Notes/Project/EduRAG/Milvus向量数据库/1.2.8.2-2.png",
