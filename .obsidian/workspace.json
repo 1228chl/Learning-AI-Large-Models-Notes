@@ -119,7 +119,8 @@
       }
     ],
     "direction": "horizontal",
-    "width": 292.5
+    "width": 312.5,
+    "collapsed": true
   },
   "right": {
     "id": "f07a0c5b7e11463b",
@@ -135,13 +136,13 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "Atomic-Cards/AI-Agent/基础设施/05-Hooks系统（Hooks System）.md",
+                "file": "Atomic-Cards/AI-Agent/RAG流程/35-BGE-M3嵌入模型与混合检索.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "05-Hooks系统（Hooks System） 的大纲"
+              "title": "35-BGE-M3嵌入模型与混合检索 的大纲"
             }
           },
           {
@@ -236,11 +237,12 @@
             }
           }
         ],
-        "currentTab": 2
+        "currentTab": 1
       }
     ],
     "direction": "horizontal",
-    "width": 370.5
+    "width": 396.5,
+    "collapsed": true
   },
   "left-ribbon": {
     "hiddenItems": {
@@ -257,8 +259,10 @@
       "realclaudian:Open Claudian": false
     }
   },
-  "active": "4c73286640237a1e",
+  "active": "9dddde49a2d5eb85",
   "lastOpenFiles": [
+    "Atomic-Cards/AI-Agent/RAG流程/35-BGE-M3嵌入模型与混合检索.md",
+    "Atomic-Cards/AI-Agent/基础设施/05-Hooks系统（Hooks System）.md",
     "Atomic-Cards/AI-Agent/基础设施/01-Tools-Execution（工具与执行）/24-消费式文件读取模式.md",
     "Atomic-Cards/AI-Agent/基础设施/04-Concurrency-Scheduling（并发与调度）/23-Daemon线程与Lock并发模式.md",
     "Atomic-Cards/AI-Agent/基础设施/01-Tools-Execution（工具与执行）/22-Messages API消息结构.md",
@@ -289,8 +293,6 @@
     "Atomic-Cards/AI-Agent/基础设施/02-Planning-Control（规划与控制）",
     "Atomic-Cards/AI-Agent/基础设施/01-Tools-Execution（工具与执行）",
     "Atomic-Cards/原子化生成提示词.md.tmp.40460.e1939aa9e9d7",
-    "Atomic-Cards/AI-Agent/基础设施/24-消费式文件读取模式.md",
-    "Atomic-Cards/AI-Agent/基础设施/23-Daemon线程与Lock并发模式.md",
     "Atomic-Cards/AI-Agent/基础设施/15-自主Agent（Autonomous Agent）.md.tmp.40460.f6f5e9b9a10d",
     "Atomic-Cards/AI-Agent/基础设施/06-子Agent（Subagent）.md.tmp.40460.ae475e82f7c8",
     "Atomic-Cards/AI-Agent/基础设施/06-子Agent（Subagent）.md.tmp.40460.010e0e9b3992",
