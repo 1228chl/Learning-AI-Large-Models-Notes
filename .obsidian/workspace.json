@@ -261,8 +261,9 @@
   },
   "active": "9dddde49a2d5eb85",
   "lastOpenFiles": [
-    "Atomic-Cards/AI-Agent/RAG流程/35-BGE-M3嵌入模型与混合检索.md",
+    "Atomic-Cards/卡片总览.md",
     "AI-Large-Modlels-Notes/Project/EduAgent/课堂知识点记录.md",
+    "Atomic-Cards/AI-Agent/RAG流程/35-BGE-M3嵌入模型与混合检索.md",
     "AI-Large-Modlels-Notes/Project/EduAgent",
     "Atomic-Cards/AI-Agent/基础设施/05-Hooks系统（Hooks System）.md",
     "Atomic-Cards/AI-Agent/基础设施/01-Tools-Execution（工具与执行）/24-消费式文件读取模式.md",
@@ -287,7 +288,6 @@
     "Atomic-Cards/AI-Agent/基础设施/01-Tools-Execution（工具与执行）/05-Hooks系统（Hooks System）.md",
     "Atomic-Cards/AI-Agent/基础设施/01-Tools-Execution（工具与执行）/04-权限系统（Permission System）.md",
     "Atomic-Cards/AI-Agent/基础设施/01-Tools-Execution（工具与执行）/03-工具分发系统（Tool Dispatch）.md",
-    "Atomic-Cards/AI-Agent/基础设施/01-Tools-Execution（工具与执行）/02-Agent循环（Agent Loop）.md",
     "Atomic-Cards/AI-Agent/基础设施/05-Multi-Agent-Platform（多Agent平台）",
     "Atomic-Cards/AI-Agent/基础设施/04-Concurrency-Scheduling（并发与调度）",
     "Atomic-Cards/AI-Agent/基础设施/03-Memory-Management（记忆管理）",
