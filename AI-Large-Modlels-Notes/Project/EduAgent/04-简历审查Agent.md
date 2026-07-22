@@ -1,6 +1,7 @@
 # 第四章 简历审查 Agent 学习笔记
 
 ## 目录
+
 - [4.1 全景与数据流](#41-全景与数据流)
 - [4.2 State与数据模型](#42-state与数据模型)
 - [4.3 提示词](#43-提示词)
@@ -21,19 +22,20 @@
 报告包含三个核心部分：
 
 1. **六维度评分**：项目深度、技术匹配度、表达规范性、简历结构、量化程度、真实可信度，每维度 0-100 分，加权出一个综合分。
-2. **逐条问题诊断**：定位到简历的具体位置（如"项目经历-电商系统-第2句"），标注优先级（high/medium/low），并给出可操作的修改建议。
+2. **逐条问题诊断**：定位到简历的具体位置（如"项目经历-电商系统-第 2 句"），标注优先级（high/medium/low），并给出可操作的修改建议。
 3. **整体评价**：核心亮点、最重要的改进方向、综合评语、与目标岗位的匹配度。
 
 这个 Agent 的几个鲜明特点：
-- **全自动、一条直线**：8个节点顺序执行，没有分支、没有人介入、没有断点续传，是最简单的 Agent 形态，适合入门。
+
+- **全自动、一条直线**：8 个节点顺序执行，没有分支、没有人介入、没有断点续传，是最简单的 Agent 形态，适合入门。
 - **结构化输出贯穿全程**：每一步 LLM 的产出都是严格的 Pydantic 结构，而不是自由文本。
-- **并行是性能关键**：六维度评分是6次独立的 LLM 调用，用 `asyncio.gather` 并行，把总耗时从"6次相加"压成"1次最慢的"。
+- **并行是性能关键**：六维度评分是 6 次独立的 LLM 调用，用 `asyncio.gather` 并行，把总耗时从"6 次相加"压成"1 次最慢的"。
 
 ### 4.1.2 HTTP 请求流程
 
 从用户视角看整个流程：
 
-```
+```python
 ① 学员 POST /resume/upload（带 PDF 文件 + JWT）
 │
 ▼
@@ -49,13 +51,13 @@
 └── 审查完成 → 返回完整报告（六维度+诊断+评价）
 ```
 
-**关键设计**：上传接口不会"卡住"等审查跑完（审查要调好几次大模型，约30-60秒）。它把任务丢到后台异步任务，立刻返回 review_id，让前端轮询。这正是"后台任务 + GC 保护"和"202 Accepted"的真实应用。
+**关键设计**：上传接口不会"卡住"等审查跑完（审查要调好几次大模型，约 30-60 秒）。它把任务丢到后台异步任务，立刻返回 review_id，让前端轮询。这正是"后台任务 + GC 保护"和"202 Accepted"的真实应用。
 
-### 4.1.3 8节点流水线
+### 4.1.3 8 节点流水线
 
 后台启动的那张"图"，内部是一条直线流水线，每个节点读取 State、做一件事、把结果写回 State：
 
-```
+```python
 START
 │
 ▼ ① upload_to_minio （本地模式空跑，占位）
@@ -80,7 +82,7 @@ END
 | ② | download_pdf | 本地模式空跑（文件已在本地 /tmp） | — |
 | ③ | extract_text | 用 PyMuPDF 提取 PDF 文本，处理双栏布局 | raw_text, page_count |
 | ④ | extract_structured | LLM 把原始文本提取成结构化简历 | structured |
-| ⑤ | run_six_dimensions | **并行**评6个维度，算加权分 | dimension_scores, weighted_score |
+| ⑤ | run_six_dimensions | **并行**评 6 个维度，算加权分 | dimension_scores, weighted_score |
 | ⑥ | diagnose_issues | 汇总问题、去重、标优先级、排序 | issues |
 | ⑦ | generate_summary | 生成整体评价 | summary |
 | ⑧ | save_results | 写入数据库、清理临时文件 | （持久化） |
@@ -89,9 +91,9 @@ END
 
 回顾基础概念：一个 Agent = State + Node + Edge（+ 可选 Checkpointer）。简历 Agent 正好是这个模型最干净的体现：
 
-- **State** = `ResumeState`（一个 TypedDict）：贯穿8个节点的"工单"，前面填 PDF 路径，中间逐步填上文本、结构化数据、评分、问题，最后填上评价。
-- **Node** = 8个节点函数：每个都遵循约定——接收 State、返回"要更新的字段"字典。
-- **Edge** = 8条固定边（START -> ① -> ② -> ... -> ⑧ -> END）：没有条件边，因为这是一条直线。
+- **State** = `ResumeState`（一个 TypedDict）：贯穿 8 个节点的"工单"，前面填 PDF 路径，中间逐步填上文本、结构化数据、评分、问题，最后填上评价。
+- **Node** = 8 个节点函数：每个都遵循约定——接收 State、返回"要更新的字段"字典。
+- **Edge** = 8 条固定边（START -> ① -> ② -> ... -> ⑧ -> END）：没有条件边，因为这是一条直线。
 - **Checkpointer** = 无：这是一次性任务，不需要记忆或断点续传，所以 `compile()` 时不传 checkpointer。
 
 **心智模型**：简历 Agent 就是"搭一条直线图"的放大版——只不过把节点里的简单逻辑，换成了"调大模型做结构化提取/评分"的真实业务。
@@ -102,7 +104,7 @@ END
 |---------|------|--------|
 | backend/agents/resume/state.py | State 与所有 Pydantic 数据模型 | 4.2 |
 | backend/agents/resume/prompts.py | 各阶段提示词 | 4.3 |
-| backend/agents/resume/nodes.py | 8个节点函数 | 4.4/4.5/4.6/4.7 |
+| backend/agents/resume/nodes.py | 8 个节点函数 | 4.4/4.5/4.6/4.7 |
 | backend/agents/resume/graph.py | 图装配 | 4.7 |
 | backend/api/v1/resume.py | 上传/查询/删除/列表接口 | 4.8 |
 
@@ -110,7 +112,7 @@ END
 
 1. 简历审查 Agent 的核心功能是什么？它的报告包含哪三部分？
 2. 为什么上传接口要返回 202 状态码而不是 200？这个设计解决了什么问题？
-3. 8个节点的执行顺序是什么？哪两个节点是"空跑"的，为什么保留它们？
+3. 8 个节点的执行顺序是什么？哪两个节点是"空跑"的，为什么保留它们？
 4. 六维度评分为什么能并行？串行和并行的耗时差异有多大？
 5. 简历 Agent 对应"Agent = 图"心智模型的哪三个要素？为什么没有 Checkpointer？
 6. 前端如何获取审查结果？轮询的机制是怎样的？
@@ -118,22 +120,24 @@ END
 
 ---
 
-## 4.2 State与数据模型
+## 4.2 State 与数据模型
 
 ### 4.2.1 为什么先定义数据模型
 
 构建一个 Agent，最好的起点是先把"数据长什么样"定下来。原因有二：
 
 1. **每一步 LLM 的产出都是结构化数据**：提取结构化简历、六维度评分、问题清单、整体评价，每一步 LLM 都不是吐自由文本，而是吐一个严格的对象。这些对象的"模板"就是 Pydantic 模型（通过 `with_structured_output` 绑定）。
-2. **State 是贯穿全程的"工单"**：8个节点共享一份 `ResumeState`，前面的节点把结果填进去、后面的节点读出来用。
+2. **State 是贯穿全程的"工单"**：8 个节点共享一份 `ResumeState`，前面的节点把结果填进去、后面的节点读出来用。
 
 所以本节定义两类东西：
+
 - ① 各步 LLM 输出的 Schema（提取/评分/诊断/评价）
 - ② 主 State（`ResumeState`）
 
 ### 4.2.2 结构化提取模型详解
 
 **EducationItem（单条教育经历）**：
+
 ```python
 class EducationItem(BaseModel):
     school: str = Field(description="学校名称")
@@ -144,10 +148,12 @@ class EducationItem(BaseModel):
 ```
 
 两个关键点：
+
 - `Field(description=...)` 不只是注释，它会被发给大模型。`with_structured_output` 在底层把这些描述变成 Function Calling 的参数说明，等于在告诉 LLM"这个字段该填什么"。描述写得越清楚，提取越准。
 - `default=""` / `default_factory=list` 表示可选字段：LLM 提取不到时用默认值（空串/空列表），不会报错。`default_factory=list` 用于列表类型（不能直接写 `default=[]`，那会让所有实例共享同一个列表，是 Python 的经典坑）。
 
 **ProjectItem（单条项目经历）**：
+
 ```python
 class ProjectItem(BaseModel):
     name: str = Field(description="项目名称")
@@ -161,6 +167,7 @@ class ProjectItem(BaseModel):
 **WorkItem（单条工作/实习经历）**：类似的结构，包含 company、position、duration、tech_stack、description 字段。
 
 **ResumeStructured（完整简历）**：
+
 ```python
 class ResumeStructured(BaseModel):
     name: str = Field(description="姓名")
@@ -179,6 +186,7 @@ class ResumeStructured(BaseModel):
 ### 4.2.3 评审/诊断/评价模型详解
 
 **DimensionScore（单维度评分）**：
+
 ```python
 class DimensionScore(BaseModel):
     dimension: str = Field(default="", description="维度名称（代码层覆盖，LLM可留空）")
@@ -188,9 +196,10 @@ class DimensionScore(BaseModel):
     suggestions: list[str] = Field(default_factory=list, description="改进建议列表")
 ```
 
-关键设计：`dimension`/`weight` 给了默认值且注释写着"代码层覆盖"——维度名和权重由代码填（来自 4.5 的 SIX_DIMENSIONS 表），不需要 LLM 操心，LLM 只管打 score、列 issues、给 suggestions。
+关键设计：`dimension` / `weight` 给了默认值且注释写着"代码层覆盖"——维度名和权重由代码填（来自 4.5 的 SIX_DIMENSIONS 表），不需要 LLM 操心，LLM 只管打 score、列 issues、给 suggestions。
 
 **IssueItem + IssueList（问题诊断）**：
+
 ```python
 class IssueItem(BaseModel):
     priority: str = Field(description="优先级：high/medium/low")
@@ -206,6 +215,7 @@ class IssueList(BaseModel):
 **重要技巧**：`with_structured_output` 要求顶层是一个**对象**，不能直接是一个"裸列表"。所以不能让 LLM 直接返回 `list[IssueItem]`，而要包一层 `IssueList { items: list[IssueItem] }`。这是用结构化输出生成"列表"时的常见做法。
 
 **ResumeSummary（整体评价）**：
+
 ```python
 class ResumeSummary(BaseModel):
     highlights: list[str] = Field(description="2-3条核心亮点")
@@ -216,7 +226,7 @@ class ResumeSummary(BaseModel):
 
 ### 4.2.4 主 State：ResumeState
 
-`ResumeState` 是一个 `TypedDict`，17个字段跨7组，按"数据流阶段"分组，正好对应各节点的产出：
+`ResumeState` 是一个 `TypedDict`，17 个字段跨 7 组，按"数据流阶段"分组，正好对应各节点的产出：
 
 ```python
 class ResumeState(TypedDict):
@@ -255,8 +265,9 @@ class ResumeState(TypedDict):
 ### 4.2.5 模块自测
 
 直接运行 `python -m backend.agents.resume.state` 验证：
+
 - 嵌套模型能正常构建、`model_dump()` 转成纯字典
-- `dimension`/`weight` 默认留空，等代码层填
+- `dimension` / `weight` 默认留空，等代码层填
 - `IssueList` 包装正常（顶层对象 + items 列表）
 - 必填字段缺失会被 Pydantic 拦下
 
@@ -280,6 +291,7 @@ class ResumeState(TypedDict):
 如果说节点是"动作"、数据模型是"表格"，那提示词就是指挥大模型做事的"剧本"。简历 Agent 每次调 LLM，都要给它一段提示词，告诉它"现在做什么、按什么标准、注意什么"。
 
 集中管理原则：所有提示词集中放在 `prompts.py`，而不是散在各个节点里。好处是：
+
 - 提示词是最需要反复调优的部分，集中管理后，调提示词不用动业务代码
 - 一眼能看全、好对比
 
@@ -288,12 +300,14 @@ class ResumeState(TypedDict):
 ### 4.3.2 系统提示与提取提示
 
 **系统提示（SYSTEM_PROMPT）**：定义大模型的"人设"，作为 `SystemMessage` 放在每次对话最前面：
+
 ```python
 SYSTEM_PROMPT = """你是一位经验丰富的 IT 行业职业顾问，专门为应届毕业生和初/中级工程师审查简历。
 你的评审严格、客观、可操作，不给出模糊的夸奖，只给出具体的问题定位和修改建议。"""
 ```
 
 **提取提示（EXTRACT_STRUCTURED_PROMPT）**：用于 `extract_structured` 节点，占位符 `{resume_text}`：
+
 ```python
 EXTRACT_STRUCTURED_PROMPT = """请从以下简历文本中提取结构化信息。
 【简历原文】
@@ -320,7 +334,7 @@ EXTRACT_STRUCTURED_PROMPT = """请从以下简历文本中提取结构化信息�
 |-----------|--------|------|---------|
 | project_depth | 项目深度 | 0.30 | 项目是否有量化数据、技术选型理由、个人贡献、难点解决 |
 | tech_match | 技术匹配度 | 0.25 | 技术栈是否与目标岗位匹配，技能描述是否有层次 |
-| expression | 表达规范性 | 0.15 | 动词开头、STAR结构、无错别字、无主语省略歧义 |
+| expression | 表达规范性 | 0.15 | 动词开头、STAR 结构、无错别字、无主语省略歧义 |
 | structure | 简历结构 | 0.15 | 模块完整性、排版逻辑、信息密度、重要内容是否放前面 |
 | quantification | 量化程度 | 0.10 | 性能指标、用户量、优化幅度等量化数据的使用情况 |
 | authenticity | 真实可信度 | 0.05 | 表述是否夸大、技术深度描述是否与经验年限匹配 |
@@ -328,6 +342,7 @@ EXTRACT_STRUCTURED_PROMPT = """请从以下简历文本中提取结构化信息�
 **权重设计思路**：项目深度（0.30）和技术匹配度（0.25）占大头——对工程师简历，这两项最关键。权重之和正好为 1.0，用于最后算加权综合分。
 
 **评分 rubric 示例（项目深度）**：
+
 ```python
 "project_depth": """请评审以下简历在【项目深度】维度的表现。
 ...
@@ -363,16 +378,16 @@ DIAGNOSE_THINK_PROMPT = """在生成简历问题诊断清单之前，请先进�
 
 ### 4.3.5 完整的提示词体系
 
-共6个提示词：
+共 6 个提示词：
 
 | 提示词 | 占位符 | 用于节点 | 类型 |
 |--------|--------|---------|------|
 | SYSTEM_PROMPT | 无 | 所有节点 | 系统消息 |
 | EXTRACT_STRUCTURED_PROMPT | {resume_text} | extract_structured | 提取 |
-| DIMENSION_REVIEW_PROMPTS | {focus}, {structured_summary}, {resume_text} | run_six_dimensions | 六维度评分（6个键） |
+| DIMENSION_REVIEW_PROMPTS | {focus}, {structured_summary}, {resume_text} | run_six_dimensions | 六维度评分（6 个键） |
 | DIAGNOSE_ISSUES_PROMPT | {structured_summary}, {resume_text}, {raw_issues} | diagnose_issues | 问题诊断 |
 | GENERATE_SUMMARY_PROMPT | {structured_summary}, {scores_summary}, {weighted_score}, {high_issues}, {target_position} | generate_summary | 整体评价 |
-| DIAGNOSE_THINK_PROMPT | {dimension_scores_summary}, {raw_issues} | diagnose_issues（Think前置） | 推理增强 |
+| DIAGNOSE_THINK_PROMPT | {dimension_scores_summary}, {raw_issues} | diagnose_issues（Think 前置） | 推理增强 |
 
 ### 面试题（4.3）
 
@@ -387,7 +402,7 @@ DIAGNOSE_THINK_PROMPT = """在生成简历问题诊断清单之前，请先进�
 
 ---
 
-## 4.4 PDF解析与结构化提取
+## 4.4 PDF 解析与结构化提取
 
 ### 4.4.1 节点通用约定
 
@@ -398,14 +413,16 @@ DIAGNOSE_THINK_PROMPT = """在生成简历问题诊断清单之前，请先进�
 前两个节点 `upload_to_minio_node` 和 `download_pdf_node`，在本地模式下**什么都不做**，直接返回空字典 `return {}`。
 
 为什么不直接删掉它们？两个原因：
+
 1. 保留它们让图结构与真实代码完全一致，不偏离原始代码。
 2. 它们标明了"这里原本是对象存储的位置"——将来若要接入云存储（OSS/S3），只需在这两个节点里填实现，图结构不用改。这是一种"预留扩展点"的工程习惯。
 
-### 4.4.3 extract_text：PDF文本提取（技术要点）
+### 4.4.3 extract_text：PDF 文本提取（技术要点）
 
 **双栏布局处理**：很多简历是双栏排版（左栏放基本信息/技能，右栏放项目/经历）。如果直接按默认顺序读，会把左右两栏的文字交错在一起，破坏语义。
 
 核心逻辑：
+
 1. 用 PyMuPDF（导入名 `fitz`）逐页读取文本块 `page.get_text("blocks")`
 2. 每个 block 是 7 元组 `(x0, y0, x1, y1, text, block_no, block_type)`，`b[6]==0` 是文字块
 3. 按横坐标 `x0` 把块分到左半/右半，判断是否双栏（左右都够多 + 右侧占比 > 30%）
@@ -413,6 +430,7 @@ DIAGNOSE_THINK_PROMPT = """在生成简历问题诊断清单之前，请先进�
 5. 多页之间插入 `---PAGE BREAK---` 标记
 
 **线程池不阻塞事件循环**：`_sync_extract_text` 是同步阻塞的（文件 I/O + 解析）。直接在 async 节点里调用会阻塞事件循环，所以用 `run_in_executor` 丢到线程池：
+
 ```python
 loop = asyncio.get_running_loop()
 result = await loop.run_in_executor(None, _sync_extract_text, pdf_path)
@@ -423,11 +441,13 @@ result = await loop.run_in_executor(None, _sync_extract_text, pdf_path)
 ### 4.4.4 extract_structured：结构化提取（第一次调大模型）
 
 **超长截断**：简历一般 1-2 页，截前 4000 字防止超出 context 且省 token：
+
 ```python
 text_for_llm = raw_text[:4000] if len(raw_text) > 4000 else raw_text
 ```
 
 **重试机制**：`with_structured_output`（底层 Function Calling）偶尔会"偷懒"——模型不调用工具、而是直接用文字回复，这时返回的是 `None`。所以判 None + 重试 2 次：
+
 ```python
 for attempt in range(2):
     try:
@@ -444,6 +464,7 @@ for attempt in range(2):
 ```
 
 **降级处理**：两次都失败时，返回空结构兜底，不让整个流程崩：
+
 ```python
 if structured_dict is None:
     structured_dict = ResumeStructured(name="未能提取").model_dump()
@@ -455,7 +476,7 @@ if structured_dict is None:
 2. 两个"本地空跑"节点为什么保留？它们体现了什么工程习惯？
 3. PyMuPDF 提取文本时，如何检测和处理双栏布局？判断双栏的算法是什么？
 4. 为什么同步的 PDF 解析要用 `run_in_executor` 丢到线程池？直接调用会有什么问题？
-5. 提取文字过少（<200字）时为什么只告警而不引入 OCR？这体现了什么设计取舍？
+5. 提取文字过少（<200 字）时为什么只告警而不引入 OCR？这体现了什么设计取舍？
 6. 结构化提取节点的重试机制是怎样的？为什么 `with_structured_output` 会返回 None？
 7. 提取失败时如何降级处理？为什么不让整个流程崩掉？
 8. 提取节点中 `text_for_llm` 为什么要截断到 4000 字？
@@ -466,13 +487,14 @@ if structured_dict is None:
 
 ### 4.5.1 为什么要并行
 
-六维度评分，本质是**6次相互独立的 LLM 调用**——项目深度怎么评，和技术匹配度怎么评，互不依赖。
+六维度评分，本质是 **6 次相互独立的 LLM 调用**——项目深度怎么评，和技术匹配度怎么评，互不依赖。
 
 - **串行**：每次 LLM 约 5-10 秒，6 个就是 30-60 秒，用户要干等。
 - **并行**：既然它们互相独立，完全可以同时发出去——用 `asyncio.gather` 把 6 个协程一起 await，总耗时约等于"最慢的那一个"（5-10 秒），而不是 6 个相加。
 
-串行图示：评1 -> 评2 -> 评3 -> 评4 -> 评5 -> 评6（总耗时 = 6次相加）
-并行图示：评1┐ 评2┤ 评3┤ 评4┤ 评5┤ 评6┘ -> `asyncio.gather` 同时进行（总耗时 ≈ 最慢的1次）
+串行图示：评 1 -> 评 2 -> 评 3 -> 评 4 -> 评 5 -> 评 6（总耗时 = 6 次相加）
+
+并行图示：评 1┐ 评 2┤ 评 3┤ 评 4┤ 评 5┤ 评 6┘ -> `asyncio.gather` 同时进行（总耗时 ≈ 最慢的 1 次）
 
 一个 `gather` 把这个 Agent 最慢的环节提速近 6 倍，是本章的性能重点。
 
@@ -490,7 +512,7 @@ SIX_DIMENSIONS = [
 ```
 
 - `key` 用来从 `DIMENSION_REVIEW_PROMPTS` 字典里取对应提示
-- `name`/`weight` 会被填进 `DimensionScore`（"维度名和权重由代码填，LLM 只管打分"）
+- `name` / `weight` 会被填进 `DimensionScore`（"维度名和权重由代码填，LLM 只管打分"）
 - `focus` 填进提示词的 `{focus}` 占位符
 
 ### 4.5.3 run_six_dimensions 节点
@@ -527,16 +549,17 @@ async def run_six_dimensions_node(state: ResumeState) -> dict:
 ```
 
 关键点：
-- `tasks = [review_one_dimension(dim) for dim in SIX_DIMENSIONS]` 先创建6个协程（此时还没执行）
-- `await asyncio.gather(*tasks)` 把6个协程一起跑、等全部完成
+
+- `tasks = [review_one_dimension(dim) for dim in SIX_DIMENSIONS]` 先创建 6 个协程（此时还没执行）
+- `await asyncio.gather(*tasks)` 把 6 个协程一起跑、等全部完成
 - 单维度失败不影响其他维度：每个维度自己 try/重试/降级，某个挂了只影响它自己
 - 加权分计算公式：`sum(score * weight)`，因为权重和为 1.0，结果天然落在 0-100
 
 ### 4.5.4 两个辅助函数
 
-**`_build_structured_summary`**：把结构化简历浓缩成几行摘要（姓名/意向/学历/技能/项目数），评审时传摘要而非全文，省 token、也让 LLM 抓重点。
+** `_build_structured_summary` **：把结构化简历浓缩成几行摘要（姓名/意向/学历/技能/项目数），评审时传摘要而非全文，省 token、也让 LLM 抓重点。
 
-**`_empty_dimension_score`**：维度评审失败时的降级结果——给50分（中性）、标注"该维度评审失败，建议人工复核"。
+** `_empty_dimension_score` **：维度评审失败时的降级结果——给 50 分（中性）、标注"该维度评审失败，建议人工复核"。
 
 ### 面试题（4.5）
 
@@ -565,6 +588,7 @@ async def run_six_dimensions_node(state: ResumeState) -> dict:
 **① 汇总各维度问题**：先把六维度各自发现的 issues 收集起来，作为诊断的输入素材。
 
 **② Think 前置推理**：先用一段自由文本让 LLM 做宏观分析，再把这段思考作为上下文喂给下一步：
+
 ```python
 reasoning_trace = ""
 try:
@@ -577,6 +601,7 @@ except Exception as e:
 ```
 
 **③ 结构化生成问题清单**：把 Think 结果拼进提示词，调结构化 LLM 生成 IssueList：
+
 ```python
 prompt = DIAGNOSE_ISSUES_PROMPT.format(...) + think_context
 try:
@@ -589,6 +614,7 @@ except Exception as e:
 ```
 
 **④ 按优先级排序**：把问题按 high -> medium -> low 排序，让最该改的排在最前：
+
 ```python
 priority_order = {"high": 0, "medium": 1, "low": 2}
 issues.sort(key=lambda x: priority_order.get(x.get("priority", "low"), 2))
@@ -599,12 +625,13 @@ issues.sort(key=lambda x: priority_order.get(x.get("priority", "low"), 2))
 最后一个 LLM 节点。它把前面所有结果"喂"给 LLM，生成面向学员的总结。
 
 关键步骤：
-1. 从 issues 里挑出高优先级问题（最多5条）
+
+1. 从 issues 里挑出高优先级问题（最多 5 条）
 2. 把维度分整理成文字
 3. 填进 `GENERATE_SUMMARY_PROMPT` 的占位符
 4. 调结构化 LLM 生成 `ResumeSummary`
 
-和结构化提取一样，这个节点也要防"结构化输出返回 None"——而且它最容易中招：它的提示词是"请生成整体评价报告"这种生成型措辞，DeepSeek 有时会直接用文字回复、不调用工具。所以同样判 None + 重试2次，两次都失败才用默认评价兜底。
+和结构化提取一样，这个节点也要防"结构化输出返回 None"——而且它最容易中招：它的提示词是"请生成整体评价报告"这种生成型措辞，DeepSeek 有时会直接用文字回复、不调用工具。所以同样判 None + 重试 2 次，两次都失败才用默认评价兜底。
 
 ### 面试题（4.6）
 
@@ -612,7 +639,7 @@ issues.sort(key=lambda x: priority_order.get(x.get("priority", "low"), 2))
 2. Think 前置推理为什么是可失败的？失败后主流程如何处理？
 3. 结构化生成问题清单失败时，降级策略是什么？为什么要统一标 medium？
 4. 按优先级排序的代码中，`priority_order` 映射和 `sort(key=...)` 的技巧是什么？
-5. generate_summary 节点中，从 issues 里挑出了哪些问题？为什么要限制最多5条？
+5. generate_summary 节点中，从 issues 里挑出了哪些问题？为什么要限制最多 5 条？
 6. 为什么 generate_summary 节点最容易中"结构化输出返回 None"的坑？
 7. 提示词的时间线推理规则中，为什么"项目时间落在工作经历区间内"是正常的，不得标记为矛盾？
 8. 离线测试验证了哪三个关键点？
@@ -623,9 +650,10 @@ issues.sort(key=lambda x: priority_order.get(x.get("priority", "low"), 2))
 
 ### 4.7.1 save_results：持久化
 
-第8个、也是最后一个节点。它把审查的全部结果写进 `resume_reviews` 表，并清理临时 PDF。
+第 8 个、也是最后一个节点。它把审查的全部结果写进 `resume_reviews` 表，并清理临时 PDF。
 
 **往 JSONB 列写要先 json.dumps**：State 里存的是 Python dict，但通过 `text()` 参数化写入时，要先用 `json.dumps` 把 dict 转成 JSON 字符串，PG 再把这个字符串存成 JSONB：
+
 ```python
 "scores": json.dumps(
     {"dimension_scores": state.get("dimension_scores", []), "weighted_score": state.get("weighted_score", 0)},
@@ -637,11 +665,12 @@ issues.sort(key=lambda x: priority_order.get(x.get("priority", "low"), 2))
 
 **用原生 SQL 写 JSONB 列**：使用 `AsyncSessionLocal` 配合 `text()` 执行原生 SQL，而不是通过 ORM 模型。这样更直接地控制 JSONB 写入。
 
-### 4.7.2 graph.py：8个节点8条固定边
+### 4.7.2 graph.py：8 个节点 8 条固定边
 
 建图三步：`StateGraph(State)` 创建、`add_node` 加节点、`add_edge` 连边、最后 `compile()`。
 
 简历 Agent 是一条直线，所以边也是顺次相连：
+
 ```python
 builder = StateGraph(ResumeState)
 
@@ -668,18 +697,18 @@ return builder.compile()
 2. 写入 JSONB 时，为什么 `ensure_ascii=False` 很重要？
 3. graph.py 中建图的三步分别是什么？如何注册节点和连接边？
 4. 为什么 `compile()` 时不传 checkpointer？一次性任务和需要多轮记忆的任务有什么区别？
-5. 8个节点之间有多少条边？为什么没有条件边？
+5. 8 个节点之间有多少条边？为什么没有条件边？
 6. 在 graph.py 中，节点名和节点函数是如何关联的？为什么每个节点都有独立的名称字符串？
 7. save_results 节点清理临时 PDF 文件有什么意义？
 8. 如果将来要接入云存储，应该如何修改代码？
 
 ---
 
-## 4.8 API接口与端到端
+## 4.8 API 接口与端到端
 
 ### 4.8.1 接口总览
 
-`resume.py` 提供4个接口，把前面写好的 Agent 暴露成 HTTP 服务：
+`resume.py` 提供 4 个接口，把前面写好的 Agent 暴露成 HTTP 服务：
 
 | 方法 | 路径 | 作用 |
 |------|------|------|
@@ -693,6 +722,7 @@ return builder.compile()
 ### 4.8.2 upload：上传接口（两个重要工程细节）
 
 **后台任务的 GC 保护**：`asyncio.create_task` 创建的任务，如果没有变量持有它的强引用，可能被垃圾回收（GC）提前杀掉。用模块级集合持有所有后台任务的引用：
+
 ```python
 _background_tasks: set[asyncio.Task] = set()  # 模块级集合，持有强引用防GC
 
@@ -704,6 +734,7 @@ task.add_done_callback(_on_task_done)          # 完成后回调（清理+移除
 `_on_task_done` 回调在任务结束时触发，负责：从集合移除任务、删临时 PDF、若任务失败/被取消则把记录标为 `failed`。
 
 **线程本地图（thread-local graph）**：图实例 `build_resume_graph()` 编译一次即可复用，但多线程并发时共享一个实例可能有竞争。用 `threading.local()` 给每个线程一份独立的图：
+
 ```python
 _graph_local = threading.local()
 
@@ -716,12 +747,14 @@ def _get_graph():
 ### 4.8.3 get_review：轮询查询（状态机+超时兜底）
 
 查询接口是个小状态机：
+
 - **processing**：审查还在跑 -> 返回 `{status: "processing"}`，让前端继续轮询
 - **done**：完成 -> 返回完整报告
 - **failed**：失败 -> 返回错误信息
 - **不存在/无权限**：404
 
-**超时兜底**：万一后台任务因服务重启中断，记录会永远卡在 `processing`。查询时检查"距上次更新是否超过15分钟"，超了就标记 `failed`：
+**超时兜底**：万一后台任务因服务重启中断，记录会永远卡在 `processing`。查询时检查"距上次更新是否超过 15 分钟"，超了就标记 `failed`：
+
 ```python
 if row["status"] == "processing":
     elapsed = (datetime.now(timezone.utc) - last_ts).total_seconds()
@@ -735,13 +768,13 @@ if row["status"] == "processing":
 
 ### 4.8.4 delete 与 list：越权防护
 
-**delete_review**：删除时 WHERE 条件带上 `student_id`——只能删自己的记录，防止越权删别人的。返回 204（No Content）；`rowcount == 0` 说明记录不存在或不属于自己，返回 404。
+**delete_review**：删除时 WHERE 条件带上 `student_id` ——只能删自己的记录，防止越权删别人的。返回 204（No Content）；`rowcount == 0` 说明记录不存在或不属于自己，返回 404。
 
 **list_reviews**：列出本人记录，按时间倒序。直接用 JSONB 查询 `(scores::jsonb ->> 'weighted_score')::float` 从 JSONB 列里取出综合分，不必把整个 scores 读出来再解析。
 
 ### 面试题（4.8）
 
-1. resume.py 提供哪4个接口？每个接口的方法和路径是什么？
+1. resume.py 提供哪 4 个接口？每个接口的方法和路径是什么？
 2. 什么是 GC 保护？为什么后台任务需要 GC 保护？`_background_tasks` 集合的作用是什么？
 3. 什么是线程本地图（thread-local graph）？为什么需要它？
 4. 查询接口有几个状态？每个状态返回什么内容？
@@ -759,24 +792,31 @@ if row["status"] == "processing":
 ### 核心概念理解
 
 **Q: resume.py 到底是什么？它和简历 Agent 是什么关系？**
+
 A: resume.py 是后端的 HTTP 接口层——它把写好的简历 Agent "包装成"几个网址（接口），让外界能通过 HTTP 来调用。前端永远不直接碰那个 Agent，它们之间只通过 HTTP 请求/响应交流。
 
 **Q: 上传响应里为什么看不到审查结果，只有 review_id？**
-A: 因为上传是 202 + 后台异步。审查任务被丢到后台就立刻返回了（不等30-60秒），所以响应里只有 review_id。真正的报告是后台任务跑完后写进数据库的。需要拿 review_id 去轮询查询接口，等它从 processing 变 done，才能看到报告。
+
+A: 因为上传是 202 + 后台异步。审查任务被丢到后台就立刻返回了（不等 30-60 秒），所以响应里只有 review_id。真正的报告是后台任务跑完后写进数据库的。需要拿 review_id 去轮询查询接口，等它从 processing 变 done，才能看到报告。
 
 **Q: `graph.ainvoke` 和 `graph.invoke` 有什么区别？**
+
 A: `ainvoke` 是异步版（a = async），要配 `await` 或 `create_task` 用；`invoke` 是同步版。后端全程异步，所以用 `ainvoke`。
 
 ### 工程细节
 
 **Q: 为什么先往数据库插一条 processing 记录，再启动后台任务？**
+
 A: 为了让 review_id 一上传就查得到。先插记录，库里立刻就有这条（status=processing）。如果不先插，后台任务还没建记录前，前端查会 404。
 
 **Q: 为什么查询/删除都要 `WHERE ... AND student_id = :student_id`？**
+
 A: 越权防护。加上 `AND student_id`，就保证只能查/删自己的记录。否则别人知道你的 review_id 就能看你的简历报告、删你的记录。
 
 **Q: SQL 里的 `:review_id` 是什么？为什么不直接把值拼进字符串？**
+
 A: `:review_id` 是参数占位符，真正的值通过后面的字典传入。这叫参数化查询，作用是防 SQL 注入——绝不能用 `f"... WHERE id='{review_id}'"` 这种字符串拼接。
 
 **Q: MongoDB 的常见错误情况有哪些？分别返回什么？**
+
 A: 非 PDF 文件->400，空文件->400，文件过大(>20MB)->413，没登录->401，token 失效->401，查不存在的 id->404，查别人的 id->404，没配 Key->能 done 但全是兜底 50 分。

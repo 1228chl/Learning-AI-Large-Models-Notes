@@ -18,7 +18,7 @@ AI 批改不能完全自动发布，原因有三：
 
 ### 1.3 完整数据流
 
-```
+```python
 学员提交 .docx
       |
       v
@@ -59,7 +59,7 @@ publish_results --- 写入 exam_reviews + 更新 exam_submissions.status='publis
 
 ### 1.4 三轨并行设计
 
-```
+```python
                     +-- 第一轨：规则引擎 --------------------------------+
                     |   单选题/多选题/判断题                                |
 run_three_tracks -->|   标准化答案（大写去空格排序）-> 精确比对 -> is_correct  |--> asyncio.gather
@@ -136,7 +136,7 @@ ExamState 分为 7 组：
 
 **SUBJECTIVE_THINK_PROMPT**：Think Tool Prompt（批改前推理），先让 LLM 自由推理（不约束输出格式），分析学员是否理解了核心概念、是否覆盖了得分点、有没有表述模糊但实质正确的内容。
 
-**CODE_QUALITY_REVIEW_PROMPT**：代码质量评估 Prompt，从5个维度评估：规范性、命名可读性、算法效率、异常处理、注释质量。
+**CODE_QUALITY_REVIEW_PROMPT**：代码质量评估 Prompt，从 5 个维度评估：规范性、命名可读性、算法效率、异常处理、注释质量。
 
 **WEAK_POINTS_ANALYSIS_PROMPT**：知识薄弱点分析 Prompt，将错题归纳到知识点，分析薄弱原因，给出复习建议。
 
@@ -149,6 +149,7 @@ ExamState 分为 7 组：
 ### 3.1 试卷模板约定
 
 教师出题使用统一的 Word 模板，解析器需要处理：
+
 1. **题目识别**：`第X题` / `Q.X` / `题目X` 三种格式
 2. **答案提取**：`答：` / `答:` / `Answer:` 前缀后的内容
 3. **代码块**：用 ` ``` ` 围起的代码，`is_code=True` 标记
@@ -156,9 +157,10 @@ ExamState 分为 7 组：
 
 ### 3.2 关键实现细节
 
-**`_sync_parse_word`**：同步解析 Word 文件，使用 `python-docx` 库。逐段遍历段落，用正则 `re.match(r"^(第?\s*[一二三四五六七八九十\d]+\s*[题、。.]|Q\.?\s*\d+|题目\s*\d+)", para_text)` 识别题目开头。
+** `_sync_parse_word` **：同步解析 Word 文件，使用 `python-docx` 库。逐段遍历段落，用正则 `re.match(r"^(第?\s*[一二三四五六七八九十\d]+\s*[题、。.]|Q\.?\s*\d+|题目\s*\d+)", para_text)` 识别题目开头。
 
-**`parse_word_node`**：用 `run_in_executor` 把同步函数放入线程池，避免阻塞 async 事件循环：
+** `parse_word_node` **：用 `run_in_executor` 把同步函数放入线程池，避免阻塞 async 事件循环：
+
 ```python
 loop = asyncio.get_running_loop()
 parsed_questions = await loop.run_in_executor(None, _sync_parse_word, word_path)
@@ -201,7 +203,7 @@ qid_params = {f"qid_{i}": qid for i, qid in enumerate(question_ids)}
 
 客观题（单选 `single_choice` / 多选 `multi_choice` / 判断 `judge`）不需要 LLM，用规则引擎精确比对：
 
-```
+```python
 学员答案 -> _normalize_answer -> 标准化字符串
 正确答案 -> _normalize_answer -> 标准化字符串
                                    -- 完全相等 -> is_correct=True -> 满分
@@ -220,7 +222,7 @@ def _normalize_answer(answer: str) -> str:
 
 ### 5.3 输出结构
 
-每个结果包含 `question_id`, `question_no`, `question_type`, `score`（答对得满分，答错得0分）, `needs_review`（固定为 False，客观题不存在争议）, `ai_feedback`（答对写"正确"，答错写"正确答案：X"）。
+每个结果包含 `question_id`, `question_no`, `question_type`, `score`（答对得满分，答错得 0 分）, `needs_review`（固定为 False，客观题不存在争议）, `ai_feedback`（答对写"正确"，答错写"正确答案：X"）。
 
 ---
 
@@ -230,7 +232,7 @@ def _normalize_answer(answer: str) -> str:
 
 简答题的核心挑战：学员可能用不同的表述正确回答了同一个知识点。解决方案是 Think Tool 两步流程：
 
-```
+```python
 第一步：推理（SUBJECTIVE_THINK_PROMPT）
   普通 LLM 调用（无结构化输出约束）
   问：这道题的每个得分点，学员是否覆盖？有没有表述不同但实质正确的内容？
@@ -247,11 +249,11 @@ def _normalize_answer(answer: str) -> str:
 
 先调 `think_llm.ainvoke` 做推理，再调 `structured_llm.ainvoke` 做结构化评分。推理失败不影响主评分，降级为直接评分。
 
-`needs_review` 阈值：`confidence < 0.7` 标记需复核。阈值设为0.7而非0.5：简答题评分有一定主观性，宁可多标几道让教师过目。
+`needs_review` 阈值：`confidence < 0.7` 标记需复核。阈值设为 0.7 而非 0.5：简答题评分有一定主观性，宁可多标几道让教师过目。
 
 ### 6.3 `_run_subjective_track` 分组并行
 
-每3题一组并行处理。组内 `asyncio.gather` 并行（最多3个并发请求），组间顺序执行。`asyncio.gather(return_exceptions=True)` 确保单题失败不阻断整组，失败的题目用降级结构填充（`score=0, needs_review=True`）。
+每 3 题一组并行处理。组内 `asyncio.gather` 并行（最多 3 个并发请求），组间顺序执行。`asyncio.gather(return_exceptions=True)` 确保单题失败不阻断整组，失败的题目用降级结构填充（`score=0, needs_review=True`）。
 
 ---
 
@@ -263,7 +265,7 @@ def _normalize_answer(answer: str) -> str:
 
 ### 7.2 五维度评估
 
-LLM 从5个维度评估代码质量：规范性（缩进/括号/分号等）、命名可读性（变量/方法/类名）、算法效率（时间/空间复杂度）、异常处理（边界条件/错误处理）、注释质量（关键逻辑是否有注释）。
+LLM 从 5 个维度评估代码质量：规范性（缩进/括号/分号等）、命名可读性（变量/方法/类名）、算法效率（时间/空间复杂度）、异常处理（边界条件/错误处理）、注释质量（关键逻辑是否有注释）。
 
 ### 7.3 始终 needs_review
 
@@ -297,6 +299,7 @@ raw = await asyncio.gather(
 ### 8.3 `analyze_weak_points_node` 薄弱点分析
 
 两条路径：
+
 - 有 `knowledge_tag` 的失分题 -> 按标签直接聚合（规则，不用 LLM）
 - 无 `knowledge_tag` 的失分题 -> 收集后交给 LLM 推断知识点
 
@@ -316,7 +319,7 @@ raw = await asyncio.gather(
 4. 图进入"暂停"状态，State 里包含中断点的位置信息（`next=["teacher_review"]`）
 5. 后续调用 `graph.ainvoke(Command(resume=decision), config=config)` 时，LangGraph 从 MemorySaver 恢复 State，从 `teacher_review_node` 的 `interrupt()` 调用处继续，`decision` 作为 `interrupt()` 的返回值
 
-关键约束：**编译图时不传 `interrupt_before`**，只在节点内调用 `interrupt()`。这是 LangGraph 1.0 的新 API，旧写法已废弃。
+关键约束：**编译图时不传 `interrupt_before` **，只在节点内调用 `interrupt()`。这是 LangGraph 1.0 的新 API，旧写法已废弃。
 
 ### 9.2 `notify_teacher_node` 职责
 
@@ -346,6 +349,7 @@ result = await _graph.ainvoke(
 ### 10.1 `apply_teacher_decision_node`
 
 教师有两种决策：
+
 - `approve`：认可 AI 批改结果，直接采用 AI 分数（`final_score = score`）
 - `modify`：对部分题目调整分数或评语，按 `modifications` 列表覆盖对应题目的 `final_score`
 
@@ -354,6 +358,7 @@ result = await _graph.ainvoke(
 ### 10.2 `publish_results_node`
 
 写入逻辑：
+
 - `exam_reviews`：先删后插（幂等），每道题一行。`ai_raw_result` 存整个 `r` dict 的 JSON 序列化，包含 `point_results`、`quality_feedback` 等详细数据。
 - `exam_submissions`：更新 `status='published'` + `weak_points` JSON + `weak_points_summary`。
 
@@ -367,7 +372,7 @@ result = await _graph.ainvoke(
 
 Exam Agent 是一条线性链，没有条件分支：
 
-```
+```python
 START -> parse_word -> load_questions_meta -> run_three_tracks
   -> aggregate_results -> analyze_weak_points
   -> notify_teacher -> teacher_review [interrupt]
@@ -464,12 +469,12 @@ _background_tasks: set[asyncio.Task] = set()  # 防止 GC 回收后台任务
 2. **Think Tool 两步流程**：先推理再评分，减少语义误判
 3. **HitL = interrupt() + Command(resume=)**：节点内暂停，API 层恢复，State 由 MemorySaver 全程保存
 4. **优雅降级**：每层都有降级策略——Word 解析失败返回空列表、LLM 调用失败标记需复核、JSON 解析失败给 0 分
-5. **分组并行**：简答题每3题一组并行，平衡并发效率与 API 稳定性
+5. **分组并行**：简答题每 3 题一组并行，平衡并发效率与 API 稳定性
 6. **先删后插**：发布结果时幂等写入，避免重复发布产生重复记录
 
 ### 14.3 状态流转
 
-```
+```python
 submitted -> ai_processing -> pending_review -> published
                                        ^
                                        | (教师驳回时回到 pending_review)
@@ -493,7 +498,7 @@ submitted -> ai_processing -> pending_review -> published
 
 ### 问题 4：代码题批改为什么始终标记 `needs_review=True`？LLM 是如何评估代码质量的？
 
-**答案**：LLM 无法实际运行代码，只能从代码文本层面做质量评估，无法验证代码是否能正确编译和运行。因此所有代码题评分仅作参考，教师必须人工确认。LLM 从5个维度评估代码质量：规范性（缩进/括号/分号等）、命名可读性（变量/方法/类名）、算法效率（时间/空间复杂度）、异常处理（边界条件/错误处理）、注释质量（关键逻辑是否有注释）。输出包含 `score` 和 `confidence`，`confidence < 0.7` 时同样标记需复核。
+**答案**：LLM 无法实际运行代码，只能从代码文本层面做质量评估，无法验证代码是否能正确编译和运行。因此所有代码题评分仅作参考，教师必须人工确认。LLM 从 5 个维度评估代码质量：规范性（缩进/括号/分号等）、命名可读性（变量/方法/类名）、算法效率（时间/空间复杂度）、异常处理（边界条件/错误处理）、注释质量（关键逻辑是否有注释）。输出包含 `score` 和 `confidence`，`confidence < 0.7` 时同样标记需复核。
 
 ### 问题 5：为什么要用 `run_in_executor` 处理 Word 文件解析？可以直接在 async 函数中调用 `python-docx` 吗？
 
@@ -501,11 +506,11 @@ submitted -> ai_processing -> pending_review -> published
 
 ### 问题 6：试卷批改 Agent 中，`parsed_questions` 为什么被两个节点先后写入？这样做有什么风险？如何防止并发冲突？
 
-**答案**：`parse_word_node` 写入初步解析结果（只有学员答案信息），`load_questions_meta_node` 用 DB 数据覆盖它（补充题型/得分点/正确答案等元数据）。风险在于，如果图装配中这两个节点被设计为并行执行，就会产生并发写冲突。但在这个 Agent 中，`parse_word -> load_questions_meta` 是**固定顺序边**，不会并发执行。合并策略是"以 DB 题目列表为准，按题号匹配解析结果"——`load_questions_meta_node` 从 DB 查询完整的题目列表，然后按 `question_no` 从 `parsed` 字典中查找对应的 `student_answer`，找不到的填空字符串。
+**答案**：`parse_word_node` 写入初步解析结果（只有学员答案信息），`load_questions_meta_node` 用 DB 数据覆盖它（补充题型/得分点/正确答案等元数据）。风险在于，如果图装配中这两个节点被设计为并行执行，就会产生并发写冲突。但在这个 Agent 中，`parse_word -> load_questions_meta` 是**固定顺序边**，不会并发执行。合并策略是"以 DB 题目列表为准，按题号匹配解析结果"—— `load_questions_meta_node` 从 DB 查询完整的题目列表，然后按 `question_no` 从 `parsed` 字典中查找对应的 `student_answer`，找不到的填空字符串。
 
-### 问题 7：`_run_subjective_track` 为什么采用每3题一组并行的策略？为什么不全部并行？
+### 问题 7：`_run_subjective_track` 为什么采用每 3 题一组并行的策略？为什么不全部并行？
 
-**答案**：如果一份试卷有15道简答题，全部并行就是15个 LLM 请求同时发出。DeepSeek API 有并发限制，超出后请求排队甚至失败。每组3题，组内并行（最多3个请求），组间顺序执行，在"并发效率"和"API 稳定性"之间取了一个合理的平衡点。`asyncio.gather(return_exceptions=True)` 确保某道题抛异常不会中断整组，其余题目正常完成，失败的题目用降级结构填充。
+**答案**：如果一份试卷有 15 道简答题，全部并行就是 15 个 LLM 请求同时发出。DeepSeek API 有并发限制，超出后请求排队甚至失败。每组 3 题，组内并行（最多 3 个请求），组间顺序执行，在"并发效率"和"API 稳定性"之间取了一个合理的平衡点。`asyncio.gather(return_exceptions=True)` 确保某道题抛异常不会中断整组，其余题目正常完成，失败的题目用降级结构填充。
 
 ### 问题 8：描述 `publish_results_node` 中"先删后插"的写入策略。为什么不用 UPSERT？
 
