@@ -13,13 +13,13 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Atomic-Cards/AI-Agent/RAG流程/35-BGE-M3嵌入模型与混合检索.md",
+                "file": "AI-Large-Modlels-Notes/Project/EduAgent/课堂知识点记录.md",
                 "mode": "source",
                 "source": false,
                 "backlinks": false
               },
               "icon": "lucide-file",
-              "title": "35-BGE-M3嵌入模型与混合检索"
+              "title": "课堂知识点记录"
             }
           },
           {
@@ -262,6 +262,8 @@
   "active": "9dddde49a2d5eb85",
   "lastOpenFiles": [
     "Atomic-Cards/AI-Agent/RAG流程/35-BGE-M3嵌入模型与混合检索.md",
+    "AI-Large-Modlels-Notes/Project/EduAgent/课堂知识点记录.md",
+    "AI-Large-Modlels-Notes/Project/EduAgent",
     "Atomic-Cards/AI-Agent/基础设施/05-Hooks系统（Hooks System）.md",
     "Atomic-Cards/AI-Agent/基础设施/01-Tools-Execution（工具与执行）/24-消费式文件读取模式.md",
     "Atomic-Cards/AI-Agent/基础设施/04-Concurrency-Scheduling（并发与调度）/23-Daemon线程与Lock并发模式.md",
@@ -286,7 +288,6 @@
     "Atomic-Cards/AI-Agent/基础设施/01-Tools-Execution（工具与执行）/04-权限系统（Permission System）.md",
     "Atomic-Cards/AI-Agent/基础设施/01-Tools-Execution（工具与执行）/03-工具分发系统（Tool Dispatch）.md",
     "Atomic-Cards/AI-Agent/基础设施/01-Tools-Execution（工具与执行）/02-Agent循环（Agent Loop）.md",
-    "Atomic-Cards/AI-Agent/基础设施/05-Multi-Agent-Platform（多Agent平台）/01-Agent Harness（基础设施层）.md",
     "Atomic-Cards/AI-Agent/基础设施/05-Multi-Agent-Platform（多Agent平台）",
     "Atomic-Cards/AI-Agent/基础设施/04-Concurrency-Scheduling（并发与调度）",
     "Atomic-Cards/AI-Agent/基础设施/03-Memory-Management（记忆管理）",
@@ -296,7 +297,6 @@
     "Atomic-Cards/AI-Agent/基础设施/15-自主Agent（Autonomous Agent）.md.tmp.40460.f6f5e9b9a10d",
     "Atomic-Cards/AI-Agent/基础设施/06-子Agent（Subagent）.md.tmp.40460.ae475e82f7c8",
     "Atomic-Cards/AI-Agent/基础设施/06-子Agent（Subagent）.md.tmp.40460.010e0e9b3992",
-    "Atomic-Cards/AI-Agent/基础设施/11-记忆系统（Memory System）.md.tmp.40460.1ba4a8caa354",
     "Assets/LangChain组件图.drawio.png",
     "Assets/Image/AI-Large-Modlels-Notes/Project/EduRAG/Milvus向量数据库/1.2.8.3-1.png",
     "Assets/Image/AI-Large-Modlels-Notes/Project/EduRAG/Milvus向量数据库/1.2.8.2-2.png",
