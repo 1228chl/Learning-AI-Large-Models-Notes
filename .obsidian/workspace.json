@@ -156,16 +156,6 @@
             }
           },
           {
-            "id": "4c73286640237a1e",
-            "type": "leaf",
-            "state": {
-              "type": "claudian-view",
-              "state": {},
-              "icon": "bot",
-              "title": "Claudian"
-            }
-          },
-          {
             "id": "53d5c2b4ac226f92",
             "type": "leaf",
             "state": {
@@ -241,7 +231,8 @@
       }
     ],
     "direction": "horizontal",
-    "width": 396.5
+    "width": 396.5,
+    "collapsed": true
   },
   "left-ribbon": {
     "hiddenItems": {
@@ -260,8 +251,9 @@
   },
   "active": "9dddde49a2d5eb85",
   "lastOpenFiles": [
-    "AI-Large-Modlels-Notes/Project/EduAgent/课堂知识点记录.md",
+    "Atomic-Cards/卡片总览.md",
     "AI-Large-Modlels-Notes/Project/EduAgent/AINote/01-项目简介.md",
+    "AI-Large-Modlels-Notes/Project/EduAgent/课堂知识点记录.md",
     "AI-Large-Modlels-Notes/Project/EduAgent/AINote/10-收尾与扩展.md",
     "AI-Large-Modlels-Notes/Project/EduAgent/AINote/09-前端集成扩展.md",
     "AI-Large-Modlels-Notes/Project/EduAgent/AINote/08-系统集成.md",
@@ -273,7 +265,6 @@
     "AI-Large-Modlels-Notes/Project/EduAgent/AINote/02-工具介绍.md",
     "AI-Large-Modlels-Notes/Project/EduAgent/AINote",
     "AI-Large-Modlels-Notes/Project/EduAgent/新建文件夹",
-    "Atomic-Cards/卡片总览.md",
     "Atomic-Cards/AI-Agent/RAG流程/35-BGE-M3嵌入模型与混合检索.md",
     "AI-Large-Modlels-Notes/Project/EduAgent",
     "Atomic-Cards/AI-Agent/基础设施/05-Hooks系统（Hooks System）.md",
