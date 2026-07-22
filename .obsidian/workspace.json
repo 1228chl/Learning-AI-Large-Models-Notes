@@ -13,13 +13,13 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "AI-Large-Modlels-Notes/Project/EduAgent/课堂知识点记录.md",
+                "file": "AI-Large-Modlels-Notes/Project/EduAgent/AINote/01-项目简介.md",
                 "mode": "source",
                 "source": false,
                 "backlinks": false
               },
               "icon": "lucide-file",
-              "title": "课堂知识点记录"
+              "title": "01-项目简介"
             }
           },
           {
@@ -241,8 +241,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 396.5,
-    "collapsed": true
+    "width": 396.5
   },
   "left-ribbon": {
     "hiddenItems": {
@@ -261,8 +260,20 @@
   },
   "active": "9dddde49a2d5eb85",
   "lastOpenFiles": [
-    "Atomic-Cards/卡片总览.md",
     "AI-Large-Modlels-Notes/Project/EduAgent/课堂知识点记录.md",
+    "AI-Large-Modlels-Notes/Project/EduAgent/AINote/01-项目简介.md",
+    "AI-Large-Modlels-Notes/Project/EduAgent/AINote/10-收尾与扩展.md",
+    "AI-Large-Modlels-Notes/Project/EduAgent/AINote/09-前端集成扩展.md",
+    "AI-Large-Modlels-Notes/Project/EduAgent/AINote/08-系统集成.md",
+    "AI-Large-Modlels-Notes/Project/EduAgent/AINote/07-模拟面试Agent.md",
+    "AI-Large-Modlels-Notes/Project/EduAgent/AINote/06-试卷批改Agent.md",
+    "AI-Large-Modlels-Notes/Project/EduAgent/AINote/05-RAG问答系统.md",
+    "AI-Large-Modlels-Notes/Project/EduAgent/AINote/04-简历审查Agent.md",
+    "AI-Large-Modlels-Notes/Project/EduAgent/AINote/03-环境搭建与工程地基.md",
+    "AI-Large-Modlels-Notes/Project/EduAgent/AINote/02-工具介绍.md",
+    "AI-Large-Modlels-Notes/Project/EduAgent/AINote",
+    "AI-Large-Modlels-Notes/Project/EduAgent/新建文件夹",
+    "Atomic-Cards/卡片总览.md",
     "Atomic-Cards/AI-Agent/RAG流程/35-BGE-M3嵌入模型与混合检索.md",
     "AI-Large-Modlels-Notes/Project/EduAgent",
     "Atomic-Cards/AI-Agent/基础设施/05-Hooks系统（Hooks System）.md",
@@ -278,16 +289,6 @@
     "Atomic-Cards/AI-Agent/基础设施/05-Multi-Agent-Platform（多Agent平台）/15-自主Agent（Autonomous Agent）.md",
     "Atomic-Cards/AI-Agent/基础设施/05-Multi-Agent-Platform（多Agent平台）/14-团队协议（Team Protocols）.md",
     "Atomic-Cards/AI-Agent/基础设施/05-Multi-Agent-Platform（多Agent平台）/13-任务系统（Task System）.md",
-    "Atomic-Cards/AI-Agent/基础设施/02-Planning-Control（规划与控制）/12-系统提示词组装（System Prompt Assembly）.md",
-    "Atomic-Cards/AI-Agent/基础设施/03-Memory-Management（记忆管理）/11-记忆系统（Memory System）.md",
-    "Atomic-Cards/AI-Agent/基础设施/05-Multi-Agent-Platform（多Agent平台）/10-MCP插件集成（MCP Plugin）.md",
-    "Atomic-Cards/AI-Agent/基础设施/05-Multi-Agent-Platform（多Agent平台）/09-消息总线与Agent团队（MessageBus）.md",
-    "Atomic-Cards/AI-Agent/基础设施/02-Planning-Control（规划与控制）/08-错误恢复与重试（Error Recovery）.md",
-    "Atomic-Cards/AI-Agent/基础设施/03-Memory-Management（记忆管理）/07-上下文压缩管线（Context Compression）.md",
-    "Atomic-Cards/AI-Agent/基础设施/02-Planning-Control（规划与控制）/06-子Agent（Subagent）.md",
-    "Atomic-Cards/AI-Agent/基础设施/01-Tools-Execution（工具与执行）/05-Hooks系统（Hooks System）.md",
-    "Atomic-Cards/AI-Agent/基础设施/01-Tools-Execution（工具与执行）/04-权限系统（Permission System）.md",
-    "Atomic-Cards/AI-Agent/基础设施/01-Tools-Execution（工具与执行）/03-工具分发系统（Tool Dispatch）.md",
     "Atomic-Cards/AI-Agent/基础设施/05-Multi-Agent-Platform（多Agent平台）",
     "Atomic-Cards/AI-Agent/基础设施/04-Concurrency-Scheduling（并发与调度）",
     "Atomic-Cards/AI-Agent/基础设施/03-Memory-Management（记忆管理）",
@@ -295,8 +296,6 @@
     "Atomic-Cards/AI-Agent/基础设施/01-Tools-Execution（工具与执行）",
     "Atomic-Cards/原子化生成提示词.md.tmp.40460.e1939aa9e9d7",
     "Atomic-Cards/AI-Agent/基础设施/15-自主Agent（Autonomous Agent）.md.tmp.40460.f6f5e9b9a10d",
-    "Atomic-Cards/AI-Agent/基础设施/06-子Agent（Subagent）.md.tmp.40460.ae475e82f7c8",
-    "Atomic-Cards/AI-Agent/基础设施/06-子Agent（Subagent）.md.tmp.40460.010e0e9b3992",
     "Assets/LangChain组件图.drawio.png",
     "Assets/Image/AI-Large-Modlels-Notes/Project/EduRAG/Milvus向量数据库/1.2.8.3-1.png",
     "Assets/Image/AI-Large-Modlels-Notes/Project/EduRAG/Milvus向量数据库/1.2.8.2-2.png",
