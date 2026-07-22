@@ -13,7 +13,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "AI-Large-Modlels-Notes/Project/EduAgent/AINote/01-项目简介.md",
+                "file": "AI-Large-Modlels-Notes/Project/EduAgent/01-项目简介.md",
                 "mode": "source",
                 "source": false,
                 "backlinks": false
@@ -119,8 +119,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 312.5,
-    "collapsed": true
+    "width": 312.5
   },
   "right": {
     "id": "f07a0c5b7e11463b",
@@ -231,8 +230,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 396.5,
-    "collapsed": true
+    "width": 396.5
   },
   "left-ribbon": {
     "hiddenItems": {
@@ -249,20 +247,20 @@
       "realclaudian:Open Claudian": false
     }
   },
-  "active": "9dddde49a2d5eb85",
+  "active": "e83158f79f242826",
   "lastOpenFiles": [
     "Atomic-Cards/卡片总览.md",
-    "AI-Large-Modlels-Notes/Project/EduAgent/AINote/01-项目简介.md",
+    "AI-Large-Modlels-Notes/Project/EduAgent/01-项目简介.md",
     "AI-Large-Modlels-Notes/Project/EduAgent/课堂知识点记录.md",
-    "AI-Large-Modlels-Notes/Project/EduAgent/AINote/10-收尾与扩展.md",
-    "AI-Large-Modlels-Notes/Project/EduAgent/AINote/09-前端集成扩展.md",
-    "AI-Large-Modlels-Notes/Project/EduAgent/AINote/08-系统集成.md",
-    "AI-Large-Modlels-Notes/Project/EduAgent/AINote/07-模拟面试Agent.md",
-    "AI-Large-Modlels-Notes/Project/EduAgent/AINote/06-试卷批改Agent.md",
-    "AI-Large-Modlels-Notes/Project/EduAgent/AINote/05-RAG问答系统.md",
-    "AI-Large-Modlels-Notes/Project/EduAgent/AINote/04-简历审查Agent.md",
-    "AI-Large-Modlels-Notes/Project/EduAgent/AINote/03-环境搭建与工程地基.md",
-    "AI-Large-Modlels-Notes/Project/EduAgent/AINote/02-工具介绍.md",
+    "AI-Large-Modlels-Notes/Project/EduAgent/10-收尾与扩展.md",
+    "AI-Large-Modlels-Notes/Project/EduAgent/09-前端集成扩展.md",
+    "AI-Large-Modlels-Notes/Project/EduAgent/08-系统集成.md",
+    "AI-Large-Modlels-Notes/Project/EduAgent/07-模拟面试Agent.md",
+    "AI-Large-Modlels-Notes/Project/EduAgent/06-试卷批改Agent.md",
+    "AI-Large-Modlels-Notes/Project/EduAgent/05-RAG问答系统.md",
+    "AI-Large-Modlels-Notes/Project/EduAgent/04-简历审查Agent.md",
+    "AI-Large-Modlels-Notes/Project/EduAgent/03-环境搭建与工程地基.md",
+    "AI-Large-Modlels-Notes/Project/EduAgent/02-工具介绍.md",
     "AI-Large-Modlels-Notes/Project/EduAgent/AINote",
     "AI-Large-Modlels-Notes/Project/EduAgent/新建文件夹",
     "Atomic-Cards/AI-Agent/RAG流程/35-BGE-M3嵌入模型与混合检索.md",
