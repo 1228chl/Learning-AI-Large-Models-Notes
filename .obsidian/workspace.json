@@ -13,7 +13,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "AI-Large-Modlels-Notes/Project/EduAgent/02-工具介绍.md",
+                "file": "AI-Large-Modlels-Notes/Project/EduAgent/精简版/02-工具介绍.md",
                 "mode": "preview",
                 "source": false,
                 "backlinks": false
@@ -250,6 +250,7 @@
   },
   "active": "9dddde49a2d5eb85",
   "lastOpenFiles": [
+    "AI-Large-Modlels-Notes/Project/EduAgent/02-工具介绍.md",
     "AI-Large-Modlels-Notes/Project/EduAgent/01-项目简介.md",
     "AI-Large-Modlels-Notes/Project/EduAgent/课堂知识点记录.md",
     "AI-Large-Modlels-Notes/Project/EduAgent/10-收尾与扩展.md",
@@ -259,7 +260,6 @@
     "AI-Large-Modlels-Notes/Project/EduAgent/06-试卷批改Agent.md",
     "AI-Large-Modlels-Notes/Project/EduAgent/05-RAG问答系统.md",
     "AI-Large-Modlels-Notes/Project/EduAgent/04-简历审查Agent.md",
-    "AI-Large-Modlels-Notes/Project/EduAgent/02-工具介绍.md",
     "AI-Large-Modlels-Notes/Project/EduAgent/03-环境搭建与工程地基.md",
     "AI-Large-Modlels-Notes/Project/EduAgent/精简版/10-收尾与扩展.md",
     "AI-Large-Modlels-Notes/Project/EduAgent/精简版/09-前端集成扩展.md",
