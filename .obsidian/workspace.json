@@ -62,8 +62,7 @@
               "title": "原子化生成提示词"
             }
           }
-        ],
-        "currentTab": 1
+        ]
       }
     ],
     "direction": "vertical"
@@ -249,7 +248,7 @@
       "templater-obsidian:Templater": false
     }
   },
-  "active": "b9c397e9f32ab073",
+  "active": "9dddde49a2d5eb85",
   "lastOpenFiles": [
     "AI-Large-Modlels-Notes/Project/EduAgent/学习版/04-简历审查Agent.md",
     "AI-Large-Modlels-Notes/Project/EduAgent/学习版/02-工具介绍.md",
