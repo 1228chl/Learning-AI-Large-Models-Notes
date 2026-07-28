@@ -80,12 +80,31 @@
 
 #### 核心知识点
 
-**Document 统一抽象**：`page_content`（文本内容）+ `metadata`（来源信息，如文件名/页码）。
+**Document 统一抽象**
+
+```python
+from langchain_core.documents import Document
+
+doc = Document(
+    page_content="这是文档的文本内容",   # 主体文字
+    metadata={"source": "Java讲义第3章.pdf", "page": 2}  # 来源信息
+)
+```
 
 **三种格式加载**：
-- PDF：`PyPDFLoader`，每页一个 Document，只提取文字层
-- Word：`python-docx` 逐段解析
-- Markdown：`TextLoader`，整个文件一个 Document
+
+```python
+# PDF：每页一个 Document
+from langchain_community.document_loaders import PyPDFLoader
+loader = PyPDFLoader("Java讲义.pdf")
+docs = loader.load()  # 每个 page 一个 Document
+
+# Markdown：整个文件一个 Document
+from langchain_community.document_loaders import TextLoader
+docs = TextLoader("笔记.md").load()
+
+# Word：python-docx 逐段解析
+```
 
 **企业优先选 Markdown**：`#` / `##` / `###` 标题天然划定知识边界，切分语义完整性远好于按字数切 PDF。
 
@@ -102,11 +121,35 @@
 
 **chunk 大小**：含代码块推荐 1000-1500 字，纯文字 600-800 字。默认 chunk_size=1200，chunk_overlap=100。
 
-**PDF 分块分隔符优先级**：`\n\n` → `\n` → `。` → `，` → 空格 → 字符。
+```python
+from langchain_text_splitters import RecursiveCharacterTextSplitter
+
+# PDF 分块
+splitter = RecursiveCharacterTextSplitter(
+    chunk_size=1200,
+    chunk_overlap=100,
+    separators=["\n\n", "\n", "。", "，", " ", ""]  # 优先级从高到低
+)
+```
 
 **Markdown 两阶段方案**：
-1. 按标题语义切分：`MarkdownHeaderTextSplitter`，保留标题在内容里，metadata 继承 H1/H2/H3
-2. 超长段落二次切分：`MarkdownTextSplitter`，优先在代码块边界断开
+
+```python
+from langchain_text_splitters import MarkdownHeaderTextSplitter
+
+# 阶段一：按标题语义切分
+header_splitter = MarkdownHeaderTextSplitter(
+    headers_to_split_on=[("#", "H1"), ("##", "H2"), ("###", "H3")],
+    strip_headers=False  # 保留标题在内容里
+)
+sections = header_splitter.split_text(md_content)
+
+# 阶段二：超长段落二次切分
+for section in sections:
+    if len(section.page_content) > 1200:
+        sub_chunks = markdown_splitter.split_documents([section])
+        # 优先在代码块边界断开
+```
 
 ---
 
@@ -129,7 +172,26 @@
 
 **BGE-M3 特点**：一次推理同时输出 dense + sparse，中英双语优秀，本地推理，max_length=8192。
 
-**BGEMEmbedder 单例模式**：类变量 `_instance` 持有，`get_instance()` 创建或复用，整个进程只加载一次（约 5-15 秒）。
+**BGEMEmbedder 单例模式**
+
+```python
+class BGEMEmbedder:
+    _instance = None
+
+    @classmethod
+    def get_instance(cls):
+        if cls._instance is None:
+            cls._instance = cls()  # 整个进程只加载一次（约5-15秒）
+        return cls._instance
+
+    def encode(self, texts: list[str], batch_size=12) -> tuple[list, list]:
+        """返回 (dense_vectors, sparse_vectors)"""
+        ...
+
+    def encode_query(self, text: str) -> tuple[list, dict]:
+        """单条查询编码"""
+        ...
+```
 
 ---
 
@@ -147,9 +209,22 @@
 
 **Contextual RAG**：用 LLM 生成定位描述拼接到 chunk 前，让 chunk 自带上下文。
 
-**五步流水线**：读取文档 → 智能分块 → 上下文增强 → BGE-M3 嵌入 → 写入 Milvus。
+**五步流水线**
 
-**幂等更新**：先按 document_id 删除旧 chunk，再插入新的。
+```python
+for doc_path in doc_paths:
+    # 1. 读取文档 → Document 列表
+    docs = load_document(doc_path)
+    # 2. 智能分块
+    chunks = smart_split(docs)
+    # 3. 上下文增强（Contextual RAG）
+    chunks = [augment_with_context(chunk) for chunk in chunks]
+    # 4. BGE-M3 嵌入 → dense + sparse
+    dense_vecs, sparse_vecs = embedder.encode([c.page_content for c in chunks])
+    # 5. 写入 Milvus（先删旧 chunk，再插入新的）
+    collection.delete(f"document_id == '{doc_id}'")
+    collection.insert([{"id": c.id, "vector": dense, ...} for c, dense in zip(chunks, dense_vecs)])
+```
 
 ---
 
@@ -166,9 +241,30 @@
 
 #### 核心知识点
 
-**双路 AnnSearchRequest**：稠密检索（dense 向量，IP 内积）+ 稀疏检索（sparse_embedding，IP 内积）。
+```python
+from pymilvus import AnnSearchRequest, WeightedRanker
 
-**WeightedRanker 融合**：dense:sparse = 0.7:0.3，语义为主，关键词为辅。
+# 双路检索
+dense_req = AnnSearchRequest(
+    data=[query_dense],
+    anns_field="dense_vector",
+    param={"metric_type": "IP"},           # 内积相似度
+    limit=30,
+)
+sparse_req = AnnSearchRequest(
+    data=[query_sparse],
+    anns_field="sparse_vector",
+    param={"metric_type": "IP"},
+    limit=30,
+)
+
+# WeightedRanker 融合：dense:sparse = 0.7:0.3
+results = collection.hybrid_search(
+    [dense_req, sparse_req],
+    rerank=WeightedRanker(0.7, 0.3),      # 语义为主，关键词为辅
+    limit=30,
+)
+```
 
 ---
 
@@ -188,9 +284,20 @@
 | 速度 | 快，百万级毫秒返回 | 慢，每对需一次推理 |
 | 使用位置 | 第一轮召回（topK=30） | 第二轮精排（topN=5） |
 
-**置信度计算**：`sigmoid(reranker_score)` → 0~1 概率值。
+**置信度计算与路由**
 
-**路由策略**：≥0.5 → generate_rag（基于知识库）；<0.5 且需联网 → web_search；<0.5 且不联网 → generate_direct。
+```python
+# 置信度 = sigmoid(reranker_score) → 0~1
+confidence = 1 / (1 + math.exp(-reranker_score))
+
+# 路由策略
+if confidence >= 0.5:
+    route = "generate_rag"       # 基于知识库回答
+elif needs_web_search:
+    route = "web_search"         # 联网搜索兜底
+else:
+    route = "generate_direct"    # LLM 直接回答
+```
 
 ---
 
@@ -210,6 +317,8 @@
 | BROAD | 宽泛问题 | multi_query_rewrite（多查询改写） |
 | PRECISE | 精确问题 | 标准 RAG 流程 |
 
+**实现方式**：使用 DeepSeek 结构化输出进行分类，temperature=0 确保稳定。
+
 **关键设计**：跨 Agent 路由（8.4）用 DeepSeek LLM（调用频率低）；QA 内部意图分类用本地 MiniLM（调用频率高）。
 
 ---
@@ -224,11 +333,26 @@
 
 #### 核心知识点
 
-**MemoryManager**：`save_memory`（保存对话历史）+ `load_memory`（加载历史）。
+```python
+class MemoryManager:
+    async def save_memory(self, thread_id: str, messages: list):
+        """保存对话历史到 MemorySaver"""
+        ...
 
-**摘要压缩**：对话超过阈值（如 10 轮）时，用 LLM 压缩历史为摘要，后续用摘要 + 最近几轮完整对话作为上下文。
+    async def load_memory(self, thread_id: str) -> list:
+        """加载历史消息"""
+        ...
 
-**MemorySaver**：`compile(checkpointer=memory)` 后自动保存 State，通过 `thread_id` 区分会话。
+# 摘要压缩：对话超过 10 轮时触发
+if len(messages) > 10:
+    summary = await llm.ainvoke(compress_prompt(messages))
+    # 用摘要 + 最近几轮完整对话作为上下文
+
+# MemorySaver + thread_id
+graph = builder.compile(checkpointer=MemorySaver())
+config = {"configurable": {"thread_id": "student_1_session_2"}}
+result = await graph.ainvoke({"messages": [msg]}, config)
+```
 
 ---
 
@@ -242,7 +366,10 @@
 
 **MCP**（Model Context Protocol）：LLM 与外部工具交互的标准化协议。
 
-**三个文件**：`kb_server.py`（暴露 Milvus 检索）、`web_search_server.py`（暴露 Web 搜索）、`client.py`（统一管理 MCP 连接）。
+**三个文件**：
+- `kb_server.py`：暴露 Milvus 检索工具
+- `web_search_server.py`：暴露 Web 搜索工具
+- `client.py`：统一管理 MCP 连接
 
 ---
 
@@ -265,16 +392,33 @@
 
 **意图分类条件路由**
 
-```
-classify_query
-  → GENERAL       → generate_general
-  → GENERAL_WEB   → web_search
-  → VAGUE         → hyde_generate
-  → BROAD         → multi_query_rewrite
-  → PRECISE       → load_memory_and_embed
+```python
+def route_by_intent(state: QAState) -> str:
+    intent = state["intent"]
+    return intent  # GENERAL / GENERAL_WEB / VAGUE / BROAD / PRECISE
+
+builder.add_conditional_edges(
+    "classify_query",
+    route_by_intent,
+    {
+        "GENERAL": "generate_general",
+        "GENERAL_WEB": "web_search",
+        "VAGUE": "hyde_generate",
+        "BROAD": "multi_query_rewrite",
+        "PRECISE": "load_memory_and_embed",
+    },
+)
 ```
 
 **HyDE（假设文档）**：对模糊问题，先让 LLM 生成一段"假设的课程讲义"，再用它去检索。模糊问题本身信息少，但"假设答案"含更丰富关键词，能召回更相关内容。
+
+```python
+# HyDE：先让 LLM 生成假设答案
+hyde_prompt = f"请根据问题生成一段相关的课程讲义内容：{question}"
+hyde_doc = await llm.ainvoke(hyde_prompt)
+# 用假设答案去检索，而不是原问题
+query_vec = embedder.encode_query(hyde_doc)
+```
 
 **Multi-Query（多查询改写）**：对宽泛问题拆成 3-5 个具体子问题，分别检索后合并结果，扩大召回覆盖。
 
@@ -285,7 +429,7 @@ classify_query
 **重排序节点**：Reranker 精排取 topN=5，sigmoid 计算置信度，按置信度路由。
 
 **三条生成路径**：
-- generate_rag（高置信）：基于知识库 chunk 生成，标注来源
+- generate_rag（高置信）：基于知识库 chunk 生成，标注来源（"来源：Java 讲义>第 3 章>3.1 IOC"）
 - web_search（低置信 + 需联网）：MCP 联网搜索作为上下文
 - generate_direct（低置信 + 不联网）：LLM 直接回答，兜底方案
 
@@ -295,7 +439,13 @@ classify_query
 
 #### 核心知识点
 
-12 个节点 + 2 个条件边（意图分类路由 + 置信度路由）+ 编译时挂 MemorySaver 实现多轮记忆。
+```python
+builder = StateGraph(QAState)
+# 12 个节点 + 2 个条件边
+builder.add_conditional_edges("classify_query", route_by_intent, {...})
+builder.add_conditional_edges("rerank", route_by_confidence, {...})
+graph = builder.compile(checkpointer=MemorySaver())  # 多轮记忆
+```
 
 ---
 

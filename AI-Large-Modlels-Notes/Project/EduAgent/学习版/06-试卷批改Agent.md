@@ -53,6 +53,20 @@
 
 **设计原则**：AI 全自动批改 → 人工确认窗口 → 教师发布。
 
+**三轨并行设计**
+
+```python
+# 三轨用 asyncio.gather 并行启动
+objective_task = run_objective_track(parsed_questions)    # 第一轨：规则引擎
+subjective_task = run_subjective_track(parsed_questions)  # 第二轨：LLM 语义评分
+code_task = run_code_track(parsed_questions)              # 第三轨：LLM 代码评估
+
+objective_results, subjective_results, code_results = await asyncio.gather(
+    objective_task, subjective_task, code_task,
+    return_exceptions=True,   # 某轨失败不影响其他轨
+)
+```
+
 **完整数据流**
 
 ```
@@ -65,19 +79,6 @@ parse_word（解析Word）
             → teacher_review [interrupt] ← 关键！图在此暂停
               → apply_teacher_decision（approve/modify）
                 → publish_results（写入DB）
-```
-
-**三轨并行设计**
-
-```
-                    +-- 第一轨：规则引擎 --------------------------------+
-                    |   单选题/多选题/判断题，标准化答案精确比对，is_correct  |
-run_three_tracks -->|                                                      |--> asyncio.gather
-                    +-- 第二轨：LLM 语义评分 -------------------------------+
-                    |   简答题，Think Tool 推理分析 → 结构化评分，含 confidence |
-                    |                                                      |
-                    +-- 第三轨：LLM 代码质量评估 ----------------------------+
-                        代码题，5 维度评估，全部标记教师复核
 ```
 
 **涉及的数据库表**：exams（试卷）、questions（试题）、scoring_points（得分点）、exam_submissions（提交状态）、exam_reviews（批改详情）。
@@ -97,12 +98,26 @@ run_three_tracks -->|                                                      |--> 
 
 **五个 Pydantic 子模型**
 
-| 模型 | 用途 | 关键字段 |
-|------|------|---------|
-| ScoringPointResult | 单个得分点评分 | point_id, earned(bool), evidence |
-| SubjectiveReviewResult | 简答题批改结果 | confidence(0~1), point_results, overall_comment |
-| WeakPoint / WeakPointsReport | 知识薄弱点 | tag, wrong_count, suggestion |
-| TeacherDecision | 教师决策 | action(approve/modify), modifications |
+```python
+class ScoringPointResult(BaseModel):
+    point_id: str = Field(description="得分点ID")
+    earned: bool = Field(description="是否得分")
+    evidence: str = Field(description="学员答案中支持得分的依据")
+
+class SubjectiveReviewResult(BaseModel):
+    question_id: str = Field(description="题目ID")
+    total_score: int = Field(description="得分")
+    full_score: int = Field(description="满分")
+    confidence: float = Field(description="评分把握度 0~1")
+    # confidence < 0.7 自动标记 needs_review=True
+    point_results: list[ScoringPointResult] = Field(default_factory=list)
+    overall_comment: str = Field(description="评语")
+
+class TeacherDecision(BaseModel):
+    action: str = Field(description="approve / modify")
+    modifications: list[dict] = Field(default_factory=list)
+    teacher_id: str = Field(description="教师ID")
+```
 
 **ExamState（7 组）**：
 
@@ -116,15 +131,7 @@ run_three_tracks -->|                                                      |--> 
 | HitL | teacher_notified, teacher_decision | notify_teacher / teacher_review |
 | 发布 | final_results, published | apply_teacher_decision / publish_results |
 
-**四个 Prompt**
-
-| Prompt | 用途 |
-|--------|------|
-| SYSTEM_PROMPT | 人设前缀，严格按得分点评分 |
-| SUBJECTIVE_REVIEW_PROMPT | 简答题批改 |
-| SUBJECTIVE_THINK_PROMPT | Think Tool 推理（批改前先自由分析） |
-| CODE_QUALITY_REVIEW_PROMPT | 5 维度代码质量评估 |
-| WEAK_POINTS_ANALYSIS_PROMPT | 薄弱点分析 |
+**四个 Prompt**：SYSTEM_PROMPT（人设，严格按得分点评分）、SUBJECTIVE_REVIEW_PROMPT（简答题批改）、CODE_QUALITY_REVIEW_PROMPT（5 维度代码评估）、WEAK_POINTS_ANALYSIS_PROMPT（薄弱点分析）。
 
 **Think Tool 的价值**：先自由推理再结构化评分，减少对"表述不同但实质正确"的误判。
 
@@ -132,15 +139,26 @@ run_three_tracks -->|                                                      |--> 
 
 ### ③ Word 解析与元数据加载
 
-#### 学习目标
-
-- Word 解析如何处理三种题目格式？
-- `_sync_parse_word` 为什么用 `run_in_executor`？
-- 元数据合并策略？
-
 #### 核心知识点
 
-**Word 解析**：python-docx 逐段遍历，正则 `^(第?\s*[一二三四五六七八九十\d]+\s*[题、。.]|Q\.?\s*\d+|题目\s*\d+)` 识别题目开头。同步函数用 `run_in_executor` 丢线程池。解析失败返回空列表，后续从 DB 补全。
+**Word 解析**
+
+```python
+def _sync_parse_word(word_path: str) -> list[ParsedQuestion]:
+    doc = Document(word_path)
+    for para in doc.paragraphs:
+        # 正则识别题目开头
+        if re.match(r"^(第?\s*[一二三四五六七八九十\d]+\s*[题、。.]|Q\.?\s*\d+)", para.text):
+            # 识别题目类型和答案
+            ...
+        # 识别代码块
+        if para.text.strip().startswith("```"):
+            is_code = True
+
+# 同步函数丢线程池，不阻塞事件循环
+loop = asyncio.get_running_loop()
+parsed_questions = await loop.run_in_executor(None, _sync_parse_word, word_path)
+```
 
 **元数据合并策略**：以 DB 题目列表为准，按题号匹配解析结果，找不到的填空字符串。
 
@@ -154,7 +172,16 @@ run_three_tracks -->|                                                      |--> 
 
 #### 核心知识点
 
-`_normalize_answer` 标准化：大写 → 去空格逗号 → 排序。精确比对，答对满分答错 0 分，固定 `needs_review=False`。
+```python
+def _normalize_answer(answer: str) -> str:
+    """标准化：大写→去空格逗号→排序，使排序无关的多选题选项等价"""
+    return "".join(sorted(answer.upper().replace(" ", "").replace(",", "")))
+
+# 精确比对
+is_correct = _normalize_answer(student_ans) == _normalize_answer(correct_ans)
+score = full_score if is_correct else 0
+needs_review = False  # 客观题无需复核
+```
 
 ---
 
@@ -162,9 +189,21 @@ run_three_tracks -->|                                                      |--> 
 
 #### 核心知识点
 
-**Think Tool 两步流程**：
-1. 普通 LLM 调用（无结构化约束）→ 自由推理分析学员答案覆盖了哪些得分点
-2. 把推理结果追加到评分 Prompt 末尾 → 结构化 LLM 输出 SubjectiveReviewResult
+**Think Tool 两步流程**
+
+```python
+async def score_subjective(question, student_answer, scoring_points):
+    # 第一步：自由推理分析（无结构化约束）
+    think_prompt = f"分析学员答案是否覆盖了得分点：{scoring_points}"
+    think_result = await llm.ainvoke(think_prompt)
+
+    # 第二步：把推理结果追加到评分 Prompt → 结构化输出
+    full_prompt = f"{think_result}\n\n请根据以上分析，给出结构化评分："
+    result = await structured_llm.ainvoke(full_prompt)
+    # result 是 SubjectiveReviewResult 类型
+
+    return result
+```
 
 **confidence < 0.7 标记需复核**。每 3 题一组并行（平衡并发效率和 API 稳定性），组内 `asyncio.gather`，组间顺序执行。
 
@@ -204,8 +243,22 @@ LLM 无法运行代码，所有代码题始终 `needs_review=True`，教师必�
 
 #### 核心知识点
 
-**interrupt() 工作原理**
+```python
+# 节点中暂停图执行
+def teacher_review_node(state: ExamState) -> dict:
+    state["teacher_notified"] = True
+    interrupt("等待教师确认批改结果")
+    # 图在此暂停，等待外部调用 Command(resume=decision) 恢复
+    return {"teacher_decision": state["teacher_decision"]}
 
+# 外部恢复执行
+graph.ainvoke(
+    Command(resume={"action": "approve"}),
+    {"configurable": {"thread_id": "exam_submission_123"}}
+)
+```
+
+**interrupt() 工作原理**
 ```
 ① 执行到 interrupt(value) → LangGraph 抛出 Interrupt 异常
 ② 完整 State 保存到 MemorySaver（按 thread_id）
@@ -222,9 +275,22 @@ LLM 无法运行代码，所有代码题始终 `needs_review=True`，教师必�
 
 #### 核心知识点
 
-**两种决策**：approve（直接采用 AI 分数）或 modify（按 modifications 列表覆盖对应题目）。
+```python
+# 两种决策
+if teacher_decision["action"] == "approve":
+    # 直接采用 AI 分数
+    final_results = ai_results
+elif teacher_decision["action"] == "modify":
+    # 按 modifications 列表覆盖对应题目
+    final_results = apply_modifications(ai_results, teacher_decision["modifications"])
 
-**先删后插**：幂等写入 exam_reviews，避免重复发布产生重复记录。保留 ai_score 和 teacher_score 两个字段便于事后评估 AI 准确性。
+# 先删后插：幂等写入 exam_reviews
+await db.execute("DELETE FROM exam_reviews WHERE submission_id = :id", {...})
+for review in final_results:
+    await db.execute("INSERT INTO exam_reviews (...) VALUES (...)", {...})
+```
+
+保留 `ai_score` 和 `teacher_score` 两个字段便于事后评估 AI 准确性。
 
 ---
 
@@ -236,7 +302,20 @@ LLM 无法运行代码，所有代码题始终 `needs_review=True`，教师必�
 
 #### 核心知识点
 
-**线性链，无条件边**：START → parse_word → load_questions_meta → run_three_tracks → aggregate_results → analyze_weak_points → notify_teacher → teacher_review[interrupt] → apply_teacher_decision → publish_results → END。
+```python
+builder = StateGraph(ExamState)
+builder.add_node("parse_word", parse_word_node)
+builder.add_node("load_questions_meta", load_questions_meta_node)
+builder.add_node("run_three_tracks", run_three_tracks_node)
+# ... 9 个节点
+builder.add_edge(START, "parse_word")
+builder.add_edge("parse_word", "load_questions_meta")
+# ... 线性链，无条件边
+builder.add_edge("publish_results", END)
+
+# 必须绑定 MemorySaver！interrupt 后需要持久化 State
+graph = builder.compile(checkpointer=MemorySaver())
+```
 
 ---
 

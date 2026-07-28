@@ -44,7 +44,7 @@
 
 **为什么需要状态机**：普通多轮对话每轮做同样的事，但模拟面试天然分阶段——热身→技术基础→项目深挖→反问收尾。阶段判断由代码逻辑管理，不靠 LLM 推断。
 
-**三个要素**：状态（State: WARMUP/TECH_BASE/PROJECT/CLOSING/FINISHED）+ 转移条件（轮数/题数/学员输入）+ 当前状态记录（current_stage 字段）。
+**三个要素**：状态（WARMUP/TECH_BASE/PROJECT/CLOSING/FINISHED）+ 转移条件（轮数/题数/学员输入）+ 当前状态记录（current_stage 字段）。
 
 **四个面试阶段**
 
@@ -60,16 +60,10 @@ WARMUP（热身）—— 破冰自我介绍，最少1轮最多4轮
 
 **强制终止**：总轮数 ≥ 38 或学员说"结束面试"，直接跳 FINISHED。
 
-**双轨考察**
-
-| 轨道 | 问题来源 | 考察重点 | 对应阶段 |
-|------|---------|---------|---------|
-| 技术基础轨 | LLM 动态出题 + DB 题库 | 知识点掌握深度 | TECH_BASE |
-| 简历项目轨 | 读取简历项目数据 | 实际工程能力 | PROJECT |
-
 **图拓扑**
 
-```
+```python
+# 每次学员发消息触发一次完整执行
 START → load_context（每轮必走）→ check_stage（纯逻辑判断）
   ├── current_stage != FINISHED → evaluate_answer → generate_response
   └── current_stage == FINISHED → generate_report → save_report
@@ -93,35 +87,65 @@ START → load_context（每轮必走）→ check_stage（纯逻辑判断）
 **InterviewStage 枚举**
 
 ```python
-WARMUP    = "warmup"      # 热身：邀请自我介绍
-TECH_BASE = "tech_base"   # 技术基础：题库问答
-PROJECT   = "project"     # 项目深挖：针对简历项目追问
-CLOSING   = "closing"     # 反问收尾：让学员提问
-FINISHED  = "finished"    # 终态：触发报告生成
+class InterviewStage(str, Enum):
+    WARMUP    = "warmup"      # 热身：邀请自我介绍
+    TECH_BASE = "tech_base"   # 技术基础：题库问答
+    PROJECT   = "project"     # 项目深挖：针对简历项目追问
+    CLOSING   = "closing"     # 反问收尾：让学员提问
+    FINISHED  = "finished"    # 终态：触发报告生成
 ```
 
 **AnswerQuality 枚举**
 
-| 标签 | 含义 | TECH_BASE 行为 | PROJECT 行为 |
-|------|------|---------------|-------------|
-| EXCELLENT | 有技术细节/原理 | 追问（最多 2 次） | 追问 |
-| ADEQUATE | 方向正确缺乏深度 | 换题 | 追问 |
-| WEAK | 方向偏差 | 换题 | 换题 |
-| NO_ANSWER | 未作答 | 提示思路后换题 | 提示思路后换题 |
+```python
+class AnswerQuality(str, Enum):
+    EXCELLENT = "excellent"   # 优秀：有技术细节/量化/原理
+    ADEQUATE  = "adequate"    # 基本及格：方向对但缺深度
+    WEAK      = "weak"        # 较弱：方向偏或太表面
+    NO_ANSWER = "no_answer"   # 未作答：明说不知道或为空
+```
+
+| 标签 | TECH_BASE 行为 | PROJECT 行为 |
+|------|---------------|-------------|
+| EXCELLENT | 追问（最多 2 次） | 追问 |
+| ADEQUATE | 换题 | 追问 |
+| WEAK | 换题 | 换题 |
+| NO_ANSWER | 提示思路后换题 | 提示思路后换题 |
+
+**五维度报告模型**
+
+```python
+class DimensionEval(BaseModel):
+    dimension:  str           # 维度名称
+    score:      int           # 得分 0-100
+    comment:    str           # 1-2句评语
+    highlights: list[str]     # 亮点列举
+    weaknesses: list[str]     # 薄弱点列举
+
+class InterviewReport(BaseModel):
+    dimensions:         list[DimensionEval]  # 五维度汇总
+    overall_score:      int                  # 综合得分（加权平均）
+    strengths:          list[str]            # 2-3条核心优势
+    improvements:       list[str]            # 2-3条提升方向
+    recommended_topics: list[str]            # 建议复习的3-5个知识点
+
+class ReportWrapper(BaseModel):
+    report: InterviewReport  # 顶层包装，满足 structured_output 要求
+```
+
+**五维度权重**：技术深度 35% > 项目经验 25% > 表达逻辑 20% > 抗压反应 10% > 整体印象 10%。
 
 **InterviewState（22 字段，7 组）**：
 
-| 分组 | 说明 |
-|------|------|
-| 请求上下文 | student_id, session_id, messages 等 |
-| 简历联动数据 | resume_data, resume_projects 等 |
+| 分组 | 关键字段 |
+|------|---------|
+| 请求上下文 | student_id, session_id, messages |
+| 简历联动数据 | resume_data, resume_projects |
 | 面试阶段控制 | current_stage, stage_turn_count, total_turn_count |
 | 题目管理 | question_bank, current_question, asked_questions |
 | 回答质量追踪 | last_answer_quality, followup_count |
 | 记忆管理 | existing_summary, should_summarize |
 | 评估结果 | report, overall_score, fallback_used |
-
-**五维度报告权重**：技术深度 35% > 项目经验 25% > 表达逻辑 20% > 抗压反应 10% > 整体印象 10%。
 
 ---
 
@@ -141,7 +165,22 @@ FINISHED  = "finished"    # 终态：触发报告生成
 
 #### 核心知识点
 
-首轮并行查询（`asyncio.gather`）题库和简历数据，初始化 State 字段（`current_stage=warmup`）。
+```python
+async def load_context_node(state: InterviewState) -> dict:
+    # 首轮：并行查询题库和简历数据
+    if state.get("current_stage") is None:
+        questions, resume = await asyncio.gather(
+            load_questions(state["target_position"]),
+            load_resume(state["student_id"]),
+        )
+        return {
+            "current_stage": "warmup",
+            "question_bank": questions,
+            "resume_projects": resume.get("projects", []) if resume else [],
+        }
+    # 非首轮：加载历史记忆
+    return {"messages": await load_memory(state["thread_id"])}
+```
 
 **降级**：无简历时 PROJECT 改为引导学员自述项目经历。
 
@@ -153,13 +192,41 @@ FINISHED  = "finished"    # 终态：触发报告生成
 
 **纯逻辑节点，不调 LLM**。读取轮数计数器判断是否推进到下一阶段。强制终止优先。
 
+```python
+def check_stage_node(state: InterviewState) -> dict:
+    # 强制终止优先
+    if state["total_turn_count"] >= 38 or "结束面试" in last_message:
+        return {"current_stage": "finished"}
+
+    # 按阶段判断推进
+    if state["current_stage"] == "warmup" and state["stage_turn_count"] >= 1:
+        return {"current_stage": "tech_base"}  # 最少1轮即可推进
+    elif state["current_stage"] == "tech_base" and state["stage_turn_count"] >= 6:
+        return {"current_stage": "project"}
+    # ...
+    return {}  # 不推进
+```
+
 ---
 
 ### ⑥ evaluate_answer
 
 #### 核心知识点
 
-**Think Tool 评估回答质量**：先让 LLM 调用"think"工具内部推理，再调用"final_answer"输出标签。Think Tool 强制 LLM 先分析再打标签，提高评估准确性。
+**Think Tool 评估回答质量**
+
+```python
+async def evaluate_answer_node(state: InterviewState) -> dict:
+    # Think Tool：先让 LLM 内部推理，再输出标签
+    result = await structured_llm.ainvoke([
+        SystemMessage(content="评估学员回答质量，先分析再打标签"),
+        HumanMessage(content=f"问题：{question}\n回答：{answer}"),
+    ])
+    quality = result.quality  # EXCELLENT / ADEQUATE / WEAK / NO_ANSWER
+    return {"last_answer_quality": quality}
+```
+
+Think Tool 强制 LLM 先分析再打标签，提高评估准确性。
 
 ---
 
@@ -181,12 +248,15 @@ FINISHED  = "finished"    # 终态：触发报告生成
 
 `current_stage == FINISHED` 时触发，LLM 生成五维度评估报告。
 
-**三层结构**
-
 ```python
-class DimensionEval(BaseModel):       # 单维度：dimension + score + comment + highlights + weaknesses
-class InterviewReport(BaseModel):     # 五维度汇总：dimensions + overall_score + strengths + improvements
-class ReportWrapper(BaseModel):       # 顶层包装：report（满足 structured_output 要求）
+async def generate_report_node(state: InterviewState) -> dict:
+    conversation = format_conversation(state["messages"])
+    # LLM 生成 ReportWrapper 结构化报告
+    result = await structured_llm.ainvoke([
+        SystemMessage(content=GENERATE_REPORT_PROMPT),
+        HumanMessage(content=conversation),
+    ])
+    return {"report": result.report.model_dump()}
 ```
 
 ---
@@ -195,9 +265,21 @@ class ReportWrapper(BaseModel):       # 顶层包装：report（满足 structure
 
 #### 核心知识点
 
-- 报告写入 interview_sessions 表 JSONB 字段
-- 每 10 轮触发摘要压缩防止消息列表撑爆上下文
-- 首轮 INSERT 创建会话记录（UPSERT ON CONFLICT thread_id）
+```python
+async def save_report_node(state: InterviewState) -> dict:
+    # 报告写入 interview_sessions 表 JSONB 字段
+    await db.execute(
+        "UPDATE interview_sessions SET report = :report, overall_score = :score, status = 'finished' WHERE thread_id = :tid",
+        {"report": json.dumps(state["report"]), "score": state["report"]["overall_score"], "tid": state["thread_id"]},
+    )
+
+async def save_memory_node(state: InterviewState) -> dict:
+    # 每 10 轮触发摘要压缩
+    if state["total_turn_count"] % 10 == 0:
+        summary = await compress_to_summary(state["messages"])
+        await db.execute("UPDATE interview_sessions SET summary = :s WHERE thread_id = :tid", ...)
+    # 首轮 UPSERT 创建会话记录
+```
 
 ---
 
@@ -209,7 +291,29 @@ class ReportWrapper(BaseModel):       # 顶层包装：report（满足 structure
 
 #### 核心知识点
 
-7 个节点，唯一分支点 `check_stage` 条件路由（正常对话/报告生成），两条路径最终汇合到 `save_memory`。编译时传 MemorySaver 实现跨轮记忆。
+```python
+builder = StateGraph(InterviewState)
+builder.add_node("load_context", load_context_node)
+builder.add_node("check_stage", check_stage_node)
+builder.add_node("evaluate_answer", evaluate_answer_node)
+builder.add_node("generate_response", generate_response_node)
+builder.add_node("generate_report", generate_report_node)
+builder.add_node("save_report", save_report_node)
+builder.add_node("save_memory", save_memory_node)
+
+# 唯一分支点：check_stage 条件路由
+builder.add_conditional_edges("check_stage", route_by_stage, {
+    "normal": "evaluate_answer",
+    "report": "generate_report",
+})
+builder.add_edge("evaluate_answer", "generate_response")
+builder.add_edge("generate_response", "save_memory")
+builder.add_edge("generate_report", "save_report")
+builder.add_edge("save_report", "save_memory")
+builder.add_edge("save_memory", END)
+
+graph = builder.compile(checkpointer=MemorySaver())  # 跨轮记忆
+```
 
 ---
 
@@ -234,7 +338,7 @@ class ReportWrapper(BaseModel):       # 顶层包装：report（满足 structure
 | 回答评估 | Think Tool 先推理再打标签 | 提高评估准确性，减少误判 |
 | 面试报告 | 三层嵌套 Pydantic 模型 | 结构化输出，便于存储和展示 |
 | 记忆管理 | MemorySaver + 摘要压缩 | 支持 20-40 轮长对话不撑爆上下文 |
-| 取消流式 | SSE 直连 | 打字机效果，降低用户感知延迟 |
+| 流式输出 | SSE 直连 | 打字机效果，降低用户感知延迟 |
 
 ---
 
