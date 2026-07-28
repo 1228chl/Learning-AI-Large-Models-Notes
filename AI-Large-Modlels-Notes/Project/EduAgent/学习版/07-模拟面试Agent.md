@@ -44,7 +44,7 @@
 
 **为什么需要状态机**：普通多轮对话每轮做同样的事，但模拟面试天然分阶段——热身→技术基础→项目深挖→反问收尾。阶段判断由代码逻辑管理，不靠 LLM 推断。
 
-**三个要素**：状态（WARMUP/TECH_BASE/PROJECT/CLOSING/FINISHED）+ 转移条件（轮数/题数/学员输入）+ 当前状态记录（current_stage 字段）。
+**三个要素**：状态（`WARMUP`/`TECH_BASE`/`PROJECT`/`CLOSING`/`FINISHED`）+ 转移条件（轮数/题数/学员输入）+ 当前状态记录（`current_stage` 字段）。
 
 **四个面试阶段**
 
@@ -56,9 +56,9 @@ WARMUP（热身）—— 破冰自我介绍，最少1轮最多4轮
         → FINISHED（终态）—— 生成五维度报告+持久化
 ```
 
-**追问规则**：EXCELLENT → 最多追问 2 次；WEAK/NO_ANSWER → 换题。
+**追问规则**：`EXCELLENT` → 最多追问 2 次；`WEAK`/`NO_ANSWER` → 换题。
 
-**强制终止**：总轮数 ≥ 38 或学员说"结束面试"，直接跳 FINISHED。
+**强制终止**：总轮数 ≥ 38 或学员说"结束面试"，直接跳 `FINISHED`。
 
 **图拓扑**
 
@@ -79,12 +79,12 @@ START → load_context（每轮必走）→ check_stage（纯逻辑判断）
 #### 学习目标
 
 - 两个枚举分别是什么？如何驱动追问逻辑？
-- InterviewState 的 22 字段分哪 7 组？
+- `InterviewState` 的 22 字段分哪 7 组？
 - 五维度报告权重？
 
 #### 核心知识点
 
-**InterviewStage 枚举**
+**`InterviewStage` 枚举**
 
 ```python
 class InterviewStage(str, Enum):
@@ -95,7 +95,7 @@ class InterviewStage(str, Enum):
     FINISHED  = "finished"    # 终态：触发报告生成
 ```
 
-**AnswerQuality 枚举**
+**`AnswerQuality` 枚举**
 
 ```python
 class AnswerQuality(str, Enum):
@@ -105,12 +105,12 @@ class AnswerQuality(str, Enum):
     NO_ANSWER = "no_answer"   # 未作答：明说不知道或为空
 ```
 
-| 标签 | TECH_BASE 行为 | PROJECT 行为 |
+| 标签 | `TECH_BASE` 行为 | `PROJECT` 行为 |
 |------|---------------|-------------|
-| EXCELLENT | 追问（最多 2 次） | 追问 |
-| ADEQUATE | 换题 | 追问 |
-| WEAK | 换题 | 换题 |
-| NO_ANSWER | 提示思路后换题 | 提示思路后换题 |
+| `EXCELLENT` | 追问（最多 2 次） | 追问 |
+| `ADEQUATE` | 换题 | 追问 |
+| `WEAK` | 换题 | 换题 |
+| `NO_ANSWER` | 提示思路后换题 | 提示思路后换题 |
 
 **五维度报告模型**
 
@@ -135,17 +135,17 @@ class ReportWrapper(BaseModel):
 
 **五维度权重**：技术深度 35% > 项目经验 25% > 表达逻辑 20% > 抗压反应 10% > 整体印象 10%。
 
-**InterviewState（22 字段，7 组）**：
+**`InterviewState`（22 字段，7 组）**：
 
 | 分组 | 关键字段 |
 |------|---------|
-| 请求上下文 | student_id, session_id, messages |
-| 简历联动数据 | resume_data, resume_projects |
-| 面试阶段控制 | current_stage, stage_turn_count, total_turn_count |
-| 题目管理 | question_bank, current_question, asked_questions |
-| 回答质量追踪 | last_answer_quality, followup_count |
-| 记忆管理 | existing_summary, should_summarize |
-| 评估结果 | report, overall_score, fallback_used |
+| 请求上下文 | `student_id`, `session_id`, `messages` |
+| 简历联动数据 | `resume_data`, `resume_projects` |
+| 面试阶段控制 | `current_stage`, `stage_turn_count`, `total_turn_count` |
+| 题目管理 | `question_bank`, `current_question`, `asked_questions` |
+| 回答质量追踪 | `last_answer_quality`, `followup_count` |
+| 记忆管理 | `existing_summary`, `should_summarize` |
+| 评估结果 | `report`, `overall_score`, `fallback_used` |
 
 ---
 
@@ -157,11 +157,11 @@ class ReportWrapper(BaseModel):
 
 #### 核心知识点
 
-每个阶段有独立的 Prompt：WARMUP_PROMPT、TECH_BASE_PROMPT、TECH_FOLLOWUP_PROMPT、PROJECT_PROMPT、PROJECT_FOLLOWUP_PROMPT、CLOSING_PROMPT、CLOSING_RESPONSE_PROMPT，加上 EVALUATE_ANSWER_PROMPT（评估回答质量）和 GENERATE_REPORT_PROMPT（生成报告）。
+每个阶段有独立的 Prompt：`WARMUP_PROMPT`、`TECH_BASE_PROMPT`、`TECH_FOLLOWUP_PROMPT`、`PROJECT_PROMPT`、`PROJECT_FOLLOWUP_PROMPT`、`CLOSING_PROMPT`、`CLOSING_RESPONSE_PROMPT`，加上 `EVALUATE_ANSWER_PROMPT`（评估回答质量）和 `GENERATE_REPORT_PROMPT`（生成报告）。
 
 ---
 
-### ④ load_context
+### ④ `load_context`
 
 #### 核心知识点
 
@@ -182,11 +182,11 @@ async def load_context_node(state: InterviewState) -> dict:
     return {"messages": await load_memory(state["thread_id"])}
 ```
 
-**降级**：无简历时 PROJECT 改为引导学员自述项目经历。
+**降级**：无简历时 `PROJECT` 改为引导学员自述项目经历。
 
 ---
 
-### ⑤ check_stage
+### ⑤ `check_stage`
 
 #### 核心知识点
 
@@ -200,7 +200,7 @@ def check_stage_node(state: InterviewState) -> dict:
 
     # 按阶段判断推进
     if state["current_stage"] == "warmup" and state["stage_turn_count"] >= 1:
-        return {"current_stage": "tech_base"}  # 最少1轮即可推进
+        return {"current_stage": "tech_base"}
     elif state["current_stage"] == "tech_base" and state["stage_turn_count"] >= 6:
         return {"current_stage": "project"}
     # ...
@@ -209,7 +209,7 @@ def check_stage_node(state: InterviewState) -> dict:
 
 ---
 
-### ⑥ evaluate_answer
+### ⑥ `evaluate_answer`
 
 #### 核心知识点
 
@@ -226,23 +226,23 @@ async def evaluate_answer_node(state: InterviewState) -> dict:
     return {"last_answer_quality": quality}
 ```
 
-Think Tool 强制 LLM 先分析再打标签，提高评估准确性。
+> **EduAgent 应用**：Think Tool 强制 LLM 先分析再打标签，提高评估准确性。与试卷批改的 Think Tool 是同一模式的不同应用。
 
 ---
 
-### ⑦ generate_response
+### ⑦ `generate_response`
 
 #### 核心知识点
 
-**TECH_BASE 出题逻辑**：优先从未答题库选 → 匹配简历技能 → 无可用题库时 LLM 动态生成。
+**`TECH_BASE` 出题逻辑**：优先从未答题库选 → 匹配简历技能 → 无可用题库时 LLM 动态生成。
 
-**追问逻辑**：仅 EXCELLENT 可追问，上限 2 次。
+**追问逻辑**：仅 `EXCELLENT` 可追问，上限 2 次。
 
-**换题逻辑**：WEAK/NO_ANSWER 时中性回应换题。
+**换题逻辑**：`WEAK`/`NO_ANSWER` 时中性回应换题。
 
 ---
 
-### ⑧ generate_report
+### ⑧ `generate_report`
 
 #### 核心知识点
 
@@ -251,7 +251,6 @@ Think Tool 强制 LLM 先分析再打标签，提高评估准确性。
 ```python
 async def generate_report_node(state: InterviewState) -> dict:
     conversation = format_conversation(state["messages"])
-    # LLM 生成 ReportWrapper 结构化报告
     result = await structured_llm.ainvoke([
         SystemMessage(content=GENERATE_REPORT_PROMPT),
         HumanMessage(content=conversation),
@@ -261,13 +260,12 @@ async def generate_report_node(state: InterviewState) -> dict:
 
 ---
 
-### ⑨ save_report / save_memory
+### ⑨ `save_report` / `save_memory`
 
 #### 核心知识点
 
 ```python
 async def save_report_node(state: InterviewState) -> dict:
-    # 报告写入 interview_sessions 表 JSONB 字段
     await db.execute(
         "UPDATE interview_sessions SET report = :report, overall_score = :score, status = 'finished' WHERE thread_id = :tid",
         {"report": json.dumps(state["report"]), "score": state["report"]["overall_score"], "tid": state["thread_id"]},
@@ -321,11 +319,11 @@ graph = builder.compile(checkpointer=MemorySaver())  # 跨轮记忆
 
 | 接口 | 说明 |
 |------|------|
-| POST /interview/start | 开始面试，返回 session_id + 面试官开场白 |
-| POST /interview/chat | 发送消息，返回回复 + 当前阶段 |
-| GET /interview/history/{id} | 获取对话历史 |
-| GET /interview/report/{id} | 获取五维度评估报告 |
-| GET /interview/stream/{id} | SSE 流式对话 |
+| `POST /interview/start` | 开始面试，返回 `session_id` + 面试官开场白 |
+| `POST /interview/chat` | 发送消息，返回回复 + 当前阶段 |
+| `GET /interview/history/{id}` | 获取对话历史 |
+| `GET /interview/report/{id}` | 获取五维度评估报告 |
+| `GET /interview/stream/{id}` | SSE 流式对话 |
 
 ---
 
@@ -333,13 +331,13 @@ graph = builder.compile(checkpointer=MemorySaver())  # 跨轮记忆
 
 | 决策 | 方案 | 原因 |
 |------|------|------|
-| 阶段管理 | 代码逻辑（check_stage 纯逻辑节点） | 不靠 LLM 推断阶段，精确可控 |
-| 追问控制 | 基于 AnswerQuality 枚举 | 质量标签驱动追问/换题，规则清晰 |
+| 阶段管理 | 代码逻辑（`check_stage` 纯逻辑节点） | 不靠 LLM 推断阶段，精确可控 |
+| 追问控制 | 基于 `AnswerQuality` 枚举 | 质量标签驱动追问/换题，规则清晰 |
 | 回答评估 | Think Tool 先推理再打标签 | 提高评估准确性，减少误判 |
 | 面试报告 | 三层嵌套 Pydantic 模型 | 结构化输出，便于存储和展示 |
-| 记忆管理 | MemorySaver + 摘要压缩 | 支持 20-40 轮长对话不撑爆上下文 |
+| 记忆管理 | `MemorySaver` + 摘要压缩 | 支持 20-40 轮长对话不撑爆上下文 |
 | 流式输出 | SSE 直连 | 打字机效果，降低用户感知延迟 |
 
 ---
 
-> **学习建议**：先理解"为什么需要状态机"（①），这是本章的核心教学模式。再看 State 和枚举定义（②），然后按节点顺序逐个学习（③~⑨）。重点理解 check_stage 的纯逻辑阶段推进和 evaluate_answer 的 Think Tool 评估——这是第七章区别于前几章的核心设计。
+> **学习建议**：先理解"为什么需要状态机"（①），这是本章的核心教学模式。再看 State 和枚举定义（②），然后按节点顺序逐个学习（③~⑨）。重点理解 `check_stage` 的纯逻辑阶段推进和 `evaluate_answer` 的 Think Tool 评估——这是第七章区别于前几章的核心设计。

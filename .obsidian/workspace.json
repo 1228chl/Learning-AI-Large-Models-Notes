@@ -13,13 +13,13 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "AI-Large-Modlels-Notes/Project/EduAgent/学习版/02-工具介绍.md",
+                "file": "AI-Large-Modlels-Notes/Project/EduAgent/学习版/04-简历审查Agent.md",
                 "mode": "preview",
                 "source": false,
                 "backlinks": false
               },
               "icon": "lucide-file",
-              "title": "02-工具介绍"
+              "title": "04-简历审查Agent"
             }
           },
           {
@@ -62,7 +62,8 @@
               "title": "原子化生成提示词"
             }
           }
-        ]
+        ],
+        "currentTab": 1
       }
     ],
     "direction": "vertical"
@@ -119,7 +120,8 @@
       }
     ],
     "direction": "horizontal",
-    "width": 312.5
+    "width": 312.5,
+    "collapsed": true
   },
   "right": {
     "id": "f07a0c5b7e11463b",
@@ -247,32 +249,31 @@
       "templater-obsidian:Templater": false
     }
   },
-  "active": "9dddde49a2d5eb85",
+  "active": "b9c397e9f32ab073",
   "lastOpenFiles": [
+    "AI-Large-Modlels-Notes/Project/EduAgent/学习版/04-简历审查Agent.md",
+    "AI-Large-Modlels-Notes/Project/EduAgent/学习版/02-工具介绍.md",
+    "AI-Large-Modlels-Notes/Project/EduAgent/学习版/01-项目简介.md",
+    "AI-Large-Modlels-Notes/Project/EduAgent/学习版/10-收尾与扩展.md.tmp.3368.5c4ba85eed5e",
+    "AI-Large-Modlels-Notes/Project/EduAgent/学习版/09-前端集成扩展.md.tmp.3368.d25459c5df12",
+    "AI-Large-Modlels-Notes/Project/EduAgent/学习版/08-系统集成.md.tmp.3368.95a25bcee63e",
+    "AI-Large-Modlels-Notes/Project/EduAgent/学习版/07-模拟面试Agent.md.tmp.3368.cac5b6cf8592",
+    "AI-Large-Modlels-Notes/Project/EduAgent/学习版/06-试卷批改Agent.md.tmp.3368.08309e1ba821",
+    "AI-Large-Modlels-Notes/Project/EduAgent/学习版/05-RAG问答系统.md.tmp.3368.a8f6577e1b98",
+    "AI-Large-Modlels-Notes/Project/EduAgent/学习版/04-简历审查Agent.md.tmp.3368.6f1985a42666",
+    "AI-Large-Modlels-Notes/Project/EduAgent/学习版/03-环境搭建与工程地基.md.tmp.3368.373a1281781c",
+    "AI-Large-Modlels-Notes/Project/EduAgent/学习版/01-项目简介.md.tmp.3368.1c864522ac0f",
     "AI-Large-Modlels-Notes/Project/EduAgent/学习版/10-收尾与扩展.md.tmp.3368.c4314d0a5643",
-    "AI-Large-Modlels-Notes/Project/EduAgent/学习版/09-前端集成扩展.md.tmp.3368.810dc3eddd66",
-    "AI-Large-Modlels-Notes/Project/EduAgent/学习版/08-系统集成.md.tmp.3368.3830ce278955",
-    "AI-Large-Modlels-Notes/Project/EduAgent/学习版/07-模拟面试Agent.md.tmp.3368.626cfe9b3858",
-    "AI-Large-Modlels-Notes/Project/EduAgent/学习版/06-试卷批改Agent.md.tmp.3368.3735c56cf240",
-    "AI-Large-Modlels-Notes/Project/EduAgent/学习版/05-RAG问答系统.md.tmp.3368.b1d9ddc71452",
-    "AI-Large-Modlels-Notes/Project/EduAgent/学习版/04-简历审查Agent.md.tmp.3368.d0be34f0fb97",
-    "AI-Large-Modlels-Notes/Project/EduAgent/学习版/03-环境搭建与工程地基.md.tmp.3368.060dfb21299a",
-    "AI-Large-Modlels-Notes/Project/EduAgent/学习版/01-项目简介.md.tmp.3368.23b77a78a690",
     "AI-Large-Modlels-Notes/Project/EduAgent/学习版/10-收尾与扩展.md",
-    "AI-Large-Modlels-Notes/Project/EduAgent/学习版/10-收尾与扩展.md.tmp.3368.c99672dfc7e6",
     "AI-Large-Modlels-Notes/Project/EduAgent/学习版/09-前端集成扩展.md",
-    "AI-Large-Modlels-Notes/Project/EduAgent/学习版/09-前端集成扩展.md.tmp.3368.76a261a11ee3",
     "AI-Large-Modlels-Notes/Project/EduAgent/学习版/08-系统集成.md",
     "AI-Large-Modlels-Notes/Project/EduAgent/学习版/07-模拟面试Agent.md",
     "AI-Large-Modlels-Notes/Project/EduAgent/学习版/06-试卷批改Agent.md",
     "AI-Large-Modlels-Notes/Project/EduAgent/学习版/05-RAG问答系统.md",
-    "AI-Large-Modlels-Notes/Project/EduAgent/学习版/04-简历审查Agent.md",
     "AI-Large-Modlels-Notes/Project/EduAgent/学习版/03-环境搭建与工程地基.md",
-    "AI-Large-Modlels-Notes/Project/EduAgent/学习版/01-项目简介.md",
     "AI-Large-Modlels-Notes/NLP/07-Bert系列模型.md",
     "AI-Large-Modlels-Notes/NLP/05-注意力机制和Seq2Seq介绍.md",
     "AI-Large-Modlels-Notes/NLP/06-Transformer.md",
-    "AI-Large-Modlels-Notes/Project/EduAgent/学习版/02-工具介绍.md",
     "AI-Large-Modlels-Notes/Project/EduAgent/02-工具介绍.md",
     "AI-Large-Modlels-Notes/Project/EduAgent/精简版/02-工具介绍.md",
     "AI-Large-Modlels-Notes/Project/EduAgent/01-项目简介.md",

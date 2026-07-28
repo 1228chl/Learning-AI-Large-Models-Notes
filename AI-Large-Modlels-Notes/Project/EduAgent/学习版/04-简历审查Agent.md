@@ -62,20 +62,20 @@ GET /resume/reviews/{review_id}
 # 返回：{"status": "processing"} 或完整报告
 ```
 
-**关键设计**：上传接口不会卡住等审查跑完，立刻返回 202。这正是"后台任务 + GC 保护"和"202 Accepted"的真实应用。
+> **EduAgent 应用**：上传接口不会卡住等审查跑完，立刻返回 202。这正是"后台任务 + GC 保护"和"202 Accepted"的真实应用。
 
 **8 节点流水线**
 
 | # | 节点 | 干什么 | 写入 State |
 |---|------|--------|-----------|
-| ① | upload_to_minio | 本地模式空跑 | — |
-| ② | download_pdf | 本地模式空跑 | — |
-| ③ | extract_text | PyMuPDF 提取 PDF 文本 | raw_text, page_count |
-| ④ | extract_structured | LLM 提取结构化简历 | structured |
-| ⑤ | run_six_dimensions | **并行**评 6 个维度 | dimension_scores, weighted_score |
-| ⑥ | diagnose_issues | 汇总问题、去重、标优先级 | issues |
-| ⑦ | generate_summary | 生成整体评价 | summary |
-| ⑧ | save_results | 写入 DB、清理临时文件 | （持久化） |
+| ① | `upload_to_minio` | 本地模式空跑 | — |
+| ② | `download_pdf` | 本地模式空跑 | — |
+| ③ | `extract_text` | PyMuPDF 提取 PDF 文本 | `raw_text`, `page_count` |
+| ④ | `extract_structured` | LLM 提取结构化简历 | `structured` |
+| ⑤ | `run_six_dimensions` | **并行**评 6 个维度 | `dimension_scores`, `weighted_score` |
+| ⑥ | `diagnose_issues` | 汇总问题、去重、标优先级 | `issues` |
+| ⑦ | `generate_summary` | 生成整体评价 | `summary` |
+| ⑧ | `save_results` | 写入 DB、清理临时文件 | （持久化） |
 
 > **心智模型**：简历 Agent = "搭一条直线图"的放大版——节点里的简单逻辑换成了"调大模型做结构化提取/评分"的真实业务。
 
@@ -117,9 +117,9 @@ class ResumeStructured(BaseModel):
     skills_list: list[str] = Field(default_factory=list, description="技术标签列表")
 ```
 
-**`Field(description=...)` 双重作用**：既是注释，又通过 `with_structured_output` 发给 LLM 作为填空指令。描述写得越清楚，提取越准。
+> ⭐ **核心心法**：`Field(description=...)` 不只是注释，它通过 `with_structured_output` 发给 LLM 作为填空指令。描述写得越清楚，提取越准。
 
-**`default_factory=list` 规则**：列表类型必须用 `default_factory=list`，禁止写 `default=[]`（会共享同一个列表，污染其他实例）。
+**`default_factory=list` 规则**：列表类型必须用 `default_factory=list`，**禁止写 `default=[]`**（会共享同一个列表，污染其他实例）。
 
 **`IssueList` 包装技巧**：`with_structured_output` 要求顶层是对象，不能直接返回"裸列表"，需包一层 `IssueList { items: list[IssueItem] }`。
 
@@ -127,13 +127,13 @@ class ResumeStructured(BaseModel):
 
 | 分组 | 字段 | 说明 |
 |------|------|------|
-| 请求上下文 | messages, student_id, tenant_id, review_id, pdf_minio_path, pdf_local_path | API 初始化 |
-| 解析结果 | raw_text, page_count | 节点③写入 |
-| 结构化提取 | structured | 节点④写入 |
-| 六维度评分 | dimension_scores, weighted_score | 节点⑤写入 |
-| 问题诊断 | issues | 节点⑥写入 |
-| 整体评价 | summary | 节点⑦写入 |
-| 降级标记 | fallback_used, structured_output | 兜底用 |
+| 请求上下文 | `messages`, `student_id`, `tenant_id`, `review_id`, `pdf_minio_path`, `pdf_local_path` | API 初始化 |
+| 解析结果 | `raw_text`, `page_count` | 节点③写入 |
+| 结构化提取 | `structured` | 节点④写入 |
+| 六维度评分 | `dimension_scores`, `weighted_score` | 节点⑤写入 |
+| 问题诊断 | `issues` | 节点⑥写入 |
+| 整体评价 | `summary` | 节点⑦写入 |
+| 降级标记 | `fallback_used`, `structured_output` | 兜底用 |
 
 **设计决策**：State 存 `dict` 而非 Pydantic 对象（节点 LLM 返回 Pydantic 后调 `.model_dump()` 转字典），保证可 JSON 序列化。
 
@@ -148,14 +148,14 @@ class ResumeStructured(BaseModel):
 #### 学习目标
 
 - 提示词集中管理的好处？
-- 评分 rubric 怎么设计？六维度权重分别是多少？
+- 评分 `rubric` 怎么设计？六维度权重分别是多少？
 - Think 提示设计的价值？
 
 #### 核心知识点
 
 **集中管理**：所有提示词在 `prompts.py` 中，调提示词不动业务代码。
 
-**评分 rubric 设计**：每个维度 0-100 分分档写明每一档特征，让 LLM 有明确标尺。
+**评分 `rubric` 设计**：每个维度 0-100 分分档写明每一档特征，让 LLM 有明确标尺。
 
 ```python
 # 示例：项目深度评分标准
@@ -189,7 +189,7 @@ SIX_DIMENSIONS = [
 
 #### 核心知识点
 
-**双栏布局处理**：PyMuPDF 逐页读取文本块，按横坐标 x0 分左右半，判断是否双栏（右侧占比>30%），双栏时先左后右读取。
+**双栏布局处理**：PyMuPDF 逐页读取文本块，按横坐标 `x0` 分左右半，判断是否双栏（右侧占比>30%），双栏时先左后右读取。
 
 **`run_in_executor`**
 
@@ -200,7 +200,7 @@ raw_text, page_count = await loop.run_in_executor(
 )
 ```
 
-同步 PDF 解析用 `run_in_executor` 丢线程池，不阻塞事件循环。
+> **EduAgent 应用**：所有本地模型推理（BGE-M3/Reranker/MiniLM）、PDF/Word 解析、密码校验都通过 `run_in_executor` 丢线程池，不阻塞事件循环。
 
 **结构化提取重试**
 
@@ -249,7 +249,7 @@ dimension_scores = await asyncio.gather(*tasks)
 weighted_score = sum(d["score"] * d["weight"] for d in dimension_scores)
 ```
 
-**关键**：`tasks = [...]` 创建协程（还没执行），`await asyncio.gather(*tasks)` 一起跑。单维度失败不影响其他维度。
+> **EduAgent 应用**：`tasks = [...]` 创建协程（还没执行），`await asyncio.gather(*tasks)` 一起跑。单维度失败不影响其他维度。这是 Agent 中"并行评审"范式的核心实现。
 
 ---
 
@@ -258,13 +258,13 @@ weighted_score = sum(d["score"] * d["weight"] for d in dimension_scores)
 #### 学习目标
 
 - `diagnose_issues` 的四步流程？
-- 结构化输出防 None 的兜底策略？
+- 结构化输出防 `None` 的兜底策略？
 
 #### 核心知识点
 
-**diagnose_issues 四步**：汇总各维度问题 → Think 前置推理（可失败，不影响主流程） → 结构化生成 IssueList → 按优先级排序（high → medium → low）。
+**`diagnose_issues` 四步**：汇总各维度问题 → Think 前置推理（可失败，不影响主流程） → 结构化生成 `IssueList` → 按优先级排序（high → medium → low）。
 
-**generate_summary**：综合所有结果，调用 LLM 生成 `ResumeSummary`（亮点/改进/评语/匹配度）。同样防 None + 重试 2 次。
+**`generate_summary`**：综合所有结果，调用 LLM 生成 `ResumeSummary`（亮点/改进/评语/匹配度）。同样防 `None` + 重试 2 次。
 
 ---
 
@@ -317,20 +317,20 @@ graph = builder.compile()    # 不传 checkpointer（一次性任务）
 
 - 四个接口分别做什么？
 - 后台任务如何防止 GC 回收？
-- thread-local 图解决什么问题？
+- `thread-local` 图解决什么问题？
 
 #### 核心知识点
 
 | 接口 | 说明 |
 |------|------|
-| POST /resume/upload | 上传 PDF，返回 202+review_id，后台异步审查 |
-| GET /resume/reviews/{id} | 轮询查询状态/结果（含超时兜底：15 分钟标记 failed） |
-| DELETE /resume/reviews/{id} | 越权防护：WHERE 条件带 student_id |
-| GET /resume/reviews | 列出本人记录，JSONB 直接取综合分 |
+| `POST /resume/upload` | 上传 PDF，返回 202+`review_id`，后台异步审查 |
+| `GET /resume/reviews/{id}` | 轮询查询状态/结果（含超时兜底：15 分钟标记 `failed`） |
+| `DELETE /resume/reviews/{id}` | 越权防护：WHERE 条件带 `student_id` |
+| `GET /resume/reviews` | 列出本人记录，JSONB 直接取综合分 |
 
 **GC 保护**：`_background_tasks: set[asyncio.Task]` 持有后台任务强引用防 GC 回收。
 
-**thread-local 图**：`threading.local()` 给每个线程一份独立图实例，避免多线程并发竞争。
+**`thread-local` 图**：`threading.local()` 给每个线程一份独立图实例，避免多线程并发竞争。
 
 ---
 
@@ -340,9 +340,9 @@ graph = builder.compile()    # 不传 checkpointer（一次性任务）
 |------|---------|---------|
 | 结构化输出 | `with_structured_output(PydanticModel, method="function_calling")` | ④⑤⑥⑦ |
 | 并行 fan-out | `asyncio.gather(*tasks)` | ⑤ |
-| 重试兜底 | for 循环 2 次 + try/except | ④⑤⑦ |
+| 重试兜底 | `for` 循环 2 次 + `try/except` | ④⑤⑦ |
 | 后台任务 | `asyncio.create_task()` + GC 保护 | 上传接口 |
-| 轮询 | 前端 setInterval(POST) | 查询接口 |
+| 轮询 | 前端 `setInterval(POST)` | 查询接口 |
 | 线程隔离 | `threading.local()` | 图实例 |
 
 ---

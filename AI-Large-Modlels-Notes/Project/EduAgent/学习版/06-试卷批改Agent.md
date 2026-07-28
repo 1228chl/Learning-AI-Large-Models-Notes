@@ -47,7 +47,7 @@
 **核心价值**：自动批改 Word 格式试卷，三轨并行处理三种题型（客观题/简答题/代码题）。
 
 **为什么需要 HitL**（三个原因）：
-1. **简答题有歧义**：不同表述正确回答了同一个知识点，AI 有时会低估（confidence < 0.7）
+1. **简答题有歧义**：不同表述正确回答了同一个知识点，AI 有时会低估（`confidence < 0.7`）
 2. **代码题无法自动运行**：LLM 只能做质量评估，无法验证代码正确性
 3. **成绩有法律效力**：教师必须有最终确认权
 
@@ -67,21 +67,16 @@ objective_results, subjective_results, code_results = await asyncio.gather(
 )
 ```
 
+> **EduAgent 应用**：三轨并行是"并行评审"范式的再次应用，但这里的"并行"是三种不同轨道的并行，不是同一维度的并行。
+
 **完整数据流**
 
 ```
-parse_word（解析Word）
-  → load_questions_meta（加载DB题目元数据）
-    → run_three_tracks（三轨并行批改）
-      → aggregate_results（汇总+计算总分）
-        → analyze_weak_points（薄弱点分析）
-          → notify_teacher（通知教师）
-            → teacher_review [interrupt] ← 关键！图在此暂停
-              → apply_teacher_decision（approve/modify）
-                → publish_results（写入DB）
+parse_word → load_questions_meta → run_three_tracks → aggregate_results
+→ analyze_weak_points → notify_teacher
+→ teacher_review [interrupt] ← 关键！图在此暂停
+→ apply_teacher_decision → publish_results
 ```
-
-**涉及的数据库表**：exams（试卷）、questions（试题）、scoring_points（得分点）、exam_submissions（提交状态）、exam_reviews（批改详情）。
 
 ---
 
@@ -90,7 +85,7 @@ parse_word（解析Word）
 #### 学习目标
 
 - 五个 Pydantic 子模型分别是做什么的？
-- ExamState 的 7 组字段？`parsed_questions` 为什么被两个节点共用？
+- `ExamState` 的 7 组字段？`parsed_questions` 为什么被两个节点共用？
 - 四个 Prompt 分别对应什么场景？
 - Think Tool 的价值？
 
@@ -119,19 +114,21 @@ class TeacherDecision(BaseModel):
     teacher_id: str = Field(description="教师ID")
 ```
 
-**ExamState（7 组）**：
+> ⭐ **核心设计**：`confidence` 字段是关键——低于 0.7 自动标记 `needs_review=True`，这是 HitL 的触发条件。
+
+**`ExamState`（7 组）**：
 
 | 分组 | 字段 | 写入节点 |
 |------|------|----------|
-| 请求上下文 | exam_id, submission_id, word_file_path | API 初始化 |
-| 解析结果 | parsed_questions | parse_word → load_questions_meta 覆盖 |
-| 三轨结果 | objective_results, subjective_results, code_results | run_three_tracks |
-| 汇总 | pre_review_summary | aggregate_results |
-| 薄弱点 | weak_points, weak_points_summary | analyze_weak_points |
-| HitL | teacher_notified, teacher_decision | notify_teacher / teacher_review |
-| 发布 | final_results, published | apply_teacher_decision / publish_results |
+| 请求上下文 | `exam_id`, `submission_id`, `word_file_path` | API 初始化 |
+| 解析结果 | `parsed_questions` | `parse_word` → `load_questions_meta` 覆盖 |
+| 三轨结果 | `objective_results`, `subjective_results`, `code_results` | `run_three_tracks` |
+| 汇总 | `pre_review_summary` | `aggregate_results` |
+| 薄弱点 | `weak_points`, `weak_points_summary` | `analyze_weak_points` |
+| HitL | `teacher_notified`, `teacher_decision` | `notify_teacher` / `teacher_review` |
+| 发布 | `final_results`, `published` | `apply_teacher_decision` / `publish_results` |
 
-**四个 Prompt**：SYSTEM_PROMPT（人设，严格按得分点评分）、SUBJECTIVE_REVIEW_PROMPT（简答题批改）、CODE_QUALITY_REVIEW_PROMPT（5 维度代码评估）、WEAK_POINTS_ANALYSIS_PROMPT（薄弱点分析）。
+**四个 Prompt**：`SYSTEM_PROMPT`（人设，严格按得分点评分）、`SUBJECTIVE_REVIEW_PROMPT`（简答题批改）、`CODE_QUALITY_REVIEW_PROMPT`（5 维度代码评估）、`WEAK_POINTS_ANALYSIS_PROMPT`（薄弱点分析）。
 
 **Think Tool 的价值**：先自由推理再结构化评分，减少对"表述不同但实质正确"的误判。
 
@@ -149,7 +146,6 @@ def _sync_parse_word(word_path: str) -> list[ParsedQuestion]:
     for para in doc.paragraphs:
         # 正则识别题目开头
         if re.match(r"^(第?\s*[一二三四五六七八九十\d]+\s*[题、。.]|Q\.?\s*\d+)", para.text):
-            # 识别题目类型和答案
             ...
         # 识别代码块
         if para.text.strip().startswith("```"):
@@ -205,7 +201,7 @@ async def score_subjective(question, student_answer, scoring_points):
     return result
 ```
 
-**confidence < 0.7 标记需复核**。每 3 题一组并行（平衡并发效率和 API 稳定性），组内 `asyncio.gather`，组间顺序执行。
+> **EduAgent 应用**：`confidence < 0.7` 标记需复核。每 3 题一组并行（平衡并发效率和 API 稳定性），组内 `asyncio.gather`，组间顺序执行。
 
 ---
 
@@ -227,9 +223,9 @@ LLM 无法运行代码，所有代码题始终 `needs_review=True`，教师必�
 
 #### 核心知识点
 
-**aggregate_results**：合并三轨结果，按 question_no 排序，计算 total_score / score_rate / needs_review_count。
+**`aggregate_results`**：合并三轨结果，按 `question_no` 排序，计算 `total_score` / `score_rate` / `needs_review_count`。
 
-**analyze_weak_points**：有 knowledge_tag 的直接按标签聚合，无标签的让 LLM 推断知识点。
+**`analyze_weak_points`**：有 `knowledge_tag` 的直接按标签聚合，无标签的让 LLM 推断知识点。
 
 ---
 
@@ -239,7 +235,7 @@ LLM 无法运行代码，所有代码题始终 `needs_review=True`，教师必�
 
 - `interrupt()` 的工作原理是什么？
 - 图暂停后如何恢复执行？
-- 编译图时为什么要传 MemorySaver？
+- 编译图时为什么要传 `MemorySaver`？
 
 #### 核心知识点
 
@@ -258,7 +254,7 @@ graph.ainvoke(
 )
 ```
 
-**interrupt() 工作原理**
+**`interrupt()` 工作原理**
 ```
 ① 执行到 interrupt(value) → LangGraph 抛出 Interrupt 异常
 ② 完整 State 保存到 MemorySaver（按 thread_id）
@@ -267,7 +263,7 @@ graph.ainvoke(
    → 从 MemorySaver 恢复 State，从 interrupt 处继续
 ```
 
-**关键约束**：编译图不传 `interrupt_before`，只在节点内调用 `interrupt()`。**必须绑定 MemorySaver**，否则暂停后 State 丢失。
+> ⭐ **强制规范**：编译图不传 `interrupt_before`，只在节点内调用 `interrupt()`。**必须绑定 `MemorySaver`**，否则暂停后 State 丢失。
 
 ---
 
@@ -278,10 +274,8 @@ graph.ainvoke(
 ```python
 # 两种决策
 if teacher_decision["action"] == "approve":
-    # 直接采用 AI 分数
-    final_results = ai_results
+    final_results = ai_results          # 直接采用 AI 分数
 elif teacher_decision["action"] == "modify":
-    # 按 modifications 列表覆盖对应题目
     final_results = apply_modifications(ai_results, teacher_decision["modifications"])
 
 # 先删后插：幂等写入 exam_reviews
@@ -323,10 +317,10 @@ graph = builder.compile(checkpointer=MemorySaver())
 
 | 接口 | 说明 |
 |------|------|
-| POST /exam/submit | 学员提交 Word 试卷，返回 202+submission_id |
-| GET /submissions/{id}/review | 教师查看预批改详情 |
-| POST /submissions/{id}/confirm | 教师确认/修改批改结果（Command(resume=) 恢复） |
-| GET /pending-reviews | 教师查看待确认列表 |
+| `POST /exam/submit` | 学员提交 Word 试卷，返回 202+`submission_id` |
+| `GET /submissions/{id}/review` | 教师查看预批改详情 |
+| `POST /submissions/{id}/confirm` | 教师确认/修改批改结果（`Command(resume=)` 恢复） |
+| `GET /pending-reviews` | 教师查看待确认列表 |
 
 ---
 
@@ -334,13 +328,13 @@ graph = builder.compile(checkpointer=MemorySaver())
 
 | 机制 | 实现方式 | 所在节点 |
 |------|---------|---------|
-| 三轨并行 | `asyncio.gather(return_exceptions=True)` | run_three_tracks |
+| 三轨并行 | `asyncio.gather(return_exceptions=True)` | `run_three_tracks` |
 | 规则引擎 | `_normalize_answer` 标准化+精确比对 | 第一轨 |
 | Think Tool | 两步流程：自由推理→结构化评分 | 第二轨 |
-| 置信度评估 | confidence < 0.7 标记 needs_review | 第二轨 |
-| Human-in-the-Loop | interrupt() + Command(resume=) | teacher_review |
-| 幂等写入 | 先删后插 | publish_results |
+| 置信度评估 | `confidence < 0.7` 标记 `needs_review` | 第二轨 |
+| Human-in-the-Loop | `interrupt()` + `Command(resume=)` | `teacher_review` |
+| 幂等写入 | 先删后插 | `publish_results` |
 
 ---
 
-> **学习建议**：先理解"为什么需要三轨并行 + HitL"（①），再分别学习三轨的实现（④~⑥），最后重点理解 HitL 的 interrupt/resume 机制（⑧）——这是第六章的教学主线，也是 LangGraph 最强大的功能之一。
+> **学习建议**：先理解"为什么需要三轨并行 + HitL"（①），再分别学习三轨的实现（④~⑥），最后重点理解 HitL 的 `interrupt`/`resume` 机制（⑧）——这是第六章的教学主线，也是 LangGraph 最强大的功能之一。

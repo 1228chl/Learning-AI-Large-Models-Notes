@@ -24,8 +24,7 @@
   └── ⑩ MCP 工具         ← 知识库检索 + 联网搜索
 
 第四梯队：在线查询（学员提问时实时发生）
-  ├── ⑪ State 与提示词   ← 13 字段 State + 各阶段 Prompt
-  ├── ⑫~⑭ 12 节点详解    ← 分类→改写→检索→精排→生成→存记忆
+  ├── ⑪~⑭ 12 节点详解    ← 分类→改写→检索→精排→生成→存记忆
   ├── ⑮ 图装配           ← 条件边 + checkpointer
   └── ⑯ HTTP 接口        ← 流式/非流式/历史
 ```
@@ -58,7 +57,7 @@
 |------|-----------|-----------|
 | 流程形态 | 一条直线 | **带分支**（按意图/置信度走不同路径） |
 | 分支实现 | 无 | **条件边** `add_conditional_edges` |
-| 多轮记忆 | 不需要 | **需要**（挂 MemorySaver） |
+| 多轮记忆 | 不需要 | **需要**（挂 `MemorySaver`） |
 | 节点数量 | 8 个 | 12 个 |
 | 依赖模型 | 1 个 DeepSeek API | DeepSeek API + 3 个进程内本地模型 |
 
@@ -114,12 +113,12 @@ docs = TextLoader("笔记.md").load()
 
 #### 学习目标
 
-- chunk 大小推荐值？分隔符优先级？
+- `chunk` 大小推荐值？分隔符优先级？
 - Markdown 的两阶段分块方案？
 
 #### 核心知识点
 
-**chunk 大小**：含代码块推荐 1000-1500 字，纯文字 600-800 字。默认 chunk_size=1200，chunk_overlap=100。
+**`chunk` 大小**：含代码块推荐 1000-1500 字，纯文字 600-800 字。默认 `chunk_size=1200`，`chunk_overlap=100`。
 
 ```python
 from langchain_text_splitters import RecursiveCharacterTextSplitter
@@ -170,7 +169,7 @@ for section in sections:
 
 **两者互补**：融合（RRF）后综合排名最高。
 
-**BGE-M3 特点**：一次推理同时输出 dense + sparse，中英双语优秀，本地推理，max_length=8192。
+**BGE-M3 特点**：一次推理同时输出 `dense` + `sparse`，中英双语优秀，本地推理，`max_length=8192`。
 
 **BGEMEmbedder 单例模式**
 
@@ -193,6 +192,8 @@ class BGEMEmbedder:
         ...
 ```
 
+> **EduAgent 应用**：`get_instance()` 单例模式确保整个进程只加载一次 BGE-M3 模型（约 5-15 秒），避免重复加载浪费内存。
+
 ---
 
 ### ⑤ Milvus 写入
@@ -205,9 +206,9 @@ class BGEMEmbedder:
 
 #### 核心知识点
 
-**单 Collection 设计**，通过 course_id 和 document_id 区分。
+**单 Collection 设计**，通过 `course_id` 和 `document_id` 区分。
 
-**Contextual RAG**：用 LLM 生成定位描述拼接到 chunk 前，让 chunk 自带上下文。
+**Contextual RAG**：用 LLM 生成定位描述拼接到 `chunk` 前，让 `chunk` 自带上下文。
 
 **五步流水线**
 
@@ -237,7 +238,7 @@ for doc_path in doc_paths:
 #### 学习目标
 
 - 双路检索分别是什么？用什么相似度度量？
-- WeightedRanker 的融合权重？
+- `WeightedRanker` 的融合权重？
 
 #### 核心知识点
 
@@ -280,7 +281,7 @@ results = collection.hybrid_search(
 | 对比 | Embedding | Reranker |
 |------|-----------|----------|
 | 计算方式 | 余弦相似度/内积 | 交叉编码器（Cross-Encoder） |
-| 精度 | 中等，有信息损失 | 高，充分比较 query 和 chunk |
+| 精度 | 中等，有信息损失 | 高，充分比较 query 和 `chunk` |
 | 速度 | 快，百万级毫秒返回 | 慢，每对需一次推理 |
 | 使用位置 | 第一轮召回（topK=30） | 第二轮精排（topN=5） |
 
@@ -311,15 +312,13 @@ else:
 
 | 分类 | 含义 | 路由节点 |
 |------|------|---------|
-| GENERAL | 通用对话 | generate_general（直接 LLM 答） |
-| GENERAL_WEB | 需联网 | web_search |
-| VAGUE | 模糊问题 | hyde_generate（假设文档） |
-| BROAD | 宽泛问题 | multi_query_rewrite（多查询改写） |
-| PRECISE | 精确问题 | 标准 RAG 流程 |
+| `GENERAL` | 通用对话 | `generate_general`（直接 LLM 答） |
+| `GENERAL_WEB` | 需联网 | `web_search` |
+| `VAGUE` | 模糊问题 | `hyde_generate`（假设文档） |
+| `BROAD` | 宽泛问题 | `multi_query_rewrite`（多查询改写） |
+| `PRECISE` | 精确问题 | 标准 RAG 流程 |
 
-**实现方式**：使用 DeepSeek 结构化输出进行分类，temperature=0 确保稳定。
-
-**关键设计**：跨 Agent 路由（8.4）用 DeepSeek LLM（调用频率低）；QA 内部意图分类用本地 MiniLM（调用频率高）。
+> **EduAgent 应用**：跨 Agent 路由（8.4）用 DeepSeek LLM（调用频率低）；QA 内部意图分类用本地 MiniLM（调用频率高）。两个场景用不同方案，是关键取舍点。
 
 ---
 
@@ -327,9 +326,9 @@ else:
 
 #### 学习目标
 
-- MemoryManager 的两个核心方法？
+- `MemoryManager` 的两个核心方法？
 - 摘要压缩在什么时候触发？
-- MemorySaver + thread_id 如何实现多轮记忆？
+- `MemorySaver` + `thread_id` 如何实现多轮记忆？
 
 #### 核心知识点
 
@@ -388,7 +387,7 @@ result = await graph.ainvoke({"messages": [msg]}, config)
 
 #### 核心知识点
 
-**State（13 字段）**：请求上下文(messages/question) → 意图分类结果(intent) → 查询改写(hyde_document/multi_queries) → 检索结果(retrieved_chunks/reranked_chunks/confidence) → 生成结果(answer/sources) → 记忆(memory_summary)。
+**State（13 字段）**：请求上下文(`messages`/`question`) → 意图分类结果(`intent`) → 查询改写(`hyde_document`/`multi_queries`) → 检索结果(`retrieved_chunks`/`reranked_chunks`/`confidence`) → 生成结果(`answer`/`sources`) → 记忆(`memory_summary`)。
 
 **意图分类条件路由**
 
@@ -422,16 +421,16 @@ query_vec = embedder.encode_query(hyde_doc)
 
 **Multi-Query（多查询改写）**：对宽泛问题拆成 3-5 个具体子问题，分别检索后合并结果，扩大召回覆盖。
 
-**load_memory_and_embed**：并行执行两件事——加载记忆 + 向量化查询，`asyncio.gather` 同时进行。
+**`load_memory_and_embed`**：并行执行两件事——加载记忆 + 向量化查询，`asyncio.gather` 同时进行。
 
-**检索节点**：双路混合检索（稠密 + 稀疏），WeightedRanker(0.7, 0.3) 融合，取 topK=30。
+**检索节点**：双路混合检索（稠密 + 稀疏），`WeightedRanker(0.7, 0.3)` 融合，取 topK=30。
 
-**重排序节点**：Reranker 精排取 topN=5，sigmoid 计算置信度，按置信度路由。
+**重排序节点**：Reranker 精排取 topN=5，`sigmoid` 计算置信度，按置信度路由。
 
 **三条生成路径**：
-- generate_rag（高置信）：基于知识库 chunk 生成，标注来源（"来源：Java 讲义>第 3 章>3.1 IOC"）
-- web_search（低置信 + 需联网）：MCP 联网搜索作为上下文
-- generate_direct（低置信 + 不联网）：LLM 直接回答，兜底方案
+- `generate_rag`（高置信）：基于知识库 `chunk` 生成，标注来源（"来源：Java 讲义>第 3 章>3.1 IOC"）
+- `web_search`（低置信 + 需联网）：MCP 联网搜索作为上下文
+- `generate_direct`（低置信 + 不联网）：LLM 直接回答，兜底方案
 
 ---
 
@@ -453,9 +452,9 @@ graph = builder.compile(checkpointer=MemorySaver())  # 多轮记忆
 
 | 接口 | 说明 |
 |------|------|
-| POST /qa/chat | 非流式对话 |
-| POST /qa/chat/stream | SSE 流式对话（astream_events 逐 token 返回） |
-| GET /qa/history | 获取对话历史 |
+| `POST /qa/chat` | 非流式对话 |
+| `POST /qa/chat/stream` | SSE 流式对话（`astream_events` 逐 token 返回） |
+| `GET /qa/history` | 获取对话历史 |
 
 ---
 
@@ -463,14 +462,13 @@ graph = builder.compile(checkpointer=MemorySaver())  # 多轮记忆
 
 | 技术 | 文件 | 角色 |
 |------|------|------|
-| 意图分类 | query_classifier.py | 5 类分类路由 |
-| HyDE/Multi-Query | nodes.py | 查询改写 |
-| 混合检索 | knowledge_base.py | 稠密+稀疏双路召回 |
-| 重排序 | reranker.py | 精排+置信度 |
-| 记忆管理 | memory.py | MemorySaver+摘要压缩 |
-| MCP 工具 | mcp/*.py | 标准化工具调用 |
-| 提示词 | prompts.py | 各阶段 Prompt |
-| 图装配 | graph.py | 条件边+checkpointer |
+| 意图分类 | `query_classifier.py` | 5 类分类路由 |
+| HyDE/Multi-Query | `nodes.py` | 查询改写 |
+| 混合检索 | `knowledge_base.py` | 稠密+稀疏双路召回 |
+| 重排序 | `reranker.py` | 精排+置信度 |
+| 记忆管理 | `memory.py` | `MemorySaver`+摘要压缩 |
+| MCP 工具 | `mcp/*.py` | 标准化工具调用 |
+| 图装配 | `graph.py` | 条件边+`checkpointer` |
 
 ---
 
