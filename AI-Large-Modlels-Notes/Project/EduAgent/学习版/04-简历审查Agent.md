@@ -48,13 +48,18 @@
 
 **HTTP 请求流程**
 
-```
-① POST /resume/upload（PDF + JWT）
-  → ② 存文件到 /tmp，insert resume_reviews（status=processing）
-    → ③ 立即返回 202 + review_id（不等审查完成！后台启动 LangGraph 图）
-      → ④ 前端轮询 GET /resume/reviews/{id}
-        ├── 还在审查 → {status: "processing"}
-        └── 审查完成 → 完整报告
+```python
+# ① 学员上传 PDF
+POST /resume/upload（PDF + JWT）
+# ② 后端存文件 + 插库，立即返回 202
+response = {"review_id": "uuid-xxx", "status": "processing"}
+# ③ 后台异步启动 LangGraph 图
+task = asyncio.create_task(run_resume_graph(review_id))
+_background_tasks.add(task)                    # GC 保护
+task.add_done_callback(_background_tasks.discard)
+# ④ 前端轮询
+GET /resume/reviews/{review_id}
+# 返回：{"status": "processing"} 或完整报告
 ```
 
 **关键设计**：上传接口不会卡住等审查跑完，立刻返回 202。这正是"后台任务 + GC 保护"和"202 Accepted"的真实应用。
@@ -89,7 +94,28 @@
 
 **两类数据模型**：① 各步 LLM 输出的 Schema ② 主 State（`ResumeState`）
 
-**嵌套模型结构**：`EducationItem` / `ProjectItem` / `WorkItem` → `ResumeStructured`（完整简历）
+**嵌套模型结构**
+
+```python
+class EducationItem(BaseModel):
+    school: str = Field(description="学校名称")
+    major: str = Field(description="专业名称")
+    degree: str = Field(description="学历：本科/专科/硕士等")
+    duration: str = Field(description="在校时间，如 2020.09 - 2024.06")
+
+class ProjectItem(BaseModel):
+    name: str = Field(description="项目名称")
+    role: str = Field(description="担任角色")
+    tech_stack: list[str] = Field(description="使用的技术栈列表")
+    highlights: list[str] = Field(default_factory=list, description="量化亮点")
+
+class ResumeStructured(BaseModel):
+    name: str = Field(description="姓名")
+    target_position: str = Field(default="", description="求职意向岗位")
+    education: list[EducationItem] = Field(default_factory=list)
+    projects: list[ProjectItem] = Field(default_factory=list)
+    skills_list: list[str] = Field(default_factory=list, description="技术标签列表")
+```
 
 **`Field(description=...)` 双重作用**：既是注释，又通过 `with_structured_output` 发给 LLM 作为填空指令。描述写得越清楚，提取越准。
 
@@ -136,9 +162,18 @@
 "90-100：每个项目都有量化指标、明确的技术选型理由、清晰的个人贡献和难点解决"
 "70-89：大部分项目有量化数据，个人贡献基本清晰"
 "50-69：项目描述偏泛，缺少量化数据，个人贡献不明确"
-```
 
-**六维度权重**：项目深度（0.30）> 技术匹配度（0.25）> 表达规范性（0.15）= 简历结构（0.15）> 量化程度（0.10）> 真实可信度（0.05）。权重和 = 1.0。
+# 六维度权重
+SIX_DIMENSIONS = [
+    {"name": "项目深度",     "weight": 0.30},
+    {"name": "技术匹配度",   "weight": 0.25},
+    {"name": "表达规范性",   "weight": 0.15},
+    {"name": "简历结构",     "weight": 0.15},
+    {"name": "量化程度",     "weight": 0.10},
+    {"name": "真实可信度",   "weight": 0.05},
+]
+# 权重和 = 1.0
+```
 
 **Think 提示设计**：先让 LLM 用自由文本做宏观分析，再把思考作为上下文喂给结构化诊断。这是一种轻量"推理增强"技巧，能显著提升诊断质量。
 
@@ -156,9 +191,31 @@
 
 **双栏布局处理**：PyMuPDF 逐页读取文本块，按横坐标 x0 分左右半，判断是否双栏（右侧占比>30%），双栏时先左后右读取。
 
-**`run_in_executor`**：同步 PDF 解析用 `loop.run_in_executor(None, _sync_extract_text, pdf_path)` 丢线程池，不阻塞事件循环。
+**`run_in_executor`**
 
-**结构化提取重试**：`with_structured_output` 偶尔返回 None（模型不用工具而用文字回复），判 None + 重试 2 次，两次失败则返回空结构兜底。
+```python
+loop = asyncio.get_running_loop()
+raw_text, page_count = await loop.run_in_executor(
+    None, _sync_extract_text, pdf_path
+)
+```
+
+同步 PDF 解析用 `run_in_executor` 丢线程池，不阻塞事件循环。
+
+**结构化提取重试**
+
+```python
+async def extract_structured_node(state: ResumeState) -> dict:
+    for attempt in range(2):           # 重试 2 次
+        try:
+            result = await structured_llm.ainvoke(messages)
+            if result is None:         # 模型不用工具，用文字回复
+                continue
+            return {"structured": result.model_dump()}
+        except Exception:
+            continue
+    return {"structured": {}}           # 两次失败 → 空结构兜底
+```
 
 ---
 
@@ -174,18 +231,21 @@
 
 ```python
 async def review_one_dimension(dim: dict) -> dict:
-    for attempt in range(2):  # 单维度2次重试
+    for attempt in range(2):                         # 单维度2次重试
         try:
             result = await structured_llm.ainvoke([...])
             d = result.model_dump()
-            d["dimension"] = dim["name"]   # 代码层填：维度名和权重
+            d["dimension"] = dim["name"]             # 代码层填：维度名和权重
             d["weight"] = dim["weight"]
             return d
         except:
-            return _empty_dimension_score(dim)  # 降级为50分
+            return _empty_dimension_score(dim)       # 降级为50分
 
+# 创建6个协程，并行执行
 tasks = [review_one_dimension(dim) for dim in SIX_DIMENSIONS]
 dimension_scores = await asyncio.gather(*tasks)
+
+# 计算加权总分
 weighted_score = sum(d["score"] * d["weight"] for d in dimension_scores)
 ```
 
@@ -217,11 +277,33 @@ weighted_score = sum(d["score"] * d["weight"] for d in dimension_scores)
 
 #### 核心知识点
 
-**JSONB 写入**：Python dict 用 `json.dumps` 转 JSON 字符串，`ensure_ascii=False` 保留中文原文。
+**JSONB 写入**
 
-**JSONB 读取**：asyncpg 自动反序列化为 Python dict/list，不需 `json.loads`。
+```python
+# 写入：Python dict → json.dumps 转字符串
+await db.execute(
+    text("UPDATE resume_reviews SET scores = :scores WHERE id = :id"),
+    {"scores": json.dumps(dimension_scores, ensure_ascii=False), "id": review_id},
+)
+# 读取：asyncpg 自动反序列化为 Python dict/list
+```
 
-**图装配**：8 个节点 + 8 条固定边，无条件边，`compile()` 不传 checkpointer（一次性任务）。
+**图装配**
+
+```python
+builder = StateGraph(ResumeState)
+builder.add_node("extract_text", extract_text_node)
+builder.add_node("extract_structured", extract_structured_node)
+builder.add_node("run_six_dimensions", run_six_dimensions_node)
+# ... 8 个节点
+builder.add_edge(START, "extract_text")
+builder.add_edge("extract_text", "extract_structured")
+builder.add_edge("extract_structured", "run_six_dimensions")
+# ... 8 条固定边，无条件边
+builder.add_edge("save_results", END)
+
+graph = builder.compile()    # 不传 checkpointer（一次性任务）
+```
 
 ---
 
