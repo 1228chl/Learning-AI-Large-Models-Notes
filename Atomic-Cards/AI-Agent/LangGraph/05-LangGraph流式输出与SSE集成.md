@@ -23,6 +23,10 @@ LangGraph 流式输出是通过 `graph.astream_events()` 将图执行过程中�
 | SSE 封装 | `EventSourceResponse(generator)` | 标准 HTTP 协议，`data:` 帧格式 | 浏览器原生 `EventSource` 支持 |
 | LangGraph 事件流 | `graph.astream_events(state, version="v2")` | 自动捕获每个节点的各类事件 | 前端可区分"思考/打字/完成" |
 
+## 直观理解
+
+> 看球赛直播 vs 看赛后录像——同步 API 是"等比赛结束给你看完整录像"（30 秒白屏），流式输出是"解说员每看到一个动作就实时播报"（逐 token 打字效果）。LangGraph 的 `astream_events` 像一个多机位直播导演——切到"思考"镜头（on_chain_start）显示"检索中..."，切到"特写"镜头（on_chat_model_stream）逐字播出答案，切到"全景"镜头（on_chain_end）显示"完成"。前端 EventSource 就是你的电视机，持续接收直播信号。
+
 ## graph.astream_events 事件类型
 
 ```python

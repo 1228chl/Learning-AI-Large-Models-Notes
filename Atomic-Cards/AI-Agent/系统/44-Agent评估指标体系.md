@@ -24,6 +24,10 @@ $$ \text{Agent 质量} = f(\underbrace{\text{Recall@K}}_{\text{检索质量}}, \
 | MAE（平均绝对误差） | $\frac{1}{n}\sum_{i=1}^{n}\vert \text{AI}_i - \text{Expert}_i \vert$ | AI 评分与专家评分的平均偏差 | 越低越好（< 5） | 试卷批改、简历评分 |
 | Cohen's kappa | $\kappa = \frac{P_o - P_e}{1 - P_e}$ | 两评分者分类一致性（扣除随机一致） | 越高越好（> 0.6） | 分档评价任务 |
 
+## 直观理解
+
+> 评估一个 Agent 就像做体检——不会只看一项指标就下结论。Recall@K 是"该查的查到了吗"（视力检查），Answer Correctness 是"答对了吗"（问诊判断），MAE 是"评分偏差多少"（血压偏离标准值），Cohen's kappa 是"和专家的判断一致性"（两位医生的诊断是否一致）。四个指标合在一起，才能说这个 Agent "身体好不好"。
+
 ## Recall@K 详解
 
 ```python

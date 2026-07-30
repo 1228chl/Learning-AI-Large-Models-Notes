@@ -28,6 +28,10 @@ $$ \text{START} \to \text{upload\_to\_minio} \to \text{download\_pdf} \to \text{
 | 7 | generate_summary | 生成整体评价 | summary | 综合结构化简历+评分+问题 |
 | 8 | save_results | 写入 PostgreSQL + 清理临时文件 | — | `model_dump()` → JSONB 写入 |
 
+## 直观理解
+
+> 八节点流水线像一条自动化装配线：第 1-2 站接收原材料（上传/下载 PDF），第 3 站拆包（提取文本），第 4 站分类整理（结构化抽取），第 5 站六个质检员同时打分（六维度并行评审），第 6 站汇总问题（诊断），第 7 站写总结报告，第 8 站入库发货。每站只做一件事，做完传给下一站。
+
 ## 六维度评分体系
 
 | 维度 | 权重 | 评估焦点 | 评分区间描述 |

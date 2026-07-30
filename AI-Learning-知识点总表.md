@@ -32,6 +32,7 @@
 | **Python 进阶** | 高阶函数、`map/filter/reduce`、上下文管理器、`with` 语句 |
 | **Pydantic 数据建模** | BaseModel、Field.description、类型校验、LLM 结构化输出（with_structured_output）、BaseSettings |
 | **异步编程进阶** | asynccontextmanager、FastAPI lifespan 模式、yield 依赖注入、后台任务 GC 保护 |
+| **线程本地存储** | threading.local() 线程隔离变量、全局变量竞态问题、contextvars 协程隔离 |
 
 ---
 
@@ -51,6 +52,7 @@
 | **MySQL 数据库** | 数据库设计、CRUD、表连接、索引、事务、ACID |
 | **PyMySQL 模块** | 连接池、参数化查询、事务处理、ORM 对比 |
 | **PyRedis 模块** | Redis 数据结构（string/hash/set/zset）、缓存策略、过期时间 |
+| **Milvus 向量索引** | HNSW 分层可导航小世界索引、M/efConstruction/ef 参数调优、NSW 图原理 |
 
 ---
 
@@ -62,6 +64,7 @@
 | **UV 包管理器** | 极速 pip 替代（Rust）、虚拟环境、依赖解析、lock 文件 |
 | **Docker 容器化** | 镜像与容器、Dockerfile、Docker Compose、多服务编排（PostgreSQL+Milvus+etcd+MinIO+Attu）、部署 |
 | **前端集成** | Vue 3 + Vite、Element Plus、SSE 流式事件处理、JWT 鉴权全流程、Pinia 状态管理 |
+| **FastAPI 异步处理** | 文件上传 + 202 Accepted + 后台任务 + 前端轮询模式、_background_tasks GC 保护 |
 
 ---
 
@@ -189,10 +192,11 @@
 | 知识点 | 子知识点 |
 |:-------|:---------|
 | **LangChain 框架** | 六大组件（Models/Prompts/Memory/Chains/Agents/Indexes）、模块化与可扩展设计、with_structured_output |
-| **LangGraph 图模型** | State+Node+Edge 四要素、条件边与路由、Checkpointer 记忆、interrupt/Command HitL |
+| **LangGraph 图模型** | State+Node+Edge 四要素、条件边与路由、Checkpointer 记忆、interrupt/Command HitL、流式输出（astream_events + SSE）、滑动窗口+摘要压缩记忆管理 |
 | **Milvus 向量数据库** | Schema 设计、索引类型（IVF/HNSW）、相似度搜索、Collection 管理 |
 | **基于 MySQL 的问答系统** | 结构化数据问答、SQL 生成、查询执行链路 |
-| **多 Agent 系统 (EduAgent)** | 四大范式（并行评审/RAG/HitL/状态机）、统一入口与 SSE 路由、Orchestrator 编排、Agent 迁移方法论 |
+| **多 Agent 系统 (EduAgent)** | 四大范式（并行评审/RAG/HitL/状态机）、统一入口与 SSE 路由、Orchestrator 编排、Agent 迁移方法论、多租户隔离三层设计 |
+| **Agent 评估体系** | 自动化指标（Recall@K/MAE）、LLM-as-Judge 语义评判、人工基线交叉验证、系统健康度（P95 延迟/回退率/Token 消耗/TTFT） |
 
 ### 11.4 提示词工程
 
