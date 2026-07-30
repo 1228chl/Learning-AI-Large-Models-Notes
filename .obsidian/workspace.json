@@ -230,7 +230,8 @@
       }
     ],
     "direction": "horizontal",
-    "width": 396.5
+    "width": 396.5,
+    "collapsed": true
   },
   "left-ribbon": {
     "hiddenItems": {
@@ -246,7 +247,7 @@
       "templater-obsidian:Templater": false
     }
   },
-  "active": "a73ebf785a6e6ac6",
+  "active": "9dddde49a2d5eb85",
   "lastOpenFiles": [
     "Atomic-Cards/AI-Agent/设计模式/05-并行评审(fan-out-fan-in).md",
     "Atomic-Cards/AI-Agent/设计模式/05-并行评审(fan-out-fan-in).md.tmp.31804.e9ce88e2bf80",
