@@ -122,6 +122,6 @@ confidence < 0.7 的题目自动标记 `needs_review=True`，教师在确认窗�
 
 - 需要理解 Human-in-the-Loop 设计模式的抽象原理：[Human-in-the-Loop 设计模式](../设计模式/01-Human-in-the-Loop.md)
 - 需要理解 Think 前置推理在简答题语义评分中的应用：[Think 前置推理增强](../设计模式/03-Think前置推理增强.md)
-- 需要理解 LangGraph 的 Checkpointer 和 interrupt/Command 机制：[LangGraph Checkpointer 与记忆](../LangGraph/04-LangGraph-Checkpointer与记忆.md)
+- 需要理解 LangGraph 的 Checkpointer 和 interrupt/Command 机制：[LangGraph Checkpointer 与记忆](../LangGraph/04-LangGraph Checkpointer与记忆.md)
 - 需要理解 asyncio.gather 的并行调度和 return_exceptions 参数：[异步并发实战](../../Python/并发/17-异步并发实战.md)
 - 需要理解评分 Rubric 设计中"五档评分区间"的标准化方法：[评分 Rubric 设计](../设计模式/04-评分Rubric设计.md)

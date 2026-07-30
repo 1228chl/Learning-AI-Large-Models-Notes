@@ -109,4 +109,4 @@ def determine_orchestration(agents: list[Agent]):
 - 需要理解 Orchestrator 编排器的单 Agent 直达和多 Agent 串联机制：[Orchestrator 编排器设计](../系统/34-Orchestrator编排器设计.md)
 - 需要理解 Human-in-the-Loop 抽象设计模式中的通用 interrupt 流程：[Human-in-the-Loop 设计模式](../设计模式/01-Human-in-the-Loop.md)
 - 需要理解状态机对话设计模式中的阶段定义和转换条件：[状态机对话设计模式](../设计模式/02-状态机对话设计模式.md)
-- 需要理解并行评审设计模式中的 fan-out/fan-in 通用模板：[并行评审设计模式](../设计模式/05-并行评审.md)
+- 需要理解并行评审设计模式中的 fan-out/fan-in 通用模板：[并行评审设计模式](../设计模式/05-并行评审(fan-out-fan-in).md)

@@ -119,8 +119,8 @@ graph.add_conditional_edges("classify_query", route_by_intent, {
 
 ## 参考引用
 
-- 需要理解 HyDE 假设文档检索的具体原理与实现：[HyDE 假设文档检索](../RAG流程/36-HyDE假设文档检索.md)
-- 需要理解 BGE-M3 嵌入模型的稠密+稀疏双向量输出：[BGE-M3 嵌入模型](../RAG流程/35-BGE-M3嵌入模型与双向量输出.md)
-- 需要理解 Reranker 交叉编码器的精排机制：[Reranker 重排序](../检索/18-Reranker重排序与置信度计算.md)
+- 需要理解 HyDE 假设文档检索的具体原理与实现：[HyDE 假设文档检索实现](../RAG流程/36-HyDE假设文档检索实现.md)
+- 需要理解 BGE-M3 嵌入模型的稠密+稀疏双向量输出：[BGE-M3 嵌入模型与混合检索](../RAG流程/35-BGE-M3嵌入模型与混合检索.md)
+- 需要理解 Reranker 交叉编码器的精排机制：[BGE-Reranker 重排序模型](../../数据库/检索/18-BGE-Reranker重排序模型.md)
 - 需要理解 LangGraph 条件边和 Checkpointer 机制：[LangGraph 条件边与路由](../LangGraph/02-LangGraph条件边与路由.md)
-- 需要理解 Intent Classification 的 5 类意图设计：[意图识别与分类](../检索/26-意图识别多路径分类.md)
+- 需要理解 Intent Classification 的意图分类和路由机制：[FAQ 与 RAG 混合检索架构](../检索/26-FAQ与RAG混合检索架构.md)

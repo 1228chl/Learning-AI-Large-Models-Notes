@@ -113,5 +113,5 @@ LLM 调用约 7 次（1 次提取 + 6 次并行评分），总耗时约 30-60 �
 - 需要理解 Pydantic BaseModel 和 Field.description 如何被 LLM 用作填空指令：[Pydantic 数据建模与结构化输出](../../Python/Pydantic/01-Pydantic数据建模与结构化输出.md)
 - 需要理解 LangGraph 的 State + Node + Edge 基本心智模型：[LangGraph 图模型四要素](../LangGraph/01-LangGraph图模型四要素.md)
 - 需要理解 Think 前置推理在 diagnose_issues 和评分中的应用：[Think 前置推理增强](../设计模式/03-Think前置推理增强.md)
-- 需要理解并行评审（fan-out/fan-in）的抽象设计模式：[并行评审设计模式](../设计模式/05-并行评审.md)
+- 需要理解并行评审（fan-out/fan-in）的抽象设计模式：[并行评审设计模式](../设计模式/05-并行评审(fan-out-fan-in).md)
 - 需要理解后台任务 GC 保护模式在 upload 接口中的应用：[后台任务 GC 保护模式](../../Python/并发/18-后台任务GC保护模式.md)

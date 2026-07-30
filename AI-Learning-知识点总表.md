@@ -1,6 +1,6 @@
 # 📘 AI-Learning 知识点总表
 
-> 生成日期：2026-07-06
+> 生成日期：2026-07-06 | 更新日期：2026-07-30
 > 说明：本表覆盖了仓库中除 `Full-Notes` 和 `New-Notes` 外的全部内容，按知识维度重新组织和归纳。
 
 ---
@@ -30,6 +30,8 @@
 | **迭代器 & 生成器 & 协程** | 可迭代对象、`__iter__` / `__next__`、`yield`、`async/await`、`gevent` |
 | **正则表达式** | 元字符、匹配规则、`re` 模块、分组与捕获 |
 | **Python 进阶** | 高阶函数、`map/filter/reduce`、上下文管理器、`with` 语句 |
+| **Pydantic 数据建模** | BaseModel、Field.description、类型校验、LLM 结构化输出（with_structured_output）、BaseSettings |
+| **异步编程进阶** | asynccontextmanager、FastAPI lifespan 模式、yield 依赖注入、后台任务 GC 保护 |
 
 ---
 
@@ -58,7 +60,8 @@
 |:-------|:---------|
 | **Conda 环境管理** | 环境创建/管理、包安装/更新/删除、换源、环境导出、环境克隆 |
 | **UV 包管理器** | 极速 pip 替代（Rust）、虚拟环境、依赖解析、lock 文件 |
-| **Docker 容器化** | 镜像与容器、Dockerfile、Docker Compose、部署 |
+| **Docker 容器化** | 镜像与容器、Dockerfile、Docker Compose、多服务编排（PostgreSQL+Milvus+etcd+MinIO+Attu）、部署 |
+| **前端集成** | Vue 3 + Vite、Element Plus、SSE 流式事件处理、JWT 鉴权全流程、Pinia 状态管理 |
 
 ---
 
@@ -185,9 +188,11 @@
 
 | 知识点 | 子知识点 |
 |:-------|:---------|
-| **LangChain 框架** | 六大组件（Models/Prompts/Memory/Chains/Agents/Indexes）、模块化与可扩展设计 |
+| **LangChain 框架** | 六大组件（Models/Prompts/Memory/Chains/Agents/Indexes）、模块化与可扩展设计、with_structured_output |
+| **LangGraph 图模型** | State+Node+Edge 四要素、条件边与路由、Checkpointer 记忆、interrupt/Command HitL |
 | **Milvus 向量数据库** | Schema 设计、索引类型（IVF/HNSW）、相似度搜索、Collection 管理 |
 | **基于 MySQL 的问答系统** | 结构化数据问答、SQL 生成、查询执行链路 |
+| **多 Agent 系统 (EduAgent)** | 四大范式（并行评审/RAG/HitL/状态机）、统一入口与 SSE 路由、Orchestrator 编排、Agent 迁移方法论 |
 
 ### 11.4 提示词工程
 
@@ -288,7 +293,7 @@
 | 深度学习（DL） | 4 个子方向 | ~10 |
 | 自然语言处理（NLP） | 8 个模块 + 8 个精简版 | ~20 |
 | 数据分析（DataAnalysis） | 3 个工具 | ~6 |
-| AI Agent | 4 个方向 | ~12 |
+| AI Agent | 5 个方向 | ~20 |
 | 项目实战（Project） | 3 个项目 | ~25 |
 | Obsidian 插件 | 2 个插件 | ~2 |
 | 草稿 & 问题 | 2 类 | ~8 |
