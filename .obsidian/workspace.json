@@ -39,7 +39,7 @@
               "type": "markdown",
               "state": {
                 "file": "Atomic-Cards/卡片总览.md",
-                "mode": "source",
+                "mode": "preview",
                 "source": false,
                 "backlinks": false
               },
@@ -263,8 +263,10 @@
   },
   "active": "9dddde49a2d5eb85",
   "lastOpenFiles": [
-    "AI-Large-Modlels-Notes/Project/EduAgent/学习版/05-RAG问答系统.md",
     "AI-Large-Modlels-Notes/Project/EduAgent/05-RAG问答系统.md",
+    "Atomic-Cards/工程实践/工具/09-Claude使用指南.md",
+    "Atomic-Cards/卡片总览.md",
+    "AI-Large-Modlels-Notes/Project/EduAgent/学习版/05-RAG问答系统.md",
     "AI-Large-Modlels-Notes/Project/EduAgent/05-RAG问答系统.md.tmp.37728.8fad648f0f9a",
     "AI-Large-Modlels-Notes/Project/EduAgent/02-工具介绍.md",
     "Atomic-Cards/Python/并发/10-协程与asyncio.md",
@@ -297,8 +299,6 @@
     "Atomic-Cards/AI-Agent/LangChain/22-LangChain组件操作指南.md",
     "Atomic-Cards/AI-Agent/LangChain/04-LangChain六大组件.md",
     "Atomic-Cards/AI-Agent/系统/39-RAG问答系统十二节点完整流程.md",
-    "Atomic-Cards/AI-Agent/系统/40-试卷批改Agent三轨并行与HitL.md",
-    "Atomic-Cards/AI-Agent/LangGraph/01-LangGraph图模型四要素.md",
     "Assets/LangChain组件图.drawio.png",
     "Assets/Image/AI-Large-Modlels-Notes/Project/EduRAG/Milvus向量数据库/1.2.8.3-1.png",
     "Assets/Image/AI-Large-Modlels-Notes/Project/EduRAG/Milvus向量数据库/1.2.8.2-2.png",
