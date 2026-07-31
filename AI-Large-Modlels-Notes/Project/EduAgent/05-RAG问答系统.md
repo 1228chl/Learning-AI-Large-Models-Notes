@@ -54,53 +54,57 @@ RAG 天然分成两个阶段：
 
 这是项目中"最复杂的 Agent"，它不再是一条直线，而是有意图分流、查询改写、混合检索、重排序、置信度路由、Web 兜底、多轮记忆。以下是完整的 12 节点流程图：
 
-```python
-                              START
-                                |
-                                ▼
-                        ┌───────────────┐
-                        │classify_query │  意图分类：判断问题类型
-                        └───────┬───────┘
-          ┌──────────────┬──────┴───────────┬──────────────┐
-       GENERAL        GENERAL_WEB         VAGUE           BROAD      PRECISE
-          │              │                  │               │           │
-          ▼              ▼                  ▼               ▼           │
-   generate_general   web_search      hyde_generate  multi_query_      │
-   （直接LLM答）       │            （生成假设文档）  rewrite         │
-          │              │                  │          （拆多个子问）   │
-          │          （路由到                └──────┬────────┘           │
-          │          general/direct）              ▼                    │
-          │                              ┌──────────────────────┐      │
-          │                              │ load_memory_and_embed │◀─────┘
-          │                              │（并行：加载摘要+向量化）│
-          │                              └──────────┬───────────┘
-          │                                         ▼
-          │                                   ┌──────────┐
-          │                                   │ retrieve │  混合检索（稠密+稀疏）
-          │                                   └────┬─────┘
-          │                                        ▼
-          │                                   ┌──────────┐
-          │                                   │  rerank  │  重排序+算置信度
-          │                                   └────┬─────┘
-          │                  ┌─────────────────────┼─────────────────────┐
-          │              high（高置信）        low_web（低+联网）    low_direct（低+不联网）
-          │                  │                     │                      │
-          │                  ▼                     ▼                      │
-          │            generate_rag          web_search ──┐               │
-          │           （基于知识库答）              │       │               │
-          │                  │                     ▼       ▼               ▼
-          │                  │                  generate_direct（LLM兜底答）
-          │                  │                          │
-          │                  │                          ▼
-          │                  │                  enqueue_pending（低分问题入待办队列）
-          │                  │                          │
-          └──────────────────┴──────────┬───────────────┘
-                                        ▼
-                                 ┌─────────────┐
-                                 │ save_memory │  保存对话+必要时摘要压缩
-                                 └──────┬──────┘
-                                        ▼
-                                       END
+```mermaid
+flowchart TD
+    START([START])
+
+    %% ── ① 意图分类 ──
+    START --> classify_query[classify_query<br>意图分类]
+    classify_query -->|GENERAL| generate_general[generate_general<br>直接LLM回答]
+    classify_query -->|GENERAL_WEB| web_search_1[web_search<br>联网搜索]
+    classify_query -->|VAGUE| hyde_generate[hyde_generate<br>生成假设文档]
+    classify_query -->|BROAD| multi_query_rewrite[multi_query_rewrite<br>拆多个子问题]
+    classify_query -->|PRECISE| load_memory_and_embed
+
+    %% ── ② 查询改写汇聚 ──
+    hyde_generate --> load_memory_and_embed
+    multi_query_rewrite --> load_memory_and_embed
+
+    %% ── ③ 检索与精排 ──
+    load_memory_and_embed[load_memory_and_embed<br>加载记忆+向量化] --> retrieve[retrieve<br>混合检索：稠密+稀疏]
+    retrieve --> rerank[rerank<br>重排序+算置信度]
+
+    %% ── ④ 置信度路由 ──
+    rerank -->|high 置信度>=0.5| generate_rag[generate_rag<br>基于知识库回答]
+    rerank -->|low_web 置信度<0.5+需联网| web_search_2[web_search<br>联网搜索]
+    rerank -->|low_direct 置信度<0.5+不联网| generate_direct[generate_direct<br>LLM兜底回答]
+
+    web_search_1 --> generate_direct
+    web_search_2 --> generate_direct
+
+    %% ── ⑤ 收尾 ──
+    generate_general --> save_memory[save_memory<br>保存对话+摘要压缩]
+    generate_rag --> save_memory
+    generate_direct --> enqueue_pending[enqueue_pending<br>低分问题入待办]
+    enqueue_pending --> save_memory
+    save_memory --> END([END])
+
+    %% 样式：按逻辑区段着色
+    classDef startEnd fill:#e1f5fe,stroke:#0288d1,stroke-width:2px
+    classDef classify fill:#fff3e0,stroke:#f57c00,stroke-width:2px
+    classDef query fill:#e8f5e9,stroke:#388e3c,stroke-width:2px
+    classDef retrieve fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px
+    classDef route fill:#fff8e1,stroke:#fbc02d,stroke-width:2px
+    classDef generate fill:#e0f7fa,stroke:#00838f,stroke-width:2px
+    classDef endNode fill:#fce4ec,stroke:#c62828,stroke-width:2px
+
+    class START,END startEnd
+    class classify_query classify
+    class hyde_generate,multi_query_rewrite query
+    class load_memory_and_embed,retrieve,rerank retrieve
+    class generate_general,generate_rag,generate_direct generate
+    class web_search_1,web_search_2 route
+    class enqueue_pending,save_memory endNode
 ```
 
 本质上是"判断问题类型 → 按类型选检索策略 → 检索 → 按置信度选怎么回答 → 存记忆"这条思路的展开。

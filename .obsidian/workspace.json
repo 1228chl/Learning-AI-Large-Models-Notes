@@ -121,7 +121,8 @@
       }
     ],
     "direction": "horizontal",
-    "width": 312.5
+    "width": 312.5,
+    "collapsed": true
   },
   "right": {
     "id": "f07a0c5b7e11463b",
@@ -154,6 +155,16 @@
               "state": {},
               "icon": "git-pull-request",
               "title": "Source Control"
+            }
+          },
+          {
+            "id": "e66b56d845bbdf96",
+            "type": "leaf",
+            "state": {
+              "type": "claudian-view",
+              "state": {},
+              "icon": "bot",
+              "title": "Claudian"
             }
           },
           {
@@ -228,11 +239,11 @@
             }
           }
         ],
-        "currentTab": 1
+        "currentTab": 2
       }
     ],
     "direction": "horizontal",
-    "width": 396.5,
+    "width": 461.5,
     "collapsed": true
   },
   "left-ribbon": {
@@ -246,11 +257,13 @@
       "bases:新建数据库": false,
       "obsidian-git:Open Git source control": true,
       "table-editor-obsidian:Advanced Tables Toolbar": false,
-      "templater-obsidian:Templater": false
+      "templater-obsidian:Templater": false,
+      "realclaudian:Open Claudian": false
     }
   },
   "active": "9dddde49a2d5eb85",
   "lastOpenFiles": [
+    "AI-Large-Modlels-Notes/Project/EduAgent/05-RAG问答系统.md.tmp.37728.8fad648f0f9a",
     "AI-Large-Modlels-Notes/Project/EduAgent/02-工具介绍.md",
     "Atomic-Cards/Python/并发/10-协程与asyncio.md",
     "Atomic-Cards/Python/并发/20-threading_local线程本地存储.md",
@@ -286,7 +299,6 @@
     "Atomic-Cards/AI-Agent/系统/40-试卷批改Agent三轨并行与HitL.md",
     "Atomic-Cards/AI-Agent/LangGraph/01-LangGraph图模型四要素.md",
     "Atomic-Cards/AI-Agent/系统/43-多Agent系统迁移四步方法论.md",
-    "Atomic-Cards/工程实践/部署/10-Vue3前端SSE与JWT全栈集成.md",
     "Assets/LangChain组件图.drawio.png",
     "Assets/Image/AI-Large-Modlels-Notes/Project/EduRAG/Milvus向量数据库/1.2.8.3-1.png",
     "Assets/Image/AI-Large-Modlels-Notes/Project/EduRAG/Milvus向量数据库/1.2.8.2-2.png",
