@@ -242,7 +242,8 @@
       }
     ],
     "direction": "horizontal",
-    "width": 461.5
+    "width": 461.5,
+    "collapsed": true
   },
   "left-ribbon": {
     "hiddenItems": {
@@ -259,7 +260,7 @@
       "realclaudian:Open Claudian": false
     }
   },
-  "active": "a73ebf785a6e6ac6",
+  "active": "9dddde49a2d5eb85",
   "lastOpenFiles": [
     "Atomic-Cards/卡片诊断报告.md.tmp.36248.b263df02e3ec",
     "Atomic-Cards/原子化生成提示词.md.tmp.36248.8ecc962faed6",
