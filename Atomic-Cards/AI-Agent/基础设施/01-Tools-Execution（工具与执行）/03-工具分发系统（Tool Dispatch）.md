@@ -128,4 +128,4 @@ TOOLS = [
 - 需要理解 Hooks 对工具执行的前后扩展参见 [Hooks 系统](../01-Tools-Execution（工具与执行）/05-Hooks系统（Hooks%20System）.md)
 - 需要了解 MCP 动态工具池参见 [MCP 插件集成](../05-Multi-Agent-Platform（多Agent平台）/10-MCP插件集成（MCP%20Plugin）.md)
 - 需要理解 Agent 定义参见 [Agent 定义与核心公式](../基础/01-Agent定义与核心公式.md)
-- 需要了解该机制在 Claude Code 中的工程实现参见 [Claude 使用指南](../../Project/工具/09-Claude使用指南.md)
+- 需要了解该机制在 Claude Code 中的工程实现参见 [Claude 使用指南](../../Tools/工具/09-Claude使用指南.md)

@@ -142,7 +142,7 @@ task.add_done_callback(_background_tasks.discard) # 完成后移除，避免内�
 
 1. 进程重启 → 内存中的 `_background_tasks` 集合丢失 → 所有未完成任务消失
 2. 前端轮询永远返回 "processing"（DB 中状态未被更新为 completed/failed）→ 前端陷入死循环
-3. 解决方案：带时间戳的 status 字段 → 定时任务扫描 `status='processing' AND updated_at < NOW() - 15min` → 自动标记为 failed
+3. 解决方案：带时间戳的 status 字段 → 定时任务扫描 `status='processing' AND upd[FastAPI 高级特性](09-FastAPI高级特性.md)
 4. 更好的替代：WebSocket 推送替代轮询——服务端完成任务时主动推送给前端，连接断开时前端自动感知
 
 ## 参考引用
@@ -151,4 +151,4 @@ task.add_done_callback(_background_tasks.discard) # 完成后移除，避免内�
 - 需要理解 asyncio.create_task 和事件循环中后台任务的执行模型：[异步并发实战](../../Python/并发/17-异步并发实战.md)
 - 需要理解后台任务 GC 保护模式的完整原理：[后台任务 GC 保护模式](../../Python/并发/18-后台任务GC保护模式.md)
 - 需要理解简历审查 Agent 中该模式的实际应用（上传 + 202 + 轮询）：[简历审查 Agent 八节点流水线](../../AI-Agent/系统/38-简历审查Agent八节点流水线.md)
-- 需要理解 SSE 流式推送如何避免轮询的延迟问题：[SSE 流式输出](../../Project/网络/10-WebSocket与SSE流式输出.md)
+- 需要理解 SSE 流式推送如何避免轮询的延迟问题：[SSE 流式输出](../../Tools/网络/10-WebSocket与SSE流式输出.md)

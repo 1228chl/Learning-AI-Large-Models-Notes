@@ -110,4 +110,4 @@ def safe_path(p: str) -> Path:
 - 需要掌握工具分发中 safe_path 的使用参见 [工具分发系统](../01-Tools-Execution（工具与执行）/03-工具分发系统（Tool%20Dispatch）.md)
 - 需要了解 Deny List 与 safe_path 的配合参见 [权限系统](../01-Tools-Execution（工具与执行）/04-权限系统（Permission%20System）.md)
 - 需要了解 Harness 整体安全设计参见 [Agent Harness（基础设施层）](../05-Multi-Agent-Platform（多Agent平台）/01-Agent%20Harness（基础设施层）.md)
-- 需要了解 Python 路径处理的最佳实践参见 [工具体系](../../Project/工具/09-Claude使用指南.md)
+- 需要了解 Python 路径处理的最佳实践参见 [工具体系](../../Tools/工具/09-Claude使用指南.md)

@@ -110,4 +110,4 @@ def spawn_subagent(description: str) -> str:
 - 需要了解后台任务与子 Agent 的区别参见 [后台任务系统](../04-Concurrency-Scheduling（并发与调度）/18-后台任务系统（Background%20Tasks）.md)
 - 需要掌握消息总线通信参见 [消息总线与 Agent 团队](../05-Multi-Agent-Platform（多Agent平台）/09-消息总线与Agent团队（MessageBus）.md)
 - 需要了解 Harness 整体设计参见 [Agent Harness（基础设施层）](../05-Multi-Agent-Platform（多Agent平台）/01-Agent%20Harness（基础设施层）.md)
-- 需要了解该机制在 Claude Code 中的工程实现参见 [Claude 使用指南](../../Project/工具/09-Claude使用指南.md)
+- 需要了解该机制在 Claude Code 中的工程实现参见 [Claude 使用指南](../../Tools/工具/09-Claude使用指南.md)

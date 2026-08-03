@@ -106,4 +106,4 @@ def check_permission(block) -> bool:
 - 需要了解 Hooks 如何实现权限检查的插拔参见 [Hooks 系统](../01-Tools-Execution（工具与执行）/05-Hooks系统（Hooks%20System）.md)
 - 需要理解工具分发与权限的关系参见 [工具分发系统](../01-Tools-Execution（工具与执行）/03-工具分发系统（Tool%20Dispatch）.md)
 - 需要掌握 Agent 循环整体流程参见 [Agent 循环](../01-Tools-Execution（工具与执行）/02-Agent循环（Agent%20Loop）.md)
-- 需要了解生产部署中的权限管理参见 [LLM API 部署](../../Project/部署/07-LLM%20API调用与ChatBot.md)
+- 需要了解生产部署中的权限管理参见 [LLM API 部署](../../Tools/部署/07-LLM%20API调用与ChatBot.md)

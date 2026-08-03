@@ -153,7 +153,7 @@ JWT_SECRET_KEY=$(openssl rand -hex 32) # JWT 签名密钥
 
 ## 参考引用
 
-- 需要理解 Docker 基础概念（镜像、容器、卷、网络）：[Docker 基础与容器化](./01-Docker基础与容器化.md)
+- 需要理解 Docker 基础概念（镜像、容器、卷、网络）：[Docker 基础与容器化](01-Docker基础与容器化.md)
 - 需要理解 Compose 的基本语法（services、volumes、networks、depends_on）：[Docker Compose 编排](./11-Docker Compose编排.md)
 - 需要理解 PostgreSQL 的 JSONB、UUID 和触发器特性：[PostgreSQL 高级特性](../../数据库/SQL/05-PostgreSQL高级特性.md)
 - 需要理解 Milvus 的 Collection Schema 设计和向量索引：[Milvus 集合 Schema 设计与索引选择](../../AI-Agent/RAG流程/40-Milvus集合Schema设计与索引选择.md)

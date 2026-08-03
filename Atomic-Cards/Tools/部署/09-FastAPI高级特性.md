@@ -166,6 +166,6 @@ async def upload(file: UploadFile = File(...)):
 3. 202 + 后台任务模式让用户无需在前端等待，体现了"异步处理"的设计模式
 
 ## 参考引用
-- 需要理解 FastAPI 基础部署的相关知识，参见 [Flask与FastAPI模型部署](../部署/04-Flask与FastAPI模型部署.md)
+- 需要理解 FastAPI 基础部署的相关知识，参见 [Flask与FastAPI模型部署](04-Flask与FastAPI模型部署.md)
 - 需要理解 SSE 协议基础概念的相关知识，参见 [WebSocket与SSE流式输出](../../网络/10-WebSocket与SSE流式输出.md)
 - 需要理解后台任务 GC 保护模式的相关知识，参见 [后台任务GC保护模式](../../Python/并发/18-后台任务GC保护模式.md)

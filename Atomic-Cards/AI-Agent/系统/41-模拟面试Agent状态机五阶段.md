@@ -132,5 +132,5 @@ def _maybe_compress_summary(state: InterviewState):
 - 需要理解状态机对话设计模式的抽象原理：[状态机对话设计模式](../设计模式/02-状态机对话设计模式.md)
 - 需要理解 LangGraph 条件边和 check_stage 的路由机制：[LangGraph 条件边与路由](../LangGraph/02-LangGraph条件边与路由.md)
 - 需要理解 LangGraph Checkpointer 在多轮对话中的记忆持久化：[LangGraph Checkpointer 与记忆](../LangGraph/04-LangGraph-Checkpointer与记忆.md)
-- 需要理解 SSE 流式输出在面试对话逐字输出中的应用：[SSE 流式输出](../../Project/网络/10-WebSocket与SSE流式输出.md)
+- 需要理解 SSE 流式输出在面试对话逐字输出中的应用：[SSE 流式输出](../../Tools/网络/10-WebSocket与SSE流式输出.md)
 - 需要理解 Think 前置推理在回答质量评估中的应用：[Think 前置推理增强](../设计模式/03-Think前置推理增强.md)

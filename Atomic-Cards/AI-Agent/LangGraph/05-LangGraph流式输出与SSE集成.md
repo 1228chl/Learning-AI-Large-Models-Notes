@@ -131,7 +131,7 @@ async def chat_stream(request: ChatRequest):
 
 ## 参考引用
 
-- 需要理解 SSE 协议的标准格式和服务端推送机制：[SSE 流式输出](../../Project/网络/10-WebSocket与SSE流式输出.md)
+- 需要理解 SSE 协议的标准格式和服务端推送机制：[SSE 流式输出](../../Tools/网络/10-WebSocket与SSE流式输出.md)
 - 需要理解 Python 异步生成器 `async def` + `yield` 的执行模型：[async 上下文管理器与 FastAPI lifespan 模式](../../Python/并发/19-async上下文管理器与FastAPI-lifespan模式.md)
 - 需要理解 LangGraph 图模型的 State + Node + Edge 基本心智：[LangGraph 图模型四要素](../LangGraph/01-LangGraph图模型四要素.md)
 - 需要理解 LangGraph Checkpointer 如何通过 thread_id 持久化多轮状态：[LangGraph Checkpointer 与记忆](../LangGraph/04-LangGraph%20Checkpointer与记忆.md)
