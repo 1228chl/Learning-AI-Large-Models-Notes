@@ -1,6 +1,6 @@
 # EduAgent 课件 V7.7 — 文字版 XMind 思维导图（深度版）
 
-> 共 10 大块，每块展开至技术细节层，总计 834 节点
+> 共 10 大块，每块展开至技术细节层，总计 964 节点
 
 ---
 
@@ -10,47 +10,97 @@
 - **项目背景**
   - 教育机构的真实痛点
     - 简历筛选耗时
+      - 人工筛选一份简历平均5-10分钟
+      - 培训高峰期每日数百份简历
+      - 筛选标准不统一，依赖个人经验
     - 知识问答重复
+      - 学员常见问题高度重复（如"什么是多态"）
+      - 讲师每天花费大量时间回答相同问题
+      - 下班后仍有大量学员咨询，无法及时响应
     - 试卷批改繁重
+      - 主观题（简答/代码）需要逐字批改
+      - 批改标准不一致，学员投诉
+      - 批改周期长，反馈不及时
     - 模拟面试缺标准
+      - 面试官水平参差不齐，问题质量不一
+      - 缺乏统一的评估维度
+      - 面试记录不完整，难以跟踪学员进步
   - 通用LLM三大不足
-    - 无企业私有知识
-    - 无业务流程编排
-    - 无工程容错机制
-  - 解法：AI原生教学辅助系统，每个业务一个专用Agent
+    - 无企业私有知识：通用LLM未学习企业内部课程/题库/简历 / 无法回答"我们课程里讲了什么" / 知识截止于训练数据
+    - 无业务流程编排：审查简历需解析PDF→提取→评分→诊断 / 这些流程LLM单次调用无法完成
+    - 无工程容错机制：线上系统不能一出错就崩溃 / 需要重试/降级/超时控制/日志/监控
+  - 解法：AI原生教学辅助系统，每个业务一个专用Agent / Agent内部封装完整业务流程 / 融合企业私有知识库 / 工程化容错机制保底
 - **四大核心Agent**
   - 简历审查Agent
-    - 上传PDF → 结构化提取 → 六维度并行评分 → 问题诊断 → 整体评价 → 持久化
+    - 上传PDF（PyMuPDF解析文本 + run_in_executor不阻塞）
+    - 结构化提取（LLM with_structured_output + 提取教育/工作/项目经历）
+    - 六维度并行评分（asyncio.gather并发6维度 + 加权综合分计算）
+    - 问题诊断（Think前置推理 + 优先级排序）
+    - 整体评价（亮点/改进/评语/匹配度）
+    - 持久化（写入PostgreSQL JSONB）
   - RAG问答系统
-    - 混合检索 → 意图分类 → 记忆管理 → MCP工具（Web搜索兜底）
+    - 混合检索（Dense+Sparse双路召回 + WeightedRanker(0.7,0.3)融合）
+    - 意图分类（MiniLM三层分类 + SPECIFIC/VAGUE/BROAD/GENERAL）
+    - 记忆管理（滑动窗口+摘要压缩 + MemorySaver持久化）
+    - MCP工具（知识库MCP Server + Web搜索MCP Server兜底）
   - 试卷批改Agent
-    - 三轨并行（规则引擎 + LLM评分 + 代码评估）→ Human-in-the-Loop教师确认
+    - 三轨并行
+      - 规则引擎（选择题/判断题精确比对 + 答案标准化三步：大写→去空格→排序）
+      - LLM评分（Think推理→结构化评分 + 分组并行asyncio.gather）
+      - 代码评估（多维度：正确性/可读性/效率/健壮性）
+    - Human-in-the-Loop教师确认
   - 模拟面试Agent
-    - 五阶段状态机驱动 → Think Tool质量评估 → 多维报告生成
+    - 五阶段状态机驱动（WARMUP→TECH_BASE→PROJECT→CLOSING→REPORT / 双阈值控制：MIN_TURNS防过早/MAX_TURNS防卡死）
+    - Think Tool质量评估（两步：自由推理→打标签 / EXCELLENT/ADEQUATE/WEAK/NO_ANSWER）
+    - 多维报告生成（五维度评估 / 三层结构：总体→维度→细项）
   - 上层编排
-    - Orchestrator统一路由
-    - Pipeline串联（简历→面试全链路）
+    - Orchestrator统一路由（LLM意图路由：6个label映射 / 前置拦截：五类零Token回复）
+    - Pipeline串联（如求职全链路：简历审查→模拟面试 / 前序structured注入后序context）
 - **技术栈全景**
-  - 语言/框架：Python 3.11 + LangChain + LangGraph + FastAPI
-  - 数据库：PostgreSQL（业务数据）+ Milvus（向量库）
-  - 本地模型：BGE-M3（稠密/稀疏双向量）+ BGE-Reranker（CrossEncoder精排）+ MiniLM-L6（意图分类）
-  - 大模型：DeepSeek（主力）+ GLM-4-Flash（兜底）
-  - 基础设施：Docker Compose + SQLAlchemy异步 + Pydantic v2 + SSE
-  - 关键约束：进程内本地模型（不另起微服务，直接函数调用）
+  - 语言/框架
+    - Python 3.11（异步编程async/await + 类型注解支持）
+    - LangChain（统一LLM调用接口 + with_structured_output结构化输出）
+    - LangGraph（Agent=图心智模型 + State/Node/Edge/Checkpointer四要素）
+    - FastAPI（异步Web框架 + 依赖注入/SSE流式响应）
+  - 数据库
+    - PostgreSQL（业务数据存储 + UUID主键/JSONB/事务）
+    - Milvus（向量数据库 + Dense+Sparse双路检索）
+  - 本地模型
+    - BGE-M3（稠密+稀疏双向量输出 + 进程内加载，不另起服务）
+    - BGE-Reranker（CrossEncoder精排 + 召回50条→精排取Top-3）
+    - MiniLM-L6（意图二分类 + 22M参数，推理极快）
+  - 大模型
+    - DeepSeek（主力模型 + 所有Agent默认使用）
+    - GLM-4-Flash（兜底模型 + DeepSeek不可用时自动切换）
+  - 基础设施
+    - Docker Compose（一键启动PG/Milvus/Redis）
+    - SQLAlchemy异步（create_async_engine + text()+参数化查询）
+    - Pydantic v2（数据校验/配置管理 + LLM结构化输出Schema）
+    - SSE（StreamingResponse流式输出 + 事件格式data: {json}\n\n）
+  - 关键约束：本地模型进程内加载（不另起微服务，直接函数调用 / 启动时asyncio.gather并行预热）
 - **分层架构**
-  - 前端层（Vue 3）→ Nginx/Vite代理 → API网关层（FastAPI）→ Agent层（LangGraph图）→ 基础设施层（PG/Milvus/本地模型）
-- **课件使用方式：复刻式教学，逐行写代码、逐步跑通**
+  - 前端层（Vue 3 + Element Plus / Vite开发服务器）
+  - Nginx/Vite代理（开发：Vite代理转发/api / SSE绕过代理直连后端）
+  - API网关层（FastAPI统一入口 / 前置拦截→LLM路由→Orchestrator分发）
+  - Agent层（LangGraph图执行引擎 / 4个独立Agent图）
+  - 基础设施层（PostgreSQL/Milvus/本地模型 / Docker Compose编排）
 
 ### 1.2 多Agent系统核心概念
 - **什么是Agent**
-  - 对比：普通LLM调用 = 一问一答 / Agent = 有感知/记忆/决策/行动/循环的工作流程
-  - 四大能力：感知(Perceive) → 记忆(Memory) → 决策(Decide) → 行动(Act) → 可循环/可中断
+  - 对比
+    - 普通LLM调用 = 一问一答：输入问题→模型返回→结束 / 无记忆、无工具、无状态 / 每次调用独立，不感知上下文
+    - Agent = 有感知/记忆/决策/行动/循环的工作流程：感知（接收用户输入和上下文）/ 记忆（记住之前的对话或中间结果）/ 决策（判断下一步该做什么）/ 行动（调用工具、检索知识、生成内容）/ 可循环/可中断（反复执行直到完成）
+  - 四大能力
+    - 感知（Perceive）：接收用户输入和上下文 / 理解当前状态
+    - 记忆（Memory）：记住之前的对话 / 记住中间结果
+    - 决策（Decide）：判断下一步做什么 / 是否需要查知识库/联网/走哪条分支
+    - 行动（Act）：调用工具 / 检索知识库 / 生成内容
+    - 可循环/可中断：反复执行直到完成 / 中途停下来等人介入（HitL）
 - **Agent四种形态**
-  - 普通LLM调用（无Agent特征）
-  - 工作流（人为编排固定步骤，LLM在部分环节出力）
-  - 单Agent（LLM自主决策调工具）
-  - 多Agent（复杂问题拆给专精Agent + 编排者调度）
-  - EduAgent = 形态二(受控工作流) + 形态四(多Agent编排)
+  - 形态一：普通LLM调用 — 无Agent特征 / 一次问答，无状态无记忆
+  - 形态二：工作流 — 流程是人为编排好的固定步骤 / LLM只在部分环节出力 / 可控、可预测，但不够灵活 / EduAgent主要采用此形态
+  - 形态三：单Agent — 把决策权交给LLM / LLM自主决定调用哪些工具/循环多少次 / 灵活但有时不可控
+  - 形态四：多Agent — 复杂问题拆给多个专精Agent / 由编排者统一调度 / EduAgent采用此形态
 - **为什么拆成四个Agent**
   - 四种业务流程形状根本不同：RAG（检索→判断→生成）/ HitL（并行打分→等人→发布）/ 扇出（抽取→并行评分→汇总）/ 状态机（多轮推进→评估→报告）
 - **实现框架：LangGraph**
@@ -794,4 +844,4 @@
 
 ---
 
-> **生成说明**：基于EduAgent课件V7.7全文提取，10大章节、834节点，覆盖全部知识点至技术细节层。
+> **生成说明**：基于EduAgent课件V7.7全文提取，10大章节、964节点，覆盖全部知识点至技术细节层。
