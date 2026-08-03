@@ -132,5 +132,5 @@ $$ \text{评估方法选择} = \begin{cases} \text{自动化指标} & \text{有�
 - 需要理解 RAGAS 框架中 Faithfullness、Context Relevancy 等自动化评估指标：[RAG 系统评估 RAGAS](../系统/25-RAG系统评估(RAGAS).md)
 - 需要理解 LLM-as-Judge 的语义评判设计和人工交叉验证：[LLM-as-Judge 评估模式](../基础/32-LLM-as-Judge评估模式.md)
 - 需要理解评估指标（准确率、精确率、召回率、F1）的基础概念：[评估指标](../../机器学习/基础/04-评估指标.md)
-- 需要理解 Cohen's kappa 的数学推导和 $P_o$/$P_e$ 的计算：[协方差与相关系数](../../概率统计/05-协方差与相关系数.md)
+- 需要理解 Cohen's kappa 的数学推导和 $P_o$/$P_e$ 的计算：[协方差与相关系数](../../数学基础/概率统计/05-协方差与相关系数.md)
 - 需要理解评分 Rubric 设计中锚点如何提高评分一致性（直接影响 kappa）：[评分 Rubric 设计](../设计模式/04-评分Rubric设计.md)

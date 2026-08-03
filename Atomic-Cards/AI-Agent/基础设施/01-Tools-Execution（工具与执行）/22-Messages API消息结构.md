@@ -113,4 +113,4 @@ Messages API 像"对话记录本"——user 是"我说的话"和"工具返回的
 - 需要了解 Agent 循环如何驱动消息轮次参见 [Agent 循环](../01-Tools-Execution（工具与执行）/02-Agent循环（Agent%20Loop）.md)
 - 需要掌握工具分发中 tool_use 的处理参见 [工具分发系统](../01-Tools-Execution（工具与执行）/03-工具分发系统（Tool%20Dispatch）.md)
 - 需要了解错误恢复中 tool_result 的处理参见 [错误恢复与重试](../02-Planning-Control（规划与控制）/08-错误恢复与重试（Error%20Recovery）.md)
-- 需要理解 LLM API 调用方式参见 [LLM API 调用与 ChatBot](../../工程实践/部署/07-LLM%20API调用与ChatBot.md)
+- 需要理解 LLM API 调用方式参见 [LLM API 调用与 ChatBot](../../Project/部署/07-LLM%20API调用与ChatBot.md)

@@ -129,7 +129,7 @@ class Orchestrator:
 ## 参考引用
 
 - 需要理解 Orchestrator 编排器的内部设计（单 Agent 直达 + Pipeline 串联 + Schema 定义）：[Orchestrator 编排器设计](../系统/34-Orchestrator编排器设计.md)
-- 需要理解 SSE 流式输出技术的前端和后端实现：[SSE 流式输出](../../工程实践/网络/10-WebSocket与SSE流式输出.md)
+- 需要理解 SSE 流式输出技术的前端和后端实现：[SSE 流式输出](../../Project/网络/10-WebSocket与SSE流式输出.md)
 - 需要理解三层兜底重试机制如何在 _run_single_agent 中通过 @with_retry 应用：[三层兜底重试机制](../工程实践/02-三层兜底重试机制.md)
 - 需要理解四大 Agent 范式及各 Agent 的 LangGraph 图构建：[四大 Agent 范式对比](../系统/37-四大Agent范式对比.md)
 - 需要理解 LLM Factory 的 get_llm("intent") 如何提供路由判断模型：[LLM Factory 设计模式](../工程实践/01-LLM Factory设计模式.md)

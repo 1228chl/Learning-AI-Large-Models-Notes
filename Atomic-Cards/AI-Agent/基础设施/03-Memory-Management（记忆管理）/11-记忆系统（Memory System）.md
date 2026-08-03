@@ -128,4 +128,4 @@ def select_relevant_memories(messages: list) -> list[str]:
 - 需要了解系统提示词中记忆的注入方式参见 [系统提示词组装](../02-Planning-Control（规划与控制）/12-系统提示词组装（System%20Prompt%20Assembly）.md)
 - 需要掌握 Agent 循环中记忆的提取时机参见 [Agent 循环](../01-Tools-Execution（工具与执行）/02-Agent循环（Agent%20Loop）.md)
 - 需要了解 Harness 整体设计参见 [Agent Harness（基础设施层）](../05-Multi-Agent-Platform（多Agent平台）/01-Agent%20Harness（基础设施层）.md)
-- 需要了解该机制在 Claude Code 中的工程实现参见 [Claude 使用指南](../../工程实践/工具/09-Claude使用指南.md)
+- 需要了解该机制在 Claude Code 中的工程实现参见 [Claude 使用指南](../../Project/工具/09-Claude使用指南.md)
