@@ -13,13 +13,13 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "AI-Learning-知识点总表.md",
+                "file": "Atomic-Cards/AI-Agent/工程实践/06-MCP模型通信协议.md",
                 "mode": "source",
                 "source": false,
                 "backlinks": false
               },
               "icon": "lucide-file",
-              "title": "AI-Learning-知识点总表"
+              "title": "06-MCP模型通信协议"
             }
           },
           {
@@ -252,6 +252,8 @@
   },
   "active": "9dddde49a2d5eb85",
   "lastOpenFiles": [
+    "Atomic-Cards/AI-Agent/工程实践/06-MCP模型通信协议.md.tmp.28668.b6d73edf4dc2",
+    "AI-Learning-知识点总表.md",
     "README.md",
     "Atomic-Cards/AI-Agent/工程实践/06-MCP模型通信协议.md",
     "Atomic-Cards/原子化生成提示词.md.tmp.28668.b1af56185368",
@@ -286,8 +288,6 @@
     "Atomic-Cards/Tools/部署/01-Git版本控制.md",
     "Atomic-Cards/Tools/网络/02-WebSocket与SSE流式输出.md",
     "Atomic-Cards/Tools/网络/01-HTTP基础与API设计.md",
-    "Atomic-Cards/Tools/工具/05-MLOps与实验跟踪.md",
-    "Atomic-Cards/Tools/工具/04-Claude使用指南.md",
     "Assets/LangChain组件图.drawio.png",
     "Assets/Image/AI-Large-Modlels-Notes/Project/EduRAG/Milvus向量数据库/1.2.8.3-1.png",
     "Assets/Image/AI-Large-Modlels-Notes/Project/EduRAG/Milvus向量数据库/1.2.8.2-2.png",
