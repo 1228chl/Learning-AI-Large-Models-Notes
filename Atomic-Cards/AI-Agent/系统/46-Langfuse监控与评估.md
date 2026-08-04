@@ -23,10 +23,10 @@ $$
 | **自托管（Docker Compose）** | 生产环境、数据不出内网 | 免费但需自己维护 |
 
 ```bash
-# .env.local 配置
-LANGFUSE_SECRET_KEY=sk-lf-xxxxxxxxxxxxxxxx
-LANGFUSE_PUBLIC_KEY=pk-lf-xxxxxxxxxxxxxxxx
-LANGFUSE_HOST=https://cloud.langfuse.com  # 自托管改为http://localhost:3000
+# .env.local 配置示例
+LANGFUSE_SECRET_KEY=sk-lf-xxx
+LANGFUSE_PUBLIC_KEY=pk-lf-xxx
+LANGFUSE_HOST=https://cloud.langfuse.com  # 自托管改为 http://localhost:3000
 ```
 
 ## 三种接入方式
@@ -102,6 +102,13 @@ Trace（一次完整请求）
 4. 查看 generation Span 的 context 是否包含正确文档
 
 **Token 成本设置**：在 Langfuse 后台注册自定义模型价格（Settings → Models → Add Model），填写模型名称和 Input/Output 价格。在 trace 里记录 usage 后，自动按价格表换算成本。
+
+## ML/DL 应用场景
+
+| 应用场景 | 数学形式 | 说明 |
+|:--------|:---------|:-----|
+| LLM 应用成本监控 | $\text{Cost} = \sum(\text{in\_tokens} \times p_{\text{in}} + \text{out\_tokens} \times p_{\text{out}})$ | 按模型/用户分组统计 Token 消耗和成本 |
+| RAG 系统质量评估 | $\text{Score} = \frac{1}{N}\sum_{i=1}^{N} \text{LLM-Judge}(q_i, a_i)$ | 用评测集批量运行，对比版本迭代效果 |
 
 ## 面试追问
 

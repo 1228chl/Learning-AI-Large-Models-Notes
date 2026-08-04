@@ -146,3 +146,5 @@ def should_request_review(state: ExamState) -> str:
 ## 参考引用
 - 需要理解 LangGraph Checkpointer 与 interrupt 机制的相关知识，参见 [LangGraph Checkpointer与记忆](../LangGraph/04-LangGraph Checkpointer与记忆.md)
 - 需要理解三层兜底重试机制中降级策略的相关知识，参见 [三层兜底重试机制](../工程实践/02-三层兜底重试机制.md)
+- 需要理解提示词工程中如何设计人工审核指令，参见 [提示词工程核心原则](../基础/06-提示词工程核心原则.md)
+- 需要了解 Agent 生命周期管理中中断点的处理，参见 [Agent 生命周期与状态管理](../../AI-Agent/系统/28-Agent生命周期与状态管理.md)

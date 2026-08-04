@@ -155,3 +155,5 @@ FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
 ## 参考引用
 - 需要理解 SQL 基础与数据库设计的相关知识，参见 [SQL基础与数据库设计](../SQL/01-SQL基础与数据库设计.md)
 - 需要理解 MySQL 高级特性的相关知识，参见 [MySQL高级特性](../SQL/03-MySQL高级特性.md)
+- 需要理解 SQLAlchemy ORM 如何与 PostgreSQL 高级特性配合，参见 [SQLAlchemy ORM](../SQL/06-SQLAlchemy ORM.md)
+- 需要了解向量数据库中 JSONB 与元数据存储的设计模式，参见 [Milvus 集合与 Schema 设计](../../数据库/Milvus/09-Milvus集合与Schema设计.md)

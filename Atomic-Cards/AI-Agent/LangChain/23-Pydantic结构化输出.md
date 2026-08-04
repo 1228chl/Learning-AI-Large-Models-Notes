@@ -191,4 +191,6 @@ d = result.model_dump()  # Pydantic 对象 → 字典
 
 ## 参考引用
 - 需要理解 LangChain 基础用法的相关知识，参见 [LangChain六大组件](../LangChain/04-LangChain六大组件.md)
-- 需要理解 Pydantic BaseModel 和 Field 基础用法的相关知识，参见 [Python 工具](../Python/工具/xx-Pydantic基础.md)
+- 需要理解 Pydantic BaseModel 和 Field 基础用法的相关知识，参见 [Python 工具](../../Python/工具/xx-Pydantic基础.md)
+- 需要理解结构化输出在 LLM-as-Judge 评分中的应用，参见 [LLM-as-Judge 评估模式](../基础/32-LLM-as-Judge评估模式.md)
+- 需要理解提示词工程中如何设计结构化输出的约束指令，参见 [提示词工程核心原则](../基础/06-提示词工程核心原则.md)

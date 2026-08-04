@@ -242,7 +242,8 @@
       }
     ],
     "direction": "horizontal",
-    "width": 461.5
+    "width": 461.5,
+    "collapsed": true
   },
   "left-ribbon": {
     "hiddenItems": {
@@ -259,29 +260,29 @@
       "realclaudian:Open Claudian": false
     }
   },
-  "active": "a73ebf785a6e6ac6",
+  "active": "9dddde49a2d5eb85",
   "lastOpenFiles": [
-    "Atomic-Cards/卡片总览.md.tmp.28668.a0759b12a305",
-    "Atomic-Cards/卡片总览.md.tmp.28668.8230ca25441a",
-    "Atomic-Cards/卡片总览.md.tmp.28668.e12b1614d645",
+    "Atomic-Cards/Python/并发/18-后台任务GC保护模式.md.tmp.28668.9cb673f2d4fb",
+    "Atomic-Cards/Python/并发/17-异步并发实战.md.tmp.28668.8a3cf1833451",
+    "Atomic-Cards/AI-Agent/设计模式/01-Human-in-the-Loop设计模式.md.tmp.28668.d5c42b517382",
+    "Atomic-Cards/AI-Agent/工程实践/02-三层兜底重试机制.md.tmp.28668.ed878a6b1907",
+    "Atomic-Cards/AI-Agent/LangChain/23-Pydantic结构化输出.md.tmp.28668.f27189cddb33",
+    "Atomic-Cards/all_cards_list.txt",
+    "Atomic-Cards/AI-Agent/平台/11-Coze参数调优指南.md.tmp.28668.7d1f503747a5",
+    "Atomic-Cards/AI-Agent/平台/10-Coze进阶：工作流与高级功能.md.tmp.28668.439b22401d16",
+    "Atomic-Cards/AI-Agent/平台/10-Coze进阶：工作流与高级功能.md.tmp.28668.a3b8e5d0d392",
+    "Atomic-Cards/AI-Agent/系统/46-Langfuse监控与评估.md.tmp.28668.3fdd4a9ad2f5",
+    "Atomic-Cards/AI-Agent/系统/46-Langfuse监控与评估.md.tmp.28668.4ca2692a62ff",
     "Atomic-Cards/AI-Agent/平台/11-Coze参数调优指南.md",
-    "Atomic-Cards/AI-Agent/平台/11-Coze参数调优指南.md.tmp.28668.37e962e84907",
     "Atomic-Cards/AI-Agent/基础/33-LLM幻觉分类与应对.md",
-    "Atomic-Cards/AI-Agent/基础/33-LLM幻觉分类与应对.md.tmp.28668.6eb8027c23e5",
     "Atomic-Cards/AI-Agent/平台/10-Coze进阶：工作流与高级功能.md",
-    "Atomic-Cards/AI-Agent/平台/10-Coze进阶：工作流与高级功能.md.tmp.28668.10807438fd61",
     "Atomic-Cards/AI-Agent/系统/46-Langfuse监控与评估.md",
-    "Atomic-Cards/卡片总览.md.tmp.28668.8e6a66833944",
     "Atomic-Cards/AI-Agent/工程实践/06-MCP模型通信协议.md",
-    "Atomic-Cards/AI-Agent/工程实践/06-MCP模型通信协议.md.tmp.28668.6cb89cca8130",
     "AI-Large-Modlels-Notes/Project/EduAgent/02-工具介绍.md",
     "Atomic-Cards/AI-Agent/LangGraph/01-LangGraph图模型四要素.md",
-    "Atomic-Cards/原子化生成提示词.md.tmp.36248.d24c1b5d150f",
-    "Atomic-Cards/数学基础/概率统计/05-协方差与相关系数.md.tmp.36248.b58c73ec2d8e",
     "Atomic-Cards/AI-Agent/RAG流程/03-文档切分策略.md",
     "Atomic-Cards/AI-Agent/RAG流程/02-RAG三阶段流程.md",
     "Atomic-Cards/卡片总览.md",
-    "Atomic-Cards/卡片诊断报告.md.tmp.36248.fbec3b653c72",
     "Atomic-Cards/Tools/部署/11-FastAPI文件上传与202后台任务模式.md",
     "Atomic-Cards/Tools/部署/09-FastAPI高级特性.md",
     "Atomic-Cards/Tools/部署/08-ONNX模型部署.md",

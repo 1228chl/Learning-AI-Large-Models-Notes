@@ -69,6 +69,13 @@ def choose_anti_hallucination_strategy(scenario: str) -> str:
         return "组合方案：RAG + 提示词工程"
 ```
 
+## ML/DL 应用场景
+
+| 应用场景 | 数学形式 | 说明 |
+|:--------|:---------|:-----|
+| RAG 答案事实性校验 | $\text{faithfulness} = \frac{\vert \text{answer} \cap \text{context} \vert}{\vert \text{answer} \vert}$ | 检测生成答案是否偏离检索到的上下文文档 |
+| LLM-as-Judge 幻觉检测 | $P(\text{hallucination} \mid q, a, c)$ | 用 LLM 评估生成内容与给定上下文的一致性 |
+
 ## 面试追问
 
 **Q1（基础）**：LLM 幻觉有哪两种主要类型？区别是什么？
