@@ -10,16 +10,17 @@
 ./AI-Agent/LangGraph/06-滑动窗口与摘要压缩记忆管理.md
 ./AI-Agent/RAG流程/01-RAG三阶段流程.md
 ./AI-Agent/RAG流程/02-文档切分策略.md
-./AI-Agent/RAG流程/03-多格式文档加载与OCR解析.md
-./AI-Agent/RAG流程/04-父文档与子文档分块策略.md
-./AI-Agent/RAG流程/05-中文递归文本分割器.md
-./AI-Agent/RAG流程/06-BGE-M3嵌入模型与混合检索.md
-./AI-Agent/RAG流程/07-HyDE假设文档检索实现.md
-./AI-Agent/RAG流程/08-子查询检索策略.md
-./AI-Agent/RAG流程/09-RAG Prompt模板设计.md
-./AI-Agent/RAG流程/10-回溯问题检索策略.md
-./AI-Agent/RAG流程/11-Milvus集合Schema设计与索引选择.md
-./AI-Agent/RAG流程/12-ContextualRAG上下文增强.md
+./AI-Agent/RAG流程/03-文档加载与LangChain集成.md
+./AI-Agent/RAG流程/04-OCR解析与多模态文档处理.md
+./AI-Agent/RAG流程/05-父文档与子文档分块策略.md
+./AI-Agent/RAG流程/06-中文递归文本分割器.md
+./AI-Agent/RAG流程/07-BGE-M3嵌入模型与混合检索.md
+./AI-Agent/RAG流程/08-HyDE假设文档检索实现.md
+./AI-Agent/RAG流程/09-子查询检索策略.md
+./AI-Agent/RAG流程/10-RAG Prompt模板设计.md
+./AI-Agent/RAG流程/11-回溯问题检索策略.md
+./AI-Agent/RAG流程/12-Milvus集合Schema设计与索引选择.md
+./AI-Agent/RAG流程/13-ContextualRAG上下文增强.md
 ./AI-Agent/协作/01-多Agent协作(Multi-Agent).md
 ./AI-Agent/基础/01-Agent定义与核心公式.md
 ./AI-Agent/基础/02-Agent四种形态.md
@@ -85,6 +86,7 @@
 ./AI-Agent/系统/17-Agent评估指标体系.md
 ./AI-Agent/系统/18-系统健康度评估指标.md
 ./AI-Agent/系统/19-Langfuse监控与评估.md
+./AI-Agent/系统/20-MiniLM意图分类与QueryClassifier.md
 ./AI-Agent/设计模式/01-Human-in-the-Loop设计模式.md
 ./AI-Agent/设计模式/02-状态机对话设计模式.md
 ./AI-Agent/设计模式/03-Think前置推理增强.md
@@ -158,6 +160,7 @@
 ./Tools/部署/08-Vue3前端SSE与JWT全栈集成.md
 ./Tools/部署/09-FastAPI文件上传与202后台任务模式.md
 ./Tools/部署/10-FastAPI SSE流式响应.md
+./Tools/部署/11-FastAPI基础与路由定义.md
 ./数学基础/微积分与优化/01-导数与偏导数.md
 ./数学基础/微积分与优化/02-链式法则.md
 ./数学基础/微积分与优化/03-梯度与方向导数.md
