@@ -146,4 +146,4 @@ MCP 层直接依赖**数据层**（读取配置）和**公共层**（共享工�
 - 需要理解 LLM Factory 如何实现模型客户端创建和缓存，参见 [LLM Factory 设计模式](./01-LLM%20Factory设计模式.md)
 - 需要理解重试和降级策略的详细实现，参见 [三层兜底重试机制](./02-三层兜底重试机制.md)
 - 需要理解配置中心如何管理模型切换配置，参见 [配置中心与异常体系设计](./03-配置中心与异常体系设计.md)
-- 需要了解 MCP（Model Context Protocol）与 MCP 层的区别，参见 [MCP 插件集成](../基础设施/05-Multi-Agent-Platform（多Agent平台）/10-MCP插件集成（MCP%20Plugin）.md)
+- 需要了解 MCP（Model Context Protocol）与 MCP 层的区别，参见 [MCP 插件集成](../基础设施/05-Multi-Agent-Platform/10-MCP插件集成（MCP%20Plugin）.md)
