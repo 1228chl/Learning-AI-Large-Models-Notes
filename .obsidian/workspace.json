@@ -13,13 +13,13 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Atomic-Cards/AI-Agent/工程实践/06-MCP模型通信协议.md",
+                "file": "AI-Learning-知识点总表.md",
                 "mode": "source",
                 "source": false,
                 "backlinks": false
               },
               "icon": "lucide-file",
-              "title": "06-MCP模型通信协议"
+              "title": "AI-Learning-知识点总表"
             }
           },
           {
@@ -252,6 +252,10 @@
   },
   "active": "9dddde49a2d5eb85",
   "lastOpenFiles": [
+    "README.md",
+    "Atomic-Cards/AI-Agent/工程实践/06-MCP模型通信协议.md",
+    "Atomic-Cards/原子化生成提示词.md.tmp.28668.b1af56185368",
+    "Atomic-Cards/原子化生成提示词.md.tmp.28668.51add478eac7",
     "Atomic-Cards/卡片诊断报告.md.tmp.28668.3fcbda85870b",
     "Atomic-Cards/卡片总览.md.tmp.28668.6f73ae7473a5",
     "Atomic-Cards/卡片总览.md.tmp.28668.db45ea3ce8cd",
@@ -260,11 +264,7 @@
     "Atomic-Cards/卡片总览.md.tmp.28668.54dda6cb9e74",
     "Atomic-Cards/卡片总览.md.tmp.28668.116c3e25d92e",
     "Atomic-Cards/卡片总览.md.tmp.28668.8fe3267a89d9",
-    "Atomic-Cards/卡片总览.md.tmp.28668.9bfc0076fe42",
-    "Atomic-Cards/卡片总览.md.tmp.28668.480b4c98a850",
-    "Atomic-Cards/卡片总览.md.tmp.28668.4ea7170da691",
     "Atomic-Cards/卡片总览.md",
-    "Atomic-Cards/AI-Agent/工程实践/06-MCP模型通信协议.md",
     "Atomic-Cards/数据结构与算法/算法/06-贪心算法.md",
     "Atomic-Cards/数据结构与算法/算法/05-回溯算法.md",
     "Atomic-Cards/数据结构与算法/算法/04-动态规划.md",
