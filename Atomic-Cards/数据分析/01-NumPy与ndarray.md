@@ -128,4 +128,4 @@ a.argmax()            # 最大值索引 — 分类任务中常用作预测标签
 ## 参考引用
 - 需要理解广播机制的相关知识，参见 [广播机制](02-广播机制.md)
 - 需要理解 Pandas 与 DataFrame 的相关知识，参见 [Pandas与DataFrame](03-Pandas与DataFrame.md)
-- 需要理解 PyTorch 张量与运算的相关知识，参见 [PyTorch张量与运算](../深度学习/PyTorch/07-PyTorch张量与运算.md)
+- 需要理解 PyTorch 张量与运算的相关知识，参见 [PyTorch张量与运算](../深度学习/PyTorch/01-PyTorch张量与运算.md)

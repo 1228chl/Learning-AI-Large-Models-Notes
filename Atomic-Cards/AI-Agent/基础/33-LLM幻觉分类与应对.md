@@ -109,5 +109,5 @@ def choose_anti_hallucination_strategy(scenario: str) -> str:
 
 - 需要了解提示词工程如何约束模型行为，参见 [提示词工程核心原则](./06-提示词工程核心原则.md)
 - 需要了解 RAG 如何减少事实性幻觉，参见 [RAG 系统双架构](../系统/10-RAG系统双架构.md)
-- 需要了解 LLM 推理解码参数（Temperature/TopP）对输出的影响，参见 [LLM 推理解码参数](../../深度学习/LLM/29-LLM推理解码参数.md)
+- 需要了解 LLM 推理解码参数（Temperature/TopP）对输出的影响，参见 [LLM 推理解码参数](../../深度学习/LLM/03-LLM推理解码参数.md)
 - 需要了解 LLM-as-Judge 如何检测幻觉，参见 [LLM-as-Judge 评估模式](./32-LLM-as-Judge评估模式.md)

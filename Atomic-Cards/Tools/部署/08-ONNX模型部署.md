@@ -161,5 +161,5 @@ PyTorch 训练              ONNX Runtime 推理
 
 - 需要理解模型保存格式与 ONNX 的关系参见 [模型保存格式](05-模型保存格式.md)
 - 需要理解 Flask/FastAPI 部署 REST API 参见 [Flask与FastAPI模型部署](04-Flask与FastAPI模型部署.md)
-- 需要理解模型量化与 ONNX 量化的关系参见 [模型量化](../../深度学习/模型压缩/19-模型量化(Quantization).md)
+- 需要理解模型量化与 ONNX 量化的关系参见 [模型量化](../../深度学习/模型压缩/03-模型量化(Quantization).md)
 - 需要理解 Docker 容器化部署参见 [Docker基础与容器化](../Docker/01-Docker基础与容器化.md)

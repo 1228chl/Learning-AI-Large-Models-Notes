@@ -92,8 +92,8 @@ Harness 是 Agent 的"车辆"，模型是"驾驶员"——车辆提供操控装�
 ## 参考引用
 
 - 需要理解 Agent 基本定义参见 [Agent 定义与核心公式](../基础/01-Agent定义与核心公式.md)
-- 需要了解 Agent 循环具体实现参见 [Agent 循环](../01-Tools-Execution（工具与执行）/02-Agent循环（Agent%20Loop）.md)
-- 需要了解工具分发机制参见 [工具分发系统](../01-Tools-Execution（工具与执行）/03-工具分发系统（Tool%20Dispatch）.md)
-- 需要掌握权限系统设计参见 [权限系统](../01-Tools-Execution（工具与执行）/04-权限系统（Permission%20System）.md)
-- 需要理解 Hooks 扩展机制参见 [Hooks 系统](../01-Tools-Execution（工具与执行）/05-Hooks系统（Hooks%20System）.md)
+- 需要了解 Agent 循环具体实现参见 [Agent 循环](../01-Tools-Execution/01-Agent循环.md)
+- 需要了解工具分发机制参见 [工具分发系统](../01-Tools-Execution/02-工具分发系统.md)
+- 需要掌握权限系统设计参见 [权限系统](../01-Tools-Execution/03-权限系统.md)
+- 需要理解 Hooks 扩展机制参见 [Hooks 系统](../01-Tools-Execution/04-Hooks系统.md)
 - 需要了解该机制在 Claude Code 中的工程实现参见 [Claude 使用指南](../../Tools/工具/09-Claude使用指南.md)

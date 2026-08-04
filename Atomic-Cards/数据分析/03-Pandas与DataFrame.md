@@ -175,5 +175,5 @@ y = df['target'].values                         # 标签向量：提取目标列
 
 ## 参考引用
 - 需要理解NumPy与ndarray的相关知识，参见 [NumPy与ndarray](01-NumPy与ndarray.md)
-- 需要理解特征工程的机器学习原理与应用，参见 [特征工程](../机器学习/特征工程/18-特征工程.md)
+- 需要理解特征工程的机器学习原理与应用，参见 [特征工程](../机器学习/特征工程/01-特征工程.md)
 - 需要理解Matplotlib与数据可视化的相关知识，参见 [Matplotlib与数据可视化](04-Matplotlib与数据可视化.md)

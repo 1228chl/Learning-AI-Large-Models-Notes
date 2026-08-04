@@ -115,5 +115,5 @@ NLP 的发展经历了四个主要范式：
 - 需要理解词嵌入与分布式表示（NLP 基础表示方法）参见 [词嵌入与分布式表示](./02-词嵌入与分布式表示.md)
 - 需要理解 Transformer 架构（现代 NLP 基础）参见 [自注意力与Transformer](../架构/06-自注意力与Transformer.md)
 - 需要理解 BERT 预训练方法参见 [BERT与MLM预训练](../预训练/10-BERT与MLM预训练.md)
-- 需要理解 LLM 发展阶段与 Scaling Law 参见 [Scaling Law与涌现能力](../../深度学习/LLM/23-Scaling Law与涌现能力.md)
+- 需要理解 LLM 发展阶段与 Scaling Law 参见 [Scaling Law与涌现能力](../../深度学习/LLM/02-Scaling Law与涌现能力.md)
 - 需要理解错觉（幻觉）产生机制参见 [Agent定义与核心公式](../../AI-Agent/基础/01-Agent定义与核心公式.md)
