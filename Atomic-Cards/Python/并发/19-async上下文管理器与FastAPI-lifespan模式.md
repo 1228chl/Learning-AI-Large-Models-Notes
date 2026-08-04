@@ -146,4 +146,4 @@ async def get_profile(db: AsyncSession = Depends(get_db)):
 - 需要理解协程和 asyncio 的基础知识：[协程与 asyncio](./10-协程与asyncio.md)
 - 需要理解 asyncio.gather 的并行执行机制及其在异步上下文中的应用：[异步并发实战](./17-异步并发实战.md)
 - 需要理解后台任务 GC 保护模式中 create_task 与 done_callback 的配合：[后台任务 GC 保护模式](./18-后台任务GC保护模式.md)
-- 需要理解 FastAPI 的 Depends 注入机制和 yield 依赖注入：[FastAPI 高级特性](../../Tools/部署/09-FastAPI高级特性.md)
+- 需要理解 FastAPI 的 Depends 注入机制和 yield 依赖注入：[FastAPI 依赖注入](../../Tools/部署/09-FastAPI依赖注入.md)

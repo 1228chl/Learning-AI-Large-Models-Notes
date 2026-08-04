@@ -142,7 +142,7 @@ task.add_done_callback(_background_tasks.discard) # 完成后移除，避免内�
 
 1. 进程重启 → 内存中的 `_background_tasks` 集合丢失 → 所有未完成任务消失
 2. 前端轮询永远返回 "processing"（DB 中状态未被更新为 completed/failed）→ 前端陷入死循环
-3. 解决方案：带时间戳的 status 字段 → 定时任务扫描 `status='processing' AND upd[FastAPI 高级特性](09-FastAPI高级特性.md)
+3. 解决方案：带时间戳的 status 字段，定时任务扫描超时未完成的任务重置为 failed
 4. 更好的替代：WebSocket 推送替代轮询——服务端完成任务时主动推送给前端，连接断开时前端自动感知
 
 ## 参考引用

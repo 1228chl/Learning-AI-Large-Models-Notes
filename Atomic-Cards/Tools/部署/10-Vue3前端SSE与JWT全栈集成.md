@@ -179,7 +179,7 @@ router.beforeEach((to, from, next) => {
 ## 参考引用
 
 - 需要理解 SSE 流式输出技术的服务端实现和协议细节：[SSE 流式输出](../网络/10-WebSocket与SSE流式输出.md)
-- 需要理解 FastAPI 的后端 API 设计和 CORS 配置：[FastAPI 高级特性](09-FastAPI高级特性.md)
+- 需要理解 FastAPI 的后端 API 设计和 CORS 配置：[FastAPI 依赖注入](09-FastAPI依赖注入.md)
 - 需要理解 JWT 认证的服务端实现（签发、校验、过期处理）：[JWT 认证与 bcrypt 密码安全](../../AI-Agent/工程实践/04-JWT认证与bcrypt密码安全.md)
 - 需要理解统一入口的 SSE 事件分发和 unified_chat 路由：[多 Agent 系统集成统一入口](../../AI-Agent/系统/42-多Agent系统集成统一入口与SSE路由.md)
 - 需要理解 HTTP 基础协议中的状态码（202 Accepted、401 Unauthorized）：[HTTP 基础与 API 设计](../网络/08-HTTP基础与API设计.md)

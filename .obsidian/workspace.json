@@ -13,13 +13,13 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Atomic-Cards/AI-Agent/基础设施/05-Multi-Agent-Platform（多Agent平台）/10-MCP插件集成（MCP Plugin）.md",
+                "file": "Atomic-Cards/AI-Agent/工程实践/06-MCP模型通信协议.md",
                 "mode": "source",
                 "source": false,
                 "backlinks": false
               },
               "icon": "lucide-file",
-              "title": "10-MCP插件集成（MCP Plugin）"
+              "title": "06-MCP模型通信协议"
             }
           },
           {
@@ -262,17 +262,20 @@
   },
   "active": "9dddde49a2d5eb85",
   "lastOpenFiles": [
-    "Atomic-Cards/Python/并发/18-后台任务GC保护模式.md.tmp.28668.9cb673f2d4fb",
-    "Atomic-Cards/Python/并发/17-异步并发实战.md.tmp.28668.8a3cf1833451",
-    "Atomic-Cards/AI-Agent/设计模式/01-Human-in-the-Loop设计模式.md.tmp.28668.d5c42b517382",
-    "Atomic-Cards/AI-Agent/工程实践/02-三层兜底重试机制.md.tmp.28668.ed878a6b1907",
-    "Atomic-Cards/AI-Agent/LangChain/23-Pydantic结构化输出.md.tmp.28668.f27189cddb33",
-    "Atomic-Cards/all_cards_list.txt",
-    "Atomic-Cards/AI-Agent/平台/11-Coze参数调优指南.md.tmp.28668.7d1f503747a5",
-    "Atomic-Cards/AI-Agent/平台/10-Coze进阶：工作流与高级功能.md.tmp.28668.439b22401d16",
-    "Atomic-Cards/AI-Agent/平台/10-Coze进阶：工作流与高级功能.md.tmp.28668.a3b8e5d0d392",
-    "Atomic-Cards/AI-Agent/系统/46-Langfuse监控与评估.md.tmp.28668.3fdd4a9ad2f5",
-    "Atomic-Cards/AI-Agent/系统/46-Langfuse监控与评估.md.tmp.28668.4ca2692a62ff",
+    "Atomic-Cards/AI-Agent/系统/23-RAG系统完整实现.md.tmp.28668.4162daf1efd4",
+    "Atomic-Cards/AI-Agent/系统/23-RAG系统完整实现.md.tmp.28668.819ff5aa40e2",
+    "Atomic-Cards/AI-Agent/系统/23-RAG系统完整实现.md.tmp.28668.f202c87d13b4",
+    "Atomic-Cards/AI-Agent/系统/23-RAG系统完整实现.md.tmp.28668.a88bc7b01c4d",
+    "Atomic-Cards/AI-Agent/系统/23-RAG系统完整实现.md.tmp.28668.057806839180",
+    "Atomic-Cards/AI-Agent/系统/23-RAG系统完整实现.md.tmp.28668.921579e0dcd9",
+    "Atomic-Cards/Tools/部署/11-FastAPI文件上传与202后台任务模式.md.tmp.28668.beacc54870a8",
+    "Atomic-Cards/Python/并发/19-async上下文管理器与FastAPI-lifespan模式.md.tmp.28668.4253a34617e6",
+    "Atomic-Cards/Tools/部署/11-FastAPI文件上传与202后台任务模式.md.tmp.28668.4d3636aadb26",
+    "Atomic-Cards/Tools/部署/10-Vue3前端SSE与JWT全栈集成.md.tmp.28668.0185ff83e850",
+    "Atomic-Cards/Tools/部署/12-FastAPI SSE流式响应.md",
+    "Atomic-Cards/Tools/部署/12-FastAPI SSE流式响应.md.tmp.28668.f84b04757f89",
+    "Atomic-Cards/Tools/部署/09-FastAPI依赖注入.md",
+    "Atomic-Cards/AI-Agent/基础设施/05-Multi-Agent-Platform（多Agent平台）/10-MCP插件集成（MCP Plugin）.md",
     "Atomic-Cards/AI-Agent/平台/11-Coze参数调优指南.md",
     "Atomic-Cards/AI-Agent/基础/33-LLM幻觉分类与应对.md",
     "Atomic-Cards/AI-Agent/平台/10-Coze进阶：工作流与高级功能.md",
@@ -295,9 +298,6 @@
     "Atomic-Cards/Tools/网络/08-HTTP基础与API设计.md",
     "Atomic-Cards/Tools/网络/10-WebSocket与SSE流式输出.md",
     "Atomic-Cards/Tools/Docker/11-Docker Compose编排.md",
-    "Atomic-Cards/Tools/Docker/12-Docker-Compose五服务编排实战.md",
-    "Atomic-Cards/Tools/Docker/01-Docker基础与容器化.md",
-    "Atomic-Cards/Tools/工具/10-MLOps与实验跟踪.md",
     "Assets/LangChain组件图.drawio.png",
     "Assets/Image/AI-Large-Modlels-Notes/Project/EduRAG/Milvus向量数据库/1.2.8.3-1.png",
     "Assets/Image/AI-Large-Modlels-Notes/Project/EduRAG/Milvus向量数据库/1.2.8.2-2.png",
