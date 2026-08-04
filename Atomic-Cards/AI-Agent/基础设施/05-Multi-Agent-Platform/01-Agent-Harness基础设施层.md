@@ -96,4 +96,4 @@ Harness 是 Agent 的"车辆"，模型是"驾驶员"——车辆提供操控装�
 - 需要了解工具分发机制参见 [工具分发系统](../01-Tools-Execution/02-工具分发系统.md)
 - 需要掌握权限系统设计参见 [权限系统](../01-Tools-Execution/03-权限系统.md)
 - 需要理解 Hooks 扩展机制参见 [Hooks 系统](../01-Tools-Execution/04-Hooks系统.md)
-- 需要了解该机制在 Claude Code 中的工程实现参见 [Claude 使用指南](../../Tools/工具/09-Claude使用指南.md)
+- 需要了解该机制在 Claude Code 中的工程实现参见 [Claude 使用指南](../../Tools/工具/04-Claude使用指南.md)

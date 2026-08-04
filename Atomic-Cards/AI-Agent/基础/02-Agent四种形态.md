@@ -166,5 +166,5 @@ EduAgent 没有选择单一的形态，而是采用**形态二（固定工作流
 
 ## 参考引用
 - 需要理解 Agent 核心定义与基本概念的相关知识，参见 [Agent定义与核心公式](../基础/01-Agent定义与核心公式.md)
-- 需要理解多 Agent 协作系统的相关知识，参见 [多Agent协作(Multi-Agent)](../协作/11-多Agent协作(Multi-Agent).md)
-- 需要理解 Orchestrator 编排器设计的相关知识，参见 [Orchestrator编排器设计](../系统/34-Orchestrator编排器设计.md)
+- 需要理解多 Agent 协作系统的相关知识，参见 [多Agent协作(Multi-Agent)](../协作/01-多Agent协作(Multi-Agent).md)
+- 需要理解 Orchestrator 编排器设计的相关知识，参见 [Orchestrator编排器设计](../系统/07-Orchestrator编排器设计.md)

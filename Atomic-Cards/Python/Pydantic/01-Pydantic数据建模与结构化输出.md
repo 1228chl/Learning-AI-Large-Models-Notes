@@ -148,8 +148,8 @@ print(data)  # {'name': '小明', 'education': [{'school': '清华大学'}]}
 
 ## 参考引用
 
-- 需要理解 Pydantic 的 description 如何通过 LangChain 传递给 LLM：[Pydantic 结构化输出](../../AI-Agent/LangChain/23-Pydantic结构化输出.md)
-- 需要理解 Python 面向对象基础（继承机制、类型注解语法）：[继承与 MRO](../OOP/12-继承与MRO.md)
+- 需要理解 Pydantic 的 description 如何通过 LangChain 传递给 LLM：[Pydantic 结构化输出](../../AI-Agent/LangChain/03-Pydantic结构化输出.md)
+- 需要理解 Python 面向对象基础（继承机制、类型注解语法）：[继承与 MRO](../OOP/04-继承与MRO.md)
 - 需要理解 LLM Factory 中如何使用 BaseSettings 实现配置管理：[LLM Factory 设计模式](../../AI-Agent/工程实践/01-LLM Factory设计模式.md)
 - 需要理解配置中心与异常体系中 BaseSettings 的环境变量加载机制：[配置中心与异常体系设计](../../AI-Agent/工程实践/03-配置中心与异常体系设计.md)
 - 需要理解 Pydantic 模型如何作为 LangGraph State 的类型定义：[LangGraph 图模型四要素](../../AI-Agent/LangGraph/01-LangGraph图模型四要素.md)

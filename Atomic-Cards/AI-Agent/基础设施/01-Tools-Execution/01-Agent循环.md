@@ -112,4 +112,4 @@ Agent 循环就像一个"思考→行动→观察→再思考"的认知闭环：
 - 需要掌握权限控制参见 [权限系统](../01-Tools-Execution/03-权限系统.md)
 - 需要了解子 Agent 的独立循环参见 [子 Agent](../02-Planning-Control/01-子Agent.md)
 - 需要理解错误恢复对循环的影响参见 [错误恢复与重试](../02-Planning-Control/02-错误恢复与重试.md)
-- 需要了解该机制在 Claude Code 中的工程实现参见 [Claude 使用指南](../../Tools/工具/09-Claude使用指南.md)
+- 需要了解该机制在 Claude Code 中的工程实现参见 [Claude 使用指南](../../Tools/工具/04-Claude使用指南.md)

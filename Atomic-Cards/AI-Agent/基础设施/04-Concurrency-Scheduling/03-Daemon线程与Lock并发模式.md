@@ -126,5 +126,5 @@ Daemon 线程像"外卖骑手"——你下单后（派发任务），骑手去�
 - 需要了解后台任务系统的完整实现参见 [后台任务系统](../04-Concurrency-Scheduling/01-后台任务系统.md)
 - 需要掌握 Cron 调度器中的线程使用参见 [Cron 调度器](../04-Concurrency-Scheduling/02-Cron调度器.md)
 - 需要了解消息总线中的线程协作参见 [消息总线与 Agent 团队](../05-Multi-Agent-Platform/02-消息总线与Agent团队.md)
-- 需要理解 Python 并发编程基础参见 [Python 并发与 GIL](../../Python/并发/15-线程与GIL.md)
-- 需要了解该模式在 Claude Code 中的工程实现参见 [Claude 使用指南](../../Tools/工具/09-Claude使用指南.md)
+- 需要理解 Python 并发编程基础参见 [Python 并发与 GIL](../../Python/并发/04-线程与GIL.md)
+- 需要了解该模式在 Claude Code 中的工程实现参见 [Claude 使用指南](../../Tools/工具/04-Claude使用指南.md)

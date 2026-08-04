@@ -161,7 +161,7 @@ model.eval()                    # 推理模式：BN 使用全局滑动平均统�
 
 ## 参考引用
 
-- 需要理解 Layer Normalization 与 BN 的区别参见 [Layer Normalization](../../NLP/组件/14-Layer Normalization.md)
+- 需要理解 Layer Normalization 与 BN 的区别参见 [Layer Normalization](../../NLP/组件/03-Layer Normalization.md)
 - 需要理解梯度消失问题与 BN 的关系参见 [梯度消失与梯度爆炸](./06-梯度消失与梯度爆炸.md)
 - 需要理解 Dropout 与 BN 正则化效果的差异参见 [Dropout随机失活](./08-Dropout随机失活.md)
 - 需要理解激活函数敏感区间与 BN 的配合参见 [激活函数](./02-激活函数.md)

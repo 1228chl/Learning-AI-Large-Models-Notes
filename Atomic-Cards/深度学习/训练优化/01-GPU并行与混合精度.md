@@ -142,5 +142,5 @@ torch.compile(model, mode='reduce-overhead')  # PyTorch 2.0 编译
 
 ## 参考引用
 - 需要理解PyTorch张量与运算的相关知识，参见 [PyTorch张量与运算](../../深度学习/PyTorch/01-PyTorch张量与运算.md)
-- 需要掌握进程与线程以理解编程实现机制的相关知识，参见 [进程与线程](../../Python/并发/06-进程与线程.md)
+- 需要掌握进程与线程以理解编程实现机制的相关知识，参见 [进程与线程](../../Python/并发/01-进程与线程.md)
 - 需要理解PyTorch张量与运算的深度学习机制与实现的相关知识，参见 [PyTorch张量与运算](../../深度学习/PyTorch/01-PyTorch张量与运算.md)

@@ -140,6 +140,6 @@ services:
 4. 高性能计算场景考虑 Singularity/Apptainer
 
 ## 参考引用
-- 需要理解Docker Compose多服务编排的相关知识，参见 [Docker Compose编排](11-Docker Compose编排.md)
-- 需要理解Flask与FastAPI模型部署的相关知识，参见 [Flask与FastAPI模型部署](../部署/04-Flask与FastAPI模型部署.md)
-- 需要理解Ollama与本地LLM部署的相关知识，参见 [Ollama与本地LLM部署](../部署/06-Ollama与本地LLM部署.md)
+- 需要理解Docker Compose多服务编排的相关知识，参见 [Docker Compose编排](02-Docker Compose编排.md)
+- 需要理解Flask与FastAPI模型部署的相关知识，参见 [Flask与FastAPI模型部署](../部署/02-Flask与FastAPI模型部署.md)
+- 需要理解Ollama与本地LLM部署的相关知识，参见 [Ollama与本地LLM部署](../部署/04-Ollama与本地LLM部署.md)

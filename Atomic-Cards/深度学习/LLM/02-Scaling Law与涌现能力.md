@@ -141,5 +141,5 @@ print(f"GPT-3 相对 GPT-1 损失下降: {(1 - gpt3_loss / gpt1_loss) * 100:.1f}
 
 ## 参考引用
 - 需要理解语言模型发展史的相关知识，参见 [语言模型发展史](01-语言模型发展史.md)
-- 需要理解自注意力与Transformer的相关知识，参见 [自注意力与Transformer](../../NLP/架构/06-自注意力与Transformer.md)
-- 需要理解GPT与自回归生成的相关知识，参见 [GPT与自回归生成](../../NLP/预训练/11-GPT与自回归生成.md)
+- 需要理解自注意力与Transformer的相关知识，参见 [自注意力与Transformer](../../NLP/架构/03-自注意力与Transformer.md)
+- 需要理解GPT与自回归生成的相关知识，参见 [GPT与自回归生成](../../NLP/预训练/02-GPT与自回归生成.md)

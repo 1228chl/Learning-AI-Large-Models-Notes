@@ -121,4 +121,4 @@ def idle_poll(name, messages, role) -> str:
 - 需要掌握团队协议中的关闭握手参见 [团队协议](../05-Multi-Agent-Platform/05-团队协议.md)
 - 需要理解任务系统的认领机制参见 [任务系统](../05-Multi-Agent-Platform/04-任务系统.md)
 - 需要了解 Agent 团队整体架构参见 [Agent Harness（基础设施层）](../05-Multi-Agent-Platform/01-Agent-Harness基础设施层.md)
-- 需要了解该机制在 Claude Code 中的工程实现参见 [Claude 使用指南](../../Tools/工具/09-Claude使用指南.md)
+- 需要了解该机制在 Claude Code 中的工程实现参见 [Claude 使用指南](../../Tools/工具/04-Claude使用指南.md)

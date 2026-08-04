@@ -154,5 +154,5 @@ LayerNorm → DownProject(r) → ReLU → UpProject(d) → 残差连接
 
 - 需要理解迁移学习和微调的基础概念参见 [迁移学习与微调](./01-迁移学习与微调.md)
 - 需要理解模型量化技术参见 [模型量化](../../深度学习/模型压缩/03-模型量化(Quantization).md)
-- 需要理解 Transformer 注意力机制的结构参见 [自注意力与Transformer](../../NLP/架构/06-自注意力与Transformer.md)
+- 需要理解 Transformer 注意力机制的结构参见 [自注意力与Transformer](../../NLP/架构/03-自注意力与Transformer.md)
 - 需要理解 RLHF 与 PEFT 的联合使用参见 [RLHF与人类偏好对齐](../LLM/04-RLHF与人类偏好对齐.md)

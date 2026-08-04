@@ -152,5 +152,5 @@ dimension_scores = await asyncio.gather(*tasks)
 
 ## 参考引用
 - 需要理解 Think 前置推理增强技巧的相关知识，参见 [Think前置推理增强](03-Think前置推理增强.md)
-- 需要理解 Pydantic 结构化输出与大模型集成的相关知识，参见 [Pydantic结构化输出](../LangChain/23-Pydantic结构化输出.md)
-- 需要理解 Python 异步并发中 asyncio.gather 用法的相关知识，参见 [异步并发实战](../../Python/并发/17-异步并发实战.md)
+- 需要理解 Pydantic 结构化输出与大模型集成的相关知识，参见 [Pydantic结构化输出](../LangChain/03-Pydantic结构化输出.md)
+- 需要理解 Python 异步并发中 asyncio.gather 用法的相关知识，参见 [异步并发实战](../../Python/并发/05-异步并发实战.md)

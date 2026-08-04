@@ -178,6 +178,6 @@ def _build_structured_summary(structured: dict) -> str:
 4. 系统不会崩溃，但用户会看到"需要人工复核"的提示
 
 ## 参考引用
-- 需要理解 Python 异步并发中 asyncio.gather 用法的相关知识，参见 [异步并发实战](../../Python/并发/17-异步并发实战.md)
+- 需要理解 Python 异步并发中 asyncio.gather 用法的相关知识，参见 [异步并发实战](../../Python/并发/05-异步并发实战.md)
 - 需要理解评分 Rubric 设计的相关知识，参见 [评分Rubric设计](04-评分Rubric设计.md)
 - 需要理解 Think 前置推理增强技巧的相关知识，参见 [Think前置推理增强](03-Think前置推理增强.md)
