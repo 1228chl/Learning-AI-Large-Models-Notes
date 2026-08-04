@@ -12,9 +12,12 @@ aliases: ["MCP Plugin", "MCP插件", "MCP协议", "Model Context Protocol"]
 MCP（Model Context Protocol）是一种标准协议，定义 Agent 发现和调用外部工具的方式。Agent 不需要知道工具是谁写的、部署在哪里，只需通过 `tools/list` 发现可用工具，通过 `tools/call` 调用具体工具。MCP 工具和内置工具在运行时组装成统一的工具池，同等对待。
 
 $$
-\text{MCP Integration} = \text{tools/list（发现）} + \text{tools/call（调用）} + \text{assemble_tool_pool（组装）}
+\text{MCP Integration} = \text{tools/list(discovery)} + \text{tools/call(invocation)} + \text{assemble\_tool\_pool(assembly)}
 $$
 
+- discovery：发现
+- invocation：调用
+- assembly：组装
 
 ## 问题描述
 

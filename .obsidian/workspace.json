@@ -13,13 +13,13 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "AI-Large-Modlels-Notes/Project/EduAgent/02-工具介绍.md",
-                "mode": "preview",
+                "file": "Atomic-Cards/AI-Agent/基础设施/05-Multi-Agent-Platform（多Agent平台）/10-MCP插件集成（MCP Plugin）.md",
+                "mode": "source",
                 "source": false,
                 "backlinks": false
               },
               "icon": "lucide-file",
-              "title": "02-工具介绍"
+              "title": "10-MCP插件集成（MCP Plugin）"
             }
           },
           {
@@ -242,8 +242,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 461.5,
-    "collapsed": true
+    "width": 461.5
   },
   "left-ribbon": {
     "hiddenItems": {
@@ -260,14 +259,17 @@
       "realclaudian:Open Claudian": false
     }
   },
-  "active": "9dddde49a2d5eb85",
+  "active": "a73ebf785a6e6ac6",
   "lastOpenFiles": [
+    "Atomic-Cards/卡片总览.md.tmp.28668.8e6a66833944",
+    "Atomic-Cards/AI-Agent/工程实践/06-MCP模型通信协议.md",
+    "Atomic-Cards/AI-Agent/工程实践/06-MCP模型通信协议.md.tmp.28668.6cb89cca8130",
+    "AI-Large-Modlels-Notes/Project/EduAgent/02-工具介绍.md",
     "Atomic-Cards/AI-Agent/LangGraph/01-LangGraph图模型四要素.md",
     "Atomic-Cards/原子化生成提示词.md.tmp.36248.d24c1b5d150f",
     "Atomic-Cards/数学基础/概率统计/05-协方差与相关系数.md.tmp.36248.b58c73ec2d8e",
     "Atomic-Cards/AI-Agent/RAG流程/03-文档切分策略.md",
     "Atomic-Cards/AI-Agent/RAG流程/02-RAG三阶段流程.md",
-    "AI-Large-Modlels-Notes/Project/EduAgent/02-工具介绍.md",
     "Atomic-Cards/卡片总览.md",
     "Atomic-Cards/卡片诊断报告.md.tmp.36248.fbec3b653c72",
     "Atomic-Cards/原子化生成提示词.md.tmp.36248.54495f5e7b14",
@@ -276,7 +278,6 @@
     "Atomic-Cards/卡片总览.md.tmp.36248.91cb15c47f6c",
     "Atomic-Cards/卡片总览.md.tmp.36248.a4afbd2a1800",
     "README.md.tmp.36248.ccd6a2dbc8bd",
-    "README.md.tmp.36248.38fa5fe4172c",
     "Atomic-Cards/Tools/部署/11-FastAPI文件上传与202后台任务模式.md",
     "Atomic-Cards/Tools/部署/09-FastAPI高级特性.md",
     "Atomic-Cards/Tools/部署/08-ONNX模型部署.md",
@@ -296,8 +297,6 @@
     "Atomic-Cards/Tools/工具/02-Conda包管理与配置.md",
     "Atomic-Cards/Tools/工具/03-UV包管理器.md",
     "Atomic-Cards/Tools/工具/01-Conda环境管理.md",
-    "Atomic-Cards/数学基础/概率统计/09-信息论基础.md",
-    "Atomic-Cards/数学基础/概率统计/08-假设检验.md",
     "Assets/LangChain组件图.drawio.png",
     "Assets/Image/AI-Large-Modlels-Notes/Project/EduRAG/Milvus向量数据库/1.2.8.3-1.png",
     "Assets/Image/AI-Large-Modlels-Notes/Project/EduRAG/Milvus向量数据库/1.2.8.2-2.png",
