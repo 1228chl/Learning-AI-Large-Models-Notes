@@ -116,8 +116,8 @@ results = collection.search(
 
 ## 参考引用
 
-- 需要理解 Milvus 向量数据库的 Collection Schema 和索引创建：[Milvus 集合创建与索引设计](../../AI-Agent/RAG流程/11-Milvus集合Schema设计与索引选择.md)
+- 需要理解 Milvus 向量数据库的 Collection Schema 和索引创建：[Milvus 集合创建与索引设计](../../AI-Agent/RAG流程/12-Milvus集合Schema设计与索引选择.md)
 - 需要理解稠密向量与稀疏向量在混合检索中的互补作用：[稠密向量与稀疏向量](./06-稠密向量与稀疏向量.md)
 - 需要理解距离度量（COSINE / L2 / IP）的选择依据：[距离度量](../../数学基础/线性代数/向量/05-距离度量.md)
-- 需要理解 BGE-M3 嵌入模型生成待索引向量的过程：[BGE-M3 嵌入模型与混合检索](../../AI-Agent/RAG流程/06-BGE-M3嵌入模型与混合检索.md)
+- 需要理解 BGE-M3 嵌入模型生成待索引向量的过程：[BGE-M3 嵌入模型与混合检索](../../AI-Agent/RAG流程/07-BGE-M3嵌入模型与混合检索.md)
 - 需要理解混合检索中 RRF 融合排序与 HNSW 稠密检索的配合：[RRF 排序器与加权排序](./04-RRF排序器与加权排序.md)

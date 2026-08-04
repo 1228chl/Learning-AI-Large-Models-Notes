@@ -201,4 +201,4 @@ IP 度量在向量归一化后等价于余弦相似度，但 IP 计算更快（�
 - 需要理解Milvus核心概念的相关知识，参见 [Milvus核心概念](02-Milvus核心概念.md)
 - 需要理解Milvus Python操作的相关知识，参见 [Milvus Python操作指南](03-Milvus Python操作指南.md)
 - 需要理解文档切分策略的相关知识，参见 [文档切分策略](../../AI-Agent/RAG流程/02-文档切分策略.md)
-- 需要理解多格式文档加载与OCR解析的相关知识，参见 [多格式文档加载与OCR解析](../../AI-Agent/RAG流程/03-多格式文档加载与OCR解析.md)
+- 需要理解多格式文档加载与OCR解析的相关知识，参见 [多格式文档加载与OCR解析](../../AI-Agent/RAG流程/03-文档加载与LangChain集成.md)
