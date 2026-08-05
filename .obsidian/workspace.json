@@ -14,7 +14,7 @@
               "type": "markdown",
               "state": {
                 "file": "AI-Large-Modlels-Notes/Project/EduAgent/02-工具介绍.md",
-                "mode": "source",
+                "mode": "preview",
                 "source": false,
                 "backlinks": false
               },
@@ -246,8 +246,7 @@
       "bases:新建数据库": false,
       "obsidian-git:Open Git source control": true,
       "table-editor-obsidian:Advanced Tables Toolbar": false,
-      "templater-obsidian:Templater": false,
-      "realclaudian:Open Claudian": false
+      "templater-obsidian:Templater": false
     }
   },
   "active": "9dddde49a2d5eb85",
