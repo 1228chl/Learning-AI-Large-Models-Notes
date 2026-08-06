@@ -1,0 +1,371 @@
+# QA Agent 图装配：`graph.py` 深度解析
+
+> 源文件：`backend/agents/qa/graph.py`（共 182 行）
+> 对应课件：5.15 图装配（graph.py）
+> 前置依赖：`state.py`、`nodes.py`、`memory.py`
+
+## 一、文件定位
+
+`graph.py` 是 QA Agent 的"总装图"——把 10 个节点 + 3 个条件路由组装成一张 LangGraph StateGraph，定义了 5 条完整处理路径和所有分支逻辑。
+
+```
+graph.py 的职责：
+  ├─ 注册 10 个节点
+  ├─ 定义 3 个路由函数
+  ├─ 连接边（固定边 + 条件边）
+  ├─ 编译图（带 checkpointer）
+  └─ 对外暴露 build_qa_graph()
+
+graph.py 不负责：
+  ├─ 节点内部逻辑（那是 nodes.py 的事）
+  ├─ State 定义（那是 state.py 的事）
+  └─ HTTP 接口（那是 qa.py 的事）
+```
+
+---
+
+## 二、import 分析（第 20~35 行）
+
+```python
+from langgraph.graph import StateGraph, START, END
+
+from backend.agents.qa.state import QAState
+from backend.agents.qa.nodes import (
+    classify_query_node,
+    hyde_generate_node,
+    multi_query_rewrite_node,
+    retrieve_node,
+    generate_rag_node,
+    web_search_node,
+    generate_direct_node,
+    generate_general_node,
+    enqueue_pending_node,
+    save_memory_node,
+)
+from backend.core.memory import get_memory_saver
+```
+
+| import | 来源 | 用途 |
+|--------|------|------|
+| `StateGraph` | `langgraph.graph` | LangGraph 状态图构建器 |
+| `START` | `langgraph.graph` | 图的起始节点（哨兵） |
+| `END` | `langgraph.graph` | 图的终止节点（哨兵） |
+| `QAState` | `state.py` | 图的 State 类型 |
+| 10 个节点 | `nodes.py` | 所有节点函数 |
+| `get_memory_saver` | `memory.py` | MemorySaver 检查点 |
+
+---
+
+## 三、三个路由函数（第 38~79 行）
+
+### 3.1 `_route_by_query_type`：分类后路由（第 38~52 行）
+
+```python
+def _route_by_query_type(state: QAState) -> str:
+    """
+    classify_query 之后的路由：根据 query_type 和 enable_web_search 分流。
+
+    返回的路由键：
+      GENERAL      → 直接 generate_general（跳过检索）
+      GENERAL_WEB  → web_search → generate_general（先联网再回答）
+      PRECISE      → 直接 retrieve
+      VAGUE        → hyde_generate → retrieve
+      BROAD        → multi_query_rewrite → retrieve
+    """
+    qt = state.get("query_type", "PRECISE").upper()
+    if qt == "GENERAL" and state.get("enable_web_search", False):
+        return "GENERAL_WEB"   # 通用问题 + 联网指令 → 先联网再回答
+    return qt                   # 其余按 query_type 直走
+```
+
+**返回值**：字符串，对应 `add_conditional_edges` 的 `path_map` 键。
+
+**`GENERAL_WEB` 分支**：`query_type=GENERAL` 且 `enable_web_search=True` 时，先走 `web_search` 再进 `generate_general`。这是"联网搜索+通用问题"的混合路径。
+
+**5 条分支**：
+
+| 返回值 | 后续节点 | 说明 |
+|--------|---------|------|
+| `"GENERAL"` | `generate_general` | 通用问题直答，跳过检索 |
+| `"GENERAL_WEB"` | `web_search` | 通用问题 + 联网指令，先联网再回答 |
+| `"PRECISE"` | `retrieve` | 直接检索 |
+| `"VAGUE"` | `hyde_generate` | 先 HyDE 再检索 |
+| `"BROAD"` | `multi_query_rewrite` | 先改写再并行检索 |
+
+### 3.2 `_route_by_confidence`：检索后路由（第 55~68 行）
+
+```python
+def _route_by_confidence(state: QAState) -> str:
+    """
+    retrieve 之后的路由：根据置信度和联网开关分流。
+
+    返回的路由键：
+      high       → generate_rag（RAG 高质量回答）
+      low_web    → web_search → generate_direct（先联网补充再直答）
+      low_direct → generate_direct（直接 LLM 兜底）
+    """
+    if state.get("is_high_confidence", False):
+        return "high"           # 置信度 ≥ 0.75 → 高置信度 RAG 生成
+    if state.get("enable_web_search", False):
+        return "low_web"        # 置信度低 + 联网开启 → 先联网再直答
+    return "low_direct"         # 置信度低 + 联网关闭 → 直接 LLM 兜底
+```
+
+**3 条分支**：
+
+| 返回值 | 条件 | 后续节点 | 说明 |
+|--------|------|---------|------|
+| `"high"` | `is_high_confidence=True` | `generate_rag` | 高置信度，RAG 生成 |
+| `"low_web"` | 低置信度 + `enable_web_search=True` | `web_search` | 先联网搜索，再 LLM 直答 |
+| `"low_direct"` | 低置信度 + 无联网 | `generate_direct` | 直接 LLM 兜底 |
+
+**`low_web` 路径的时序**：
+
+```
+retrieve → web_search → generate_direct
+  ↑ 置信度低    ↑ 收集网络信息   ↑ 注入 Web 上下文后生成
+```
+
+### 3.3 `_route_after_web_search`：搜索后路由（第 71~79 行）
+
+```python
+def _route_after_web_search(state: QAState) -> str:
+    """
+    web_search 节点被两条路径共用，走完搜索后需要区分去向：
+      - 来自 GENERAL_WEB 路径（query_type=GENERAL）→ generate_general
+      - 来自低置信度路径                            → generate_direct
+    """
+    if state.get("query_type", "").upper() == "GENERAL":
+        return "generate_general"
+    return "generate_direct"
+```
+
+**`web_search` 被两条路径共用**：
+
+```
+路径 1：GENERAL_WEB → web_search → generate_general
+路径 2：low_web → web_search → generate_direct
+```
+
+**区分依据**：`query_type` 是否为 `"GENERAL"`。如果是，来自 GENERAL_WEB 路径，走 `generate_general`；否则来自低置信度路径，走 `generate_direct`。
+
+---
+
+## 四、`build_qa_graph`：图构建（第 82~182 行）
+
+### 4.1 函数签名（第 82~102 行）
+
+```python
+def build_qa_graph():
+    """
+    构建智能问答 Agent 的状态图。
+
+    完整图结构：
+
+    START → classify_query
+      ├─ GENERAL → generate_general
+      ├─ GENERAL_WEB → web_search → generate_general
+      ├─ PRECISE → retrieve
+      │   ├─ high → generate_rag
+      │   ├─ low_web → web_search → generate_direct
+      │   └─ low_direct → generate_direct
+      ├─ VAGUE → hyde_generate → retrieve → ...
+      └─ BROAD → multi_query_rewrite → retrieve → ...
+
+    所有生成节点 → enqueue_pending → save_memory → END
+
+    Returns:
+        编译后的 LangGraph StateGraph，可调用 graph.ainvoke(state, config)
+    """
+```
+
+### 4.2 注册 10 个节点（第 108~117 行）
+
+```python
+builder.add_node("classify_query",      classify_query_node)       # 三层分类
+builder.add_node("hyde_generate",       hyde_generate_node)        # VAGUE：假设文档生成
+builder.add_node("multi_query_rewrite", multi_query_rewrite_node)  # BROAD：子 Query 改写
+builder.add_node("retrieve",            retrieve_node)             # 混合召回 + 精排
+builder.add_node("generate_rag",        generate_rag_node)         # 高置信度 RAG 生成
+builder.add_node("web_search",          web_search_node)           # Web 搜索兜底
+builder.add_node("generate_direct",     generate_direct_node)      # 低置信度 LLM 直答
+builder.add_node("generate_general",    generate_general_node)     # 通用问题直答
+builder.add_node("enqueue_pending",     enqueue_pending_node)      # 低置信度问题入队
+builder.add_node("save_memory",         save_memory_node)          # 记忆保存
+```
+
+**节点命名规范**：小写蛇形，与函数名一致（去掉 `_node` 后缀）。
+
+### 4.3 连边逻辑（第 122~176 行）
+
+#### 4.3.1 固定边 vs 条件边
+
+| 类型 | 方法 | 用途 | 示例 |
+|------|------|------|------|
+| 固定边 | `add_edge` | 确定性流转 | `hyde_generate → retrieve` |
+| 条件边 | `add_conditional_edges` | 运行时分支 | `classify_query → 5 条分支` |
+
+#### 4.3.2 三种边的关系
+
+```
+固定边（3 条）：
+  START → classify_query
+  hyde_generate → retrieve
+  multi_query_rewrite → retrieve
+
+条件边（3 条）：
+  classify_query → _route_by_query_type
+  retrieve → _route_by_confidence
+  web_search → _route_after_web_search
+
+循环边（1 条）：
+  generate_rag / generate_direct / generate_general → enqueue_pending → save_memory → END
+```
+
+#### 4.3.3 完整图结构
+
+```
+                              START
+                                │
+                                ▼
+                         classify_query
+                        /    |    |    \    \
+                       /     |    |     \    \
+                      /      |    |      \    \
+                     ▼       ▼    ▼       ▼    ▼
+               GENERAL  PRECISE VAGUE  BROAD  GENERAL_WEB
+                 │        │      │       │        │
+                 │        │      ▼       ▼        │
+                 │        │  hyde_   multi_      │
+                 │        │  generate query_     │
+                 │        │    │    rewrite      │
+                 │        │    ▼       ▼         │
+                 │        │    retrieve          │
+                 │        │   /    \    \        │
+                 │        │  /      \    \       │
+                 │        │ ▼       ▼    ▼      │
+                 │    generate_  web_  generate_ │
+                 │     rag    search   direct    │
+                 │        │      │       │       │
+                 │        │      ▼       │       │
+                 │        │  generate_   │       │
+                 │        │  general     │       │
+                 │        │      │       │       │
+                 │        └──────┼───────┘       │
+                 │               ▼               │
+                 │        generate_general ◄─────┘
+                 │               │
+                 └───────────────┼───────────────────┐
+                                 ▼                   │
+                          enqueue_pending            │
+                                 │                   │
+                                 ▼                   │
+                          save_memory                │
+                                 │                   │
+                                 ▼                   │
+                                 END ◄───────────────┘
+```
+
+### 4.4 编译图（第 181~182 行）
+
+```python
+memory_saver = get_memory_saver("qa")                # 获取 QA Agent 的 MemorySaver
+return builder.compile(checkpointer=memory_saver)
+```
+
+**`get_memory_saver("qa")`**：获取 QA Agent 专用的 MemorySaver 实例（按 Agent 类型隔离）。
+
+**`builder.compile(checkpointer=memory_saver)`**：编译图，启用 checkpointer。每次调用 `graph.ainvoke(state, config)` 时，MemorySaver 自动保存和恢复 State。
+
+---
+
+## 五、5 条完整路径
+
+### 路径 1：GENERAL（通用问题直答）
+
+```
+START → classify_query → generate_general → enqueue_pending → save_memory → END
+```
+
+**触发条件**：`query_type="GENERAL"`，无需联网搜索。
+
+### 路径 2：GENERAL_WEB（通用问题 + 联网）
+
+```
+START → classify_query → web_search → generate_general → enqueue_pending → save_memory → END
+```
+
+**触发条件**：`query_type="GENERAL"` + `enable_web_search=True`。
+
+### 路径 3：PRECISE（精确检索）
+
+```
+START → classify_query → retrieve
+  ├─ high → generate_rag → enqueue_pending → save_memory → END
+  ├─ low_web → web_search → generate_direct → enqueue_pending → save_memory → END
+  └─ low_direct → generate_direct → enqueue_pending → save_memory → END
+```
+
+**触发条件**：`query_type="PRECISE"`。
+
+### 路径 4：VAGUE（HyDE 语义扩充）
+
+```
+START → classify_query → hyde_generate → retrieve → ...
+```
+
+**触发条件**：`query_type="VAGUE"`。
+
+### 路径 5：BROAD（Multi-Query 并行检索）
+
+```
+START → classify_query → multi_query_rewrite → retrieve → ...
+```
+
+**触发条件**：`query_type="BROAD"`。
+
+---
+
+## 六、`★` 设计亮点总结
+
+### 6.1 3 个路由函数，5 条路径
+
+| 路由函数 | 决策依据 | 分支数 | 位置 |
+|---------|---------|--------|------|
+| `_route_by_query_type` | `query_type` + `enable_web_search` | 5 | classify_query 之后 |
+| `_route_by_confidence` | `is_high_confidence` + `enable_web_search` | 3 | retrieve 之后 |
+| `_route_after_web_search` | `query_type` | 2 | web_search 之后 |
+
+### 6.2 `web_search` 节点被两条路径共用
+
+`web_search` 既可以为 GENERAL_WEB 路径联网，也可以为低置信度路径兜底。通过 `_route_after_web_search` 区分去向。
+
+### 6.3 `enqueue_pending` 只接 low_direct 路径
+
+```python
+for gen_node in ("generate_rag", "generate_direct", "generate_general"):
+    builder.add_edge(gen_node, "enqueue_pending")
+```
+
+所有生成节点都走 `enqueue_pending`，但 `enqueue_pending` 内部判断 `confidence < 0.75` 时才实际写入。高置信度路径的 `enqueue_pending` 是空操作。
+
+### 6.4 固定边 + 条件边组合
+
+```
+固定边：确定性路径（START → classify_query, hyde_generate → retrieve）
+条件边：运行时分支（classify_query → 5 条, retrieve → 3 条）
+```
+
+固定边保证核心流程不走错，条件边保证分支灵活。
+
+### 6.5 编译时注入 checkpointer
+
+```python
+builder.compile(checkpointer=get_memory_saver("qa"))
+```
+
+编译时注入 MemorySaver，而不是在 nodes.py 中手动管理。LangGraph 自动处理 State 的保存和恢复。
+
+### 6.6 `GENERAL_WEB` 特殊分支
+
+`_route_by_query_type` 返回 `"GENERAL_WEB"`（不是标准的 `"GENERAL"`），让 GENERAL 路径在开启联网搜索时走 `web_search` 分支。这是"通用问题 + 时效性信息"的混合场景。
