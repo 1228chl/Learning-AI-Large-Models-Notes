@@ -222,48 +222,34 @@ builder.add_node("save_memory",         save_memory_node)          # 记忆保�
   generate_rag / generate_direct / generate_general → enqueue_pending → save_memory → END
 ```
 
-#### 4.3.3 完整图结构
+#### 4.3.3 完整图结构（Mermaid 流程图）
 
-```
-                              START
-                                │
-                                ▼
-                         classify_query
-                        /    |    |    \    \
-                       /     |    |     \    \
-                      /      |    |      \    \
-                     ▼       ▼    ▼       ▼    ▼
-               GENERAL  PRECISE VAGUE  BROAD  GENERAL_WEB
-                 │        │      │       │        │
-                 │        │      ▼       ▼        │
-                 │        │  hyde_   multi_      │
-                 │        │  generate query_     │
-                 │        │    │    rewrite      │
-                 │        │    ▼       ▼         │
-                 │        │    retrieve          │
-                 │        │   /    \    \        │
-                 │        │  /      \    \       │
-                 │        │ ▼       ▼    ▼      │
-                 │    generate_  web_  generate_ │
-                 │     rag    search   direct    │
-                 │        │      │       │       │
-                 │        │      ▼       │       │
-                 │        │  generate_   │       │
-                 │        │  general     │       │
-                 │        │      │       │       │
-                 │        └──────┼───────┘       │
-                 │               ▼               │
-                 │        generate_general ◄─────┘
-                 │               │
-                 └───────────────┼───────────────────┐
-                                 ▼                   │
-                          enqueue_pending            │
-                                 │                   │
-                                 ▼                   │
-                          save_memory                │
-                                 │                   │
-                                 ▼                   │
-                                 END ◄───────────────┘
+```mermaid
+flowchart TD
+    START --> classify_query
+
+    classify_query -->|GENERAL| generate_general
+    classify_query -->|GENERAL_WEB| web_search
+    classify_query -->|PRECISE| retrieve
+    classify_query -->|VAGUE| hyde_generate
+    classify_query -->|BROAD| multi_query_rewrite
+
+    hyde_generate --> retrieve
+    multi_query_rewrite --> retrieve
+
+    retrieve -->|high| generate_rag
+    retrieve -->|low_web| web_search
+    retrieve -->|low_direct| generate_direct
+
+    web_search -->|"来自 GENERAL_WEB"| generate_general
+    web_search -->|"来自低置信度"| generate_direct
+
+    generate_rag --> enqueue_pending
+    generate_direct --> enqueue_pending
+    generate_general --> enqueue_pending
+
+    enqueue_pending --> save_memory
+    save_memory --> END
 ```
 
 ### 4.4 编译图（第 181~182 行）
