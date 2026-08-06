@@ -224,12 +224,49 @@ builder.add_node("save_memory",         save_memory_node)          # 记忆保�
 
 #### 4.3.3 完整图结构（Mermaid 流程图）
 
+按逻辑层级分 5 组，从上到下依次为：**意图分类 → 查询预处理 → 检索 → 生成 → 后处理**。
+
 ```mermaid
 flowchart TD
-    START --> classify_query
+    subgraph 入口层["① 意图分类"]
+        direction LR
+        START([START]) --> classify_query{classify_query<br>三层分类}
+    end
 
-    classify_query -->|GENERAL| generate_general
+    subgraph 预处理层["② 查询预处理"]
+        direction TB
+        hyde_generate[hyde_generate<br>HyDE 假设文档生成]
+        multi_query_rewrite[multi_query_rewrite<br>Multi-Query 子查询改写]
+    end
+
+    subgraph 检索层["③ 混合检索"]
+        retrieve[retrieve<br>混合检索 → BGE 精排]
+    end
+
+    subgraph 生成层["④ 回答生成"]
+        direction TB
+        generate_rag[generate_rag<br>RAG 生成]
+        generate_direct[generate_direct<br>LLM 直答️]
+        web_search[web_search<br>Web 搜索]
+        generate_general[generate_general<br>通用直答]
+    end
+
+    subgraph 后处理层["⑤ 后处理"]
+        direction TB
+        enqueue_pending[enqueue_pending<br>低置信入队]
+        save_memory[save_memory<br>记忆保存]
+        END([END])
+    end
+
+    %% ── 层间连接 ──
+    %% web_search 的两条入边：retrieve 走左、classify_query 走右，避免交叉
+    retrieve -->|"low_web<br>低置信度+联网"| web_search
     classify_query -->|GENERAL_WEB| web_search
+
+    %% generate_general 的两条入边：web_search 走左、classify_query 走右，避免交叉
+    web_search -->|"GENERAL_WEB<br>来源"| generate_general
+    classify_query -->|GENERAL| generate_general
+
     classify_query -->|PRECISE| retrieve
     classify_query -->|VAGUE| hyde_generate
     classify_query -->|BROAD| multi_query_rewrite
@@ -237,12 +274,10 @@ flowchart TD
     hyde_generate --> retrieve
     multi_query_rewrite --> retrieve
 
-    retrieve -->|high| generate_rag
-    retrieve -->|low_web| web_search
-    retrieve -->|low_direct| generate_direct
+    retrieve -->|"high<br>高置信度"| generate_rag
+    retrieve -->|"low_direct<br>低置信度+无联网"| generate_direct
 
-    web_search -->|"来自 GENERAL_WEB"| generate_general
-    web_search -->|"来自低置信度"| generate_direct
+    web_search -->|"low_direct<br>来源"| generate_direct
 
     generate_rag --> enqueue_pending
     generate_direct --> enqueue_pending
