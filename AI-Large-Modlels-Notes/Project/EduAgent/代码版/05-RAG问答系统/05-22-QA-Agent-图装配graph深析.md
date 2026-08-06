@@ -190,7 +190,7 @@ builder.add_node("generate_rag",        generate_rag_node)         # 高置信�
 builder.add_node("web_search",          web_search_node)           # Web 搜索兜底
 builder.add_node("generate_direct",     generate_direct_node)      # 低置信度 LLM 直答
 builder.add_node("generate_general",    generate_general_node)     # 通用问题直答
-builder.add_node("enqueue_pending",     enqueue_pending_node)      # 低置信度问题入队
+builder.add_node("enqueue_pending",     enqueue_pending_node)      # 低置信度问题入队（内部按 confidence 过滤）
 builder.add_node("save_memory",         save_memory_node)          # 记忆保存
 ```
 
@@ -253,7 +253,7 @@ flowchart TD
 
     subgraph 后处理层["⑤ 后处理"]
         direction TB
-        enqueue_pending[enqueue_pending<br>低置信入队]
+        enqueue_pending[enqueue_pending<br>低置信入队<br>≥0.75跳过]
         save_memory[save_memory<br>记忆保存]
         END([END])
     end
@@ -361,14 +361,19 @@ START → classify_query → multi_query_rewrite → retrieve → ...
 
 `web_search` 既可以为 GENERAL_WEB 路径联网，也可以为低置信度路径兜底。通过 `_route_after_web_search` 区分去向。
 
-### 6.3 `enqueue_pending` 只接 low_direct 路径
+### 6.3 `enqueue_pending` 内部按 confidence 过滤
 
 ```python
 for gen_node in ("generate_rag", "generate_direct", "generate_general"):
     builder.add_edge(gen_node, "enqueue_pending")
 ```
 
-所有生成节点都走 `enqueue_pending`，但 `enqueue_pending` 内部判断 `confidence < 0.75` 时才实际写入。高置信度路径的 `enqueue_pending` 是空操作。
+所有生成节点都走 `enqueue_pending`，但节点内部按 `confidence` 过滤：
+
+- **`confidence >= 0.75`**（高置信度 RAG / 通用问题）→ 直接 `return {}`，不产生任何 DB 写入
+- **`confidence < 0.75`**（低置信度兜底）→ 写入 `knowledge_pending_queue`，供教师补充
+
+这样设计的好处：**图结构统一**（`for` 循环无需区分路径）+ **行为与课件一致**（`generate_rag` 和 `generate_general` 不会污染待补充队列）。
 
 ### 6.4 固定边 + 条件边组合
 
