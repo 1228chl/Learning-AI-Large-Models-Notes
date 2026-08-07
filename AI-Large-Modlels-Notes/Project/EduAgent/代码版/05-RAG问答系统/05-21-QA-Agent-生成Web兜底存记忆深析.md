@@ -11,16 +11,20 @@
 ```
 retrieve_node
   │
-  ├─ is_high_confidence=True → generate_rag_node → save_memory_node
+  ├─ is_high_confidence=True → generate_rag_node
   │
   └─ is_high_confidence=False → web_search_node → generate_direct_node
-       │                                              │
-       │                                    enqueue_pending_node
-       │                                              │
-       └────────────────────────────────────── save_memory_node
+       │
+       └───（低置信度路径同上）
 
 GENERAL 分支（独立路径）：
-  classify_query_node → generate_general_node → save_memory_node
+  classify_query_node → generate_general_node
+
+所有生成节点 ──→ enqueue_pending_node ──→ save_memory_node ──→ END
+                            │
+                    ┌───────┴───────┐
+               confidence ≥ 0.75   confidence < 0.75
+               ─→ 直接跳过（空操作）   ─→ 写入待补充队列
 ```
 
 ### 1.1 6 个节点的职责
@@ -31,7 +35,7 @@ GENERAL 分支（独立路径）：
 | `generate_rag_node` | 生成 | 高置信度 | `answer` + `sources` + `answer_mode="rag"` |
 | `generate_direct_node` | 生成 | 低置信度 | `answer` + `answer_mode="web_augmented"/"llm_direct"` |
 | `generate_general_node` | 生成 | query_type=GENERAL | `answer` + `answer_mode="general"/"web_augmented"` |
-| `enqueue_pending_node` | 副作用 | 低置信度 | 写 DB（不修改 State） |
+| `enqueue_pending_node` | 副作用 | 所有生成节点 | 写 DB（内部按 confidence 过滤，≥0.75 跳过） |
 | `save_memory_node` | 副作用 | 总是 | 写 DB（不修改 State） |
 
 ---
@@ -309,7 +313,7 @@ return {
 
 ---
 
-## 六、`enqueue_pending_node`：低置信度问题入队（第 861~899 行）
+## 六、`enqueue_pending_node`：低置信度问题入队（第 861~905 行）
 
 ### 6.1 函数签名
 
@@ -321,12 +325,28 @@ async def enqueue_pending_node(state: QAState) -> dict:
     当知识库无法回答学员问题时（confidence < 0.75），
     把问题记录到待补充队列，教师定期审查后补充知识库文档。
 
+    置信度 >= 0.75 时直接跳过（高置信度 RAG / 通用问题无需记录），
+    不产生任何 DB 写入。失败静默，不影响已生成的回答。返回 {} 不修改 State。
+
     ON CONFLICT DO NOTHING：幂等写入，同一问题重复触发不会产生重复记录。
-    失败静默，不影响已生成的回答。返回 {} 不修改 State。
     """
 ```
 
-### 6.2 幂等写入（第 874~895 行）
+### 6.2 置信度过滤（第 873~875 行）
+
+```python
+# 高置信度直接跳过，不需要记录待补充问题
+if state.get("confidence", 1.0) >= 0.75:
+    return {}
+```
+
+**`state.get("confidence", 1.0)`**：默认值 1.0。`generate_general_node` 不设置 confidence 字段（通用问题不涉及检索），拿到 1.0 直接跳过，不会错误入队。
+
+**0.75 阈值**：与 `_route_by_confidence` 的 `is_high_confidence` 阈值一致，保持决策逻辑统一。
+
+**设计意图**：`enqueue_pending_node` 在图层面被所有生成节点调用（`for` 循环统一连边），但内部按置信度过滤——高置信度路径走空操作，低置信度才实际写入。这样图结构简单统一，行为与课件一致。
+
+### 6.3 幂等写入（第 880~901 行）
 
 ```python
 async with AsyncSessionLocal() as session:

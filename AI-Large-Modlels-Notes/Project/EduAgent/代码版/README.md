@@ -131,7 +131,19 @@
 
 对应课件：`06-01-试卷批改Agent全景.html` ~ `06-13-端到端测试.html`
 
-> ⏳ 暂无文档，待补充
+| 步骤 | 学习文档 | 源文件 | 知识点 |
+|------|---------|--------|--------|
+| 1 | [06-02-试卷批改Agent-State与Prompts深析](06-试卷批改Agent/06-02-试卷批改Agent-State与Prompts深析.md) | `backend/agents/exam/state.py` + `prompts.py` | 5 个 Pydantic 子模型，ExamState 7 组字段，5 个 Prompt 模板 |
+| 2 | [06-03-试卷批改Agent-Word文件解析深析](06-试卷批改Agent/06-03-试卷批改Agent-Word文件解析深析.md) | `backend/agents/exam/nodes.py` 第 1~184 行 | `_sync_parse_word` 状态机，`parse_word_node`，`run_in_executor` |
+| 3 | [06-04-试卷批改Agent-题目元数据加载深析](06-试卷批改Agent/06-04-试卷批改Agent-题目元数据加载深析.md) | `backend/agents/exam/nodes.py` 第 191~267 行 | 四步合并，动态 IN 子句，以 DB 为准的合并策略 |
+| 4 | [06-05-试卷批改Agent-三轨并行-客观题规则引擎深析](06-试卷批改Agent/06-05-试卷批改Agent-三轨并行-客观题规则引擎深析.md) | `backend/agents/exam/nodes.py` 第 273~316 行 | `_normalize_answer` 标准化，`_run_objective_track` 规则批改，三轨并行总览 |
+| 5 | [06-06-试卷批改Agent-三轨并行-简答题LLM评分深析](06-试卷批改Agent/06-06-试卷批改Agent-三轨并行-简答题LLM评分深析.md) | `backend/agents/exam/nodes.py` 第 319~425 行 | Think Tool 两步流程，needs_review 阈值，分组并行，单题降级 |
+| 6 | [06-07-试卷批改Agent-三轨并行-代码题LLM评估深析](06-试卷批改Agent/06-07-试卷批改Agent-三轨并行-代码题LLM评估深析.md) | `backend/agents/exam/nodes.py` 第 428~528 行 | 三函数调用链，五维度评估，JSON 解析降级，三轨对比总结 |
+| 7 | [06-08-试卷批改Agent-三轨组装与汇总](06-试卷批改Agent/06-08-试卷批改Agent-三轨组装与汇总.md) | `backend/agents/exam/nodes.py` 第 530~737 行 | 三轨组装，汇总统计，薄弱点两路合并 |
+| 8 | [06-09-试卷批改Agent-Human-in-the-Loop与结果发布深析](06-试卷批改Agent/06-09-试卷批改Agent-Human-in-the-Loop与结果发布深析.md) | `backend/agents/exam/nodes.py` 第 740~953 行 | interrupt() 原理，教师决策，先删后插，审计日志 |
+| 9 | [06-11-试卷批改Agent-图装配graph深析](06-试卷批改Agent/06-11-试卷批改Agent-图装配graph深析.md) | `backend/agents/exam/graph.py` 全文件 | 线性链，9 节点，固定边，MemorySaver 与 HitL |
+| 10 | [06-12-试卷批改Agent-HTTP接口exam深析](06-试卷批改Agent/06-12-试卷批改Agent-HTTP接口exam深析.md) | `backend/api/v1/exam.py` 全文件 | 后台提交，防 GC，state 分叉，Command(resume) |
+| 11 | [06-13-试卷批改Agent-端到端测试深析](06-试卷批改Agent/06-13-试卷批改Agent-端到端测试深析.md) | `scripts/manual_tests/test_exam.py` 全文件 | 8 步全链路，for-else 轮询，approve/modify |
 
 ---
 
