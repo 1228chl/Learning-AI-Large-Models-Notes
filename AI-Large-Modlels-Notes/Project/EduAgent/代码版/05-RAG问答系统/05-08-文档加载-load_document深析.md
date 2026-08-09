@@ -1,9 +1,17 @@
 # 文档加载：`load_document` / `load_pdf` / `load_markdown` 深度解析
 
-> 源文件：`scripts/build_knowledge_base.py` 第 67~128 行
+> 源文件：`scripts/build_knowledge_base.py` 第 67~129 行
 > 对应课件：5.2 文档加载
 
-## 一、函数定位与三层架构
+## 一、全文行号速查表
+
+| 行号 | 函数 | 说明 |
+|-----|------|------|
+| 67~84 | `load_pdf()` | **加载 PDF**（PyPDFLoader，每页一个 Document） |
+| 87~105 | `load_markdown()` | **加载 Markdown**（TextLoader，整个文件一个 Document） |
+| 107~129 | `load_document()` | **统一入口**（简单工厂，根据扩展名路由） |
+
+### 函数定位与三层架构
 
 ```
             load_document()  ← 统一入口：根据扩展名路由
@@ -18,15 +26,17 @@
 在 `build_pipeline()` 中的调用：
 
 ```python
+# scripts/build_knowledge_base.py 第 XX 行
 docs = load_document(file_path)       # ← 这里
 chunks = split_documents(docs, file_path)  # ← 下一步
 ```
 
 ---
 
-## 二、`load_pdf`：PDF 文档加载
+## 二、`load_pdf`：PDF 文档加载（第 67~84 行）
 
 ```python
+# scripts/build_knowledge_base.py 第 67~84 行
 def load_pdf(file_path: str) -> list[Document]:
     """
     加载 PDF 文档，每页返回一个 Document。
@@ -46,6 +56,17 @@ def load_pdf(file_path: str) -> list[Document]:
     print(f"  [PDF] 加载完成：{len(pages)} 页 ← {Path(file_path).name}")
     return pages
 ```
+
+### 逐行精读
+
+| 行号 | 代码 | 说明 |
+|-----|------|------|
+| 67 | `def load_pdf(file_path: str) -> list[Document]:` | 函数签名，参数为文件路径，返回 Document 列表 |
+| 68~80 | 文档字符串 | 说明：只提取文字层、图片页不报错、metadata 含 source 和 page |
+| 81 | `loader = PyPDFLoader(file_path)` | 实例化 LangChain 的 PyPDFLoader，内部使用 PyMuPDF（fitz） |
+| 82 | `pages = loader.load()` | 调用 `load()` 方法，每页返回一个 Document |
+| 83 | `print(f"  [PDF] 加载完成：{len(pages)} 页 ...")` | 打印日志，方便调试时看到加载进度 |
+| 84 | `return pages` | 返回 Document 列表 |
 
 ### 2.1 核心逻辑
 
@@ -73,9 +94,10 @@ PDF 天然有"页"的概念，每页一个 Document 有三个好处：
 
 ---
 
-## 三、`load_markdown`：Markdown 文档加载
+## 三、`load_markdown`：Markdown 文档加载（第 87~105 行）
 
 ```python
+# scripts/build_knowledge_base.py 第 87~105 行
 def load_markdown(file_path: str) -> list[Document]:
     """
     加载 Markdown 文档，整个文件作为一个 Document 返回。
@@ -96,6 +118,18 @@ def load_markdown(file_path: str) -> list[Document]:
     print(f"  [MD]  加载完成：{char_count} 字符 ← {Path(file_path).name}")
     return docs
 ```
+
+### 逐行精读
+
+| 行号 | 代码 | 说明 |
+|-----|------|------|
+| 87 | `def load_markdown(file_path: str) -> list[Document]:` | 函数签名，参数为文件路径，返回 Document 列表 |
+| 88~99 | 文档字符串 | 强调"不在在这里做标题切分——那是 5.3 分块步骤的工作" |
+| 101 | `loader = TextLoader(file_path, encoding="utf-8")` | 实例化 LangChain 的 TextLoader，显式指定 UTF-8 编码 |
+| 102 | `docs = loader.load()` | 调用 `load()` 方法，整个文件作为一个 Document |
+| 103 | `char_count = len(docs[0].page_content)` | 计算字符数，用于日志输出 |
+| 104 | `print(f"  [MD]  加载完成：{char_count} 字符 ...")` | 打印日志 |
+| 105 | `return docs` | 返回 Document 列表（只有一个元素） |
 
 ### 3.1 和 PDF 加载的关键区别
 
@@ -133,9 +167,10 @@ TextLoader(file_path)                    # 默认用系统编码（gbk）
 
 ---
 
-## 四、`load_document`：统一入口
+## 四、`load_document`：统一入口（第 107~129 行）
 
 ```python
+# scripts/build_knowledge_base.py 第 107~129 行
 def load_document(file_path: str) -> list[Document]:
     """统一文档加载入口，根据扩展名选择 Loader"""
     path = Path(file_path)
@@ -164,6 +199,18 @@ def load_document(file_path: str) -> list[Document]:
         )
 ```
 
+### 逐行精读
+
+| 行号 | 代码 | 说明 |
+|-----|------|------|
+| 107 | `def load_document(file_path: str) -> list[Document]:` | 统一入口函数 |
+| 109 | `path = Path(file_path)` | 将字符串路径转为 `pathlib.Path` 对象 |
+| 110~111 | `if not path.exists(): raise FileNotFoundError(...)` | **第一步：路径存在性校验** |
+| 112 | `ext = path.suffix.lower()` | 提取扩展名，转小写统一处理 `.PDF` / `.pdf` |
+| 113~117 | `if ext == ".pdf": ... return pages` | **第二步：PDF 路由** → PyPDFLoader |
+| 118~122 | `elif ext in (".md", ".markdown"): ... return docs` | **第二步：MD 路由** → TextLoader（支持 `.md` 和 `.markdown`） |
+| 123~128 | `else: raise ValueError(...)` | **第三步：未知类型抛异常**，附带解决方案提示 |
+
 ### 4.1 三步逻辑
 
 ```
@@ -190,28 +237,7 @@ def load_document(file_path: str) -> list[Document]:
 
 已有代码不需要改动，符合**开闭原则**。
 
-### 4.3 `★` 给解决方案而不是只给错误
-
-```python
-raise ValueError(
-    f"不支持的文件类型：{ext}\n"
-    f"当前支持：.pdf / .md / .markdown\n"
-    f"提示：可用 markitdown 将 Word/PPT 转换为 .md 后再导入"
-)
-```
-
-对比两种写法：
-
-| 写法 | 用户体验 |
-|------|---------|
-| ❌ `"不支持的文件类型：.docx"` | 用户：那我怎么办？ |
-| ✅ `"不支持的文件类型：.docx\n提示：可用 markitdown 转换"` | 用户：哦，先转格式 |
-
-给解决方案而不是只给错误——这是好的 API 设计。
-
----
-
-## 五、为什么拆成三个函数而不是一个？
+### 4.3 为什么拆成三个函数而不是一个？
 
 ```python
 # ❌ 不推荐：一个函数干所有事
@@ -241,7 +267,7 @@ def load_markdown(file_path): ...   # 只做 Markdown 加载
 
 ---
 
-## 六、数据流全景
+## 五、数据流全景
 
 ```
 磁盘文件                           内存
@@ -261,8 +287,9 @@ def load_markdown(file_path): ...   # 只做 Markdown 加载
 在完整的 `build_pipeline` 中：
 
 ```python
+# scripts/build_knowledge_base.py 第 XX 行
 # Step 1：读取
-docs = load_document(file_path)           # ← 67~128 行，我们刚读的
+docs = load_document(file_path)           # ← 67~129 行，我们刚读的
 
 # Step 2：分块
 chunks = split_documents(docs, file_path) # ← 131~195 行
@@ -276,9 +303,44 @@ write_to_milvus(doc_chunks)               # ← 347~365 行
 
 ---
 
+## 六、调用方式与依赖
+
+### 6.1 谁调用它？
+
+三个加载函数都是 `build_knowledge_base.py` 中的**内部工具函数**，不是独立节点。它们被 `build_pipeline()` 主流水线调用：
+
+```python
+# build_knowledge_base.py 第 370~432 行
+async def build_pipeline(file_path, course_id, document_id, ...):
+    docs = load_document(file_path)           # ← 统一入口（Step 1）
+    chunks = split_documents(docs, file_path) # ← 下一步
+    ...
+```
+
+### 6.2 依赖的外部资源
+
+| 依赖 | 用途 | 来源 |
+|------|------|------|
+| `PyPDFLoader` | PDF 解析 | `langchain_community.document_loaders` |
+| `TextLoader` | Markdown 解析 | `langchain_community.document_loaders` |
+| `Path` | 文件路径判断 | Python 标准库 `pathlib` |
+| 原始文件 | 文件系统读取 | 磁盘上的 `.pdf` / `.md` 文件 |
+
+### 6.3 调用链
+
+```
+build_pipeline
+  └─ load_document(file_path)       ← 简单工厂，根据扩展名路由
+       ├─ .pdf  → load_pdf(file_path)       → list[Document]
+       ├─ .md   → load_markdown(file_path)  → list[Document]
+       └─ 其他  → raise ValueError
+```
+
+---
+
 ## 七、`★` 设计亮点总结
 
-### 7.1 三种加载策略
+### 6.1 三种加载策略
 
 | 文件类型 | Loader | 分页策略 | 输出 |
 |---------|--------|---------|------|
@@ -286,10 +348,30 @@ write_to_milvus(doc_chunks)               # ← 347~365 行
 | Markdown | `TextLoader` | 整个文件 | 一个 Document |
 | 其他 | 抛异常 + 提示 | — | 指导用户转换格式 |
 
-### 7.2 分层路由
+### 6.2 分层路由
 
 `load_document` 做路由决策，`load_pdf`/`load_markdown` 做具体加载。职责分离，方便扩展。
 
-### 7.3 容错设计
+### 6.3 容错设计
 
 PDF 图片页/扫描件不会报错，`page_content` 为空字符串，后续分块时自然过滤。单步失败不影响整个流水线。
+
+### 6.4 `★` 给解决方案而不是只给错误
+
+```python
+# scripts/build_knowledge_base.py 第 124~128 行
+raise ValueError(
+    f"不支持的文件类型：{ext}\n"
+    f"当前支持：.pdf / .md / .markdown\n"
+    f"提示：可用 markitdown 将 Word/PPT 转换为 .md 后再导入"
+)
+```
+
+对比两种写法：
+
+| 写法 | 用户体验 |
+|------|---------|
+| ❌ `"不支持的文件类型：.docx"` | 用户：那我怎么办？ |
+| ✅ `"不支持的文件类型：.docx\n提示：可用 markitdown 转换"` | 用户：哦，先转格式 |
+
+给解决方案而不是只给错误——这是好的 API 设计。

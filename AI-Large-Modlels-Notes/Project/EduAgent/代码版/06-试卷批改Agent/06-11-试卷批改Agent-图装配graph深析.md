@@ -4,6 +4,20 @@
 > 对应课件：6.11 图装配（graph.py）
 > 前置依赖：`state.py` 的 `ExamState`、`nodes.py` 的 9 个节点、`memory.py` 的 `get_memory_saver`
 
+## 全文行号速查表
+
+| 行号范围 | 代码段 | 说明 |
+|---------|--------|------|
+| 1~2 | 文件头 docstring | 图定义 |
+| 3~17 | import | StateGraph, END, ExamState, 9 个节点, get_memory_saver |
+| 20~29 | `build_exam_graph()` 签名 | 构建线性链图 |
+| 30 | `builder = StateGraph(ExamState)` | 用 ExamState 初始化 |
+| 33~41 | 注册 9 个节点 | `add_node(...)` |
+| 44~53 | 固定边（线性链） | `add_edge` 顺次连接 START → ... → END |
+| 56~57 | 编译 + MemorySaver | `builder.compile(checkpointer=...)` |
+
+---
+
 ## 一、文件定位
 
 `graph.py` 把 9 个节点组装成一条**线性链** LangGraph。与 QA Agent 不同，这里**没有条件边**——图的路径完全确定，每个节点只有一个出口。
@@ -128,6 +142,18 @@ builder.add_node("apply_teacher_decision", apply_teacher_decision_node)
 builder.add_node("publish_results",        publish_results_node)
 ```
 
+| 行号 | 代码 | 说明 |
+|:-----|:-----|:-----|
+| 33 | `builder.add_node("parse_word", parse_word_node)` | 节点①：解析 Word 文件 |
+| 34 | `builder.add_node("load_questions_meta", load_questions_meta_node)` | 节点②：加载 DB 题目元数据 |
+| 35 | `builder.add_node("run_three_tracks", run_three_tracks_node)` | 节点③：三轨并行批改 |
+| 36 | `builder.add_node("aggregate_results", aggregate_results_node)` | 节点④：汇总统计 |
+| 37 | `builder.add_node("analyze_weak_points", analyze_weak_points_node)` | 节点⑤：知识薄弱点分析 |
+| 38 | `builder.add_node("notify_teacher", notify_teacher_node)` | 节点⑥：通知教师 |
+| 39 | `builder.add_node("teacher_review", teacher_review_node)` | 节点⑦：interrupt 暂停点 |
+| 40 | `builder.add_node("apply_teacher_decision", apply_teacher_decision_node)` | 节点⑧：合并教师决策 |
+| 41 | `builder.add_node("publish_results", publish_results_node)` | 节点⑨：发布结果 |
+
 **节点命名规范**：小写蛇形，与函数名一致（去掉 `_node` 后缀）。
 
 ### 4.3 连接 10 条固定边（第 44~53 行）
@@ -183,7 +209,53 @@ return builder.compile(checkpointer=checkpointer)
 
 ---
 
-## 六、`★` 设计亮点总结
+## 六、调用方式与依赖
+
+### 6.1 谁调用 build_exam_graph？
+
+`build_exam_graph()` 在 `exam.py`（API 层）模块导入时编译一次：
+
+```python
+# exam.py 第 22 行
+from backend.agents.exam.graph import build_exam_graph
+_graph = build_exam_graph()    # 模块级单例，编译一次
+```
+
+所有请求共用同一个图实例，不重复编译。
+
+### 6.2 谁消费图实例？
+
+| 消费者 | 用途 | 方式 |
+|--------|------|------|
+| `POST /submit` | 启动后台批改 | `asyncio.create_task(_graph.ainvoke(state, config))` |
+| `GET /pending-reviews` | 读取暂停时的 State | `_graph.aget_state(config)` |
+| `GET /submissions/{id}/review` | 读取预批改详情 | `_graph.aget_state(config)` |
+| `POST /confirm` | 恢复中断的图 | `_graph.ainvoke(Command(resume=decision), config)` |
+
+### 6.3 依赖的资源
+
+| 依赖 | 用途 |
+|------|------|
+| `StateGraph` / `START` / `END` | LangGraph 图构建 |
+| `ExamState` | 图 State 类型 |
+| 9 个节点函数 | 图中的每个处理步骤 |
+| `get_memory_saver("exam")` | MemorySaver 检查点（HitL 状态保存） |
+
+---
+
+## 七、边界情况与异常处理
+
+| 场景 | 表现 | 处理 |
+|------|------|------|
+| `build_exam_graph()` 编译失败 | 模块导入时异常 | 启动时直接崩溃，开发阶段发现 |
+| 9 个节点中某个未注册 | 图执行到该节点时报错 | 添加节点时遗漏，开发阶段发现 |
+| MemorySaver 不可用 | `compile()` 时抛异常 | 检查 Milvus/Redis 连接（取决于 MemorySaver 后端） |
+| interrupt 的图被恢复时 Decision 为空 | `Command(resume=None)` | `teacher_review_node` 返回 `None`，直接跳过决策应用 |
+| 线性链中某个节点超时 | 下游节点等待 | 无内部超时，靠 API 层的 `RESUME_REVIEW_TIMEOUT_SECONDS` 兜底 |
+
+---
+
+## 八、`★` 设计亮点总结
 
 ### 6.1 线性链简化拓扑
 

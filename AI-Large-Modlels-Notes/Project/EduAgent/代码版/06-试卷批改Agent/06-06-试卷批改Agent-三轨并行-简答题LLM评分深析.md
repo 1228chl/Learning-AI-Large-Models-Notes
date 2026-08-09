@@ -4,6 +4,17 @@
 > 对应课件：6.6 三轨并行-简答题LLM评分
 > 前置依赖：`get_llm`、`get_structured_llm`、`SubjectiveReviewResult`、`SUBJECTIVE_THINK_PROMPT`、`SUBJECTIVE_REVIEW_PROMPT`
 
+## 全文行号速查表
+
+| 行号范围 | 函数/代码段 | 说明 |
+|---------|-------------|------|
+| 319~322 | 分区注释 | 节点：_run_subjective_track — 简答题 LLM 批改 |
+| 324~327 | `_run_subjective_track` 签名 | 分组并行入口 |
+| 330~377 | `_review_one_subjective` | 单题批改（Think + Review 两步，LLM 调用） |
+| 380~425 | `_run_subjective_track` 主体 | 按 needs_review 分组，并行批改，单题降级 |
+
+---
+
 ## 一、两步批改流程
 
 简答题的核心挑战：学员可能用不同的表述正确回答了同一个知识点。直接让 LLM 对照得分点评分，面对"表述不同但实质正确"的情况容易误判扣分。
@@ -38,6 +49,15 @@
 async def _review_one_subjective(q: dict) -> dict:
     """批改单道简答题，两步流程：先 Think Tool 推理，再结构化评分。"""
 ```
+
+| 行号 | 代码 | 说明 |
+|:-----|:-----|:-----|
+| 321 | `async def _review_one_subjective(q: dict) -> dict:` | 异步函数，接收单道题的合并字典 |
+| 322~323 | 文档字符串 | 说明两步流程 |
+| 324~329 | 前置准备（scoring_points_text, student_answer_text） | 格式化得分点和学员答案 |
+| 332~345 | Think Tool 推理 | 先自由推理再评分 |
+| 348~362 | 结构化评分 | 调用 `with_structured_output` |
+| 364~377 | 返回值 | 组装结果字典 |
 
 ### 2.2 前置准备（第 324~329 行）
 
@@ -80,6 +100,17 @@ except Exception as e:
     # 推理失败不影响主评分，降级为直接评分
     logger.warning("subjective_think.failed", error=str(e))
 ```
+
+| 行号 | 代码 | 说明 |
+|:-----|:-----|:-----|
+| 332 | `reasoning_trace = ""` | 初始化为空，推理失败时保持空字符串 |
+| 333~334 | `try:` | 尝试 LLM 推理 |
+| 335~339 | `think_prompt = SUBJECTIVE_THINK_PROMPT.format(...)` | 拼接 Think Tool Prompt |
+| 341 | `think_llm = get_llm("exam_subjective", temperature=0)` | 获取普通 LLM，temperature=0 保证确定性 |
+| 342 | `think_resp = await think_llm.ainvoke(...)` | 调用 LLM 推理 |
+| 343 | `reasoning_trace = _get_message_content(think_resp).strip()` | 提取推理内容 |
+| 344 | `logger.debug(...)` | 记录推理完成日志 |
+| 345~347 | `except Exception: logger.warning(...)` | 推理失败不阻断，降级为直接评分 |
 
 **`get_llm("exam_subjective", temperature=0)`**：获取一个普通 LLM 实例（非结构化输出），`temperature=0` 保证输出确定性。
 
@@ -141,6 +172,21 @@ return {
     "point_results":  [p.model_dump() for p in result.point_results],
 }
 ```
+
+| 行号 | 代码 | 说明 |
+|:-----|:-----|:-----|
+| 364 | `return {` | 返回批改结果字典 |
+| 365 | `"question_id": q["question_id"]` | 题目 ID |
+| 366 | `"question_no": q["question_no"]` | 题号 |
+| 367 | `"question_type": "short_answer"` | 题型固定为 short_answer |
+| 368 | `"knowledge_tag": q.get("knowledge_tag", "")` | 知识点标签，缺省空串 |
+| 370 | `"student_answer": q["student_answer"]` | 学员答案原样回显 |
+| 371 | `"score": result.total_score` | LLM 算出的得分 |
+| 372 | `"full_score": result.full_score` | 题目满分 |
+| 373 | `"needs_review": result.confidence < 0.7` | 低把握度标记教师复核 |
+| 374 | `"confidence": result.confidence` | LLM 评分把握度 |
+| 375 | `"ai_feedback": result.overall_comment` | 整体评语 |
+| 376 | `"point_results": [p.model_dump() for p in result.point_results]` | 逐得分点结果，Pydantic 转 dict |
 
 **`needs_review: result.confidence < 0.7`**：LLM 对自己的评分把握度打分。阈值设为 0.7 而非 0.5，课件第 2003 行解释：
 
@@ -244,7 +290,41 @@ for q, result in zip(group, group_results):
 
 ---
 
-## 四、`★` 设计亮点总结
+## 四、调用方式与依赖
+
+### 4.1 谁调用它？
+
+`_run_subjective_track` 由 `run_three_tracks_node` 在 `asyncio.gather` 中调用，与客观轨、代码轨并行：
+
+```python
+# nodes.py run_three_tracks_node 内部
+p_objective, p_subjective, p_code = await asyncio.gather(
+    _run_objective_track(objective_questions),
+    _run_subjective_track(subjective_questions),
+    _run_code_track(code_questions),
+)
+```
+
+### 4.2 依赖的资源
+
+| 依赖 | 用途 |
+|------|------|
+| `get_llm("exam")` | 普通 LLM 调用（Think Tool 推理） |
+| `get_structured_llm("exam", SubjectiveReviewResult)` | 结构化 LLM 调用（评分） |
+| `SUBJECTIVE_THINK_PROMPT` | 批改前推理 Prompt |
+| `SUBJECTIVE_REVIEW_PROMPT` | 结构化评分 Prompt |
+| `SYSTEM_PROMPT` | 系统人设 |
+
+### 4.3 输入输出
+
+| 方向 | 内容 |
+|------|------|
+| 输入 | `questions: list[dict]`（含 `scoring_points`, `student_answer`, `full_score`） |
+| 输出 | `list[dict]`（每题的 `score, needs_review, ai_feedback, point_results...`） |
+
+---
+
+## 五、`★` 设计亮点总结
 
 ### 4.1 Think Tool 两步流程
 

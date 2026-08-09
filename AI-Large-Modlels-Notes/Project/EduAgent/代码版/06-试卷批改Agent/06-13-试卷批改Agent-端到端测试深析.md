@@ -4,9 +4,44 @@
 > 对应课件：6.13 端到端测试
 > 前置条件：所有服务运行中（FastAPI + PostgreSQL）
 
+## 全文行号速查表（test_exam.py 预期结构）
+
+| 行号范围 | 函数/代码段 | 说明 |
+|---------|-------------|------|
+| 1~15 | import + 常量 | httpx, BASE_URL, SUBMISSION_ID |
+| 17~30 | `prepare_test_docx` | 生成测试用 Word 文件 |
+| 32~45 | `submit_exam` | 上传试卷提交 |
+| 47~65 | `wait_for_pending_review` | 轮询等待批改完成（for-else 超时） |
+| 67~85 | `approve_review` | 教师确认发布 |
+| 87~100 | `verify_published` | 验证发布结果 |
+| 102~120 | `modify_review` | 教师修改分数后发布 |
+| 122~140 | `main` | 主入口：8 步全链路 |
+| 142~150 | `if __name__ == "__main__"` | 直接运行 |
+
+---
+
 ## 一、测试场景总览
 
 测试脚本覆盖完整的学员→教师→发布链路：
+
+### 1.1 为什么需要端到端测试？
+
+第六章前面的文档分析了每个节点、每条路径的行为，但**节点之间的协作**（一条完整的批改链路）需要端到端测试验证。例如：
+
+- `parse_word` 解析的 Word 文件，能否被 `load_questions_meta` 正确合并 DB 元数据？
+- `run_three_tracks` 三轨批改后，`aggregate_results` 能否正确汇总？
+- `teacher_review` 的 `interrupt()` 暂停后，`POST /confirm` 能否正确恢复并发布？
+
+这些都是跨节点行为，只有真实 HTTP 请求才能验证。测试脚本启动完整服务（FastAPI + PostgreSQL + LLM），用真实请求走完学员→教师→发布链路。
+
+### 1.2 测试覆盖的链路
+
+```
+学员登录 → 提交 Word 试卷 → 等待 AI 批改（pending_review）
+    → 教师查看待确认列表 → 确认发布（approve）
+    → 学员查询已发布结果
+    → 教师修改分数后发布（modify 路径）
+```
 
 ```
 ① 学员登录 → ② 提交试卷 → ③ 轮询批改状态 → ④ 教师登录
@@ -73,6 +108,15 @@ def print_section(title: str):
     print("="*60)
 ```
 
+| 行号 | 代码 | 说明 |
+|:-----|:-----|:-----|
+| 95 | `def login(username: str, password: str) -> str:` | 登录辅助函数，返回 JWT Token |
+| 96~101 | `resp = httpx.post(...)` | POST 登录请求 |
+| 99 | `trust_env=False` | 忽略系统代理，避免本地开发被拦截 |
+| 100 | `resp.raise_for_status()` | 非 2xx 响应直接抛异常 |
+| 101 | `return resp.json()["access_token"]` | 提取 JWT Token |
+| 103~109 | `def print_section(title: str)` | 打印分隔线，美化测试输出 |
+
 **`trust_env=False`**：防止 httpx 读取系统代理环境变量（如 `HTTP_PROXY`），避免本地开发时请求被代理拦截。
 
 ### 4.2 步骤 ①~②：学员登录 + 提交试卷
@@ -102,6 +146,12 @@ submission_id = submit_result["submission_id"]
 ```python
 for attempt in range(20):
     time.sleep(5)
+```
+
+| 行号 | 代码 | 说明 |
+|:-----|:-----|:-----|
+| 138 | `for attempt in range(20):` | 最多轮询 20 次（约 100 秒超时） |
+| 139 | `time.sleep(5)` | 每次间隔 5 秒 |
     resp = httpx.get(
         f"{BASE_URL}/exam/my-submissions/{submission_id}",
         headers={"Authorization": f"Bearer {student_token}"},
@@ -238,7 +288,47 @@ resp = httpx.post(
 
 ---
 
-## 七、`★` 设计亮点总结
+## 七、调用方式与依赖
+
+### 7.1 运行方式
+
+```bash
+# 确保所有服务已启动
+cd backend
+python -m uvicorn main:app --reload --port 8000
+
+# 运行端到端测试
+python scripts/manual_tests/test_exam.py
+```
+
+### 7.2 依赖的外部服务
+
+| 服务 | 必须 | 说明 |
+|------|------|------|
+| FastAPI | ✅ | 主应用，所有 API 端点 |
+| PostgreSQL | ✅ | 试卷、题目、提交记录、批改结果 |
+| LLM API | ✅ | 模型推理（DeepSeek / OpenAI） |
+
+### 7.3 测试脚本的幂等性
+
+脚本使用固定 `submission_id`，每次运行覆盖之前的数据。`publish_results_node` 的先删后插保证幂等，重复运行不会产生重复记录。
+
+---
+
+## 八、边界情况与异常处理
+
+| 场景 | 表现 | 处理 |
+|------|------|------|
+| FastAPI 未启动 | 连接被拒绝 | 检查 `uvicorn` 是否运行 |
+| 数据库未初始化 | 试卷/题目不存在 | 先运行 `python scripts/seed_data.py` 导入测试数据 |
+| AI 批改超时（>100 秒） | `for-else` 轮询超时 | 打印超时提示，建议检查 LLM 服务状态 |
+| 教师确认时 submit 不存在 | 404 错误 | 脚本先提交再确认，顺序保证 |
+| `modify` 路径的修改列表为空 | 按 approve 处理 | 无修改项时直接发布 |
+| 网络代理干扰 | httpx 被代理拦截 | `trust_env=False` 忽略系统代理 |
+
+---
+
+## 九、`★` 设计亮点总结
 
 ### 7.1 8 步覆盖全链路
 

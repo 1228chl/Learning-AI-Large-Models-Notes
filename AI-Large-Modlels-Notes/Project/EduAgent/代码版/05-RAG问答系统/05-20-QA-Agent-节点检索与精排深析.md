@@ -1,8 +1,30 @@
 # QA Agent 节点②：检索与精排 `retrieve_node` 深度解析
 
-> 源文件：`backend/agents/qa/nodes.py` 第 498~597 行
+> 源文件：`backend/agents/qa/nodes.py`（共 969 行，本节覆盖 493~596 行）
 > 对应课件：5.13 节点②：检索与精排
 > 前置依赖：`backend/core/reranker.py` 的 `retrieve()` 函数
+> 前置节点：`classify_query_node` →（`hyde_generate_node` / `multi_query_rewrite_node`）→ `retrieve_node`
+
+## 全文行号速查表
+
+| 行号范围 | 函数/代码段 | 说明 |
+|---------|-------------|------|
+| 493~496 | 分区注释 | 节点：retrieve — 混合召回 + 精排 |
+| 497~513 | `retrieve_node` 签名 + docstring | 三条路径概述 + 同步函数注意事项 |
+| 514 | `from backend.core.reranker import retrieve, RankedDocument` | 延迟导入（避免模型加载） |
+| 516~521 | 读取 State 参数 | `query_type` / `tenant_id` / `course_id` / `original_query` |
+| 523~548 | **BROAD 路径** | 并行多 Query 检索 + 合并去重 |
+| 525 | `broad_queries = state["rewritten_queries"][:MAX_BROAD_QUERIES]` | 取子 Query 列表 |
+| 528~535 | `retrieve_one` 内部函数 | 单 Query 检索封装 |
+| 538 | `results = await asyncio.gather(...)` | 并行检索 3 个子 Query |
+| 541~548 | 合并去重 | `content[:100]` 为 key，保留最高分，取 Top-3 |
+| 550~567 | **PRECISE / VAGUE 路径** | 单路检索 |
+| 553~555 | VAGUE 分支 | 用 `hyde_document` 替代 `original_query` |
+| 556~558 | 默认分支 | 用 `original_query` + `RECALL_TOP_K_PRECISE` |
+| 560~566 | `run_in_executor` 调用 | 线程池执行同步 `retrieve()` |
+| 569~595 | **结果转换与置信度计算** | `RankedDocument` → dict + 置信度 |
+
+---
 
 ## 一、节点定位
 
@@ -28,9 +50,10 @@ classify_query_node
 
 ---
 
-## 二、函数签名（第 498~515 行）
+## 二、函数签名（第 497~513 行）
 
 ```python
+# nodes.py 第 497~513 行
 async def retrieve_node(state: QAState) -> dict:
     """
     调用 retrieve() Pipeline 完成检索与精排。
@@ -50,51 +73,23 @@ async def retrieve_node(state: QAState) -> dict:
     """
 ```
 
+| 行号 | 代码 | 说明 |
+|------|------|------|
+| 497~498 | `async def retrieve_node(state: QAState) -> dict:` | 异步检索节点 |
+| 499~513 | docstring | 三条路径说明 + 同步函数注意事项 |
+
 **输入**：`QAState`——从 State 中读取 `query_type`、`tenant_id`、`course_id`、`original_query`、`hyde_document`（VAGUE）、`rewritten_queries`（BROAD）。
 
 **输出**：`dict`——`ranked_chunks`、`confidence`、`is_high_confidence`。
 
 ---
 
-## 三、三条检索路径参数配置
-
-### 3.1 常量回顾（第 44~48 行）
+## 三、参数读取与延迟导入（第 514~521 行）
 
 ```python
-MAX_BROAD_QUERIES        = 3    # BROAD 分支最多并行的子 Query 数
-RECALL_TOP_K_PRECISE     = 8    # PRECISE：直接检索召回数
-RECALL_TOP_K_VAGUE       = 10   # VAGUE：HyDE 语义扩充后多召回些
-RECALL_TOP_K_BROAD_PER   = 4    # BROAD：每个子 Query 的召回数
-RERANK_TOP_K             = 3    # 精排后保留的最终 chunk 数
-```
-
-### 3.2 三路参数差异对比
-
-| 路径 | 检索文本 | recall_top_k | rerank_top_k | 为什么 |
-|------|---------|-------------|-------------|--------|
-| PRECISE | `original_query` | 8 | 3 | 问题明确，命中率高，8 条候选足够 |
-| VAGUE | `hyde_document` | **10** | 3 | HyDE 文档与知识库对齐有误差，多召回 2 条补偿 |
-| BROAD | 每个子 Query | 4 | **4** | 精排保留全部候选，合并后统一取 Top-3 |
-
-**BROAD 的 rerank_top_k 为什么等于 recall_top_k（都是 4）？**
-
-设为 4（等于召回数）相当于"把所有召回候选都保留"——每个子 Query 返回 4 条，3 个子 Query 最多 12 条候选，后续合并步骤统一取最优 Top-3。如果设为 3，每个子 Query 就已经丢掉了一部分候选，合并时覆盖面更窄。
-
----
-
-## 四、`retrieve_node` 逐行精读
-
-### 4.1 延迟导入（第 515 行）
-
-```python
+# nodes.py 第 514~521 行
 from backend.core.reranker import retrieve, RankedDocument
-```
 
-**为什么在函数内部 import？** 避免模块加载时触发 `reranker.py` 的导入（BGE-Reranker 模型加载约 5-10 秒）。首次调用 `retrieve_node` 时才加载模型。
-
-### 4.2 读取 State 参数（第 517~522 行）
-
-```python
 query_type     = state.get("query_type", "PRECISE").upper()
 tenant_id      = state["tenant_id"]
 course_id      = state.get("course_id")
@@ -103,26 +98,36 @@ original_query = state["original_query"]
 loop = asyncio.get_running_loop()
 ```
 
-**`state.get("query_type", "PRECISE")`**：防御性默认值。如果 `query_type` 未设置（如直接从 PRECISE 入口进入），默认走 PRECISE 路径。
+| 行号 | 代码 | 说明 |
+|------|------|------|
+| 514 | `from backend.core.reranker import retrieve, RankedDocument` | **函数内部 import**：避免模块加载时触发 BGE-Reranker 模型加载（5-10 秒） |
+| 516 | `query_type = state.get("query_type", "PRECISE").upper()` | 防御性默认值 + 大小写容错 |
+| 517 | `tenant_id = state["tenant_id"]` | 必填字段，用 `[]` 访问 |
+| 518 | `course_id = state.get("course_id")` | 可选字段，用 `.get()` 访问 |
+| 519 | `original_query = state["original_query"]` | 原始查询文本 |
+| 521 | `loop = asyncio.get_running_loop()` | 获取事件循环，后续 `run_in_executor` 使用 |
 
-**`.upper()`**：容错处理。State 中的 `query_type` 可能是小写 `"precise"`，转大写确保匹配。
+---
 
-**`state["tenant_id"]`**：使用 `[]` 而不是 `.get()`，因为 `tenant_id` 是必填字段，不应该缺失。
+## 四、BROAD 路径：并行多 Query 检索（第 523~548 行）
 
-**`state.get("course_id")`**：使用 `.get()`，因为 `course_id` 是可选字段，可能为 `None`。
-
-### 4.3 BROAD 路径：并行多 Query 检索（第 525~550 行）
+### 4.1 取子 Query 列表（第 524~525 行）
 
 ```python
+# nodes.py 第 524~525 行
 if query_type == "BROAD" and state.get("rewritten_queries"):
     broad_queries = state["rewritten_queries"][:MAX_BROAD_QUERIES]
 ```
 
-**`[:MAX_BROAD_QUERIES]`**：截断到最多 3 条子 Query。`multi_query_rewrite_node` 可能返回超过 3 条，这里做了硬限制。
+| 行号 | 代码 | 说明 |
+|------|------|------|
+| 524 | `if query_type == "BROAD" and state.get("rewritten_queries"):` | 双重检查：类型 + 子 Query 非空 |
+| 525 | `broad_queries = state["rewritten_queries"][:MAX_BROAD_QUERIES]` | 截断到最多 3 条 |
 
-#### 4.3.1 单 Query 检索封装（第 529~537 行）
+### 4.2 单 Query 检索封装（第 528~535 行）
 
 ```python
+# nodes.py 第 528~535 行
 async def retrieve_one(sub_query: str) -> tuple[list, float]:
     return await loop.run_in_executor(
         None,
@@ -134,17 +139,25 @@ async def retrieve_one(sub_query: str) -> tuple[list, float]:
     )
 ```
 
-**`retrieve_one` 是内部嵌套函数**：每个子 Query 独立调用 `retrieve()`，通过 `run_in_executor` 放入线程池执行。
+| 行号 | 代码 | 说明 |
+|------|------|------|
+| 528~529 | `async def retrieve_one(sub_query: str) -> tuple[list, float]:` | 内部嵌套函数，封装单 Query 检索 |
+| 530~535 | `await loop.run_in_executor(None, lambda: retrieve(...))` | 线程池执行同步检索 |
+| 533 | `recall_top_k=RECALL_TOP_K_BROAD_PER` | 每个子 Query 召回 4 条 |
+| 534 | `rerank_top_k=RECALL_TOP_K_BROAD_PER` | 精排也保留 4 条（不丢弃候选） |
 
-**`rerank_top_k=RECALL_TOP_K_BROAD_PER`**：BROAD 路径的精排数等于召回数（都是 4），保留所有候选供合并步骤使用。
+**`rerank_top_k=RECALL_TOP_K_BROAD_PER`（都为 4）**：BROAD 路径的精排数等于召回数，保留所有候选供合并步骤使用。
 
-#### 4.3.2 并行执行（第 540 行）
+### 4.3 并行执行（第 538 行）
 
 ```python
+# nodes.py 第 538 行
 results = await asyncio.gather(*[retrieve_one(q) for q in broad_queries])
 ```
 
-**`asyncio.gather`**：3 条子 Query 的检索任务**并行执行**。总耗时 = 最慢的单条检索时间，而不是 3 条顺序执行的时间之和。
+| 行号 | 代码 | 说明 |
+|------|------|------|
+| 538 | `results = await asyncio.gather(*[retrieve_one(q) for q in broad_queries])` | 3 条子 Query 的检索任务**并行执行** |
 
 **BROAD 路径的时序**：
 
@@ -156,9 +169,12 @@ results = await asyncio.gather(*[retrieve_one(q) for q in broad_queries])
             ↑ gather 同时启动     ↑ gather 等待所有完成
 ```
 
-#### 4.3.3 合并去重（第 542~550 行）
+总耗时 = 最慢的单条检索时间，而不是 3 条顺序执行的时间之和。
+
+### 4.4 合并去重（第 541~548 行）
 
 ```python
+# nodes.py 第 541~548 行
 seen: dict[str, RankedDocument] = {}
 for ranked_docs, _ in results:
     for doc in ranked_docs:
@@ -169,11 +185,13 @@ for ranked_docs, _ in results:
 merged = sorted(seen.values(), key=lambda x: x.score, reverse=True)[:RERANK_TOP_K]
 ```
 
-**`content[:100]` 去重 key**：文档开头 100 字符足以区分不同段落，同一段落被多次召回时前 100 字相同，去重生效。
-
-**`if key not in seen or doc.score > seen[key].score`**：发生重复时保留分数更高的那条。
-
-**`sorted(seen.values(), key=lambda x: x.score, reverse=True)[:RERANK_TOP_K]`**：按 score 降序排列，取 Top-3。
+| 行号 | 代码 | 说明 |
+|------|------|------|
+| 541 | `seen: dict[str, RankedDocument] = {}` | 去重字典，key=content 前 100 字符 |
+| 542~546 | `for ranked_docs, _ in results: for doc in ranked_docs:` | 遍历所有子 Query 的召回结果 |
+| 544 | `key = doc.content[:100]` | 文档开头 100 字符为去重 key |
+| 545 | `if key not in seen or doc.score > seen[key].score:` | 重复时保留最高分 |
+| 548 | `merged = sorted(seen.values(), key=lambda x: x.score, reverse=True)[:RERANK_TOP_K]` | 按 score 降序取 Top-3 |
 
 **BROAD 合并示例**：
 
@@ -197,11 +215,13 @@ seen 去重后：
 排序后取 Top-3：A(0.9), B(0.85), E(0.75)
 ```
 
-### 4.4 PRECISE / VAGUE 路径：单路检索（第 553~569 行）
+---
+
+## 五、PRECISE / VAGUE 路径：单路检索（第 550~567 行）
 
 ```python
+# nodes.py 第 550~567 行
 else:
-    # VAGUE 用 hyde_document 代替 original_query 检索
     if query_type == "VAGUE" and state.get("hyde_document"):
         query_text   = state["hyde_document"]
         recall_top_k = RECALL_TOP_K_VAGUE
@@ -218,6 +238,17 @@ else:
         ),
     )
 ```
+
+| 行号 | 代码 | 说明 |
+|------|------|------|
+| 550 | `else:` | 非 BROAD 路径（PRECISE / VAGUE） |
+| 553 | `if query_type == "VAGUE" and state.get("hyde_document"):` | VAGUE 双重检查 |
+| 554 | `query_text = state["hyde_document"]` | 用假设文档替换原始 query |
+| 555 | `recall_top_k = RECALL_TOP_K_VAGUE` | 10 条候选（补偿对齐误差） |
+| 556~558 | `else:` | PRECISE 默认分支 |
+| 557 | `query_text = original_query` | 用原始 query 直接检索 |
+| 558 | `recall_top_k = RECALL_TOP_K_PRECISE` | 8 条候选 |
+| 560~566 | `await loop.run_in_executor(None, lambda: retrieve(...))` | 线程池执行 |
 
 **VAGUE 路径的检索文本替换**：
 
@@ -236,11 +267,20 @@ retrieve_node 用 hyde_document 检索（而不是 original_query）
 找到"Hard Negative Sampling"相关的课程内容 ✅
 ```
 
-**`if query_type == "VAGUE" and state.get("hyde_document")`**：双重检查。即使 `query_type` 是 VAGUE，如果 `hyde_document` 为空（如 HyDE 生成失败），也回退到 `original_query`。
+**三路参数差异对比**：
 
-### 4.5 结果转换与置信度计算（第 571~597 行）
+| 路径 | 检索文本 | recall_top_k | rerank_top_k | 为什么 |
+|------|---------|-------------|-------------|--------|
+| PRECISE | `original_query` | 8 | 3 | 问题明确，命中率高，8 条候选足够 |
+| VAGUE | `hyde_document` | **10** | 3 | HyDE 文档与知识库对齐有误差，多召回 2 条补偿 |
+| BROAD | 每个子 Query | 4 | **4** | 精排保留全部候选，合并后统一取 Top-3 |
+
+---
+
+## 六、结果转换与置信度计算（第 569~595 行）
 
 ```python
+# nodes.py 第 569~595 行
 ranked_chunks = [
     {
         "content":  doc.content,
@@ -250,20 +290,35 @@ ranked_chunks = [
     for doc in merged
 ]
 
-# 置信度 = Top-1 文档的 BGE 相关性概率 [0, 1]
 confidence         = ranked_chunks[0]["score"] if ranked_chunks else 0.0
-is_high_confidence = confidence >= 0.75  # 阈值 0.75
+is_high_confidence = confidence >= 0.75
+
+logger.info(
+    "retrieve.done",
+    query_type=query_type,
+    ranked=len(ranked_chunks),
+    confidence=round(confidence, 4),
+    is_high_confidence=is_high_confidence,
+)
+
+return {
+    "ranked_chunks":      ranked_chunks,
+    "confidence":         confidence,
+    "is_high_confidence": is_high_confidence,
+}
 ```
 
-**`RankedDocument → dict` 转换**：`RankedDocument` 是 dataclass，不能直接序列化。转换为 dict 后存入 State，供后续节点使用。
-
-**`confidence = ranked_chunks[0]["score"] if ranked_chunks else 0.0`**：置信度取 Top-1 文档的 BGE-Reranker 评分。空召回时置信度为 0.0。
-
-**`is_high_confidence = confidence >= 0.75`**：预计算布尔值，生成节点直接读取，不需要自己实现阈值判断。
+| 行号 | 代码 | 说明 |
+|------|------|------|
+| 570~577 | `ranked_chunks = [{"content": doc.content, "score": doc.score, "metadata": doc.metadata} for doc in merged]` | `RankedDocument` → dict 转换，确保可序列化 |
+| 580 | `confidence = ranked_chunks[0]["score"] if ranked_chunks else 0.0` | 置信度 = Top-1 文档的 BGE-Reranker 评分 |
+| 581 | `is_high_confidence = confidence >= 0.75` | 预计算布尔值，阈值 0.75 |
+| 583~589 | `logger.info("retrieve.done", ...)` | 记录检索结果 |
+| 591~595 | `return { ... }` | 返回三个字段 |
 
 ---
 
-## 五、空召回处理
+## 七、空召回处理
 
 当 `retrieve()` 返回空结果时：
 
@@ -285,9 +340,9 @@ is_high_confidence = False        # 0.0 < 0.75
 
 ---
 
-## 六、`run_in_executor` 的必要性
+## 八、`run_in_executor` 的必要性
 
-### 6.1 retrieve() 内部的阻塞操作
+### 8.1 retrieve() 内部的阻塞操作
 
 ```python
 def retrieve(query, tenant_id, course_id, ...):
@@ -306,7 +361,7 @@ def retrieve(query, tenant_id, course_id, ...):
 
 三步都没有 `await`，在 async 函数里直接调用会阻塞整个事件循环。
 
-### 6.2 阻塞 vs 非阻塞对比
+### 8.2 阻塞 vs 非阻塞对比
 
 ```python
 # ❌ 错误：阻塞事件循环
@@ -324,7 +379,7 @@ async def retrieve_node(state):
 
 ---
 
-## 七、完整数据流
+## 九、完整数据流
 
 ```
 用户： "全面介绍商品聚合大模型微调"
@@ -364,9 +419,9 @@ retrieve_node
 
 ---
 
-## 八、`★` 设计亮点总结
+## 十、`★ Insight ───` 设计亮点总结
 
-### 8.1 三路参数差异化配置
+### 10.1 三路参数差异化配置
 
 | 路径 | recall_top_k | 理由 |
 |------|-------------|------|
@@ -374,27 +429,27 @@ retrieve_node
 | VAGUE | 10 | 补偿 HyDE 文档对齐误差 |
 | BROAD | 4 × 3 | 覆盖多角度，合并后取最优 |
 
-### 8.2 BROAD 并行检索 + 合并去重
+### 10.2 BROAD 并行检索 + 合并去重
 
 `asyncio.gather` 并行执行 3 个子 Query 的检索，`content[:100]` 做近似去重。总耗时 = 最慢的单条检索时间，而不是顺序执行的总和。
 
-### 8.3 空召回兜底
+### 10.3 空召回兜底
 
 `retrieve()` 返回 `([], 0.0)` → `confidence=0.0, is_high_confidence=False` → 走低置信度分支。不抛异常，调用方不需要 try/except。
 
-### 8.4 `run_in_executor` 防止阻塞
+### 10.4 `run_in_executor` 防止阻塞
 
 BGE-M3 编码（CPU 推理）+ Milvus 检索（同步 IO）+ CrossEncoder 精排（CPU/GPU）都是同步阻塞操作，通过线程池执行，事件循环继续运转。
 
-### 8.5 延迟导入
+### 10.5 延迟导入
 
 `from backend.core.reranker import retrieve` 在函数内部导入，避免模块加载时触发 BGE-Reranker 模型加载（5-10 秒）。
 
-### 8.6 预计算布尔值
+### 10.6 预计算布尔值
 
 `is_high_confidence` 在 `retrieve_node` 中预先计算好，生成节点直接读取，不需要自己实现阈值判断。
 
-### 8.7 防御性编程
+### 10.7 防御性编程
 
 | 代码 | 作用 |
 |------|------|

@@ -4,6 +4,17 @@
 > 对应课件：6.8 三轨组装与汇总
 > 前置节点：`run_three_tracks_node` → `aggregate_results_node` → `analyze_weak_points_node`
 
+## 全文行号速查表
+
+| 行号范围 | 函数/代码段 | 说明 |
+|---------|-------------|------|
+| 530~534 | 分区注释 | 节点：run_three_tracks / aggregate_results / analyze_weak_points |
+| 535~588 | `run_three_tracks_node` | 三轨组装：按题型分流 + `asyncio.gather` 并行 |
+| 595~627 | `aggregate_results_node` | 汇总：合并三轨结果、计算总分、统计 |
+| 634~737 | `analyze_weak_points_node` | 薄弱点分析：过滤错题、LLM 分析、两路合并 |
+
+---
+
 ## 一、三个节点的数据流
 
 ```
@@ -53,6 +64,13 @@ objective_qs  = [q for q in questions if q["question_type"] in
 subjective_qs = [q for q in questions if q["question_type"] == "short_answer"]
 code_qs       = [q for q in questions if q["question_type"] == "code"]
 ```
+
+| 行号 | 代码 | 说明 |
+|:-----|:-----|:-----|
+| 546 | `questions = state["parsed_questions"]` | 读取合并后的完整题目列表 |
+| 548~549 | `objective_qs = [q for q in questions if q["question_type"] in (...)]` | 过滤出客观题（单选/多选/判断） |
+| 550 | `subjective_qs = [q for q in questions if q["question_type"] == "short_answer"]` | 过滤出简答题 |
+| 551 | `code_qs = [q for q in questions if q["question_type"] == "code"]` | 过滤出代码题 |
 
 **三个列表推导式**按 `question_type` 分流，每道题只进入对应的轨道。
 
@@ -304,7 +322,45 @@ final_weak_points.sort(key=lambda x: x.get("wrong_count", 0), reverse=True)
 
 ---
 
-## 五、`★` 设计亮点总结
+## 五、调用方式与依赖
+
+### 5.1 三个节点的调用链
+
+```
+run_three_tracks_node → aggregate_results_node → analyze_weak_points_node
+      （三轨组装）            （汇总统计）            （薄弱点分析）
+```
+
+三个节点在 `graph.py` 中按固定边顺序连接：
+
+```python
+# graph.py 第 35~37 行 + 第 47~49 行
+builder.add_node("run_three_tracks",    run_three_tracks_node)
+builder.add_node("aggregate_results",   aggregate_results_node)
+builder.add_node("analyze_weak_points", analyze_weak_points_node)
+builder.add_edge("run_three_tracks",    "aggregate_results")
+builder.add_edge("aggregate_results",   "analyze_weak_points")
+```
+
+### 5.2 各节点依赖的 State 字段
+
+| 节点 | 读 | 写 |
+|------|-----|-----|
+| `run_three_tracks_node` | `parsed_questions` | `objective_results` / `subjective_results` / `code_results` |
+| `aggregate_results_node` | 三轨结果 | `pre_review_summary` |
+| `analyze_weak_points_node` | `pre_review_summary` | `weak_points` / `weak_points_summary` |
+
+### 5.3 依赖的外部资源
+
+| 依赖 | 用途 |
+|------|------|
+| `get_llm("exam")` | 薄弱点分析 LLM 调用 |
+| `WEAK_POINTS_ANALYSIS_PROMPT` | 薄弱点分析 Prompt |
+| `AsyncSessionLocal` | PostgreSQL 查询（如需 DB 数据） |
+
+---
+
+## 六、`★` 设计亮点总结
 
 ### 5.1 三轨完全并行
 

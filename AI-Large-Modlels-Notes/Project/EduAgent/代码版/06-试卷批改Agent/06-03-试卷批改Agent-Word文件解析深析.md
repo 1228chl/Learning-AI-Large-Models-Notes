@@ -4,6 +4,18 @@
 > 对应课件：6.3 Word 文件解析（parse_word_node）
 > 前置依赖：`python-docx`、`asyncio`、`ExamState`
 
+## 全文行号速查表
+
+| 行号范围 | 函数/符号 | 类型 | 说明 |
+|---------|----------|------|------|
+| 1~30 | import | 导入 | 标准库 + 第三方 + 项目内部模块 |
+| 37~43 | `_get_message_content` | 函数 | 统一提取消息文本内容 |
+| 46~53 | `_chinese_to_int` | 函数 | 中文数字转整数 |
+| 60~153 | `_sync_parse_word` | 函数 | 同步 Word 解析（状态机：题头→答案→代码块） |
+| 156~184 | `parse_word_node` | 异步函数 | 异步节点包装（线程池 + 日志） |
+
+---
+
 ## 一、文件定位
 
 `nodes.py` 是试卷批改 Agent 的所有节点函数集合。6.3 节只写了前两个函数：`_sync_parse_word`（同步解析）和 `parse_word_node`（异步节点包装）。
@@ -403,9 +415,49 @@ except Exception as e:
 
 ---
 
-## 六、`★` 设计亮点总结
+## 六、调用方式与依赖
 
-### 6.1 状态机逐行解析
+### 6.1 谁调用 parse_word_node？
+
+`parse_word_node` 是图装配中的**第一个节点**，由 `graph.py` 注册并连接：
+
+```python
+# graph.py 第 33 行 + 第 44 行
+builder.add_node("parse_word", parse_word_node)
+builder.add_edge(START, "parse_word")
+```
+
+| 行号 | 代码 | 说明 |
+|:-----|:-----|:-----|
+| 33 | `builder.add_node("parse_word", parse_word_node)` | 在图中注册 `parse_word` 节点，绑定 `parse_word_node` 异步函数 |
+| 44 | `builder.add_edge(START, "parse_word")` | 将图起点 `START` 连接到 `parse_word` 节点，使其成为执行链的第一个节点 |
+
+调用链：`graph.ainvoke()` → `parse_word_node` → `_sync_parse_word`（线程池）→ 产出 `parsed_questions` → 交给 `load_questions_meta_node`。
+
+### 6.2 依赖的 State 字段
+
+| 字段 | 读/写 | 说明 |
+|------|------|------|
+| `word_file_path` | 读 | 学员作答 Word 文件的本地临时路径 |
+| `parsed_questions` | 写 | 解析出的题目列表（初步，仅含学员答案） |
+
+### 6.3 依赖的外部资源
+
+| 依赖 | 用途 |
+|------|------|
+| `python-docx` | Word 文件解析（`Document(word_path)`） |
+| `asyncio.run_in_executor` | 线程池执行同步解析 |
+| `backend.core.logger.get_logger` | 结构化日志 |
+
+### 6.4 下游消费者
+
+`parsed_questions` 被 `load_questions_meta_node`（节点②）消费——它从 DB 加载题目元数据，覆盖 `parsed_questions`，补充题型、得分点、正确答案。
+
+---
+
+## 七、`★` 设计亮点总结
+
+### 7.1 状态机逐行解析
 
 4 个状态变量驱动整个解析逻辑，对每行只有 5 种判断：
 
@@ -417,18 +469,18 @@ except Exception as e:
 | 代码块内 | 保留原始缩进 |
 | 普通行 | 跳过模板提示，提取 `答：`，否则原文 |
 
-### 6.2 代码题特殊处理
+### 7.2 代码题特殊处理
 
 代码题的答案在闭合 ```` ` 时**立即写入**，而不是在最后统一写入。`is_code` 标记防止最后统一赋值时覆盖已写入的代码内容。
 
-### 6.3 `答：` 前缀剥离
+### 7.3 `答：` 前缀剥离
 
 解析器自动提取 `答：` / `答:` / `Answer:` 后的内容，避免 `"答：A"` 这种"前缀+答案"污染 `student_answer`。
 
-### 6.4 `run_in_executor` 桥接同步 ↔ 异步
+### 7.4 `run_in_executor` 桥接同步 ↔ 异步
 
 `python-docx` 是同步库，不能直接在 async 节点中调用。`run_in_executor` 把同步函数放到线程池，`await` 等待结果，是 LangGraph 中处理同步阻塞操作的**标准模式**。
 
-### 6.5 优雅降级
+### 7.5 优雅降级
 
 解析失败时返回空列表而非崩溃，后续节点从 DB 补全题目信息，最终教师人工补批。这种"逐级降级"设计保证系统在部分故障时仍能运行。

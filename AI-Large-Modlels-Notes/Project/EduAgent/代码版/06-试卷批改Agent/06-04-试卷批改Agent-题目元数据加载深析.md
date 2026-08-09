@@ -5,6 +5,20 @@
 > 前置节点：`parse_word_node`
 > 涉及表：`questions`、`scoring_points`
 
+## 全文行号速查表
+
+| 行号范围 | 函数/代码段 | 说明 |
+|---------|-------------|------|
+| 191~194 | 分区注释 | 节点：load_questions_meta — 题目元数据加载 |
+| 195~198 | `load_questions_meta_node` 签名 | async def，读 ExamState，返回 dict |
+| 201~211 | 第 1 步：SQL 加载题目列表 | `SELECT ... FROM questions WHERE exam_id = :exam_id` |
+| 214~230 | 第 2 步：SQL 加载得分点 | `SELECT ... FROM scoring_points WHERE question_id = ANY(...)` |
+| 233~240 | 第 3 步：聚合得分点 | 按 question_id 聚合为 list |
+| 243~258 | 第 4 步：以 DB 为主合并 | 题号匹配，填 student_answer，找不到的填空字符串 |
+| 260~267 | 写入 State | `return {"parsed_questions": merged}` |
+
+---
+
 ## 一、为什么需要这个节点？
 
 `parse_word_node` 只能从 Word 文档里提取**学员写了什么**（`student_answer`），但批改需要知道：
@@ -276,7 +290,56 @@ for q in questions:
 
 ---
 
-## 九、`★` 设计亮点总结
+## 九、调用方式与依赖
+
+### 9.1 谁调用它？
+
+`load_questions_meta_node` 是图装配中的**第二个节点**，在 `parse_word_node` 之后执行：
+
+```python
+# graph.py 第 34 行 + 第 45 行
+builder.add_node("load_questions_meta", load_questions_meta_node)
+builder.add_edge("parse_word", "load_questions_meta")
+```
+
+| 行号 | 代码 | 说明 |
+|:-----|:-----|:-----|
+| 34 | `builder.add_node("load_questions_meta", load_questions_meta_node)` | 将 `load_questions_meta_node` 注册为图中的 `load_questions_meta` 节点，供后续按名引用 |
+| 45 | `builder.add_edge("parse_word", "load_questions_meta")` | 添加 `parse_word → load_questions_meta` 的固定顺序边，保证解析完成后才执行元数据加载 |
+
+### 9.2 依赖的 State 字段
+
+| 字段 | 读/写 | 说明 |
+|------|------|------|
+| `exam_id` | 读 | 试卷 ID，用于查询 DB |
+| `parsed_questions` | 读+写 | 读取 parse_word 的解析结果，写入完整的元数据 |
+
+### 9.3 依赖的 DB 表
+
+| 表 | 查询内容 | 用途 |
+|----|---------|------|
+| `questions` | 题目列表（按 exam_id 过滤） | 题目 ID、题型、内容、正确答案、满分、知识点标签 |
+| `scoring_points` | 得分点列表（按 question_id 过滤） | 简答题得分点（ID、描述、分值） |
+
+### 9.4 下游消费者
+
+`parsed_questions`（完整版）被三轨批改节点消费：`run_three_tracks_node` 读取 `question_type` 决定走哪条轨道（客观题/简答题/代码题），并读取 `scoring_points` 和 `correct_answer` 作为批改依据。
+
+---
+
+## 十、边界情况与异常处理
+
+| 场景 | 表现 | 处理 |
+|------|------|------|
+| DB 查询失败（exams 表不存在） | `text("SELECT ...")` 抛异常 | 异常上抛到节点，图执行中断，由 API 层捕获 |
+| 无匹配的 scoring_points | `sp_by_question` 为空 | `scoring_points` 为空列表，不影响节点执行 |
+| parsed_questions 为空 | `parsed_by_no` 为空 | 合并后所有题目 `student_answer` 为空字符串，教师人工补批 |
+| 解析结果中有 DB 不存在的题号 | 该题号在 `parsed_by_no` 中但不在 DB 列表 | 该题被忽略（不进入批改流程），打印日志 |
+| 同一 exam_id 有重复的 question_no | 后一条覆盖前一条 | 预期不会发生，DB 有唯一约束 |
+
+---
+
+## 十一、`★` 设计亮点总结
 
 ### 9.1 以 DB 为准的合并策略
 

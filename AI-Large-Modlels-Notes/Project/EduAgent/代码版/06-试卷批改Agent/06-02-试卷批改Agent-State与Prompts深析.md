@@ -4,6 +4,32 @@
 > 对应课件：6.2 State 与 Prompts
 > 前置依赖：`pydantic`、`langgraph`、`langchain-core`
 
+## 全文行号速查表
+
+### state.py（98 行）
+
+| 行号范围 | 标识符 | 类型 | 说明 |
+|---------|--------|------|------|
+| 1~7 | import | 导入 | TypedDict, BaseModel, add_messages, BaseMessage |
+| 14~21 | `ScoringPointResult` | class | 单个得分点评分结果 |
+| 24~32 | `SubjectiveReviewResult` | class | 简答题整题批改结果 |
+| 35~41 | `WeakPoint` | class | 单个知识薄弱点 |
+| 44~47 | `WeakPointsReport` | class | 薄弱点分析报告 |
+| 50~54 | `TeacherDecision` | class | 教师确认决策 |
+| 61~98 | `ExamState` | class | 试卷批改完整 State（8 组字段） |
+
+### prompts.py（116 行）
+
+| 行号范围 | 标识符 | 类型 | 说明 |
+|---------|--------|------|------|
+| 4~10 | `SYSTEM_PROMPT` | 常量 | 系统人设（严谨、公正的 IT 助教） |
+| 14~43 | `SUBJECTIVE_REVIEW_PROMPT` | 常量 | 简答题逐得分点评分 |
+| 47~64 | `SUBJECTIVE_THINK_PROMPT` | 常量 | 批改前推理分析 |
+| 68~92 | `CODE_QUALITY_REVIEW_PROMPT` | 常量 | 代码题五维度质量评估 |
+| 96~117 | `WEAK_POINTS_ANALYSIS_PROMPT` | 常量 | 知识薄弱点分析 |
+
+---
+
 ## 一、文件定位
 
 `state.py` 和 `prompts.py` 是试卷批改 Agent 所有节点的"契约"——节点之间通过 State 传递数据，通过 Prompts 生成文本。
@@ -33,6 +59,14 @@ from langgraph.graph.message import add_messages
 from langchain_core.messages import BaseMessage
 from pydantic import BaseModel
 ```
+
+| 行号 | 代码 | 说明 |
+|:-----|:-----|:-----|
+| 3 | `from typing import Annotated, Optional` | 导入 `Annotated`（用于 `messages` 字段的 reducer 注解）与 `Optional` |
+| 4 | `from typing_extensions import TypedDict` | 导入 `TypedDict`，用于定义 LangGraph 的 `ExamState` |
+| 5 | `from langgraph.graph.message import add_messages` | 导入 `add_messages`，`messages` 字段的追加 reducer |
+| 6 | `from langchain_core.messages import BaseMessage` | 导入消息基类，作为 `messages` 列表的元素类型 |
+| 7 | `from pydantic import BaseModel` | 导入 Pydantic 基类，用于定义 5 个子模型 |
 
 | import | 来源 | 用途 |
 |--------|------|------|
@@ -85,6 +119,17 @@ class ScoringPointResult(BaseModel):
     missing:     str   # earned=False 时填未得分原因
 ```
 
+| 行号 | 代码 | 说明 |
+|:-----|:-----|:-----|
+| 14 | `class ScoringPointResult(BaseModel):` | 类定义，Pydantic BaseModel |
+| 15 | `"""单个得分点的评分结果"""` | 文档字符串 |
+| 16 | `point_id: str` | 得分点 ID |
+| 17 | `point_desc: str` | 得分点描述 |
+| 18 | `point_score: int` | 该得分点满分 |
+| 19 | `earned: bool` | 是否得分 |
+| 20 | `evidence: str` | 得分原文（earned=True 时填） |
+| 21 | `missing: str` | 扣分原因（earned=False 时填） |
+
 **`evidence` / `missing` 互斥**：`earned=True` 时填 `evidence`（得分依据=学员原文），`earned=False` 时填 `missing`（未得分原因）。一个得分点要么有"得分原文"，要么有"扣分原因"，**不能同时为空**。这是**可追溯性**设计——老师的批改必须能展示依据，不能只给一个分数。
 
 ### 3.2 `SubjectiveReviewResult`：中层——整道简答题（第 24~32 行）
@@ -100,6 +145,18 @@ class SubjectiveReviewResult(BaseModel):
     point_results:   list[ScoringPointResult]
     overall_comment: str
 ```
+
+| 行号 | 代码 | 说明 |
+|:-----|:-----|:-----|
+| 24 | `class SubjectiveReviewResult(BaseModel):` | 类定义，Pydantic BaseModel |
+| 25 | `"""简答题批改结果（LLM 结构化输出）"""` | 文档字符串 |
+| 26 | `question_id: str` | 题目 ID |
+| 27 | `student_answer: str` | 学员答案（回显，追溯用） |
+| 28 | `total_score: int` | LLM 算出的得分（各得分点累加） |
+| 29 | `full_score: int` | 题目满分 |
+| 30 | `confidence: float` | 评分把握度 [0,1]，<0.7 标记需复核 |
+| 31 | `point_results: list[ScoringPointResult]` | 各得分点评分结果列表 |
+| 32 | `overall_comment: str` | 整体评语 |
 
 **`confidence` 贯穿设计**：LLM 给自己评分的把握度打分。当 `confidence < 0.7` 时，该题自动标记 `needs_review=True`，进入教师必须人工确认的列表。
 
@@ -123,6 +180,20 @@ class WeakPointsReport(BaseModel):
     overall_summary: str         # 整体评价，不超过50字
 ```
 
+| 行号 | 代码 | 说明 |
+|:-----|:-----|:-----|
+| 35 | `class WeakPoint(BaseModel):` | 类定义，单个知识薄弱点 |
+| 36 | `"""单个知识薄弱点"""` | 文档字符串 |
+| 37 | `tag: str` | 知识点标签，如 `"Spring IOC"` |
+| 38 | `wrong_count: int` | 该知识点下的错题数 |
+| 39 | `total_count: int` | 该知识点下的总题数 |
+| 40 | `question_nos: list[int]` | 涉及的题目序号列表（可跳转） |
+| 41 | `suggestion: str` | 针对该知识点的复习建议 |
+| 44 | `class WeakPointsReport(BaseModel):` | 类定义，薄弱点分析报告 |
+| 45 | `"""知识薄弱点分析报告（LLM 结构化输出）"""` | 文档字符串 |
+| 46 | `weak_points: list[WeakPoint]` | 薄弱点列表 |
+| 47 | `overall_summary: str` | 整体评价，不超过 50 字 |
+
 **`question_nos` 是"可点击跳转"设计**：记录该知识点下的出错题号，教师看报告时可以直接跳到对应题目核查。
 
 **`overall_summary` 限 50 字**：约束 LLM 输出简洁，避免长篇大论。
@@ -137,6 +208,14 @@ class TeacherDecision(BaseModel):
     teacher_id:    str
 ```
 
+| 行号 | 代码 | 说明 |
+|:-----|:-----|:-----|
+| 50 | `class TeacherDecision(BaseModel):` | 类定义，教师确认决策 |
+| 51 | `"""教师确认决策（interrupt 恢复时传入）"""` | 文档字符串 |
+| 52 | `action: str` | 决策动作：`"approve"` 全部通过 / `"modify"` 带修改 |
+| 53 | `modifications: list[dict]` | 修改列表，宽松结构，不强校验 |
+| 54 | `teacher_id: str` | 教师 ID |
+
 **这是 HitL（Human-in-the-Loop）的输入**：教师不是直接改分数，而是传一个决策对象。`action="approve"` 表示全部通过，`action="modify"` 表示带了修改列表。`modifications` 用 `list[dict]` 而非强类型子模型，因为它是**教师自由输入的宽松结构**，不需要强校验。
 
 ---
@@ -149,6 +228,31 @@ class TeacherDecision(BaseModel):
 class ExamState(TypedDict):
     """试卷批改 Agent 完整 State"""
 ```
+
+| 行号 | 代码 | 说明 |
+|:-----|:-----|:-----|
+| 61 | `class ExamState(TypedDict):` | 定义 LangGraph 图 State，继承 `TypedDict` |
+| 62 | `"""试卷批改 Agent 完整 State"""` | 文档字符串 |
+| 65 | `messages: Annotated[list[BaseMessage], add_messages]` | 对话消息列表，唯一带 reducer 追加的字段 |
+| 66 | `student_id: str` | 学员 ID |
+| 67 | `tenant_id: str` | 租户 ID |
+| 68 | `session_id: str` | 会话 ID |
+| 69 | `exam_id: str` | 试卷 ID |
+| 70 | `submission_id: str` | 提交记录 ID |
+| 71 | `word_file_path: str` | 学员作答 Word 文件本地路径 |
+| 74 | `parsed_questions: list[dict]` | 解析+DB 合并后的完整题目列表 |
+| 77 | `objective_results: list[dict]` | 客观题批改结果 |
+| 78 | `subjective_results: list[dict]` | 简答题批改结果 |
+| 79 | `code_results: list[dict]` | 代码题评估结果 |
+| 82 | `pre_review_summary: dict` | 三轨汇总预批改结果 |
+| 85 | `weak_points: list[dict]` | 知识薄弱点列表 |
+| 86 | `weak_points_summary: str` | 薄弱点整体评价 |
+| 89 | `teacher_notified: bool` | 教师是否已通知 |
+| 90 | `teacher_decision: Optional[dict]` | 教师决策（中断恢复时传入） |
+| 93 | `final_results: list[dict]` | 最终批改结果 |
+| 94 | `published: bool` | 结果是否已发布 |
+| 97 | `fallback_used: bool` | 降级标记 |
+| 98 | `structured_output: Optional[dict]` | 结构化输出（降级时用） |
 
 ### 4.2 7 组字段完整列表
 
@@ -227,6 +331,16 @@ SYSTEM_PROMPT = """你是 EduAgent 智能助教，专门辅助 IT 培训课程�
 - 对有争议的内容保持保守评分，宁可偏低并标记复核，不随意给高分"""
 ```
 
+| 行号 | 代码 | 说明 |
+|:-----|:-----|:-----|
+| 4 | `SYSTEM_PROMPT = """你是 EduAgent 智能助教...` | 定义系统人设常量，无占位符的静态 Prompt |
+| 5 | `（空行）` | 占位分隔，保持 Prompt 可读性 |
+| 6 | `【批改原则】` | 批改原则标题 |
+| 7 | `- 严格按照得分点评分，不随意加减分` | 原则一：严守得分点，不随意加减 |
+| 8 | `- 给出明确的得分依据，指出学员答案中的具体内容` | 原则二：评分依据可追溯 |
+| 9 | `- 评语简洁专业，指出核心问题，避免空泛表扬或批评` | 原则三：评语简洁，避免空泛 |
+| 10 | `- 对有争议的内容保持保守评分，宁可偏低并标记复核，不随意给高分` | 原则四：保守评分，从严不放松 |
+
 **注入方式**：作为 `SystemMessage` 注入到每个批改请求。**没有占位符**（`{}`），是纯静态人设。
 
 **"保守评分宁可偏低"**：这是关键设计。AI 批改宁可判严一点并标记复核，也不能给高分放水——因为给错高分会让学员误以为自己学会了。**错误方向的选择**：AI 批改的错误偏向"从严"是安全的。
@@ -265,6 +379,29 @@ SUBJECTIVE_REVIEW_PROMPT = """请按照以下得分点批改学员的简答题�
   "overall_comment": "<1-2句整体评语，指出最核心的问题或亮点>"
 }}"""
 ```
+
+| 行号 | 代码 | 说明 |
+|:-----|:-----|:-----|
+| 14 | `SUBJECTIVE_REVIEW_PROMPT = """请按照以下得分点批改学员的简答题作答。` | 定义简答批改主 Prompt |
+| 17 | `{question_content}` | 题干占位符，由调用方填充 |
+| 19 | `【得分点（共{full_score}分）】` | 得分点标题，含满分占位符 |
+| 20 | `{scoring_points}` | 标准得分点列表占位符 |
+| 23 | `{student_answer}` | 学员答案占位符 |
+| 25 | `请严格按照得分点逐条评分，输出以下 JSON 结构...` | 要求按得分点逐条评分并输出 JSON |
+| 27 | `"question_id": ""` | 题目 ID 字段 |
+| 28 | `"student_answer": "{student_answer}"` | 回显学员答案，追溯用 |
+| 29 | `"total_score": <整数，各得分点累加>` | 总得分（各得分点累加） |
+| 30 | `"full_score": {full_score}` | 满分 |
+| 31 | `"confidence": <0.0-1.0，评分把握度...>` | 把握度，不确定时给低分 |
+| 32 | `"point_results": [` | 得分点结果列表，逐点评分 |
+| 34 | `"point_id": "<得分点ID...>"` | 得分点 ID |
+| 35 | `"point_desc": "<得分点描述>"` | 得分点描述 |
+| 36 | `"point_score": <该得分点满分>` | 该得分点满分 |
+| 37 | `"earned": <true/false>` | 是否得分 |
+| 38 | `"evidence": "<学员答案中对应的原文...>"` | 得分依据原文（earned=true 必填） |
+| 39 | `"missing": "<未得分的原因...>"` | 扣分原因（earned=false 必填） |
+| 42 | `"overall_comment": "<1-2句整体评语...>"` | 整体评语，指出最核心问题或亮点 |
+| 43 | `}}"""` | Prompt 结束，`}}` 转义为字面 `}` |
 
 #### 3 个占位符
 
@@ -317,6 +454,19 @@ SUBJECTIVE_THINK_PROMPT = """在批改这道简答题之前，请先进行深入
 直接输出分析内容，不加任何前缀标签。"""
 ```
 
+| 行号 | 代码 | 说明 |
+|:-----|:-----|:-----|
+| 47 | `SUBJECTIVE_THINK_PROMPT = """在批改这道简答题之前，请先进行深入分析。` | 定义批改前推理 Prompt |
+| 50 | `{question_content}` | 题干占位符 |
+| 53 | `{scoring_points}` | 标准得分点占位符 |
+| 56 | `{student_answer}` | 学员作答占位符 |
+| 58 | `请分析以下几点（中文，5-8句话）：` | 要求分析 4 个方面，5-8 句话 |
+| 59 | `1. 学员是否理解了题目的核心概念？` | 分析点一：核心概念理解 |
+| 60 | `2. 逐一检查每个得分点：...` | 分析点二：逐得分点对照 |
+| 61 | `3. 有没有表述模糊但实质正确、不应扣分的内容？` | 分析点三：模糊但实质正确的容错 |
+| 62 | `4. 有没有明显的概念错误或理解偏差？` | 分析点四：明显错误确认 |
+| 64 | `直接输出分析内容，不加任何前缀标签。"""` | 要求纯文本输出，无前缀标签 |
+
 **这是"两步批改"的第一步**：
 1. 先让 LLM **自由推理**（不约束输出格式）→ 分析写进 `reasoning_trace`
 2. 把这段推理**追加到主批改 Prompt 末尾** → 让结构化评分参考这段分析
@@ -354,6 +504,25 @@ CODE_QUALITY_REVIEW_PROMPT = """请对以下代码题的学员提交代码进行
 - 部分正确：{full_score} × 0.4
 - 未提交或完全错误：0"""
 ```
+
+| 行号 | 代码 | 说明 |
+|:-----|:-----|:-----|
+| 68 | `CODE_QUALITY_REVIEW_PROMPT = """请对以下代码题的学员提交代码进行质量评估。` | 定义代码质量评估 Prompt |
+| 71 | `{question}` | 题目要求占位符 |
+| 74 | `{code}` | 学员代码占位符 |
+| 76 | `请从以下5个维度评估代码质量，总分 {full_score} 分...` | 要求 5 维度评估，总分由占位符控制 |
+| 78 | `"score": <整数，0到{full_score}>` | 总评分，范围 0~full_score |
+| 79 | `"feedback": [` | 5 个维度评价的列表 |
+| 80 | `"<维度1评价：代码规范性...>"` | 维度一：代码规范性 |
+| 81 | `"<维度2评价：命名可读性...>"` | 维度二：命名可读性 |
+| 82 | `"<维度3评价：算法效率...>"` | 维度三：算法效率 |
+| 83 | `"<维度4评价：异常处理...>"` | 维度四：异常处理 |
+| 84 | `"<维度5评价：注释质量...>"` | 维度五：注释质量 |
+| 88 | `评分参考：` | 四档评分参考 |
+| 89 | `- 代码基本正确且规范：{full_score} × 0.9` | 第一档：基本正确且规范 |
+| 90 | `- 功能正确但不够规范：{full_score} × 0.7` | 第二档：功能正确，规范性不足 |
+| 91 | `- 部分正确：{full_score} × 0.4` | 第三档：部分正确 |
+| 92 | `- 未提交或完全错误：0"""` | 第四档：未提交或完全错误 |
 
 #### 不同于简答题：这是"整体评分 + 维度评价"
 
@@ -393,13 +562,64 @@ WEAK_POINTS_ANALYSIS_PROMPT = """你是一位经验丰富的 IT 课程教师，�
 }}"""
 ```
 
+| 行号 | 代码 | 说明 |
+|:-----|:-----|:-----|
+| 96 | `WEAK_POINTS_ANALYSIS_PROMPT = """你是一位经验丰富的 IT 课程教师...` | 定义知识薄弱点分析 Prompt |
+| 99 | `{wrong_questions}` | 错题/扣分题清单占位符 |
+| 101 | `【说明】` | 操作说明标题 |
+| 102 | `- 上方列出了本次试卷中学员答错或扣分的题目...` | 说明输入内容 |
+| 103 | `- 请将这些题目归纳到对应的知识点...` | 说明归纳输出目标 |
+| 105 | `请输出以下 JSON 结构...` | 要求按 JSON 结构输出 |
+| 107 | `"weak_points": [` | 薄弱点列表 |
+| 109 | `"tag": "<知识点名称...>"` | 知识点标签 |
+| 110 | `"wrong_count": <该知识点下的错题数>` | 错题数 |
+| 111 | `"total_count": <...若不确定填与wrong_count相同>` | 总题数，宽容性引导 |
+| 112 | `"question_nos": [<题目序号列表>]` | 涉及题号列表 |
+| 113 | `"suggestion": "<具体复习建议，1-2句>"` | 复习建议 |
+| 116 | `"overall_summary": "<整体表现的简短评价...不超过50字>"` | 整体评价，限 50 字 |
+| 117 | `}}"""` | Prompt 结束 |
+
 **操作规程**：输入是"错题/扣分题清单"（含题目内容和错误原因），输出是**错误归纳**到知识点 + 复习建议。
 
 **`total_count` 的"若不确定填与 wrong_count 相同"**：这是对 LLM 的宽容性引导——防止 LLM 因不确定而不填或编造。`total_count` 用于计算薄弱度（如错了 3 题 / 共 5 题 = 60% 薄弱），但数据不全时退化为 100%，仍能指导优先级。
 
 ---
 
-## 六、`★` 设计亮点总结
+## 六、调用方式与依赖
+
+### 6.1 谁消费 state.py？
+
+`state.py` 定义的 `ExamState` 和子模型被所有节点和 API 层共享：
+
+| 消费者 | 用途 | 方式 |
+|--------|------|------|
+| `nodes.py`（10 个节点） | 读写 `ExamState` 字段 | `from backend.agents.exam.state import ExamState` |
+| `graph.py` | 初始化 `StateGraph(ExamState)` | 图构建时传入 State 类型 |
+| `exam.py`（API 层） | 构造初始 State、读取结果 | 传入 `initial_state` dict |
+| LLM 函数调用 | `with_structured_output(SubjectiveReviewResult)` | 子模型作为 Schema |
+
+### 6.2 谁消费 prompts.py？
+
+| Prompt | 消费节点 | 功能 |
+|--------|---------|------|
+| `SYSTEM_PROMPT` | `_review_one_subjective` / `_llm_code_review` | 系统人设 |
+| `SUBJECTIVE_REVIEW_PROMPT` | `_review_one_subjective` | 简答题批改 |
+| `SUBJECTIVE_THINK_PROMPT` | `_review_one_subjective` | 批改前推理 |
+| `CODE_QUALITY_REVIEW_PROMPT` | `_llm_code_review` | 代码题评估 |
+| `WEAK_POINTS_ANALYSIS_PROMPT` | `analyze_weak_points_node` | 薄弱点分析 |
+
+### 6.3 依赖的外部资源
+
+| 依赖 | 用途 |
+|------|------|
+| `pydantic.BaseModel` | 子模型定义，`with_structured_output` 的 Schema |
+| `langchain_core.messages.BaseMessage` | 消息类型 |
+| `langgraph.graph.message.add_messages` | `messages` 字段的 reducer |
+| `typing_extensions.TypedDict` | `ExamState` 定义 |
+
+---
+
+## 七、`★` 设计亮点总结
 
 ### 6.1 软硬结合的输出控制
 

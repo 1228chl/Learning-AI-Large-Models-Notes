@@ -4,6 +4,18 @@
 > 对应课件：6.9 Human-in-the-Loop
 > 关键依赖：`langgraph.types.interrupt`、`Command(resume=...)`
 
+## 全文行号速查表
+
+| 行号范围 | 函数/代码段 | 说明 |
+|---------|-------------|------|
+| 740~743 | 分区注释 | 节点：notify_teacher / teacher_review / apply_teacher_decision / publish_results |
+| 744~764 | `notify_teacher_node` | 更新状态为 pending_review |
+| 771~800 | `teacher_review_node` | `interrupt()` 暂停点，等待教师决策 |
+| 807~845 | `apply_teacher_decision_node` | 合并教师决策（approve 或 modify） |
+| 852~953 | `publish_results_node` | 发布结果：先删后插 + 日志审计 |
+
+---
+
 ## 一、四个节点的数据流
 
 ```
@@ -29,6 +41,23 @@ analyze_weak_points → notify_teacher → teacher_review → apply_teacher_deci
 | `teacher_review_node` | `interrupt()` 暂停图，等教师决策 | `interrupt(display_data)` |
 | `apply_teacher_decision_node` | 按教师决策合并分数 | `approve` 或 `modify` |
 | `publish_results_node` | 写库发布 | `exam_reviews` 先删后插，更新 `status='published'` |
+
+### 为什么需要 Human-in-the-Loop？
+
+AI 批改试卷的准确率**不是 100%**——尤其简答题的评分主观性强，LLM 可能误判"不同表述但实质正确"的答案。直接让 AI 全量发布结果，学员可能看到不合理的分数。
+
+**Human-in-the-Loop（HitL）** 在 AI 批改和最终发布之间插入一个"教师审核"环节：
+
+```
+AI 批改完成 → 教师审核 → 批准/修改 → 发布
+      ↑ 自动的           ↑ 人工的        ↑ 两者的结合
+```
+
+教师可以：
+- **approve**：AI 批改结果没问题，直接发布
+- **modify**：调整部分题目的分数，保留 AI 批改的其他部分
+
+这样既发挥了 AI 批改的效率优势（自动批改 90% 的题目），又保留了教师的最终决策权（对争议题目人工复核）。
 
 ---
 
@@ -85,6 +114,16 @@ async def notify_teacher_node(state: ExamState) -> dict:
     return {"teacher_notified": True}
 ```
 
+| 行号 | 代码 | 说明 |
+|:-----|:-----|:-----|
+| 744 | `async def notify_teacher_node(state: ExamState) -> dict:` | 异步节点函数，接收 ExamState |
+| 745~748 | 文档字符串 | 说明功能：推进状态到 pending_review |
+| 749~750 | `async with AsyncSessionLocal() as session:` | 创建异步 DB 会话 |
+| 751 | `async with session.begin():` | 事务开始 |
+| 752~758 | `await session.execute(text("UPDATE ..."), ...)` | 更新 status 为 pending_review |
+| 761 | `logger.info(...)` | 记录通知完成日志 |
+| 762 | `return {"teacher_notified": True}` | 标记教师已通知 |
+
 **只做一件事**：更新数据库状态为 `pending_review`。教师轮询 `GET /pending-reviews` 接口就能看到新提交。
 
 **`return {"teacher_notified": True}`**：标记 State，表示教师已被告知。
@@ -124,6 +163,14 @@ logger.info(
 
 return {"teacher_decision": teacher_decision}
 ```
+
+| 行号 | 代码 | 说明 |
+|:-----|:-----|:-----|
+| 790 | `teacher_decision = interrupt(display_data)` | 冻结图，等待教师决策；恢复时返回 decision |
+| 791~795 | `logger.info("teacher_review.resumed", ...)` | 记录恢复日志 |
+| 792 | `submission_id=state["submission_id"]` | 记录提交 ID |
+| 793 | `action=teacher_decision.get("action", "unknown")` | 记录教师动作（approve/modify） |
+| 797 | `return {"teacher_decision": teacher_decision}` | 把决策存入 State，供 apply_teacher_decision 读取 |
 
 **`interrupt()` 执行时**：图冻结，State 保存，等待外部恢复。
 
@@ -256,6 +303,20 @@ for r in final_results:
 
 **`DELETE + INSERT` 幂等**：先按 `submission_id + question_id` 删除旧记录，再插入新记录。这样即使重复发布（如教师点了两次发布），也不会产生重复记录。
 
+| 行号 | 代码 | 说明 |
+|:-----|:-----|:-----|
+| 260 | `# 先删后插：避免重复发布时产生重复记录` | 注释说明幂等策略 |
+| 261~268 | `DELETE FROM exam_reviews WHERE submission_id=... AND question_id=...` | 先删除旧批改记录 |
+| 269~301 | `INSERT INTO exam_reviews (...)` | 插入新批改记录 |
+| 274 | `ai_score, ai_feedback, ai_raw_result` | AI 原始评分、反馈、完整 JSON |
+| 275 | `teacher_score, teacher_comment, final_score` | 教师调整后的分数、评语、最终分 |
+| 276 | `needs_review, reviewed_by, reviewed_at` | 复核标记、审核人、审核时间 |
+| 294 | `"ai_raw_result": json.dumps(r)` | 完整批改结果存 JSON（审计日志） |
+| 295 | `"teacher_score": r.get("teacher_score")` | None 表示教师未修改该题 |
+| 300 | `"reviewed_by": teacher_id` | 记录审核教师 ID |
+
+**`DELETE + INSERT` 幂等**：先按 `submission_id + question_id` 删除旧记录，再插入新记录。这样即使重复发布（如教师点了两次发布），也不会产生重复记录。
+
 **`ai_raw_result: json.dumps(r)`**：把整道题的完整批改结果（包括 `point_results`、`quality_feedback` 等）以 JSON 格式存入数据库。这是"审计日志"——以后可以追溯 AI 当时是怎么评的。
 
 ### 6.3 更新提交状态（第 914~929 行）
@@ -302,7 +363,57 @@ return {
 
 ---
 
-## 七、`★` 设计亮点总结
+## 七、调用方式与依赖
+
+### 7.1 谁调用这四个节点？
+
+四个节点在 `graph.py` 中按固定边连接，构成 HitL 的核心链路：
+
+```python
+# graph.py 第 38~40 行 + 第 50~53 行
+builder.add_node("notify_teacher",         notify_teacher_node)
+builder.add_node("teacher_review",         teacher_review_node)
+builder.add_node("apply_teacher_decision", apply_teacher_decision_node)
+builder.add_node("publish_results",        publish_results_node)
+builder.add_edge("notify_teacher",          "teacher_review")
+builder.add_edge("teacher_review",          "apply_teacher_decision")
+builder.add_edge("apply_teacher_decision",  "publish_results")
+```
+
+### 7.2 谁触发 interrupt 恢复？
+
+`teacher_review_node` 的 `interrupt()` 冻结图后，由 **API 层** `POST /submissions/{id}/confirm` 用 `Command(resume=decision)` 恢复：
+
+```
+学员提交 → 图执行到 teacher_review → interrupt() 冻结
+                                    ↓
+教师 GET /pending-reviews 查看 → POST /confirm → Command(resume=decision)
+                                    ↓
+图恢复，interrupt() 返回 decision → apply_teacher_decision → publish_results
+```
+
+### 7.3 依赖的 State 字段
+
+| 字段 | 节点 | 读/写 |
+|------|------|------|
+| `teacher_notified` | `notify_teacher_node` | 写 |
+| `teacher_decision` | `teacher_review_node` / `apply_teacher_decision_node` | 读+写 |
+| `final_results` | `apply_teacher_decision_node` | 写 |
+| `published` | `publish_results_node` | 写 |
+| `structured_output` | `publish_results_node` | 写 |
+
+### 7.4 依赖的外部资源
+
+| 依赖 | 用途 |
+|------|------|
+| `langgraph.types.interrupt` | 冻结图 |
+| `langgraph.types.Command` | 恢复图 |
+| `MemorySaver` | 保存/恢复中断时的 State |
+| `AsyncSessionLocal` | PostgreSQL 写入（发布结果、审计日志） |
+
+---
+
+## 八、`★` 设计亮点总结
 
 ### 7.1 `interrupt()` 实现 Human-in-the-Loop
 

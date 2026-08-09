@@ -4,6 +4,17 @@
 > 对应课件：6.5 三轨并行-客观题规则引擎
 > 前置数据：`load_questions_meta_node` 合并后的完整题目字典
 
+## 全文行号速查表
+
+| 行号范围 | 函数/代码段 | 说明 |
+|---------|-------------|------|
+| 273~278 | 分区注释 | 节点：run_three_tracks — 三轨并行批改 |
+| 280~316 | `_normalize_answer` | 答案标准化（大小写/空格/逗号/排序） |
+| 283~303 | `_run_objective_track` | 客观题规则批改（标准化比对 + 全有全无评分） |
+| 306~316 | 输出结构 | `is_correct, score, needs_review=False` |
+
+---
+
 ## 一、三轨并行总览
 
 `run_three_tracks_node` 把题目按题型分成三轨并行批改：
@@ -171,9 +182,61 @@ results.append({
 
 ---
 
-## 四、`★` 设计亮点总结
+## 四、调用方式与依赖
 
-### 4.1 规则引擎 vs LLM 的选择
+### 4.1 谁调用它？
+
+`_run_objective_track` 由 `run_three_tracks_node` 在 `asyncio.gather` 中调用，与简答轨、代码轨并行：
+
+```python
+# nodes.py run_three_tracks_node 内部（约 535~588 行）
+p_objective, p_subjective, p_code = await asyncio.gather(
+    _run_objective_track(objective_questions),
+    _run_subjective_track(subjective_questions),
+    _run_code_track(code_questions),
+)
+```
+
+| 行号 | 代码 | 说明 |
+|:-----|:-----|:-----|
+| 561 | `raw = await asyncio.gather(` | 启动三轨并行，同时等待所有协程完成 |
+| 562 | `    _run_objective_track(objective_qs),` | 第一轨：客观题规则引擎批改 |
+| 563 | `    _run_subjective_track(subjective_qs),` | 第二轨：简答题 LLM 语义评分 |
+| 564 | `    _run_code_track(code_qs),` | 第三轨：代码题 LLM 质量评估 |
+| 565 | `    return_exceptions=True,` | 单轨异常不中断其他轨，异常作为返回值处理 |
+| 566 | `)` | 结束 gather 调用 |
+
+### 4.2 输入输出
+
+| 方向 | 内容 | 说明 |
+|------|------|------|
+| 输入 | `questions: list[dict]` | 客观题列表（含 `student_answer`, `correct_answer`, `full_score`） |
+| 输出 | `list[dict]` | 每题的批改结果（`is_correct, score, needs_review=False`） |
+
+### 4.3 依赖的 State 字段
+
+| 字段 | 读/写 | 说明 |
+|------|------|------|
+| `parsed_questions` | 读 | 从 `question_type` 过滤出客观题 |
+| `objective_results` | 写 | 客观轨批改结果 |
+
+---
+
+## 五、边界情况与异常处理
+
+| 场景 | 表现 | 处理 |
+|------|------|------|
+| `student_answer` 为空 | `_normalize_answer("")` → `""` | 与 `correct_answer` 比对不相等 → 判错，score=0 |
+| `correct_answer` 为空 | `_normalize_answer("")` → `""` | 若学员也没填则判对（罕见），DB 通常有正确答案 |
+| 多选题答案为 `"AB"` 和 `"BA"` | 排序后都变 `"AB"` | 判对，选项顺序无关 |
+| 答案含中英文混合逗号 | 统一去除 | 判对，消除格式差异 |
+| `question_type` 不含客观题 | `objective_questions` 为空 | `_run_objective_track` 返回空列表，不影响其他两轨 |
+
+---
+
+## 六、`★` 设计亮点总结
+
+### 6.1 规则引擎 vs LLM 的选择
 
 | 题型 | 批改方式 | 原因 |
 |:-----|:---------|:-----|
