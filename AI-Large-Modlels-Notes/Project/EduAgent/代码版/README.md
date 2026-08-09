@@ -151,7 +151,20 @@
 
 对应课件：`07-00-模拟面试Agent概览.html` ~ `07-13-端到端测试.html`
 
-> ⏳ 暂无文档，待补充
+| 步骤 | 学习文档 | 源文件 | 知识点 |
+|------|---------|--------|--------|
+| 1 | [07-02-模拟面试Agent-State与枚举](07-模拟面试Agent/07-02-模拟面试Agent-State与枚举.md) | `backend/agents/interview/state.py` | InterviewState 22 字段，InterviewStage 五状态，AnswerQuality 四等级 |
+| 2 | [07-03-模拟面试Agent-Prompts全解析](07-模拟面试Agent/07-03-模拟面试Agent-Prompts全解析.md) | `backend/agents/interview/prompts.py` | 11 个提示词，5 场景×2 输出方式，三合一提示词 |
+| 3 | [07-04-会话初始化与上下文加载](07-模拟面试Agent/07-04-会话初始化与上下文加载.md) | `nodes.py` 第 49~196 行 | load_context_node，首轮vs非首轮，三重并发加载 |
+| 4 | [07-05-阶段推进与状态机控制](07-模拟面试Agent/07-05-阶段推进与状态机控制.md) | `nodes.py` 第 199~297 行 | check_stage_node，min/max 双阈值，force_end_keywords |
+| 5 | [07-06-回答质量评估与Think工具](07-模拟面试Agent/07-06-回答质量评估与Think工具.md) | `nodes.py` 第 300~368 行 | evaluate_answer_node，两步流程，三层降级 |
+| 6 | [07-07-面试官回应生成（上）](07-模拟面试Agent/07-07-面试官回应生成（上）.md) | `nodes.py` 第 371~506 行 | generate_response_node 分派，_respond_warmup，_respond_tech_base，追问/换题决策 |
+| 7 | [07-08-面试官回应生成（下）](07-模拟面试Agent/07-08-面试官回应生成（下）.md) | `nodes.py` 第 509~589 行 | _respond_project 四条路径，_respond_closing 两种状态 |
+| 8 | [07-09-面试报告生成](07-模拟面试Agent/07-09-面试报告生成.md) | `nodes.py` 第 592~665 行 | generate_report_node，双层输入，重试+兜底报告 |
+| 9 | [07-10-结果持久化与记忆保存](07-模拟面试Agent/07-10-结果持久化与记忆保存.md) | `nodes.py` 第 668~753 行 | save_report_node，save_memory_node，UPSERT，两级持久化 |
+| 10 | [07-11-图装配](07-模拟面试Agent/07-11-图装配.md) | `backend/agents/interview/graph.py` | 条件边，循环拓扑，每轮子图执行 |
+| 11 | [07-12-HTTP接口interview](07-模拟面试Agent/07-12-HTTP接口interview.md) | `backend/api/v1/interview.py` | 5 端点，SSE 流式，astream_events 精准过滤 |
+| 12 | [07-13-端到端测试](07-模拟面试Agent/07-13-端到端测试.md) | `scripts/manual_tests/itv_07_13_e2e.py` | 正常流程，强制结束，SSE 流式验证 |
 
 ---
 
@@ -159,7 +172,15 @@
 
 对应课件：`08-01-系统集成全景.html` ~ `08-07-端到端测试.html`
 
-> ⏳ 暂无文档，待补充
+| 步骤 | 学习文档 | 源文件 | 知识点 |
+|------|---------|--------|--------|
+| 1 | [08-01-系统集成全景](08-系统集成/08-01-系统集成全景.md) | —（概念） | 前四章造了什么，统一入口生命周期，两种执行模式 |
+| 2 | [08-02-Orchestrator-Schema与单Agent直达](08-系统集成/08-02-Orchestrator-Schema与单Agent直达.md) | `orchestrator.py` 第 1~212 行 | AgentType/ExecutionMode 枚举，AgentRequest/AgentResponse，懒加载，_run_single_agent |
+| 3 | [08-03-Orchestrator-多Agent串联Pipeline](08-系统集成/08-03-Orchestrator-多Agent串联Pipeline.md) | `orchestrator.py` 第 214~340 行 | _run_pipeline，上下文传递，简历<60 分终止，_aggregate_pipeline，单例 |
+| 4 | [08-04-统一入口-前置拦截与LLM路由](08-系统集成/08-04-统一入口-前置拦截与LLM路由.md) | `unified_chat.py` 第 1~287 行 | _pre_filter 五类拦截，_llm_route 六类路由，label 映射 |
+| 5 | [08-05-统一入口-SSE分发](08-系统集成/08-05-统一入口-SSE分发.md) | `unified_chat.py` 第 290~464 行 | unified_chat_stream 四分支，_stream_qa_agent，pipeline_plan 分工 |
+| 6 | [08-06-路由聚合与main集成](08-系统集成/08-06-路由聚合与main集成.md) | `router.py` + `main.py` | 六个 router 聚合，lifespan，模型预热，MCP 挂载 |
+| 7 | [08-07-端到端测试](08-系统集成/08-07-端到端测试.md) | `test_unified_chat_e2e.py` | 全部路由分支，SSE 事件序列验证，日志确认 |
 
 ---
 
@@ -255,3 +276,42 @@
 - [05-05-QA-Agent-节点函数](05-RAG问答系统/05-05-QA-Agent-节点函数.md)
 - [05-06-QA-Agent-图装配与API](05-RAG问答系统/05-06-QA-Agent-图装配与API.md)
 - [05-07-MCP工具](05-RAG问答系统/05-07-MCP工具.md)
+
+### 06-试卷批改 Agent
+
+- [06-02-试卷批改Agent-State与Prompts深析](06-试卷批改Agent/06-02-试卷批改Agent-State与Prompts深析.md)
+- [06-03-试卷批改Agent-Word文件解析深析](06-试卷批改Agent/06-03-试卷批改Agent-Word文件解析深析.md)
+- [06-04-试卷批改Agent-题目元数据加载深析](06-试卷批改Agent/06-04-试卷批改Agent-题目元数据加载深析.md)
+- [06-05-试卷批改Agent-三轨并行-客观题规则引擎深析](06-试卷批改Agent/06-05-试卷批改Agent-三轨并行-客观题规则引擎深析.md)
+- [06-06-试卷批改Agent-三轨并行-简答题LLM评分深析](06-试卷批改Agent/06-06-试卷批改Agent-三轨并行-简答题LLM评分深析.md)
+- [06-07-试卷批改Agent-三轨并行-代码题LLM评估深析](06-试卷批改Agent/06-07-试卷批改Agent-三轨并行-代码题LLM评估深析.md)
+- [06-08-试卷批改Agent-三轨组装与汇总](06-试卷批改Agent/06-08-试卷批改Agent-三轨组装与汇总.md)
+- [06-09-试卷批改Agent-Human-in-the-Loop与结果发布深析](06-试卷批改Agent/06-09-试卷批改Agent-Human-in-the-Loop与结果发布深析.md)
+- [06-11-试卷批改Agent-图装配graph深析](06-试卷批改Agent/06-11-试卷批改Agent-图装配graph深析.md)
+- [06-12-试卷批改Agent-HTTP接口exam深析](06-试卷批改Agent/06-12-试卷批改Agent-HTTP接口exam深析.md)
+- [06-13-试卷批改Agent-端到端测试深析](06-试卷批改Agent/06-13-试卷批改Agent-端到端测试深析.md)
+
+### 07-模拟面试 Agent
+
+- [07-02-模拟面试Agent-State与枚举](07-模拟面试Agent/07-02-模拟面试Agent-State与枚举.md)
+- [07-03-模拟面试Agent-Prompts全解析](07-模拟面试Agent/07-03-模拟面试Agent-Prompts全解析.md)
+- [07-04-会话初始化与上下文加载](07-模拟面试Agent/07-04-会话初始化与上下文加载.md)
+- [07-05-阶段推进与状态机控制](07-模拟面试Agent/07-05-阶段推进与状态机控制.md)
+- [07-06-回答质量评估与Think工具](07-模拟面试Agent/07-06-回答质量评估与Think工具.md)
+- [07-07-面试官回应生成（上）](07-模拟面试Agent/07-07-面试官回应生成（上）.md)
+- [07-08-面试官回应生成（下）](07-模拟面试Agent/07-08-面试官回应生成（下）.md)
+- [07-09-面试报告生成](07-模拟面试Agent/07-09-面试报告生成.md)
+- [07-10-结果持久化与记忆保存](07-模拟面试Agent/07-10-结果持久化与记忆保存.md)
+- [07-11-图装配](07-模拟面试Agent/07-11-图装配.md)
+- [07-12-HTTP接口interview](07-模拟面试Agent/07-12-HTTP接口interview.md)
+- [07-13-端到端测试](07-模拟面试Agent/07-13-端到端测试.md)
+
+### 08-系统集成
+
+- [08-01-系统集成全景](08-系统集成/08-01-系统集成全景.md)
+- [08-02-Orchestrator-Schema与单Agent直达](08-系统集成/08-02-Orchestrator-Schema与单Agent直达.md)
+- [08-03-Orchestrator-多Agent串联Pipeline](08-系统集成/08-03-Orchestrator-多Agent串联Pipeline.md)
+- [08-04-统一入口-前置拦截与LLM路由](08-系统集成/08-04-统一入口-前置拦截与LLM路由.md)
+- [08-05-统一入口-SSE分发](08-系统集成/08-05-统一入口-SSE分发.md)
+- [08-06-路由聚合与main集成](08-系统集成/08-06-路由聚合与main集成.md)
+- [08-07-端到端测试](08-系统集成/08-07-端到端测试.md)

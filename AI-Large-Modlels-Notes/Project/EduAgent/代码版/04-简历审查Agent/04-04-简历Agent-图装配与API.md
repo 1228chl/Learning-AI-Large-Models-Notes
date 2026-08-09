@@ -39,8 +39,8 @@ State       = 贯穿全图的"工单"
 | 23~27 | `_get_graph()` | 获取线程本地的图实例 |
 | 34~45 | `_mark_review_failed()` | 标记审查失败（幂等） |
 | 48~131 | `POST /upload` | 上传简历，触发异步审查 |
-| 134~185 | `GET /reviews/{id}` | 查询审查结果/状态 |
-| 188~201 | `DELETE /reviews/{id}` | 删除审查记录 |
+| 134~185 | `GET /reviews/{review_id}` | 查询审查结果/状态 |
+| 188~201 | `DELETE /reviews/{review_id}` | 删除审查记录 |
 | 204~227 | `GET /reviews` | 历史列表 |
 
 ---
