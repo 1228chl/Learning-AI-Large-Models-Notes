@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MCP 的设计与运行原理｜教学信息图</title>
+  <style>
+    * { box-sizing: border-box; }
+    html, body { width: 100%; height: 100%; margin: 0; overflow: hidden; background: #dfeaf5; }
+    body { display: grid; place-items: center; font-family: "Microsoft YaHei", "PingFang SC", "Noto Sans SC", sans-serif; }
+    #wrap { position: relative; width: 100vw; height: 100vh; display: grid; place-items: center; }
+    #infographic { width: min(100vw, calc(100vh * 16 / 9)); height: min(100vh, calc(100vw * 9 / 16)); display: block; }
+    .controls { position: absolute; z-index: 10; top: max(8px, calc((100vh - min(100vh, 100vw * 9 / 16)) / 2 + 8px)); right: max(14px, calc((100vw - min(100vw, 100vh * 16 / 9)) / 2 + 22px)); display: flex; gap: 7px; }
+    .controls button { height: 30px; padding: 0 13px; border-radius: 9px; border: 1px solid #bdd1e8; background: rgba(255,255,255,.9); color: #355778; font: 700 13px "Microsoft YaHei", sans-serif; box-shadow: 0 5px 14px rgba(49,83,125,.12); cursor: pointer; }
+    .controls .primary { background: #2368e8; color: #fff; border-color: #2368e8; }
+    .scene { transition: opacity .32s ease, filter .32s ease; }
+    #infographic.playing .scene { opacity: .34; filter: saturate(.55); }
+    #infographic.playing .scene.live { opacity: 1; filter: saturate(1.08); }
+    .flow-dot { opacity: 0; transition: opacity .25s ease; }
+    #infographic.playing .flow-dot { opacity: 1; }
+    body.export .controls { display: none; }
+    body.export *, body.export *::before, body.export *::after { animation: none !important; transition: none !important; }
+  </style>
+</head>
+<body>
+  <div id="wrap">
+    <div class="controls" aria-label="流程播放控制">
+      <button class="primary" id="play">播放流程</button>
+      <button id="previous" aria-label="Previous step">&#19978;&#19968;&#27493;</button>
+      <button id="next" aria-label="Next step">&#19979;&#19968;&#27493;</button>
+      <button id="pause">暂停</button>
+      <button id="all">显示全部</button>
+    </div>
+
+    <svg id="infographic" xmlns="http://www.w3.org/2000/svg" width="1920" height="1080" viewBox="0 0 1920 1080" role="img" aria-labelledby="svgTitle svgDesc">
+      <title id="svgTitle">MCP：AI 应用连接外部世界的统一协议</title>
+      <desc id="svgDesc">展示 MCP 出现的原因、Host Client Server 的位置关系、数据库调用及结果返回流程。</desc>
+
+      <defs>
+        <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0" stop-color="#f9fcff"/><stop offset=".52" stop-color="#edf5fc"/><stop offset="1" stop-color="#f8fbff"/>
+        </linearGradient>
+        <radialGradient id="halo" cx="50%" cy="50%" r="50%">
+          <stop offset="0" stop-color="#75b8ff" stop-opacity=".24"/><stop offset="1" stop-color="#75b8ff" stop-opacity="0"/>
+        </radialGradient>
+        <linearGradient id="brand" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0" stop-color="#1458d2"/><stop offset=".65" stop-color="#2c8cf1"/><stop offset="1" stop-color="#43b9cf"/>
+        </linearGradient>
+        <linearGradient id="navyGrad" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0" stop-color="#102a56"/><stop offset="1" stop-color="#1b57a3"/>
+        </linearGradient>
+        <linearGradient id="appGrad" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0" stop-color="#e9f6ff" stop-opacity=".98"/><stop offset="1" stop-color="#f6fbff" stop-opacity=".9"/>
+        </linearGradient>
+        <linearGradient id="serverGrad" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0" stop-color="#ffffff"/><stop offset="1" stop-color="#e8f4ff"/>
+        </linearGradient>
+        <linearGradient id="orangeGrad" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0" stop-color="#f07d2d"/><stop offset="1" stop-color="#ffb063"/>
+        </linearGradient>
+        <linearGradient id="greenGrad" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0" stop-color="#129f80"/><stop offset="1" stop-color="#48c5aa"/>
+        </linearGradient>
+        <pattern id="grid" width="44" height="44" patternUnits="userSpaceOnUse">
+          <path d="M44 0H0V44" fill="none" stroke="#477eb6" stroke-opacity=".10" stroke-width="1"/>
+        </pattern>
+        <filter id="shadow" x="-20%" y="-20%" width="140%" height="150%">
+          <feDropShadow dx="0" dy="12" stdDeviation="16" flood-color="#315b8d" flood-opacity=".14"/>
+        </filter>
+        <filter id="softShadow" x="-20%" y="-20%" width="140%" height="150%">
+          <feDropShadow dx="0" dy="7" stdDeviation="8" flood-color="#315b8d" flood-opacity=".12"/>
+        </filter>
+        <marker id="arrowOrange" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0 0L10 5 0 10Z" fill="#f28a3a"/></marker>
+        <marker id="arrowGreen" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0 0L10 5 0 10Z" fill="#19a98a"/></marker>
+        <marker id="arrowBlue" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0 0L10 5 0 10Z" fill="#397ed3"/></marker>
+        <style>
+          text { font-family: "Microsoft YaHei", "PingFang SC", "Noto Sans SC", sans-serif; }
+          .ink { fill:#21385a; } .navy { fill:#102a56; } .blue { fill:#2368e8; } .muted { fill:#61728d; }
+          .t9{font-size:9px}.t10{font-size:10px}.t11{font-size:11px}.t12{font-size:12px}.t13{font-size:13px}.t14{font-size:14px}.t15{font-size:15px}.t16{font-size:16px}.t17{font-size:17px}.t18{font-size:18px}.t19{font-size:19px}.t20{font-size:20px}.t22{font-size:22px}.t24{font-size:24px}.t46{font-size:46px}
+          .w600{font-weight:600}.w700{font-weight:700}.w800{font-weight:800}.w900{font-weight:900}
+          .panel{fill:#fff;fill-opacity:.84;stroke:#9bb8d7;stroke-opacity:.42;stroke-width:1.2}
+          .card{fill:#fff;stroke:#c4d6e8;stroke-width:1.2}
+          .center{text-anchor:middle}.right{text-anchor:end}
+          .mono{font-family:Consolas,"DejaVu Sans Mono",monospace}
+          .dash{stroke-dasharray:8 8}
+        </style>
+      </defs>
+
+      <!-- 背景与装饰 -->
+      <rect width="1920" height="1080" fill="url(#bg)"/>
+      <rect width="1920" height="880" fill="url(#grid)" opacity=".56"/>
+      <circle cx="1425" cy="235" r="410" fill="url(#halo)"/>
+      <circle cx="1870" cy="480" r="310" fill="none" stroke="#377fd0" stroke-opacity=".09" stroke-width="1.5"/>
+      <circle cx="1870" cy="480" r="220" fill="none" stroke="#377fd0" stroke-opacity=".08" stroke-width="1.5"/>
+
+      <!-- 顶部标题 -->
+      <g class="scene" data-scene="summary">
+        <rect x="44" y="35" width="70" height="70" rx="21" fill="url(#brand)" filter="url(#softShadow)"/>
+        <path d="M64 79V62c0-6 4-10 10-10h5M94 62v17c0 6-4 10-10 10h-5" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round"/>
+        <rect x="72" y="61" width="16" height="20" rx="5" fill="none" stroke="#fff" stroke-width="3"/>
+        <circle cx="64" cy="84" r="5" fill="#91e8ef"/><circle cx="94" cy="57" r="5" fill="#ffd08f"/>
+        <text x="137" y="49" class="t15 w800" fill="#4d75a6" letter-spacing="2.7">MODEL CONTEXT PROTOCOL</text>
+        <text x="137" y="90" class="t46 w900 navy">MCP：AI 应用连接外部世界的统一协议</text>
+        <text x="139" y="121" class="t22 w700" fill="#526985"><tspan fill="#2368e8">Host</tspan> 负责管理　·　<tspan fill="#2368e8">Client</tspan> 负责通信　·　<tspan fill="#2368e8">Server</tspan> 负责暴露能力</text>
+        <rect x="1321" y="40" width="555" height="82" rx="20" fill="url(#navyGrad)" filter="url(#softShadow)"/>
+        <circle cx="1354" cy="81" r="18" fill="#fff" fill-opacity=".13" stroke="#fff" stroke-opacity=".27"/>
+        <text x="1354" y="89" class="t24 w900 center" fill="#ffca82">!</text>
+        <text x="1382" y="72" class="t17 w700" fill="#fff">MCP Server 不是数据库或业务系统本身，</text>
+        <text x="1382" y="98" class="t17 w700" fill="#fff">而是它们前面的<tspan fill="#ffcd8b" class="w900">协议适配层</tspan></text>
+      </g>
+
+      <!-- 左侧：为什么需要 MCP -->
+      <g class="scene" data-scene="why">
+        <rect x="42" y="151" width="382" height="648" rx="24" class="panel" filter="url(#shadow)"/>
+        <rect x="63" y="171" width="29" height="29" rx="9" fill="url(#brand)"/>
+        <text x="77.5" y="191" class="t14 w900 center" fill="#fff">01</text>
+        <text x="104" y="194" class="t24 w900 navy">为什么会有 MCP？</text>
+      </g>
+
+      <g class="scene" data-scene="before">
+        <rect x="62" y="215" width="342" height="302" rx="18" fill="#fffaf6" stroke="#e6ad88" stroke-opacity=".55"/>
+        <text x="78" y="245" class="t18 w900" fill="#7e4024">MCP 出现前｜接口孤岛</text>
+        <rect x="319" y="226" width="69" height="24" rx="7" fill="#fff0e7"/><text x="353.5" y="243" class="t11 w900 center" fill="#b75e2c">重复适配</text>
+        <rect x="77" y="260" width="312" height="151" rx="13" fill="#fff" fill-opacity=".72" stroke="#e6c7b5" stroke-opacity=".62"/>
+        <!-- 交叉连接线 -->
+        <path d="M164 298C220 275 260 279 303 279M164 298C222 309 260 310 303 310M164 298C225 342 264 339 303 341M164 298C232 377 268 374 303 373" fill="none" stroke="#db7b45" stroke-width="2.2" opacity=".75"/>
+        <path d="M164 365C219 349 259 286 303 279M164 365C217 344 260 321 303 310M164 365C218 344 260 340 303 341M164 365C225 386 269 378 303 373" fill="none" stroke="#517fbd" stroke-width="2.2" opacity=".7"/>
+        <!-- 应用节点 -->
+        <rect x="86" y="283" width="78" height="31" rx="9" class="card" filter="url(#softShadow)"/><rect x="93" y="290" width="18" height="18" rx="5" fill="#e9f2ff"/><text x="102" y="303" class="t11 w900 center blue">AI</text><text x="120" y="304" class="t12 w800 ink">应用 A</text>
+        <rect x="86" y="350" width="78" height="31" rx="9" class="card" filter="url(#softShadow)"/><rect x="93" y="357" width="18" height="18" rx="5" fill="#e9f2ff"/><text x="102" y="370" class="t11 w900 center blue">AI</text><text x="120" y="371" class="t12 w800 ink">应用 B</text>
+        <!-- 系统节点 -->
+        <g class="t11 w800 ink center"><rect x="303" y="266" width="78" height="26" rx="7" class="card"/><text x="342" y="283">PostgreSQL</text><rect x="303" y="297" width="78" height="26" rx="7" class="card"/><text x="342" y="314">GitHub</text><rect x="303" y="328" width="78" height="26" rx="7" class="card"/><text x="342" y="345">文件系统</text><rect x="303" y="360" width="78" height="26" rx="7" class="card"/><text x="342" y="377">企业 API</text></g>
+        <!-- 痛点标签 -->
+        <g class="t10 w800" fill="#9a4a22"><rect x="178" y="271" width="61" height="19" rx="5" fill="#fff0e6" stroke="#efc2a6"/><text x="208.5" y="285" text-anchor="middle">不同鉴权</text><rect x="219" y="300" width="61" height="19" rx="5" fill="#fff0e6" stroke="#efc2a6"/><text x="249.5" y="314" text-anchor="middle">不同参数</text><rect x="177" y="334" width="86" height="19" rx="5" fill="#fff0e6" stroke="#efc2a6"/><text x="220" y="348" text-anchor="middle">返回格式不同</text><rect x="209" y="370" width="90" height="19" rx="5" fill="#fff0e6" stroke="#efc2a6"/><text x="254" y="384" text-anchor="middle">错误处理不统一</text></g>
+        <rect x="77" y="425" width="312" height="70" rx="12" fill="#fff3eb"/>
+        <text x="233" y="449" class="t15 w700 center" fill="#74452d">多个 AI 应用 × 多个外部系统</text>
+        <text x="233" y="479" class="t18 w900 center" fill="#c35b27">＝ 大量定制连接</text>
+      </g>
+
+      <g class="scene" data-scene="after">
+        <rect x="62" y="529" width="342" height="246" rx="18" fill="#f1f9ff" stroke="#70a9e6" stroke-opacity=".55"/>
+        <text x="78" y="559" class="t18 w900" fill="#1453aa">MCP 出现后｜统一协议</text>
+        <rect x="319" y="540" width="69" height="24" rx="7" fill="#e4f2ff"/><text x="353.5" y="557" class="t11 w900 center" fill="#1761bf">标准连接</text>
+        <!-- 标准通道 -->
+        <g filter="url(#softShadow)"><rect x="75" y="582" width="58" height="55" rx="12" class="card"/><rect x="155" y="582" width="82" height="55" rx="12" fill="url(#brand)"/><rect x="259" y="582" width="62" height="55" rx="12" class="card"/><rect x="343" y="582" width="47" height="55" rx="12" class="card"/></g>
+        <g class="t12 w900 center"><text x="104" y="604" fill="#244f81">AI</text><text x="104" y="622" fill="#244f81">应用</text><text x="196" y="604" fill="#fff">MCP</text><text x="196" y="622" fill="#fff">标准接口</text><text x="290" y="604" fill="#244f81">MCP</text><text x="290" y="622" fill="#244f81">Server</text><text x="366.5" y="604" fill="#244f81">外部</text><text x="366.5" y="622" fill="#244f81">系统</text></g>
+        <path d="M135 609H151M239 609H255M323 609H339" stroke="#3984da" stroke-width="2.5" marker-end="url(#arrowBlue)"/>
+        <text x="233" y="664" class="t15 w800 center" fill="#28577f">降低重复集成成本</text>
+        <text x="233" y="687" class="t15 w800 center" fill="#28577f">让外部能力更容易组合与复用</text>
+        <g class="t11 w800 center" fill="#5b6f87"><rect x="82" y="711" width="91" height="31" rx="9" fill="#fff" stroke="#d4e0ec"/><text x="127.5" y="731">不是大模型</text><rect x="180" y="711" width="91" height="31" rx="9" fill="#fff" stroke="#d4e0ec"/><text x="225.5" y="731">不是数据库</text><rect x="278" y="711" width="105" height="31" rx="9" fill="#fff" stroke="#d4e0ec"/><text x="330.5" y="731">不是 Agent 框架</text></g>
+      </g>
+
+      <!-- 右侧架构总面板 -->
+      <g class="scene" data-scene="architecture">
+        <rect x="444" y="151" width="1434" height="648" rx="24" class="panel" filter="url(#shadow)"/>
+        <rect x="465" y="171" width="29" height="29" rx="9" fill="url(#brand)"/>
+        <text x="479.5" y="191" class="t14 w900 center" fill="#fff">02</text>
+        <text x="506" y="194" class="t24 w900 navy">它怎样连接并运行？</text>
+        <text x="1276" y="190" class="t14 w700 muted">主场景：查询杭州 2026-08-01 天气</text>
+        <line x1="1545" y1="185" x2="1570" y2="185" stroke="#f28a3a" stroke-width="4" stroke-linecap="round"/><text x="1578" y="190" class="t13 w700 muted">请求</text>
+        <line x1="1645" y1="185" x2="1670" y2="185" stroke="#19a98a" stroke-width="4" stroke-linecap="round"/><text x="1678" y="190" class="t13 w700 muted">结果返回</text>
+      </g>
+
+      <!-- AI 应用内部 -->
+      <g class="scene" data-scene="app">
+        <rect x="466" y="217" width="790" height="490" rx="21" fill="url(#appGrad)" stroke="#4b8bd6" stroke-opacity=".65" filter="url(#softShadow)"/>
+        <text x="484" y="247" class="t19 w900" fill="#174f9d">AI Application｜AI 应用内部</text>
+        <text x="1237" y="247" class="t13 w700 right" fill="#68809c">LLM + Host + MCP Client</text>
+      </g>
+
+      <!-- 用户 -->
+      <g class="scene" data-scene="user">
+        <rect x="484" y="280" width="136" height="351" rx="17" class="card" filter="url(#softShadow)"/>
+        <circle cx="552" cy="329" r="27" fill="#eaf3ff" stroke="#c4daf2"/>
+        <circle cx="552" cy="322" r="8" fill="none" stroke="#2368e8" stroke-width="2.4"/><path d="M535 344c2-10 8-15 17-15s15 5 17 15" fill="none" stroke="#2368e8" stroke-width="2.4" stroke-linecap="round"/>
+        <text x="552" y="380" class="t18 w900 center" fill="#193c69">用户任务</text><text x="552" y="401" class="t11 w800 center" fill="#6a80a0">USER REQUEST</text>
+        <rect x="496" y="424" width="112" height="111" rx="12" fill="#f4f8fd" stroke="#d7e4f1"/><rect x="496" y="424" width="4" height="111" rx="2" fill="#3b81e8"/>
+        <text x="507" y="452" class="t14 w700" fill="#365473"><tspan x="507" dy="0">“查询杭州</tspan><tspan x="507" dy="24">2026-08-01 天气，</tspan><tspan x="507" dy="24">并说明数据</tspan><tspan x="507" dy="24">来源。”</tspan></text>
+        <rect x="496" y="575" width="112" height="38" rx="10" fill="#eaf9f5" stroke="#bfe7dc"/><text x="552" y="599" class="t11 w900 center" fill="#16836e">最终接收答案</text>
+      </g>
+
+      <!-- LLM / Agent -->
+      <g class="scene" data-scene="llm">
+        <rect x="648" y="280" width="160" height="351" rx="17" fill="#fff" stroke="#7eb1e9" filter="url(#softShadow)"/>
+        <circle cx="728" cy="329" r="27" fill="#edf5ff" stroke="#c4daf2"/>
+        <path d="M728 309l4.8 9.6 10.2 3.9-10.2 3.9-4.8 9.6-4.8-9.6-10.2-3.9 10.2-3.9 4.8-9.6z" fill="none" stroke="#2368e8" stroke-width="2"/>
+        <text x="728" y="380" class="t18 w900 center" fill="#193c69">LLM / Agent</text><text x="728" y="401" class="t11 w800 center" fill="#6a80a0">DECISION CORE</text>
+        <g class="t13 w800 center" fill="#365776"><rect x="662" y="423" width="132" height="40" rx="9" fill="#f4f8fe" stroke="#dbe7f3"/><text x="728" y="448">理解用户任务</text><rect x="662" y="470" width="132" height="40" rx="9" fill="#f4f8fe" stroke="#dbe7f3"/><text x="728" y="495">判断需要外部能力</text><rect x="662" y="517" width="132" height="40" rx="9" fill="#f4f8fe" stroke="#dbe7f3"/><text x="728" y="542">选择数据库工具</text><rect x="662" y="564" width="132" height="40" rx="9" fill="#f4f8fe" stroke="#dbe7f3"/><text x="728" y="589">根据结果生成回答</text></g>
+      </g>
+
+      <!-- Host -->
+      <g class="scene" data-scene="host">
+        <rect x="836" y="280" width="190" height="351" rx="17" fill="#e7f3ff" stroke="#377ed7" stroke-width="1.6" filter="url(#softShadow)"/>
+        <circle cx="931" cy="329" r="27" fill="url(#brand)"/>
+        <rect x="919" y="318" width="24" height="22" rx="5" fill="none" stroke="#fff" stroke-width="2.2"/><circle cx="925" cy="325" r="2" fill="#fff"/><path d="M930 325h7M924 332h14" stroke="#fff" stroke-width="2" stroke-linecap="round"/>
+        <text x="931" y="380" class="t18 w900 center" fill="#193c69">MCP Host｜管理层</text><text x="931" y="401" class="t11 w800 center" fill="#6a80a0">CONTAINER &amp; COORDINATOR</text>
+        <g class="t12 w800 center" fill="#2f577d"><rect x="850" y="425" width="78" height="72" rx="10" fill="#fff" fill-opacity=".78" stroke="#c6dcf3"/><text x="889" y="454">管理</text><text x="889" y="473">MCP Client</text><rect x="935" y="425" width="78" height="72" rx="10" fill="#fff" fill-opacity=".78" stroke="#c6dcf3"/><text x="974" y="454">控制连接</text><text x="974" y="473">与权限</text><rect x="850" y="506" width="78" height="72" rx="10" fill="#fff" fill-opacity=".78" stroke="#c6dcf3"/><text x="889" y="535">管理连接</text><text x="889" y="554">生命周期</text><rect x="935" y="506" width="78" height="72" rx="10" fill="#fff" fill-opacity=".78" stroke="#c6dcf3"/><text x="974" y="535">协调上下文</text><text x="974" y="554">与结果</text></g>
+      </g>
+
+      <!-- 内部请求与返回箭头 -->
+      <g class="scene" data-scene="route">
+        <path d="M623 425H642M811 425H830M1029 425H1042" stroke="#f28a3a" stroke-width="3" marker-end="url(#arrowOrange)"/>
+        <path d="M1043 476H1030M831 476H812M643 476H624" stroke="#19a98a" stroke-width="3" marker-end="url(#arrowGreen)"/>
+      </g>
+
+      <!-- Clients -->
+      <g class="scene" data-scene="client">
+        <text x="1139" y="270" class="t13 w900 center" fill="#37658f">MCP Client 通信端口</text>
+        <g filter="url(#softShadow)"><rect x="1047" y="281" width="190" height="150" rx="15" fill="#fff" stroke="#4c92e4" stroke-width="1.6"/><rect x="1047" y="293" width="5" height="126" rx="2.5" fill="#2368e8"/><rect x="1047" y="443" width="190" height="91" rx="15" class="card"/><rect x="1047" y="546" width="190" height="91" rx="15" class="card"/></g>
+        <text x="1063" y="308" class="t11 w900" fill="#6e86a4">MCP CLIENT</text><text x="1063" y="333" class="t17 w900" fill="#204b7c">Weather Client</text><text x="1063" y="357" class="t12 w700 muted">发现能力 · 发送请求</text><text x="1063" y="377" class="t12 w700 muted">接收结构化结果</text><rect x="1063" y="393" width="158" height="26" rx="7" fill="#e8f3ff" stroke="#c7dff8"/><text x="1142" y="411" class="t11 w900 center" fill="#175ebc">1 Client : 1 Server</text>
+        <text x="1063" y="469" class="t11 w900" fill="#6e86a4">MCP CLIENT</text><text x="1063" y="493" class="t16 w900" fill="#204b7c">GitHub Client</text><text x="1063" y="515" class="t12 w700 muted">独立连接</text>
+        <text x="1063" y="572" class="t11 w900" fill="#6e86a4">MCP CLIENT</text><text x="1063" y="596" class="t16 w900" fill="#204b7c">Files Client</text><text x="1063" y="618" class="t12 w700 muted">独立连接</text>
+      </g>
+
+      <!-- 应用边界 -->
+      <g class="scene" data-scene="boundary">
+        <line x1="1283" y1="218" x2="1283" y2="706" stroke="#2c76cf" stroke-width="2" stroke-dasharray="9 8" opacity=".8"/>
+        <rect x="1254" y="228" width="58" height="95" rx="12" fill="#edf7ff" stroke="#9ec2e9" filter="url(#softShadow)"/>
+        <text x="1283" y="250" class="t11 w900 center" fill="#184f97"><tspan x="1283">AI 应用</tspan><tspan x="1283" dy="17">边界</tspan><tspan x="1283" dy="20" class="t10">Application</tspan><tspan x="1283" dy="14" class="t10">Boundary</tspan></text>
+        <!-- 1:1 三条连接 -->
+        <path id="mcpRequestPath" d="M1239 337H1327" stroke="#f28a3a" stroke-width="3.3" marker-end="url(#arrowOrange)"/>
+        <path id="mcpResultPath" d="M1328 386H1240" stroke="#19a98a" stroke-width="3.3" marker-end="url(#arrowGreen)"/>
+        <path d="M1239 489H1327M1239 592H1327" stroke="#397ed3" stroke-width="2.7" marker-end="url(#arrowBlue)"/>
+        <rect x="1261" y="350" width="44" height="24" rx="6" fill="#2368e8"/><text x="1283" y="367" class="t10 w900 center" fill="#fff">MCP</text>
+        <circle class="flow-dot" r="6" fill="#ff9d50" stroke="#fff" stroke-width="2"><animateMotion dur="1.6s" repeatCount="indefinite" path="M1239 337H1327"/></circle>
+        <circle class="flow-dot" r="6" fill="#22b094" stroke="#fff" stroke-width="2"><animateMotion dur="1.6s" repeatCount="indefinite" path="M1328 386H1240"/></circle>
+      </g>
+
+      <!-- Server -->
+      <g class="scene" data-scene="server">
+        <text x="1462" y="241" class="t18 w900 center" fill="#164f98">MCP Server｜应用外部</text><text x="1462" y="261" class="t12 w700 center" fill="#5d748e">包装并暴露真实系统能力</text>
+        <rect x="1340" y="270" width="244" height="28" rx="8" fill="#fff" fill-opacity=".9" stroke="#d0dfef"/><text x="1462" y="289" class="t11 w800 center" fill="#4f6684">可运行在本地进程，也可以是远程服务</text>
+        <g filter="url(#softShadow)"><rect x="1327" y="306" width="270" height="150" rx="16" fill="url(#serverGrad)" stroke="#3180e2" stroke-width="2"/><rect x="1327" y="466" width="270" height="91" rx="16" fill="url(#serverGrad)" stroke="#b7cee8"/><rect x="1327" y="567" width="270" height="91" rx="16" fill="url(#serverGrad)" stroke="#b7cee8"/></g>
+        <!-- DB Server -->
+        <rect x="1342" y="323" width="38" height="38" rx="11" fill="url(#brand)"/><rect x="1351" y="332" width="20" height="20" fill="none" stroke="#fff" stroke-width="2"/><path d="M1355 338h12M1355 343h12M1355 348h8" stroke="#fff" stroke-width="1.7"/>
+        <text x="1392" y="339" class="t17 w900" fill="#193f70">Weather MCP Server</text><text x="1392" y="357" class="t11 w800 muted">协议适配层</text>
+        <g class="t10 w900 center"><rect x="1342" y="374" width="67" height="25" rx="7" fill="#2368e8"/><text x="1375.5" y="391" fill="#fff">Tools 工具</text><rect x="1415" y="374" width="79" height="25" rx="7" fill="#fff" stroke="#c5daf0"/><text x="1454.5" y="391" fill="#2a5e92">Resources 资源</text><rect x="1500" y="374" width="82" height="25" rx="7" fill="#fff" stroke="#c5daf0"/><text x="1541" y="391" fill="#2a5e92">Prompts 模板</text></g>
+        <rect x="1342" y="411" width="240" height="28" rx="8" fill="#e7f2ff" stroke="#bad8f7"/><text x="1462" y="430" class="t12 w800 center mono" fill="#1659a8">get_weather</text>
+        <!-- Other servers -->
+        <rect x="1342" y="486" width="34" height="34" rx="10" fill="url(#brand)"/><path d="M1350 508c-5-4 0-11 5-7 4-5 12 1 8 6 4 2 1 8-3 8h-10" fill="none" stroke="#fff" stroke-width="1.8"/>
+        <text x="1388" y="500" class="t16 w900" fill="#193f70">GitHub MCP Server</text><text x="1388" y="520" class="t11 w800 muted">Tools · Resources｜协议适配层</text>
+        <rect x="1342" y="587" width="34" height="34" rx="10" fill="url(#brand)"/><path d="M1349 596h9l3 3h8v13h-20z" fill="none" stroke="#fff" stroke-width="1.8"/>
+        <text x="1388" y="601" class="t16 w900" fill="#193f70">Files MCP Server</text><text x="1388" y="621" class="t11 w800 muted">Tools · Resources｜协议适配层</text>
+      </g>
+
+      <!-- Server 到真实系统 -->
+      <g class="scene" data-scene="adapter">
+        <text x="1636" y="250" class="t11 w900 center" fill="#a15329">协议适配层</text>
+        <g stroke="#db6e2e" stroke-width="2.5" stroke-linecap="round"><line x1="1627" y1="263" x2="1645" y2="263"/><line x1="1627" y1="270" x2="1645" y2="270"/><line x1="1642" y1="258" x2="1630" y2="275"/></g>
+        <text x="1636" y="292" class="t11 w900 center" fill="#a15329">真实系统</text>
+        <path d="M1599 337H1675" stroke="#f28a3a" stroke-width="3.2" marker-end="url(#arrowOrange)"/><path d="M1676 386H1600" stroke="#19a98a" stroke-width="3.2" marker-end="url(#arrowGreen)"/>
+        <path d="M1599 510H1675M1599 611H1675" stroke="#778ea8" stroke-width="2.7" marker-end="url(#arrowBlue)"/>
+      </g>
+
+      <!-- 真实系统 -->
+      <g class="scene" data-scene="system">
+        <text x="1768" y="241" class="t18 w900 center" fill="#314b69">真实外部系统</text><text x="1768" y="261" class="t12 w700 center muted">能力与数据的实际来源</text>
+        <g filter="url(#softShadow)"><rect x="1677" y="306" width="180" height="150" rx="16" fill="#fff8f1" stroke="#f0a064" stroke-width="2"/><rect x="1677" y="466" width="180" height="91" rx="16" fill="#f6f8fb" stroke="#c6d1de"/><rect x="1677" y="567" width="180" height="91" rx="16" fill="#f6f8fb" stroke="#c6d1de"/></g>
+        <ellipse cx="1767" cy="344" rx="24" ry="9" fill="none" stroke="#d66928" stroke-width="2.4"/><path d="M1743 344v28c0 6 11 10 24 10s24-4 24-10v-28M1743 358c0 6 11 10 24 10s24-4 24-10" fill="none" stroke="#d66928" stroke-width="2.4"/>
+        <text x="1767" y="413" class="t18 w900 center" fill="#314b69">天气 API / Mock</text><text x="1767" y="435" class="t11 w800 center muted">天气数据源</text>
+        <path d="M1720 516c-7-6 0-17 8-11 6-8 18 0 13 9 7 3 2 12-5 12h-16" fill="none" stroke="#4b6681" stroke-width="2"/><text x="1796" y="511" class="t16 w900 center" fill="#314b69">GitHub API</text><text x="1796" y="532" class="t11 w800 center muted">真实业务接口</text>
+        <path d="M1708 593h25l7 7h31v28h-63z" fill="none" stroke="#4b6681" stroke-width="2.2"/><text x="1810" y="612" class="t16 w900 center" fill="#314b69">文件系统</text><text x="1810" y="633" class="t11 w800 center muted">真实文件与目录</text>
+      </g>
+
+      <!-- 消息说明 -->
+      <g class="scene" data-scene="messages">
+        <rect x="1212" y="317" width="117" height="42" rx="9" fill="#fff7f0" stroke="#efb88e" filter="url(#softShadow)"/><text x="1220" y="333" class="t10 w900" fill="#8d421c">tools/call</text><text x="1220" y="349" class="t9 w800 mono" fill="#8d421c">week: current</text>
+        <rect x="1204" y="378" width="126" height="42" rx="9" fill="#effcf8" stroke="#9edccc" filter="url(#softShadow)"/><text x="1212" y="394" class="t10 w900" fill="#117b67">structured result</text><text x="1212" y="410" class="t9 w800" fill="#117b67">人数 · 均分 · 薄弱点</text>
+      </g>
+
+      <!-- 三个核心价值 -->
+      <g class="scene" data-scene="values">
+        <g filter="url(#softShadow)"><rect x="466" y="719" width="450" height="63" rx="14" fill="#f7fbff" stroke="#cfdeee"/><rect x="925" y="719" width="450" height="63" rx="14" fill="#f7fbff" stroke="#cfdeee"/><rect x="1384" y="719" width="472" height="63" rx="14" fill="#f7fbff" stroke="#cfdeee"/></g>
+        <g><rect x="480" y="732" width="37" height="37" rx="11" fill="url(#brand)"/><text x="498.5" y="756" class="t14 w900 center" fill="#fff">01</text><text x="531" y="746" class="t16 w900" fill="#214a79">统一接口</text><text x="531" y="766" class="t12 w700 muted">一致地描述、发现和调用外部能力</text></g>
+        <g><rect x="939" y="732" width="37" height="37" rx="11" fill="url(#brand)"/><text x="957.5" y="756" class="t14 w900 center" fill="#fff">02</text><text x="990" y="746" class="t16 w900" fill="#214a79">解耦复用</text><text x="990" y="766" class="t12 w700 muted">应用不必直接理解每个系统的私有接口</text></g>
+        <g><rect x="1398" y="732" width="37" height="37" rx="11" fill="url(#brand)"/><text x="1416.5" y="756" class="t14 w900 center" fill="#fff">03</text><text x="1449" y="746" class="t16 w900" fill="#214a79">安全可控</text><text x="1449" y="766" class="t12 w700 muted">Host 管理连接、权限、授权与上下文边界</text></g>
+      </g>
+
+      <!-- 底部完整调用流程 -->
+      <g class="scene" data-scene="timeline">
+        <rect x="42" y="815" width="1836" height="218" rx="24" class="panel" filter="url(#shadow)"/>
+        <rect x="63" y="833" width="29" height="29" rx="9" fill="url(#brand)"/><text x="77.5" y="853" class="t14 w900 center" fill="#fff">03</text>
+        <text x="104" y="856" class="t22 w900 navy">一次调用如何完整运行？</text>
+        <rect x="1488" y="831" width="368" height="34" rx="10" fill="#e8f3ff" stroke="#bedaf6"/><text x="1672" y="853" class="t14 w900 center" fill="#1857a5">核心顺序：先发现能力，再在任务中调用能力</text>
+        <!-- 准备阶段 -->
+        <rect x="60" y="878" width="552" height="137" rx="15" fill="#f5f9fd" stroke="#d6e2ef"/>
+        <circle cx="78" cy="898" r="5" fill="#8da6c2"/><text x="91" y="903" class="t14 w900" fill="#526b86">连接准备｜通常提前完成</text>
+        <line x1="137" y1="936" x2="535" y2="936" stroke="#c4d4e5" stroke-width="3"/>
+        <!-- 执行阶段 -->
+        <rect x="627" y="878" width="1229" height="137" rx="15" fill="#f2faff" stroke="#c5ddec"/>
+        <circle cx="647" cy="898" r="5" fill="#2477df"/><text x="660" y="903" class="t14 w900" fill="#1f60ab">任务执行｜请求向右，结果原路返回</text>
+        <line x1="710" y1="936" x2="1772" y2="936" stroke="#e99954" stroke-width="3"/>
+        <line x1="1368" y1="936" x2="1772" y2="936" stroke="#3bb39a" stroke-width="3"/>
+        <!-- 准备步骤 -->
+        <g class="center"><g><rect x="118" y="919" width="34" height="34" rx="10" fill="#8fa8c3" stroke="#fff" stroke-width="3"/><text x="135" y="941" class="t13 w900" fill="#fff">1</text><text x="135" y="973" class="t14 w900 ink">Initialize</text><text x="135" y="992" class="t10 w700 muted">建立连接 · 协商能力</text></g><g><rect x="299" y="919" width="34" height="34" rx="10" fill="#8fa8c3" stroke="#fff" stroke-width="3"/><text x="316" y="941" class="t13 w900" fill="#fff">2</text><text x="316" y="973" class="t14 w900 ink">Discover</text><text x="316" y="992" class="t10 w700 muted">获取 Server 暴露能力</text></g><g><rect x="480" y="919" width="34" height="34" rx="10" fill="#8fa8c3" stroke="#fff" stroke-width="3"/><text x="497" y="941" class="t13 w900" fill="#fff">3</text><text x="497" y="973" class="t14 w900 ink">Ready</text><text x="497" y="992" class="t10 w700 muted">工具 · 资源 · 模板就绪</text></g></g>
+        <!-- 执行步骤 -->
+        <g class="center"><g><rect x="690" y="919" width="34" height="34" rx="10" fill="url(#orangeGrad)" stroke="#fff" stroke-width="3"/><text x="707" y="941" class="t13 w900" fill="#fff">1</text><text x="707" y="973" class="t14 w900 ink">用户提出任务</text><text x="707" y="992" class="t10 w700 muted">查询指定日期天气</text></g><g><rect x="890" y="919" width="34" height="34" rx="10" fill="url(#orangeGrad)" stroke="#fff" stroke-width="3"/><text x="907" y="941" class="t13 w900" fill="#fff">2</text><text x="907" y="973" class="t14 w900 ink">模型判断</text><text x="907" y="992" class="t10 w700 muted">需要天气工具</text></g><g><rect x="1090" y="919" width="34" height="34" rx="10" fill="url(#orangeGrad)" stroke="#fff" stroke-width="3"/><text x="1107" y="941" class="t13 w900" fill="#fff">3</text><text x="1107" y="973" class="t14 w900 ink">Client 调用</text><text x="1107" y="992" class="t10 w700 muted">发送 tools/call</text></g><g><rect x="1290" y="919" width="34" height="34" rx="10" fill="url(#orangeGrad)" stroke="#fff" stroke-width="3"/><text x="1307" y="941" class="t13 w900" fill="#fff">4</text><text x="1307" y="973" class="t14 w900 ink">Server 执行</text><text x="1307" y="992" class="t10 w700 muted">调用天气 Provider</text></g><g><rect x="1490" y="919" width="34" height="34" rx="10" fill="url(#greenGrad)" stroke="#fff" stroke-width="3"/><text x="1507" y="941" class="t13 w900" fill="#fff">5</text><text x="1507" y="973" class="t14 w900 ink">结果返回</text><text x="1507" y="992" class="t10 w700 muted">结构化结果返回 Host</text></g><g><rect x="1690" y="919" width="34" height="34" rx="10" fill="url(#greenGrad)" stroke="#fff" stroke-width="3"/><text x="1707" y="941" class="t13 w900" fill="#fff">6</text><text x="1707" y="973" class="t14 w900 ink">生成回答</text><text x="1707" y="992" class="t10 w700 muted">组织天气与来源说明</text></g></g>
+      </g>
+
+      <!-- 底部总括 -->
+      <g class="scene" data-scene="summary">
+        <text x="960" y="1064" class="t17 w700 center" fill="#355675"><tspan fill="#165cc1" class="w900">MCP 统一的是“AI 应用如何发现和调用外部能力”</tspan>，不是外部系统本身，也不会让模型自动变聪明。</text>
+      </g>
+    </svg>
+  </div>
+
+  <script>
+    (() => {
+      const svg = document.getElementById('infographic');
+      const groups = [
+        ['before'], ['after'], ['app','architecture'], ['host'],
+        ['client','boundary','route'], ['server','messages'], ['adapter','system'],
+        ['llm','user'], ['values','timeline','summary']
+      ];
+      let timers = [], currentStep = -1, paused = false;
+      const scenes = [...svg.querySelectorAll('[data-scene]')];
+      const clearTimers = () => { timers.forEach(clearTimeout); timers = []; };
+      const clearLive = () => scenes.forEach(el => el.classList.remove('live'));
+      const focus = (names) => { clearLive(); names.forEach(n => svg.querySelectorAll(`[data-scene="${n}"]`).forEach(el => el.classList.add('live'))); };
+      const showAll = () => { paused = false; currentStep = -1; clearTimers(); clearLive(); svg.classList.remove('playing'); };
+      const renderStep = (step) => { svg.classList.add('playing'); focus(groups[step]); };
+      const showStep = (step) => {
+        clearTimers();
+        paused = true;
+        currentStep = Math.max(0, Math.min(step, groups.length - 1));
+        renderStep(currentStep);
+      };
+      const advance = () => {
+        if (paused) return;
+        if (currentStep < groups.length - 1) {
+          currentStep += 1;
+          renderStep(currentStep);
+          timers.push(setTimeout(advance, 1200));
+        } else {
+          timers.push(setTimeout(showAll, 1600));
+        }
+      };
+      document.getElementById('play').onclick = () => { clearTimers(); paused = false; currentStep = -1; advance(); };
+      document.getElementById('previous').onclick = () => { if (currentStep > 0) showStep(currentStep - 1); };
+      document.getElementById('next').onclick = () => { if (currentStep < groups.length - 1) showStep(currentStep + 1); };
+      document.getElementById('pause').onclick = () => { paused = true; clearTimers(); };
+      document.getElementById('all').onclick = showAll;
+      if (new URLSearchParams(location.search).get('export') === '1') document.body.classList.add('export');
+      window.__MCP_INFOGRAPHIC_READY__ = true;
+    })();
+  </script>
+</body>
+</html>

@@ -1,0 +1,1149 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Loop Engineering 教学演示</title>
+<style>
+:root{
+  --bg:#f3f7fc;
+  --surface:#ffffff;
+  --surface-2:#f8fbff;
+  --ink:#17243b;
+  --muted:#6b7890;
+  --line:#dbe5f0;
+  --blue:#2f6fed;
+  --blue-dark:#1f50bb;
+  --blue-soft:#eaf2ff;
+  --purple:#7650d6;
+  --purple-soft:#f1ecff;
+  --green:#179c68;
+  --green-soft:#e9f8f2;
+  --orange:#e98b36;
+  --orange-soft:#fff1e3;
+  --red:#d95858;
+  --red-soft:#ffeded;
+  --shadow:0 18px 55px rgba(38,64,104,.12);
+  --shadow-sm:0 8px 24px rgba(38,64,104,.09);
+}
+*{box-sizing:border-box}
+html,body{margin:0;min-width:1180px;min-height:100%;font-family:Inter,"PingFang SC","Microsoft YaHei",sans-serif;color:var(--ink);background:
+radial-gradient(circle at 8% 8%,rgba(47,111,237,.12),transparent 26%),
+radial-gradient(circle at 92% 10%,rgba(118,80,214,.10),transparent 27%),
+linear-gradient(180deg,#f8fbff,var(--bg));}
+body{overflow:auto}
+button{font:inherit}
+.app{
+  width:100%;
+  height:100vh;
+  min-height:900px;
+  padding:14px;
+  display:grid;
+  grid-template-rows:86px 58px minmax(650px,1fr) 72px;
+  gap:10px;
+}
+.glass{
+  background:rgba(255,255,255,.88);
+  border:1px solid rgba(160,177,201,.30);
+  border-radius:22px;
+  box-shadow:var(--shadow);
+  backdrop-filter:blur(16px);
+}
+
+/* Header */
+.header{
+  position:relative;
+  padding:15px 20px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:18px;
+  overflow:hidden;
+}
+.brand{display:flex;align-items:center;gap:14px;min-width:0}
+.brand-mark{
+  width:50px;height:50px;border-radius:16px;
+  display:grid;place-items:center;
+  background:linear-gradient(135deg,var(--blue),var(--purple));
+  color:white;font-size:24px;box-shadow:0 12px 25px rgba(47,111,237,.24)
+}
+.brand h1{margin:0;font-size:24px;white-space:nowrap}
+.brand p{margin:4px 0 0;color:var(--muted);font-size:12px}
+.core-message{
+  flex:0 1 620px;
+  padding:12px 16px;
+  border-radius:16px;
+  border:1px solid #d8e4f4;
+  background:linear-gradient(135deg,#edf4ff,#f5f0ff);
+  text-align:center;
+  font-size:14px;
+  color:#244781;
+  font-weight:900;
+}
+.core-message small{display:block;margin-top:3px;color:var(--purple);font-size:10px}
+
+/* Progress */
+.progress{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:8px;
+  padding:7px;
+}
+.progress-step{
+  border:0;
+  border-radius:14px;
+  background:#f0f4f9;
+  color:#6b7890;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+  cursor:pointer;
+  font-weight:900;
+  transition:.2s;
+}
+.progress-step .num{
+  width:25px;height:25px;border-radius:50%;
+  display:grid;place-items:center;
+  background:#dce5f0;color:#60718a;font-size:11px
+}
+.progress-step.active{
+  background:linear-gradient(135deg,var(--blue),#5c86ef);
+  color:#fff;
+  box-shadow:0 8px 20px rgba(47,111,237,.22)
+}
+.progress-step.active .num{background:rgba(255,255,255,.22);color:#fff}
+.progress-step.done{background:var(--green-soft);color:var(--green)}
+.progress-step.done .num{background:var(--green);color:#fff}
+
+/* Workspace */
+.workspace{position:relative;overflow:hidden}
+.screen{
+  display:none;
+  height:100%;
+  padding:16px;
+  min-height:0;
+}
+.screen.active{display:grid}
+.screen-title{
+  grid-column:1/-1;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  min-height:44px;
+  margin-bottom:10px;
+}
+.screen-title h2{margin:0;font-size:20px}
+.screen-title p{margin:3px 0 0;font-size:12px;color:var(--muted)}
+.step-chip{
+  padding:8px 12px;border-radius:999px;
+  font-size:11px;font-weight:900;
+  background:var(--blue-soft);color:var(--blue)
+}
+
+/* Common cards */
+.card{
+  background:linear-gradient(160deg,#fff,#f8fbff);
+  border:1px solid var(--line);
+  border-radius:18px;
+  box-shadow:var(--shadow-sm);
+  padding:14px;
+  min-width:0;
+}
+.card-head{
+  display:flex;align-items:center;justify-content:space-between;gap:10px;
+  margin-bottom:10px
+}
+.card-head h3{margin:0;font-size:14px}
+.tag{
+  font-size:10px;font-weight:900;padding:5px 8px;border-radius:999px;
+  background:var(--blue-soft);color:var(--blue)
+}
+.muted{color:var(--muted)}
+.small{font-size:11px}
+.avatar{
+  width:48px;height:48px;border-radius:15px;display:grid;place-items:center;
+  color:#fff;font-size:19px;font-weight:900;
+  background:linear-gradient(135deg,var(--blue),var(--purple))
+}
+.resume-top{display:flex;gap:11px;align-items:center}
+.resume-top h4{margin:0;font-size:15px}
+.resume-top p{margin:4px 0 0;color:var(--muted);font-size:11px}
+.info-grid{
+  display:grid;grid-template-columns:68px 1fr;gap:7px;margin-top:12px;
+  font-size:11px;line-height:1.55
+}
+.info-grid b{color:#52637a}
+.box{
+  border:1px solid #dfe7f1;background:#fff;border-radius:14px;
+  padding:11px;font-size:11px;line-height:1.58;color:#3a4c63
+}
+.label-row{display:flex;gap:6px;flex-wrap:wrap;margin-top:9px}
+.mini-tag{font-size:9px;padding:5px 7px;background:#edf3fa;color:#53708f;border-radius:999px;font-weight:800}
+
+/* Screen 1 */
+.business-screen{
+  grid-template-columns:1.03fr .97fr;
+  grid-template-rows:auto 1fr;
+  gap:12px;
+}
+.business-left{display:grid;grid-template-columns:1fr 1fr;gap:12px;min-height:0}
+.business-left .resume-card{grid-row:span 2}
+.business-right{
+  display:grid;grid-template-rows:auto 1fr;gap:12px;min-height:0
+}
+.goal-card{
+  background:linear-gradient(145deg,#203d77,#4c64ad);
+  color:#fff;border:0
+}
+.goal-card .card-head h3{color:#fff}
+.goal-card p{font-size:12px;line-height:1.65;color:rgba(255,255,255,.86);margin:8px 0 0}
+.io-line{
+  display:grid;grid-template-columns:1fr 44px 1fr 44px 1fr;
+  gap:8px;align-items:stretch
+}
+.io-block{
+  min-height:150px;border-radius:18px;padding:15px;
+  border:1px solid var(--line);background:#fff;position:relative
+}
+.io-block .io-num{
+  position:absolute;right:10px;top:9px;font-size:28px;font-weight:900;color:#e1e8f2
+}
+.io-block h4{margin:0;font-size:14px}
+.io-block p{margin:8px 0 0;font-size:11px;color:var(--muted);line-height:1.55}
+.io-block ul{padding-left:17px;margin:10px 0 0;font-size:11px;line-height:1.55;color:#52637a}
+.io-arrow{display:grid;place-items:center;color:#8aa4c8;font-size:24px;font-weight:900}
+.guide-card{
+  display:flex;align-items:center;gap:14px;
+  padding:14px 16px;border-radius:18px;
+  border:1px solid #cfdef2;background:linear-gradient(135deg,#edf5ff,#fff)
+}
+.guide-icon{
+  width:44px;height:44px;border-radius:14px;display:grid;place-items:center;
+  background:var(--blue);color:#fff;font-size:21px;flex:0 0 auto
+}
+.guide-card h3{margin:0;font-size:14px}
+.guide-card p{margin:5px 0 0;font-size:11px;color:var(--muted)}
+.guide-arrow{margin-left:auto;font-size:25px;color:var(--blue);font-weight:900}
+
+/* Screen 2: Agent */
+.agent-screen{
+  grid-template-columns:260px 1fr 300px;
+  grid-template-rows:auto 1fr;
+  gap:12px;
+}
+.context-column,.output-column{display:flex;flex-direction:column;gap:10px;min-height:0}
+.context-column .card,.output-column .card{padding:12px}
+.pipeline-card{display:grid;grid-template-rows:auto 1fr;min-height:0}
+.pipeline{
+  position:relative;min-height:480px;border-radius:18px;
+  background:
+    radial-gradient(circle at 50% 50%,rgba(47,111,237,.07),transparent 34%),
+    linear-gradient(180deg,#fbfdff,#f3f7fc);
+  border:1px solid var(--line);overflow:hidden
+}
+.pipeline::before{
+  content:"Agent Loop";
+  position:absolute;left:50%;top:14px;transform:translateX(-50%);
+  padding:6px 11px;border-radius:999px;background:var(--blue-soft);color:var(--blue);
+  font-size:10px;font-weight:900;z-index:4
+}
+.loop-center{
+  position:absolute;left:50%;top:51%;transform:translate(-50%,-50%);
+  width:175px;height:175px;border-radius:50%;
+  display:grid;place-items:center;text-align:center;
+  background:radial-gradient(circle at 35% 28%,#fff,#eaf2ff 55%,#dbe8ff);
+  border:1px solid #cbdcf6;box-shadow:0 22px 45px rgba(47,111,237,.16);z-index:3
+}
+.loop-center::before{
+  content:"";position:absolute;inset:15px;border-radius:50%;
+  border:1px dashed rgba(47,111,237,.35);animation:spin 13s linear infinite
+}
+@keyframes spin{to{transform:rotate(360deg)}}
+.loop-center b{display:block;font-size:15px}
+.loop-center small{display:block;margin-top:5px;color:var(--muted);font-size:9px;line-height:1.5}
+.flow-node{
+  position:absolute;width:124px;min-height:65px;transform:translate(-50%,-50%);
+  border-radius:17px;background:#fff;border:1px solid var(--line);
+  display:grid;place-items:center;text-align:center;padding:9px;z-index:4;
+  box-shadow:var(--shadow-sm);transition:.22s
+}
+.flow-node .node-icon{font-size:20px}
+.flow-node b{display:block;font-size:11px;margin-top:2px}
+.flow-node small{display:block;font-size:8px;color:var(--muted);margin-top:2px}
+.flow-node.pending{opacity:.38}
+.flow-node.done{background:var(--green-soft);border-color:#94d8ba}
+.flow-node.active{
+  border:2px solid var(--blue);
+  box-shadow:0 0 0 6px rgba(47,111,237,.12),0 15px 30px rgba(47,111,237,.22);
+  transform:translate(-50%,-50%) scale(1.05)
+}
+.flow-node.error{background:var(--orange-soft);border-color:var(--orange)}
+.flow-line{
+  position:absolute;height:2px;background:#c1cfdf;transform-origin:left center;z-index:2
+}
+.flow-line::after{
+  content:"";position:absolute;right:-1px;top:-4px;
+  border-left:7px solid #c1cfdf;border-top:5px solid transparent;border-bottom:5px solid transparent
+}
+.flow-line.active{height:3px;background:var(--blue);box-shadow:0 0 10px rgba(47,111,237,.35)}
+.flow-line.active::after{border-left-color:var(--blue)}
+.timeline{
+  display:flex;gap:6px;align-items:center;justify-content:center;
+  margin-top:8px
+}
+.timeline-dot{
+  width:25px;height:25px;border-radius:50%;
+  display:grid;place-items:center;background:#e7edf5;color:#718199;
+  font-size:9px;font-weight:900
+}
+.timeline-dot.active{background:var(--blue);color:#fff;box-shadow:0 7px 16px rgba(47,111,237,.22)}
+.timeline-dot.done{background:var(--green);color:#fff}
+.status-box{
+  border-radius:14px;padding:11px;background:#f3f7fc;border:1px solid var(--line)
+}
+.status-box h4{margin:0;font-size:11px}
+.status-box p{margin:6px 0 0;font-size:10px;line-height:1.5;color:var(--muted)}
+.output-highlight{
+  background:linear-gradient(135deg,#edf4ff,#f7f2ff);
+  border-color:#d4def5
+}
+.score-big{font-size:32px;font-weight:900;color:var(--blue);line-height:1}
+.score-track{height:8px;border-radius:999px;background:#e4ebf4;overflow:hidden;margin-top:8px}
+.score-track i{display:block;height:100%;background:linear-gradient(90deg,var(--blue),var(--purple));transition:.4s}
+.callout{
+  border-radius:15px;padding:11px;background:var(--orange-soft);border:1px solid #f4d7b9;
+  font-size:10px;line-height:1.55;color:#744c28
+}
+
+/* Screen 3: Engineering */
+.engineering-screen{
+  grid-template-columns:290px 1fr 310px;
+  grid-template-rows:auto 1fr;
+  gap:12px;
+}
+.failure-panel,.evaluation-panel{display:flex;flex-direction:column;gap:10px;min-height:0}
+.failure-list{display:flex;flex-direction:column;gap:7px}
+.failure-item{
+  padding:10px;border-radius:13px;background:var(--red-soft);border:1px solid #f0cccc;
+  display:flex;justify-content:space-between;gap:10px;font-size:10px;line-height:1.45
+}
+.failure-item b{color:#a83e3e}
+.engineering-flow{display:grid;grid-template-rows:auto 1fr auto;min-height:0}
+.eng-track{
+  display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:repeat(2,1fr);
+  gap:12px;align-items:stretch;min-height:380px;padding:10px
+}
+.eng-node{
+  border:1px solid var(--line);border-radius:18px;background:#fff;
+  padding:14px;text-align:center;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  box-shadow:var(--shadow-sm);transition:.22s;position:relative
+}
+.eng-node .node-index{
+  position:absolute;left:10px;top:8px;width:22px;height:22px;border-radius:50%;
+  display:grid;place-items:center;background:#edf1f7;color:#6c7890;font-size:9px;font-weight:900
+}
+.eng-node .eng-icon{font-size:24px}
+.eng-node b{font-size:12px;margin-top:6px}
+.eng-node small{font-size:9px;color:var(--muted);margin-top:4px;line-height:1.4}
+.eng-node.pending{opacity:.4}
+.eng-node.done{background:var(--green-soft);border-color:#9bd9be}
+.eng-node.active{
+  border:2px solid var(--purple);
+  box-shadow:0 0 0 6px rgba(118,80,214,.12),0 16px 32px rgba(118,80,214,.20);
+  transform:translateY(-2px)
+}
+.module-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:7px}
+.module-card{
+  border-radius:13px;padding:9px;background:#fff;border:1px solid var(--line);
+  text-align:center;cursor:pointer;transition:.18s
+}
+.module-card:hover,.module-card.active{border-color:var(--purple);background:var(--purple-soft)}
+.module-card b{display:block;font-size:9px;margin-top:3px}
+.eval-row{display:grid;grid-template-columns:90px 1fr 36px;gap:7px;align-items:center;font-size:9px}
+.eval-bar{height:7px;background:#e6edf5;border-radius:999px;overflow:hidden}
+.eval-bar i{display:block;height:100%;background:linear-gradient(90deg,var(--purple),var(--blue))}
+.release-card{
+  background:linear-gradient(145deg,#183966,#2d6b68);color:#fff;border:0
+}
+.release-card p{font-size:10px;color:rgba(255,255,255,.83);line-height:1.55}
+
+/* Screen 4: Compare */
+.compare-screen{
+  grid-template-columns:1fr;
+  grid-template-rows:auto auto 1fr;
+  gap:12px;
+}
+.same-input{
+  display:flex;align-items:center;justify-content:center;gap:12px;
+  border-radius:16px;padding:10px 14px;background:#f5f8fc;border:1px solid var(--line);
+  font-size:11px
+}
+.same-input b{color:var(--blue)}
+.compare-grid{
+  display:grid;grid-template-columns:1fr 56px 1fr;gap:12px;min-height:0
+}
+.version-panel{
+  border-radius:20px;padding:15px;border:1px solid var(--line);
+  background:#fff;box-shadow:var(--shadow-sm);min-height:0;
+  display:grid;grid-template-rows:auto auto 1fr auto;gap:10px
+}
+.version-panel.bad{background:linear-gradient(160deg,#fff8f2,#fff)}
+.version-panel.good{background:linear-gradient(160deg,#eff8ff,#fff)}
+.version-head{display:flex;justify-content:space-between;align-items:center}
+.version-head h3{margin:0;font-size:17px}
+.version-head span{font-size:10px;font-weight:900;padding:5px 8px;border-radius:999px}
+.bad .version-head span{background:var(--red-soft);color:var(--red)}
+.good .version-head span{background:var(--green-soft);color:var(--green)}
+.qa-compare{
+  display:grid;grid-template-columns:1fr 1fr;gap:8px
+}
+.compare-detail{
+  border-radius:14px;background:#fff;border:1px solid var(--line);padding:11px
+}
+.compare-detail b{font-size:10px}
+.compare-detail p{font-size:10px;line-height:1.5;color:var(--muted);margin:6px 0 0}
+.capability-list{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+.capability{
+  border-radius:12px;padding:8px 9px;background:#fff;border:1px solid var(--line);
+  display:flex;gap:7px;align-items:flex-start;font-size:9px;line-height:1.45
+}
+.capability i{font-style:normal;font-weight:900}
+.bad .capability i{color:var(--red)}
+.good .capability i{color:var(--green)}
+.compare-arrow{
+  display:grid;place-items:center;font-size:32px;color:var(--purple);font-weight:900
+}
+.metric-strip{display:grid;grid-template-columns:repeat(5,1fr);gap:7px}
+.metric-box{
+  border-radius:12px;padding:8px;text-align:center;background:#fff;border:1px solid var(--line)
+}
+.metric-box b{display:block;font-size:15px}
+.metric-box small{font-size:8px;color:var(--muted)}
+.compare-conclusion{
+  padding:11px;border-radius:15px;background:linear-gradient(135deg,#233e73,#6d4bbf);
+  color:#fff;text-align:center;font-size:12px;font-weight:900
+}
+
+/* Bottom controller */
+.controller{
+  display:grid;grid-template-columns:1fr auto 1fr;align-items:center;
+  padding:10px 14px;gap:14px
+}
+.controller-left{display:flex;align-items:center;gap:8px}
+.controller-center{text-align:center}
+.guide-title{font-size:11px;font-weight:900;color:#52637a}
+.guide-text{font-size:10px;color:var(--muted);margin-top:3px}
+.controller-right{display:flex;justify-content:flex-end;gap:8px}
+.secondary-btn{
+  border:1px solid #d8e2ed;background:#fff;color:#4b6079;
+  padding:10px 13px;border-radius:12px;font-weight:900;cursor:pointer
+}
+.primary-btn{
+  border:0;background:linear-gradient(135deg,var(--blue),#5a84ed);color:#fff;
+  min-width:250px;padding:13px 22px;border-radius:15px;font-weight:900;cursor:pointer;
+  box-shadow:0 12px 25px rgba(47,111,237,.26);transition:.2s
+}
+.primary-btn:hover{transform:translateY(-1px)}
+.primary-btn .hint-arrow{margin-left:10px}
+.auto-badge{
+  display:inline-flex;align-items:center;gap:6px;font-size:9px;color:var(--muted);
+  padding:5px 8px;border-radius:999px;background:#f1f5f9;border:1px solid var(--line)
+}
+.auto-dot{width:7px;height:7px;border-radius:50%;background:#aab7c8}
+.auto-badge.running .auto-dot{background:var(--green);box-shadow:0 0 0 4px rgba(23,156,104,.12)}
+
+@media(max-width:1400px){
+  .app{grid-template-rows:82px 54px minmax(650px,1fr) 70px}
+  .agent-screen{grid-template-columns:238px 1fr 270px}
+  .engineering-screen{grid-template-columns:260px 1fr 285px}
+  .brand h1{font-size:21px}
+  .core-message{font-size:12px}
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="glass header">
+    <div class="brand">
+      <div class="brand-mark">↻</div>
+      <div>
+        <h1>Loop Engineering 的原理与运行流程</h1>
+        <p>AI 面试官训练与优化实验室 · 课堂引导版</p>
+      </div>
+    </div>
+    <div style="position:absolute;right:18px;top:10px;z-index:20;
+padding:6px 10px;border-radius:999px;background:#17243b;color:#fff;
+font-size:10px;font-weight:900;box-shadow:0 8px 18px rgba(23,36,59,.18)">
+引导重构版 20260726_122409
+</div>
+<div class="core-message">
+      Agent Loop 负责完成一次面试任务，Engineering Loop 负责让整个系统逐轮变好。
+      <small>Agent Loop executes the task. Engineering Loop improves the system.</small>
+    </div>
+  </header>
+
+  <nav class="glass progress" id="progress">
+    <button class="progress-step active" data-screen="0"><span class="num">1</span>先看业务输入</button>
+    <button class="progress-step" data-screen="1"><span class="num">2</span>运行 Agent Loop</button>
+    <button class="progress-step" data-screen="2"><span class="num">3</span>运行 Engineering Loop</button>
+    <button class="progress-step" data-screen="3"><span class="num">4</span>对比 V1 与 V4</button>
+  </nav>
+
+  <main class="glass workspace">
+    <!-- STEP 1 -->
+    <section class="screen business-screen active" data-screen="0">
+      <div class="screen-title">
+        <div>
+          <h2>第一步：先看清楚真实业务、输入和输出</h2>
+          <p>不要先看循环。先明确系统到底在解决什么业务问题。</p>
+        </div>
+        <span class="step-chip">课堂引导 1 / 4</span>
+      </div>
+
+      <div class="business-left">
+        <article class="card resume-card">
+          <div class="card-head"><h3>候选人简历</h3><span class="tag">业务输入 ①</span></div>
+          <div class="resume-top">
+            <div class="avatar">张</div>
+            <div><h4>张同学</h4><p>应聘：AI 应用开发工程师</p></div>
+          </div>
+          <div class="info-grid">
+            <b>核心项目</b><span>企业知识库问答系统</span>
+            <b>技术栈</b><span>LangGraph、RAG、Milvus、PostgreSQL、FastAPI</span>
+            <b>项目特点</b><span>Agent 负责问题分类、查询改写、知识检索和异常降级</span>
+          </div>
+          <div class="label-row">
+            <span class="mini-tag">BGE-M3</span>
+            <span class="mini-tag">Hybrid Retrieval</span>
+            <span class="mini-tag">Reranker</span>
+            <span class="mini-tag">SSE</span>
+          </div>
+        </article>
+
+        <article class="card">
+          <div class="card-head"><h3>岗位 JD</h3><span class="tag">业务输入 ②</span></div>
+          <div class="box">企业希望候选人能够讲清 RAG 选型、检索优化、Agent 决策、异常处理和工程评测，而不是只会背技术概念。</div>
+        </article>
+
+        <article class="card">
+          <div class="card-head"><h3>候选人当前回答</h3><span class="tag">运行输入 ③</span></div>
+          <div class="box">“我们使用了 BGE-M3，因为它支持稠密检索和稀疏检索。”</div>
+        </article>
+      </div>
+
+      <div class="business-right">
+        <article class="card goal-card">
+          <div class="card-head"><h3>真实业务痛点</h3><span class="tag" style="background:rgba(255,255,255,.18);color:white">招聘团队</span></div>
+          <p>企业想用 AI 面试官提高初筛效率，但一次 Prompt 经常产生空泛问题、机械追问、重复问题和不稳定评分。Loop Engineering 的任务，就是把这些失败变成下一版系统的改进依据。</p>
+        </article>
+
+        <div>
+          <div class="io-line">
+            <div class="io-block">
+              <span class="io-num">1</span>
+              <h4>输入 Input</h4>
+              <ul>
+                <li>候选人简历</li>
+                <li>岗位 JD</li>
+                <li>当前回答</li>
+                <li>历史面试状态</li>
+              </ul>
+            </div>
+            <div class="io-arrow">→</div>
+            <div class="io-block">
+              <span class="io-num">2</span>
+              <h4>AI 面试系统</h4>
+              <ul>
+                <li>生成问题</li>
+                <li>判断回答缺口</li>
+                <li>决定是否追问</li>
+                <li>更新 Shared State</li>
+              </ul>
+            </div>
+            <div class="io-arrow">→</div>
+            <div class="io-block">
+              <span class="io-num">3</span>
+              <h4>输出 Output</h4>
+              <ul>
+                <li>当前问题与追问</li>
+                <li>评分与评分理由</li>
+                <li>失败类型</li>
+                <li>系统改进建议</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="guide-card" style="margin-top:12px">
+            <div class="guide-icon">👆</div>
+            <div>
+              <h3>现在只需要点击页面底部的蓝色按钮</h3>
+              <p>下一步将只展示 Agent Loop，不会同时堆叠 Engineering Loop。</p>
+            </div>
+            <div class="guide-arrow">↓</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- STEP 2 -->
+    <section class="screen agent-screen" data-screen="1">
+      <div class="screen-title">
+        <div>
+          <h2>第二步：看 Agent Loop 如何完成一次面试任务</h2>
+          <p>点击“执行下一步”，每次只高亮一个节点。蓝色循环属于 AI 系统内部。</p>
+        </div>
+        <span class="step-chip">课堂引导 2 / 4</span>
+      </div>
+
+      <aside class="context-column">
+        <article class="card">
+          <div class="card-head"><h3>本轮输入</h3><span class="tag">Input</span></div>
+          <div class="box">简历：企业知识库项目<br>岗位：AI 应用开发<br>回答：BGE-M3 支持稠密与稀疏检索</div>
+        </article>
+        <article class="card">
+          <div class="card-head"><h3>面试目标</h3><span class="tag">Goal</span></div>
+          <div class="box">判断候选人是否真正理解：为什么选 BGE-M3、双路召回如何融合、效果如何验证。</div>
+        </article>
+        <article class="card output-highlight">
+          <div class="card-head"><h3>当前教学重点</h3><span class="tag">Guide</span></div>
+          <div class="status-box">
+            <h4 id="agentTeachTitle">从“感知信息”开始</h4>
+            <p id="agentTeachText">Agent 先读取简历、岗位目标、当前问题和候选人回答。</p>
+          </div>
+        </article>
+      </aside>
+
+      <article class="card pipeline-card">
+        <div class="card-head">
+          <h3>Agent Loop：系统根据当前状态决定下一步</h3>
+          <span class="tag" id="agentStepTag">步骤 0 / 6</span>
+        </div>
+        <div>
+          <div class="pipeline" id="agentPipeline">
+            <div class="loop-center">
+              <div><div style="font-size:32px">🤖</div><b>AI 面试官</b><small>读取 Shared State<br>选择下一步动作</small></div>
+            </div>
+          </div>
+          <div class="timeline" id="agentTimeline"></div>
+        </div>
+      </article>
+
+      <aside class="output-column">
+        <article class="card output-highlight">
+          <div class="card-head"><h3>实时输出</h3><span class="tag">Output</span></div>
+          <div class="status-box">
+            <h4 id="agentOutputTitle">尚未运行</h4>
+            <p id="agentOutputText">点击底部蓝色按钮，观察输出如何随每一步变化。</p>
+          </div>
+        </article>
+        <article class="card">
+          <div class="card-head"><h3>当前决策</h3><span class="tag">Decision</span></div>
+          <div class="box" id="agentDecision">等待系统读取输入。</div>
+        </article>
+        <article class="card">
+          <div class="card-head"><h3>Shared State</h3><span class="tag">Memory</span></div>
+          <div class="box" id="agentState">已问问题：0<br>缺失信息：待判断<br>追问深度：0</div>
+        </article>
+        <article class="card">
+          <div class="card-head"><h3>本轮评分</h3><span class="tag">Score</span></div>
+          <div class="score-big" id="agentScore">--</div>
+          <div class="score-track"><i id="agentScoreBar" style="width:0%"></i></div>
+        </article>
+        <div class="callout">这里的循环是 <b>Agent Loop</b>：AI 自己围绕当前任务持续感知、判断和行动。</div>
+      </aside>
+    </section>
+
+    <!-- STEP 3 -->
+    <section class="screen engineering-screen" data-screen="2">
+      <div class="screen-title">
+        <div>
+          <h2>第三步：看 Loop Engineer 如何根据失败改进整个系统</h2>
+          <p>紫色流程属于开发者工程闭环。它不是 AI 在回答问题，而是工程师在改进 AI 系统。</p>
+        </div>
+        <span class="step-chip" style="background:var(--purple-soft);color:var(--purple)">课堂引导 3 / 4</span>
+      </div>
+
+      <aside class="failure-panel">
+        <article class="card">
+          <div class="card-head"><h3>上一版失败样本</h3><span class="tag" style="background:var(--red-soft);color:var(--red)">V1 Failure</span></div>
+          <div class="failure-list">
+            <div class="failure-item"><span>问题过于泛化，只问“什么是 RAG”</span><b>Prompt</b></div>
+            <div class="failure-item"><span>没有使用简历中的项目事实</span><b>Context</b></div>
+            <div class="failure-item"><span>候选人回答不完整，但系统没有追问</span><b>Workflow</b></div>
+            <div class="failure-item"><span>评分理由模糊，版本之间无法比较</span><b>Evaluation</b></div>
+          </div>
+        </article>
+        <article class="card">
+          <div class="card-head"><h3>为什么必须工程化</h3><span class="tag">Why</span></div>
+          <div class="box">如果只“重新写一句 Prompt”，很难判断系统是否真的变好。必须用测试集、运行轨迹、失败分类和回归评测形成证据链。</div>
+        </article>
+      </aside>
+
+      <article class="card engineering-flow">
+        <div class="card-head">
+          <h3>Engineering Loop：每一次失败都进入下一轮改进</h3>
+          <span class="tag" style="background:var(--purple-soft);color:var(--purple)" id="engStepTag">步骤 0 / 6</span>
+        </div>
+        <div class="eng-track" id="engTrack"></div>
+        <div>
+          <div class="card-head" style="margin-top:4px"><h3>本轮可修改模块</h3><span class="small muted">第 4 步会自动高亮</span></div>
+          <div class="module-grid" id="moduleGrid"></div>
+        </div>
+      </article>
+
+      <aside class="evaluation-panel">
+        <article class="card output-highlight">
+          <div class="card-head"><h3>当前工程动作</h3><span class="tag">Action</span></div>
+          <div class="status-box">
+            <h4 id="engActionTitle">等待运行</h4>
+            <p id="engActionText">点击底部蓝色按钮，逐步执行工程闭环。</p>
+          </div>
+        </article>
+        <article class="card">
+          <div class="card-head"><h3>回归评测结果</h3><span class="tag">Evaluation</span></div>
+          <div id="evalRows"></div>
+        </article>
+        <article class="card release-card">
+          <div class="card-head"><h3>发布门槛</h3><span class="tag" style="background:rgba(255,255,255,.18);color:#fff">Release Gate</span></div>
+          <p id="releaseText">系统必须同时满足：简历相关度 ≥ 90%、评分一致性 ≥ 85%、重复问题率 ≤ 8%、事实校验通过。</p>
+        </article>
+        <div class="callout" style="background:var(--purple-soft);border-color:#d8ccf6;color:#5d438f">这里的循环是 <b>Engineering Loop</b>：开发者围绕整个系统持续运行、观察、诊断、修改和评测。</div>
+      </aside>
+    </section>
+
+    <!-- STEP 4 -->
+    <section class="screen compare-screen" data-screen="3">
+      <div class="screen-title">
+        <div>
+          <h2>第四步：用同一个输入，直接对比 V1 与 V4</h2>
+          <p>这是整堂课最重要的结论页：对比不是“跑了几次”，而是系统能力发生了什么变化。</p>
+        </div>
+        <span class="step-chip">课堂引导 4 / 4</span>
+      </div>
+
+      <div class="same-input">
+        <b>相同输入：</b>
+        候选人简历 + AI 应用开发岗位 JD + 回答“BGE-M3 支持稠密与稀疏检索”
+      </div>
+
+      <div class="compare-grid">
+        <article class="version-panel bad">
+          <div class="version-head"><h3>V1 · 一次 Prompt</h3><span>系统不稳定</span></div>
+          <div class="qa-compare">
+            <div class="compare-detail"><b>系统提问</b><p>“请介绍一下什么是 RAG。”</p></div>
+            <div class="compare-detail"><b>系统评分</b><p>给出 46 分，但评分理由不清晰。</p></div>
+          </div>
+          <div class="capability-list">
+            <div class="capability"><i>✕</i><span>没有真正使用简历项目细节</span></div>
+            <div class="capability"><i>✕</i><span>不会根据回答缺口动态追问</span></div>
+            <div class="capability"><i>✕</i><span>不保存历史问题和薄弱点</span></div>
+            <div class="capability"><i>✕</i><span>没有测试集与回归评测</span></div>
+            <div class="capability"><i>✕</i><span>版本好坏只能凭感觉判断</span></div>
+            <div class="capability"><i>✕</i><span>没有明确发布标准</span></div>
+          </div>
+          <div class="metric-strip">
+            <div class="metric-box"><b>42%</b><small>简历相关度</small></div>
+            <div class="metric-box"><b>35%</b><small>追问自然度</small></div>
+            <div class="metric-box"><b>51%</b><small>评分一致性</small></div>
+            <div class="metric-box"><b>27%</b><small>重复问题率</small></div>
+            <div class="metric-box"><b>60%</b><small>稳定性</small></div>
+          </div>
+        </article>
+
+        <div class="compare-arrow">→</div>
+
+        <article class="version-panel good">
+          <div class="version-head"><h3>V4 · Loop Engineering</h3><span>达到发布标准</span></div>
+          <div class="qa-compare">
+            <div class="compare-detail"><b>系统追问</b><p>“稠密和稀疏结果如何融合？为何不用单路向量召回？”</p></div>
+            <div class="compare-detail"><b>系统评分</b><p>基于 Rubric、事实校验、追问深度和回归结果给出 92 分。</p></div>
+          </div>
+          <div class="capability-list">
+            <div class="capability"><i>✓</i><span>结构化使用简历、JD 与项目事实</span></div>
+            <div class="capability"><i>✓</i><span>Agent Loop 根据状态动态追问</span></div>
+            <div class="capability"><i>✓</i><span>Shared State 保存历史与薄弱点</span></div>
+            <div class="capability"><i>✓</i><span>测试集、轨迹、诊断、回归完整</span></div>
+            <div class="capability"><i>✓</i><span>指标证明确实优于上一版</span></div>
+            <div class="capability"><i>✓</i><span>达到发布门槛后才发布</span></div>
+          </div>
+          <div class="metric-strip">
+            <div class="metric-box"><b>93%</b><small>简历相关度</small></div>
+            <div class="metric-box"><b>90%</b><small>追问自然度</small></div>
+            <div class="metric-box"><b>89%</b><small>评分一致性</small></div>
+            <div class="metric-box"><b>5%</b><small>重复问题率</small></div>
+            <div class="metric-box"><b>94%</b><small>稳定性</small></div>
+          </div>
+        </article>
+      </div>
+
+      <div class="compare-conclusion">Agent Loop 让 AI 完成任务；Engineering Loop 让开发者根据失败证据持续改进系统。</div>
+    </section>
+  </main>
+
+  <footer class="glass controller">
+    <div class="controller-left">
+      <button class="secondary-btn" id="prevScreenBtn">← 上一步</button>
+      <button class="secondary-btn" id="resetBtn">↺ 重新开始</button>
+      <span class="auto-badge" id="autoBadge"><i class="auto-dot"></i><span>手动讲解模式</span></span>
+    </div>
+
+    <div class="controller-center">
+      <div class="guide-title" id="guideTitle">先看清输入、系统和输出</div>
+      <div class="guide-text" id="guideText">点击蓝色按钮进入 Agent Loop。</div>
+    </div>
+
+    <div class="controller-right">
+      <button class="secondary-btn" id="autoBtn">自动演示</button>
+      <button class="primary-btn" id="primaryBtn">下一步：运行 Agent Loop <span class="hint-arrow">→</span></button>
+    </div>
+  </footer>
+</div>
+
+<script>
+const screens = [
+  {
+    title:"先看清输入、系统和输出",
+    text:"点击蓝色按钮进入 Agent Loop。",
+    next:"下一步：运行 Agent Loop"
+  },
+  {
+    title:"逐步观察 Agent 如何做决策",
+    text:"每次点击只执行一个节点；完成后进入 Engineering Loop。",
+    next:"执行下一步"
+  },
+  {
+    title:"逐步观察工程师如何改进系统",
+    text:"每次点击只执行一个工程动作；完成后查看强对比。",
+    next:"执行下一步"
+  },
+  {
+    title:"同一个输入，比较两种系统能力",
+    text:"V1 与 V4 的差异已经完整呈现。",
+    next:"重新播放整套演示"
+  }
+];
+
+const agentSteps = [
+  {
+    cn:"感知信息",en:"Perceive",icon:"👁️",
+    teach:"Agent 读取所有与当前任务相关的输入。",
+    outputTitle:"完成输入读取",
+    output:"已读取简历、岗位 JD、当前回答和历史状态。",
+    decision:"下一步需要判断候选人回答覆盖了哪些内容。",
+    state:"已问问题：1<br>缺失信息：待分析<br>追问深度：0",
+    score:35
+  },
+  {
+    cn:"判断缺口",en:"Decide",icon:"🧠",
+    teach:"Agent 不是固定走下一步，而是根据当前回答判断缺失信息。",
+    outputTitle:"发现三个回答缺口",
+    output:"缺少业务原因、双路召回融合方式和效果指标。",
+    decision:"当前回答不完整，应该继续追问，而不是直接评分结束。",
+    state:"已问问题：1<br>缺失信息：业务原因 / 融合策略 / 指标<br>追问深度：0",
+    score:48
+  },
+  {
+    cn:"生成追问",en:"Act",icon:"🎯",
+    teach:"Agent 根据缺口动态生成下一轮问题。",
+    outputTitle:"生成动态追问",
+    output:"“稠密和稀疏结果如何合并？为什么没有直接使用单路向量召回？”",
+    decision:"将问题发送给候选人，继续收集项目证据。",
+    state:"已问问题：2<br>缺失信息：融合策略 / 指标<br>追问深度：1",
+    score:62
+  },
+  {
+    cn:"观察回答",en:"Observe",icon:"🔎",
+    teach:"Agent 观察真实返回结果，而不是假定工具或用户一定按预期回答。",
+    outputTitle:"收到新的项目回答",
+    output:"候选人说明使用加权融合和 Reranker，并解释单路召回的不足。",
+    decision:"核心方案已说明，但仍需判断是否满足考察目标。",
+    state:"已问问题：2<br>缺失信息：效果指标<br>追问深度：1",
+    score:75
+  },
+  {
+    cn:"更新状态",en:"Update State",icon:"🔄",
+    teach:"Agent 将已问问题、薄弱点和新证据写回 Shared State。",
+    outputTitle:"Shared State 已更新",
+    output:"记录 Hybrid Retrieval、Reranker、单路召回不足及未回答的效果指标。",
+    decision:"状态更新后，系统具备连续决策能力。",
+    state:"已问问题：2<br>已覆盖：选型 / 融合 / 业务原因<br>追问深度：1",
+    score:84
+  },
+  {
+    cn:"继续或停止",en:"Continue / Stop",icon:"🚦",
+    teach:"Agent 根据目标覆盖度和追问深度决定继续追问、换题或结束。",
+    outputTitle:"决定结束当前问题链",
+    output:"技术方案已基本讲清，进入综合评分；效果指标作为后续改进建议。",
+    decision:"停止当前追问链，输出评分和改进建议。",
+    state:"已问问题：2<br>目标覆盖度：86%<br>追问深度：1 / 2",
+    score:86
+  }
+];
+
+const agentPositions = [
+  [50,16],[77,34],[77,69],[50,84],[23,69],[23,34]
+];
+
+const engineeringSteps = [
+  {cn:"运行测试集",en:"Run",icon:"▶️",action:"用多份简历、多个回答质量和异常案例批量运行当前版本。"},
+  {cn:"收集轨迹",en:"Observe",icon:"📡",action:"记录每个案例的输入、Prompt、状态变化、输出和评分。"},
+  {cn:"诊断失败",en:"Diagnose",icon:"🩺",action:"把失败归类为 Prompt、Context、Memory、Workflow 或 Evaluation 问题。"},
+  {cn:"修改系统",en:"Modify",icon:"🛠️",action:"同时调整 Prompt、上下文、记忆、流程、评测和护栏，而不是只改一句话。"},
+  {cn:"回归评测",en:"Evaluate",icon:"🧪",action:"重新运行相同测试集，比较简历相关度、评分一致性和重复问题率。"},
+  {cn:"发布或继续",en:"Release / Iterate",icon:"🚀",action:"达到发布门槛就发布；没有达到则把新失败继续送入下一轮。"}
+];
+
+const modules = [
+  ["Prompt","✍️"],["Context","🧩"],["Memory","🧠"],["Tools","🔧"],
+  ["Workflow","🔀"],["Evaluation","🧪"],["Guardrails","🛡️"]
+];
+
+const evalMetrics = [
+  ["简历相关度",42,93],
+  ["追问自然度",35,90],
+  ["评分一致性",51,89],
+  ["系统稳定性",60,94]
+];
+
+let screenIndex = 0;
+let agentIndex = -1;
+let engIndex = -1;
+let autoTimer = null;
+let autoMode = false;
+
+const $ = s => document.querySelector(s);
+const $$ = s => [...document.querySelectorAll(s)];
+
+function renderProgress(){
+  $$(".progress-step").forEach((btn,i)=>{
+    btn.classList.toggle("active",i===screenIndex);
+    btn.classList.toggle("done",i<screenIndex);
+  });
+}
+
+function showScreen(index){
+  screenIndex = Math.max(0,Math.min(index,3));
+  $$(".screen").forEach((s,i)=>s.classList.toggle("active",i===screenIndex));
+  renderProgress();
+  updateController();
+  $("#prevScreenBtn").disabled = screenIndex===0;
+  $("#prevScreenBtn").style.opacity = screenIndex===0?".45":"1";
+}
+
+function updateController(){
+  const cfg = screens[screenIndex];
+  $("#guideTitle").textContent = cfg.title;
+  $("#guideText").textContent = cfg.text;
+
+  if(screenIndex===0){
+    $("#primaryBtn").innerHTML = '下一步：运行 Agent Loop <span class="hint-arrow">→</span>';
+  }else if(screenIndex===1){
+    if(agentIndex < agentSteps.length-1){
+      $("#primaryBtn").innerHTML = `执行下一步：${agentSteps[agentIndex+1].cn} <span class="hint-arrow">→</span>`;
+    }else{
+      $("#primaryBtn").innerHTML = '下一步：进入 Engineering Loop <span class="hint-arrow">→</span>';
+    }
+  }else if(screenIndex===2){
+    if(engIndex < engineeringSteps.length-1){
+      $("#primaryBtn").innerHTML = `执行下一步：${engineeringSteps[engIndex+1].cn} <span class="hint-arrow">→</span>`;
+    }else{
+      $("#primaryBtn").innerHTML = '下一步：查看 V1 与 V4 对比 <span class="hint-arrow">→</span>';
+    }
+  }else{
+    $("#primaryBtn").innerHTML = '重新播放整套演示 <span class="hint-arrow">↻</span>';
+  }
+}
+
+function renderAgent(){
+  const pipe = $("#agentPipeline");
+  [...pipe.querySelectorAll(".flow-node,.flow-line")].forEach(el=>el.remove());
+
+  agentSteps.forEach((step,i)=>{
+    const [x,y] = agentPositions[i];
+    const node = document.createElement("div");
+    node.className = "flow-node " + (i<agentIndex?"done":i===agentIndex?"active":"pending");
+    node.style.left=x+"%"; node.style.top=y+"%";
+    node.innerHTML=`<div><div class="node-icon">${step.icon}</div><b>${step.cn}</b><small>${step.en}</small></div>`;
+    pipe.appendChild(node);
+  });
+
+  requestAnimationFrame(drawAgentLines);
+  $("#agentTimeline").innerHTML = agentSteps.map((_,i)=>`<span class="timeline-dot ${i<agentIndex?'done':i===agentIndex?'active':''}">${i+1}</span>`).join("");
+  $("#agentStepTag").textContent = `步骤 ${Math.max(agentIndex+1,0)} / ${agentSteps.length}`;
+
+  if(agentIndex<0){
+    $("#agentTeachTitle").textContent="从“感知信息”开始";
+    $("#agentTeachText").textContent="Agent 先读取简历、岗位目标、当前问题和候选人回答。";
+    $("#agentOutputTitle").textContent="尚未运行";
+    $("#agentOutputText").textContent="点击底部蓝色按钮，观察输出如何随每一步变化。";
+    $("#agentDecision").textContent="等待系统读取输入。";
+    $("#agentState").innerHTML="已问问题：0<br>缺失信息：待判断<br>追问深度：0";
+    $("#agentScore").textContent="--";
+    $("#agentScoreBar").style.width="0%";
+  }else{
+    const s=agentSteps[agentIndex];
+    $("#agentTeachTitle").textContent=s.cn+"：课堂解释";
+    $("#agentTeachText").textContent=s.teach;
+    $("#agentOutputTitle").textContent=s.outputTitle;
+    $("#agentOutputText").textContent=s.output;
+    $("#agentDecision").textContent=s.decision;
+    $("#agentState").innerHTML=s.state;
+    $("#agentScore").textContent=s.score;
+    $("#agentScoreBar").style.width=s.score+"%";
+  }
+}
+
+function drawAgentLines(){
+  const pipe=$("#agentPipeline");
+  const nodes=[...pipe.querySelectorAll(".flow-node")];
+  const rect=pipe.getBoundingClientRect();
+  nodes.forEach((n,i)=>{
+    if(i===nodes.length-1)return;
+    const a=n.getBoundingClientRect(),b=nodes[i+1].getBoundingClientRect();
+    const x1=a.left+a.width/2-rect.left, y1=a.top+a.height/2-rect.top;
+    const x2=b.left+b.width/2-rect.left, y2=b.top+b.height/2-rect.top;
+    const len=Math.hypot(x2-x1,y2-y1);
+    const angle=Math.atan2(y2-y1,x2-x1)*180/Math.PI;
+    const line=document.createElement("div");
+    line.className="flow-line "+(i===agentIndex-1?"active":"");
+    line.style.left=x1+"px";line.style.top=y1+"px";line.style.width=len+"px";line.style.transform=`rotate(${angle}deg)`;
+    pipe.insertBefore(line,pipe.firstChild);
+  });
+}
+
+function renderEngineering(){
+  $("#engTrack").innerHTML = engineeringSteps.map((s,i)=>`
+    <div class="eng-node ${i<engIndex?'done':i===engIndex?'active':'pending'}">
+      <span class="node-index">${i+1}</span>
+      <div class="eng-icon">${s.icon}</div>
+      <b>${s.cn}</b>
+      <small>${s.en}</small>
+    </div>
+  `).join("");
+  $("#engStepTag").textContent=`步骤 ${Math.max(engIndex+1,0)} / ${engineeringSteps.length}`;
+
+  $("#moduleGrid").innerHTML = modules.map(([n,ic])=>`
+    <div class="module-card ${engIndex===3?'active':''}"><span>${ic}</span><b>${n}</b></div>
+  `).join("");
+
+  if(engIndex<0){
+    $("#engActionTitle").textContent="等待运行";
+    $("#engActionText").textContent="点击底部蓝色按钮，逐步执行工程闭环。";
+  }else{
+    const s=engineeringSteps[engIndex];
+    $("#engActionTitle").textContent=s.cn;
+    $("#engActionText").textContent=s.action;
+  }
+
+  $("#evalRows").innerHTML = evalMetrics.map(([name,before,after])=>{
+    const value = engIndex>=4 ? after : before;
+    return `<div class="eval-row" style="margin:8px 0">
+      <span>${name}</span>
+      <div class="eval-bar"><i style="width:${value}%"></i></div>
+      <b>${value}%</b>
+    </div>`;
+  }).join("");
+
+  $("#releaseText").textContent = engIndex===5
+    ? "评测通过：简历相关度 93%、评分一致性 89%、重复问题率 5%、事实校验通过。V4 达到发布标准。"
+    : "系统必须同时满足：简历相关度 ≥ 90%、评分一致性 ≥ 85%、重复问题率 ≤ 8%、事实校验通过。";
+}
+
+function primaryAction(){
+  if(screenIndex===0){
+    showScreen(1);
+  }else if(screenIndex===1){
+    if(agentIndex<agentSteps.length-1){
+      agentIndex++;
+      renderAgent();
+      updateController();
+    }else{
+      showScreen(2);
+    }
+  }else if(screenIndex===2){
+    if(engIndex<engineeringSteps.length-1){
+      engIndex++;
+      renderEngineering();
+      updateController();
+    }else{
+      showScreen(3);
+    }
+  }else{
+    resetAll();
+    startAuto();
+  }
+}
+
+function previousAction(){
+  if(screenIndex===1 && agentIndex>=0){
+    agentIndex--;
+    renderAgent();updateController();return;
+  }
+  if(screenIndex===2 && engIndex>=0){
+    engIndex--;
+    renderEngineering();updateController();return;
+  }
+  if(screenIndex>0) showScreen(screenIndex-1);
+}
+
+function resetAll(){
+  stopAuto(false);
+  agentIndex=-1;engIndex=-1;
+  renderAgent();renderEngineering();
+  showScreen(0);
+}
+
+function startAuto(){
+  resetAll();
+  autoMode=true;
+  $("#autoBadge").classList.add("running");
+  $("#autoBadge span").textContent="自动演示中";
+  $("#autoBtn").textContent="暂停自动演示";
+
+  const run=()=>{
+    if(screenIndex===3){
+      stopAuto(true);
+      return;
+    }
+    primaryAction();
+    autoTimer=setTimeout(run,1300);
+  };
+  autoTimer=setTimeout(run,900);
+}
+
+function stopAuto(completed=false){
+  if(autoTimer)clearTimeout(autoTimer);
+  autoTimer=null;
+  autoMode=false;
+  $("#autoBadge").classList.remove("running");
+  $("#autoBadge span").textContent=completed?"自动演示完成":"手动讲解模式";
+  $("#autoBtn").textContent="自动演示";
+}
+
+$("#primaryBtn").onclick=()=>{
+  if(autoMode)stopAuto(false);
+  primaryAction();
+};
+$("#prevScreenBtn").onclick=()=>{
+  if(autoMode)stopAuto(false);
+  previousAction();
+};
+$("#resetBtn").onclick=resetAll;
+$("#autoBtn").onclick=()=>autoMode?stopAuto(false):startAuto();
+
+$$(".progress-step").forEach(btn=>{
+  btn.onclick=()=>{
+    if(autoMode)stopAuto(false);
+    showScreen(+btn.dataset.screen);
+  };
+});
+
+window.addEventListener("resize",()=>{if(screenIndex===1)requestAnimationFrame(drawAgentLines)});
+
+renderAgent();
+renderEngineering();
+showScreen(0);
+</script>
+</body>
+</html>

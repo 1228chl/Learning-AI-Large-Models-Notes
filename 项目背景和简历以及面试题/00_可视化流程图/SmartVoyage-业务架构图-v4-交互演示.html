@@ -1,0 +1,1464 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>SmartVoyage 业务架构图 V4 · 交互演示</title>
+  <style>
+    :root {
+      --ink: #16324a;
+      --ink-soft: #4a667a;
+      --muted: #6f8799;
+      --line: rgba(22, 50, 74, 0.12);
+      --panel: rgba(255, 252, 247, 0.88);
+      --panel-strong: #fffaf3;
+      --sky: #e8f3f7;
+      --teal: #0f8f8a;
+      --teal-deep: #0b6f6b;
+      --ocean: #1f6f9f;
+      --sun: #d08a2e;
+      --coral: #c45c3e;
+      --leaf: #2f8f5b;
+      --weather: #1f8fb5;
+      --ticket: #c45c3e;
+      --trip: #2f8f5b;
+      --shadow: 0 18px 48px rgba(15, 52, 74, 0.14);
+      --font: "Segoe UI", "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif;
+      --mono: "Cascadia Mono", "Sarasa Mono SC", "Consolas", monospace;
+    }
+
+    * { box-sizing: border-box; }
+    html, body {
+      margin: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background: #d7e6ef;
+      color: var(--ink);
+      font-family: var(--font);
+    }
+    body { overflow: hidden; }
+    button { font: inherit; cursor: pointer; }
+
+    .canvas {
+      position: relative;
+      width: 1920px;
+      height: 1080px;
+      overflow: hidden;
+      transform-origin: left top;
+      isolation: isolate;
+      background:
+        radial-gradient(1200px 620px at 12% -8%, rgba(255, 214, 160, 0.42), transparent 58%),
+        radial-gradient(900px 520px at 92% 8%, rgba(55, 168, 176, 0.28), transparent 55%),
+        radial-gradient(800px 480px at 70% 100%, rgba(31, 111, 159, 0.18), transparent 50%),
+        linear-gradient(165deg, #eef6fa 0%, #e3eef5 42%, #d9e8f0 100%);
+      box-shadow: var(--shadow);
+    }
+
+    .canvas::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(22, 50, 74, 0.035) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(22, 50, 74, 0.035) 1px, transparent 1px);
+      background-size: 48px 48px;
+      mask-image: radial-gradient(ellipse at center, #000 35%, transparent 80%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .noise {
+      position: absolute;
+      inset: 0;
+      opacity: 0.045;
+      pointer-events: none;
+      z-index: 1;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    }
+
+    .layer { position: absolute; z-index: 2; }
+
+    .topbar {
+      top: 28px;
+      left: 36px;
+      right: 36px;
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 24px;
+    }
+
+    .brand {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      min-width: 0;
+    }
+
+    .brand-mark {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .logo {
+      width: 42px;
+      height: 42px;
+      border-radius: 14px;
+      background: linear-gradient(145deg, #1a8f9a, #14607a 55%, #0e4d66);
+      display: grid;
+      place-items: center;
+      color: #fff;
+      box-shadow: 0 10px 24px rgba(14, 77, 102, 0.28);
+    }
+
+    .logo svg { width: 24px; height: 24px; }
+
+    .brand h1 {
+      margin: 0;
+      font-size: 34px;
+      letter-spacing: 0.02em;
+      font-weight: 700;
+      line-height: 1.1;
+    }
+
+    .brand p {
+      margin: 0;
+      color: var(--ink-soft);
+      font-size: 16px;
+      max-width: 760px;
+      line-height: 1.45;
+    }
+
+    .controls {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    .control-btn {
+      height: 42px;
+      padding: 0 16px;
+      border-radius: 999px;
+      border: 1px solid rgba(22, 50, 74, 0.12);
+      background: rgba(255, 250, 243, 0.92);
+      color: var(--ink);
+      font-weight: 600;
+      box-shadow: 0 6px 16px rgba(22, 50, 74, 0.06);
+      transition: transform .18s ease, background .18s ease, border-color .18s ease;
+    }
+
+    .control-btn:hover { transform: translateY(-1px); border-color: rgba(15, 143, 138, 0.35); }
+    .control-btn.primary {
+      background: linear-gradient(135deg, #12948f, #0d6f8c);
+      border-color: transparent;
+      color: #fff;
+    }
+    .control-btn:disabled { opacity: 0.45; cursor: not-allowed; transform: none; }
+
+    .speed {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      height: 42px;
+      padding: 0 14px;
+      border-radius: 999px;
+      background: rgba(255, 250, 243, 0.92);
+      border: 1px solid rgba(22, 50, 74, 0.12);
+      color: var(--ink-soft);
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .speed input {
+      width: 88px;
+      accent-color: var(--teal);
+    }
+
+    .stage-chip {
+      position: absolute;
+      top: 118px;
+      left: 36px;
+      z-index: 5;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      height: 40px;
+      padding: 0 16px 0 12px;
+      border-radius: 999px;
+      background: rgba(15, 52, 74, 0.88);
+      color: #f4fbff;
+      font-size: 14px;
+      font-weight: 600;
+      box-shadow: 0 10px 28px rgba(15, 52, 74, 0.22);
+      backdrop-filter: blur(8px);
+    }
+
+    .stage-chip .pulse {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: #5ddec8;
+      box-shadow: 0 0 0 0 rgba(93, 222, 200, 0.55);
+      animation: pulse 1.6s infinite;
+    }
+
+    @keyframes pulse {
+      70% { box-shadow: 0 0 0 10px rgba(93, 222, 200, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(93, 222, 200, 0); }
+    }
+
+    .progress {
+      position: absolute;
+      top: 118px;
+      right: 36px;
+      z-index: 5;
+      width: 320px;
+      height: 8px;
+      border-radius: 999px;
+      background: rgba(22, 50, 74, 0.1);
+      overflow: hidden;
+    }
+
+    .progress > i {
+      display: block;
+      height: 100%;
+      width: 0%;
+      border-radius: inherit;
+      background: linear-gradient(90deg, #12948f, #1f6f9f 55%, #d08a2e);
+      transition: width .35s ease;
+    }
+
+    .legend {
+      position: absolute;
+      top: 170px;
+      left: 36px;
+      z-index: 4;
+      display: flex;
+      gap: 16px;
+      align-items: center;
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .legend span {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .legend i {
+      width: 28px;
+      height: 3px;
+      border-radius: 999px;
+      display: inline-block;
+    }
+
+    .legend .req { background: linear-gradient(90deg, #1f6f9f, #39a0c9); }
+    .legend .res { background: linear-gradient(90deg, #d08a2e, #e0ad5a); }
+
+    .card {
+      background: var(--panel);
+      border: 1px solid rgba(22, 50, 74, 0.1);
+      border-radius: 24px;
+      box-shadow: 0 12px 30px rgba(22, 50, 74, 0.07);
+      backdrop-filter: blur(10px);
+      transition: transform .25s ease, box-shadow .25s ease, border-color .25s ease, opacity .25s ease;
+      cursor: pointer;
+    }
+
+    .card:hover {
+      transform: translateY(-2px);
+      border-color: rgba(15, 143, 138, 0.28);
+      box-shadow: 0 16px 36px rgba(22, 50, 74, 0.12);
+    }
+
+    .card.active {
+      border-color: rgba(15, 143, 138, 0.55);
+      box-shadow:
+        0 0 0 3px rgba(15, 143, 138, 0.14),
+        0 18px 40px rgba(15, 143, 138, 0.18);
+      transform: translateY(-2px) scale(1.01);
+    }
+
+    .card.dim { opacity: 0.42; filter: saturate(0.75); }
+
+    .badge {
+      display: inline-grid;
+      place-items: center;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: linear-gradient(145deg, #12948f, #0d6f8c);
+      color: #fff;
+      font-size: 13px;
+      font-weight: 700;
+      flex: 0 0 auto;
+    }
+
+    .card-title {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 18px;
+      font-weight: 700;
+    }
+
+    .card-sub {
+      margin-top: 6px;
+      color: var(--ink-soft);
+      font-size: 13px;
+      line-height: 1.45;
+    }
+
+    .chip-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 14px;
+    }
+
+    .chip {
+      height: 30px;
+      padding: 0 12px;
+      border-radius: 999px;
+      display: inline-flex;
+      align-items: center;
+      font-size: 12px;
+      font-weight: 650;
+      border: 1px solid transparent;
+    }
+
+    .chip.weather { background: rgba(31, 143, 181, 0.12); color: #156f8d; }
+    .chip.ticket { background: rgba(196, 92, 62, 0.12); color: #9a3f28; }
+    .chip.trip { background: rgba(47, 143, 91, 0.12); color: #1f6d43; }
+    .chip.neutral { background: rgba(22, 50, 74, 0.06); color: var(--ink-soft); }
+
+    .user-card {
+      top: 210px;
+      left: 36px;
+      width: 340px;
+      padding: 22px;
+    }
+
+    .quote {
+      margin-top: 16px;
+      padding: 16px 16px 14px;
+      border-radius: 18px;
+      background: linear-gradient(160deg, rgba(255, 255, 255, 0.95), rgba(232, 245, 248, 0.9));
+      border: 1px solid rgba(31, 111, 159, 0.12);
+      font-size: 15px;
+      line-height: 1.55;
+      color: var(--ink);
+      position: relative;
+    }
+
+    .quote::before {
+      content: "“";
+      position: absolute;
+      top: 2px;
+      left: 10px;
+      font-size: 34px;
+      color: rgba(31, 111, 159, 0.28);
+      font-family: Georgia, serif;
+    }
+
+    .quote p { margin: 0 0 0 18px; }
+
+    .typing::after {
+      content: "";
+      display: inline-block;
+      width: 8px;
+      height: 16px;
+      margin-left: 4px;
+      background: var(--ocean);
+      animation: blink 0.9s steps(1) infinite;
+      vertical-align: -2px;
+    }
+
+    @keyframes blink {
+      50% { opacity: 0; }
+    }
+
+    .core-card {
+      top: 210px;
+      left: 420px;
+      width: 860px;
+      padding: 22px 22px 18px;
+    }
+
+    .core-head {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .core-tag {
+      height: 30px;
+      padding: 0 12px;
+      border-radius: 999px;
+      background: rgba(15, 143, 138, 0.12);
+      color: var(--teal-deep);
+      font-size: 12px;
+      font-weight: 700;
+      display: inline-flex;
+      align-items: center;
+      white-space: nowrap;
+    }
+
+    .pipeline {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      margin-top: 18px;
+    }
+
+    .pipe-step {
+      position: relative;
+      min-height: 118px;
+      padding: 14px;
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.72);
+      border: 1px solid rgba(22, 50, 74, 0.08);
+      transition: border-color .25s ease, background .25s ease, transform .25s ease;
+    }
+
+    .pipe-step.active {
+      border-color: rgba(15, 143, 138, 0.45);
+      background: rgba(219, 244, 241, 0.9);
+      transform: translateY(-2px);
+    }
+
+    .pipe-step .letter {
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      font-size: 12px;
+      font-weight: 800;
+      color: #fff;
+      margin-bottom: 10px;
+    }
+
+    .pipe-step:nth-child(1) .letter { background: var(--ocean); }
+    .pipe-step:nth-child(2) .letter { background: #3d7ea6; }
+    .pipe-step:nth-child(3) .letter { background: var(--teal); }
+    .pipe-step:nth-child(4) .letter { background: var(--sun); }
+
+    .pipe-step h3 {
+      margin: 0 0 8px;
+      font-size: 15px;
+    }
+
+    .pipe-step p {
+      margin: 0;
+      font-size: 12px;
+      color: var(--ink-soft);
+      line-height: 1.45;
+    }
+
+    .core-note {
+      margin-top: 14px;
+      font-size: 12px;
+      color: var(--muted);
+      text-align: center;
+    }
+
+    .memory-card {
+      top: 210px;
+      left: 1310px;
+      width: 340px;
+      padding: 22px;
+    }
+
+    .lane {
+      margin-top: 14px;
+      display: grid;
+      gap: 8px;
+    }
+
+    .lane div {
+      min-height: 36px;
+      padding: 8px 12px;
+      border-radius: 14px;
+      font-size: 13px;
+      color: var(--ink);
+      background: rgba(255, 255, 255, 0.7);
+      border: 1px solid rgba(22, 50, 74, 0.06);
+      display: flex;
+      align-items: center;
+    }
+
+    .zone-label {
+      position: absolute;
+      z-index: 3;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 15px;
+      font-weight: 800;
+      color: var(--ink);
+    }
+
+    .zone-a2a { top: 468px; left: 36px; }
+    .zone-mcp { top: 700px; left: 36px; }
+    .zone-data { top: 880px; left: 36px; }
+
+    .agents {
+      top: 502px;
+      left: 36px;
+      right: 400px;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+    }
+
+    .agent {
+      padding: 18px 18px 16px;
+      min-height: 168px;
+    }
+
+    .agent .icon-wrap {
+      width: 44px;
+      height: 44px;
+      border-radius: 14px;
+      display: grid;
+      place-items: center;
+      margin-bottom: 12px;
+    }
+
+    .agent.weather .icon-wrap { background: rgba(31, 143, 181, 0.14); color: var(--weather); }
+    .agent.ticket .icon-wrap { background: rgba(196, 92, 62, 0.14); color: var(--ticket); }
+    .agent.trip .icon-wrap { background: rgba(47, 143, 91, 0.14); color: var(--trip); }
+
+    .agent .icon-wrap svg { width: 24px; height: 24px; }
+
+    .mcp-row {
+      top: 734px;
+      left: 36px;
+      right: 400px;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+    }
+
+    .mcp {
+      padding: 16px 18px;
+      min-height: 108px;
+    }
+
+    .mcp .proto {
+      margin-top: 10px;
+      font-size: 12px;
+      color: var(--muted);
+      font-family: var(--mono);
+    }
+
+    .data-row {
+      top: 914px;
+      left: 36px;
+      right: 400px;
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 12px;
+    }
+
+    .data {
+      padding: 14px 12px;
+      min-height: 92px;
+      text-align: center;
+      border-radius: 18px;
+    }
+
+    .data strong {
+      display: block;
+      font-size: 13px;
+      margin-bottom: 6px;
+    }
+
+    .data span {
+      font-size: 11px;
+      color: var(--ink-soft);
+      line-height: 1.4;
+    }
+
+    .side-panel {
+      top: 502px;
+      right: 36px;
+      width: 340px;
+      bottom: 36px;
+      padding: 18px;
+      border-radius: 24px;
+      background: rgba(18, 42, 58, 0.92);
+      color: #e8f4fa;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      box-shadow: 0 18px 40px rgba(10, 30, 44, 0.28);
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      overflow: hidden;
+      z-index: 6;
+    }
+
+    .side-panel h2 {
+      margin: 0;
+      font-size: 15px;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: #9ec9db;
+      font-weight: 700;
+    }
+
+    .detail-box {
+      padding: 14px;
+      border-radius: 16px;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      min-height: 118px;
+    }
+
+    .detail-box .kicker {
+      font-size: 11px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #7fb4c8;
+      margin-bottom: 8px;
+      font-weight: 700;
+    }
+
+    .detail-box h3 {
+      margin: 0 0 8px;
+      font-size: 18px;
+      color: #fff;
+    }
+
+    .detail-box p {
+      margin: 0;
+      font-size: 13px;
+      line-height: 1.55;
+      color: #c5dce7;
+    }
+
+    .log {
+      flex: 1;
+      min-height: 0;
+      overflow: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      padding-right: 4px;
+    }
+
+    .log-item {
+      padding: 10px 12px;
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.05);
+      border-left: 3px solid #5ddec8;
+      font-size: 12px;
+      line-height: 1.45;
+      color: #d5e8f0;
+      animation: logIn .28s ease;
+    }
+
+    .log-item .t {
+      display: block;
+      font-family: var(--mono);
+      font-size: 10px;
+      color: #7ea8ba;
+      margin-bottom: 4px;
+    }
+
+    @keyframes logIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: none; }
+    }
+
+    .connectors {
+      position: absolute;
+      inset: 0;
+      width: 1920px;
+      height: 1080px;
+      pointer-events: none;
+      z-index: 3;
+    }
+
+    .flow {
+      fill: none;
+      stroke-width: 2.5;
+      stroke-linecap: round;
+      opacity: 0.28;
+      transition: opacity .25s ease;
+    }
+
+    .flow.request { stroke: #1f6f9f; stroke-dasharray: 8 8; }
+    .flow.return { stroke: #d08a2e; stroke-dasharray: 5 9; }
+    .flow.thin { stroke: #5a7d90; stroke-width: 2; stroke-dasharray: 4 8; }
+
+    .flow.lit {
+      opacity: 1;
+      animation: dash 1s linear infinite;
+      filter: drop-shadow(0 0 4px rgba(31, 111, 159, 0.35));
+    }
+
+    .flow.return.lit {
+      filter: drop-shadow(0 0 4px rgba(208, 138, 46, 0.4));
+    }
+
+    @keyframes dash {
+      to { stroke-dashoffset: -34; }
+    }
+
+    .packet {
+      opacity: 0;
+      transition: opacity .2s ease;
+    }
+
+    .packet.show { opacity: 1; }
+
+    .result-toast {
+      position: absolute;
+      left: 36px;
+      bottom: 36px;
+      width: 340px;
+      padding: 16px 18px;
+      border-radius: 18px;
+      background: linear-gradient(145deg, rgba(15, 143, 138, 0.95), rgba(13, 111, 140, 0.95));
+      color: #fff;
+      z-index: 7;
+      box-shadow: 0 16px 36px rgba(13, 111, 140, 0.28);
+      transform: translateY(18px);
+      opacity: 0;
+      pointer-events: none;
+      transition: transform .35s ease, opacity .35s ease;
+    }
+
+    .result-toast.show {
+      transform: none;
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .result-toast strong {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 14px;
+    }
+
+    .result-toast p {
+      margin: 0;
+      font-size: 13px;
+      line-height: 1.5;
+      color: rgba(255, 255, 255, 0.92);
+    }
+
+    .hint {
+      position: absolute;
+      bottom: 18px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 8;
+      font-size: 12px;
+      color: var(--muted);
+      background: rgba(255, 250, 243, 0.75);
+      padding: 6px 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(22, 50, 74, 0.08);
+    }
+
+    html[data-playing="1"] .stage-chip .pulse { animation-duration: 0.9s; }
+  </style>
+</head>
+<body>
+  <main class="canvas" id="canvas" aria-label="SmartVoyage 业务架构交互演示">
+    <div class="noise"></div>
+
+    <svg class="connectors" viewBox="0 0 1920 1080" aria-hidden="true">
+      <defs>
+        <marker id="arrowReq" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+          <path d="M1 1l7 4-7 4z" fill="#1f6f9f"/>
+        </marker>
+        <marker id="arrowRes" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+          <path d="M1 1l7 4-7 4z" fill="#d08a2e"/>
+        </marker>
+      </defs>
+
+      <!-- user <-> core -->
+      <path id="p-user-core" class="flow request" d="M376 292 H420" marker-end="url(#arrowReq)"/>
+      <path id="p-core-user" class="flow return" d="M420 352 H376" marker-end="url(#arrowRes)"/>
+
+      <!-- core <-> memory -->
+      <path id="p-core-mem" class="flow thin" d="M1280 292 H1310" marker-end="url(#arrowReq)"/>
+      <path id="p-mem-core" class="flow thin" d="M1310 352 H1280" marker-end="url(#arrowRes)"/>
+
+      <!-- core to agents -->
+      <path id="p-core-w" class="flow request" d="M620 462 V482 H277 V502" marker-end="url(#arrowReq)"/>
+      <path id="p-core-t" class="flow request" d="M850 462 V482 H778 V502" marker-end="url(#arrowReq)"/>
+      <path id="p-core-r" class="flow request" d="M1080 462 V482 H1279 V502" marker-end="url(#arrowReq)"/>
+
+      <!-- agents back to core -->
+      <path id="p-w-core" class="flow return" d="M310 502 V486 H690 V462" marker-end="url(#arrowRes)"/>
+      <path id="p-t-core" class="flow return" d="M810 502 V486 H890 V462" marker-end="url(#arrowRes)"/>
+      <path id="p-r-core" class="flow return" d="M1310 502 V486 H1110 V462" marker-end="url(#arrowRes)"/>
+
+      <!-- agents to mcp -->
+      <path id="p-w-mcp" class="flow request" d="M277 670 V734" marker-end="url(#arrowReq)"/>
+      <path id="p-t-mcp" class="flow request" d="M778 670 V734" marker-end="url(#arrowReq)"/>
+      <path id="p-r-mcp" class="flow request" d="M1279 670 V734" marker-end="url(#arrowReq)"/>
+
+      <!-- mcp back -->
+      <path id="p-mcp-w" class="flow return" d="M310 734 V670" marker-end="url(#arrowRes)"/>
+      <path id="p-mcp-t" class="flow return" d="M810 734 V670" marker-end="url(#arrowRes)"/>
+      <path id="p-mcp-r" class="flow return" d="M1310 734 V670" marker-end="url(#arrowRes)"/>
+
+      <!-- mcp to data -->
+      <path id="p-mcp-data-w" class="flow thin" d="M277 842 V914" marker-end="url(#arrowReq)"/>
+      <path id="p-mcp-data-t" class="flow thin" d="M778 842 V914" marker-end="url(#arrowReq)"/>
+      <path id="p-mcp-data-r" class="flow thin" d="M1279 842 V914" marker-end="url(#arrowReq)"/>
+
+      <circle id="pkt" class="packet" r="6" fill="#12948f" stroke="#fff" stroke-width="2"/>
+    </svg>
+
+    <header class="layer topbar">
+      <div class="brand">
+        <div class="brand-mark">
+          <div class="logo" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+              <path d="M3 17l7-9 4 5 3-4 4 8"/>
+              <circle cx="18" cy="6" r="2.2"/>
+            </svg>
+          </div>
+          <h1>SmartVoyage 智能旅行助手</h1>
+        </div>
+        <p>A2A 协作决策 × MCP 标准化接入｜一次请求，并行整合天气、票务与旅行服务</p>
+      </div>
+      <div class="controls">
+        <button class="control-btn primary" id="playBtn" type="button">▶ 开始演示</button>
+        <button class="control-btn" id="pauseBtn" type="button" disabled>⏸ 暂停</button>
+        <button class="control-btn" id="stepBtn" type="button">⏭ 单步</button>
+        <button class="control-btn" id="replayBtn" type="button">↻ 重播</button>
+        <label class="speed">速度
+          <input id="speed" type="range" min="0.6" max="2.2" step="0.2" value="1">
+          <span id="speedLabel">1.0×</span>
+        </label>
+      </div>
+    </header>
+
+    <div class="stage-chip"><span class="pulse"></span><span id="stageText">准备演示：一次完整旅行请求如何穿越五层架构</span></div>
+    <div class="progress" aria-hidden="true"><i id="progressBar"></i></div>
+
+    <div class="legend">
+      <span><i class="req"></i>请求 / Task</span>
+      <span><i class="res"></i>结果 / Result</span>
+      <span>点击任意模块查看说明</span>
+    </div>
+
+    <section class="layer card user-card" data-node="user" id="node-user">
+      <div class="card-title"><span class="badge">1</span>用户提出旅行需求</div>
+      <div class="card-sub">自然语言输入 · 一次说清目的地、时间与诉求</div>
+      <div class="quote" id="userQuote"><p id="userText">五一去成都，查天气和火车票，再推荐雪山团。</p></div>
+    </section>
+
+    <section class="layer card core-card" data-node="core" id="node-core">
+      <div class="core-head">
+        <div>
+          <div class="card-title"><span class="badge">2</span>智能协调中枢</div>
+          <div class="card-sub">LLM Planner / Orchestrator · 并行调度多个专业 Agent</div>
+        </div>
+        <span class="core-tag">决策 · 拆解 · 路由 · 聚合</span>
+      </div>
+      <div class="pipeline">
+        <div class="pipe-step" data-step="a" id="step-a">
+          <div class="letter">A</div>
+          <h3>理解意图</h3>
+          <p>识别地点、日期、人数与天气 / 票务 / 行程需求</p>
+        </div>
+        <div class="pipe-step" data-step="b" id="step-b">
+          <div class="letter">B</div>
+          <h3>拆分任务</h3>
+          <p>生成可独立执行的子任务，明确输入条件</p>
+        </div>
+        <div class="pipe-step" data-step="c" id="step-c">
+          <div class="letter">C</div>
+          <h3>路由协作</h3>
+          <p>选择专业 Agent 并行执行，跟踪状态与依赖</p>
+        </div>
+        <div class="pipe-step" data-step="d" id="step-d">
+          <div class="letter">D</div>
+          <h3>融合结果</h3>
+          <p>组合多源信息，生成可执行旅行建议</p>
+        </div>
+      </div>
+      <div class="core-note">核心职责：决策、拆解、路由、聚合；不直接访问业务数据库</div>
+    </section>
+
+    <section class="layer card memory-card" data-node="memory" id="node-memory">
+      <div class="card-title"><span class="badge">M</span>记忆与个性化</div>
+      <div class="card-sub">为协调中枢补充用户上下文</div>
+      <div class="lane">
+        <div>用户偏好：预算、交通、兴趣</div>
+        <div>查询历史：去过哪里、查过什么</div>
+        <div>短期对话：承接多轮追问</div>
+      </div>
+    </section>
+
+    <div class="layer zone-label zone-a2a"><span class="badge">3</span>A2A 专业 Agent 协作层</div>
+    <div class="layer agents">
+      <article class="card agent weather" data-node="agent-weather" id="node-agent-weather">
+        <div class="icon-wrap">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="16" cy="8" r="3.2"/><path d="M4 17h14a4 4 0 0 0 0-8 6 6 0 0 0-11.2-1.5A4.5 4.5 0 0 0 4 17z"/></svg>
+        </div>
+        <div class="card-title">天气 Agent</div>
+        <div class="card-sub">地点与日期解析 · 天气查询</div>
+        <div class="chip-row">
+          <span class="chip weather">城市 / 日期标准化</span>
+          <span class="chip weather">实时 / 预报天气</span>
+        </div>
+      </article>
+      <article class="card agent ticket" data-node="agent-ticket" id="node-agent-ticket">
+        <div class="icon-wrap">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M3 7h18v4a2.5 2.5 0 0 0 0 5v4H3v-4a2.5 2.5 0 0 0 0-5z"/><path d="M14 7v12"/></svg>
+        </div>
+        <div class="card-title">票务 Agent</div>
+        <div class="card-sub">票务搜索 · 条件过滤 · 结果整理</div>
+        <div class="chip-row">
+          <span class="chip ticket">火车票</span>
+          <span class="chip ticket">航班</span>
+          <span class="chip ticket">演唱会门票</span>
+        </div>
+      </article>
+      <article class="card agent trip" data-node="agent-trip" id="node-agent-trip">
+        <div class="icon-wrap">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M3 18l5-8 4 5 3-4 6 7"/><circle cx="17" cy="6" r="2.4"/></svg>
+        </div>
+        <div class="card-title">旅行服务 Agent</div>
+        <div class="card-sub">组合服务 · 偏好理解 · 语义推荐</div>
+        <div class="chip-row">
+          <span class="chip trip">租车</span>
+          <span class="chip trip">保险</span>
+          <span class="chip trip">跟团游推荐</span>
+        </div>
+      </article>
+    </div>
+
+    <div class="layer zone-label zone-mcp"><span class="badge">4</span>MCP 标准工具层</div>
+    <div class="layer mcp-row">
+      <article class="card mcp" data-node="mcp-weather" id="node-mcp-weather">
+        <div class="card-title">天气 MCP Server</div>
+        <div class="card-sub">工具：查询城市天气 / 获取预报</div>
+        <div class="proto">tools/call · get_weather</div>
+      </article>
+      <article class="card mcp" data-node="mcp-ticket" id="node-mcp-ticket">
+        <div class="card-title">票务 MCP Server</div>
+        <div class="card-sub">工具：查询火车 / 航班 / 演唱会票</div>
+        <div class="proto">tools/call · search_tickets</div>
+      </article>
+      <article class="card mcp" data-node="mcp-trip" id="node-mcp-trip">
+        <div class="card-title">旅行服务 MCP Server</div>
+        <div class="card-sub">工具：租车 / 保险 · 旅游团语义检索</div>
+        <div class="proto">tools/call · search_tours</div>
+      </article>
+    </div>
+
+    <div class="layer zone-label zone-data"><span class="badge">5</span>真实数据与外部系统</div>
+    <div class="layer data-row">
+      <article class="card data" data-node="data-api" id="node-data-api">
+        <strong>和风天气 API</strong>
+        <span>定时采集 / 必要时补充实时数据</span>
+      </article>
+      <article class="card data" data-node="data-weather-db" id="node-data-weather-db">
+        <strong>天气 MySQL</strong>
+        <span>天气数据缓存与查询</span>
+      </article>
+      <article class="card data" data-node="data-ticket-db" id="node-data-ticket-db">
+        <strong>票务 MySQL</strong>
+        <span>火车 · 航班 · 演唱会（模拟）</span>
+      </article>
+      <article class="card data" data-node="data-service-db" id="node-data-service-db">
+        <strong>租车 / 保险 MySQL</strong>
+        <span>服务库存与价格查询</span>
+      </article>
+      <article class="card data" data-node="data-milvus" id="node-data-milvus">
+        <strong>Milvus</strong>
+        <span>RAG 旅游团语义检索</span>
+      </article>
+    </div>
+
+    <aside class="layer side-panel" id="sidePanel">
+      <h2>演示控制台</h2>
+      <div class="detail-box" id="detailBox">
+        <div class="kicker">当前焦点</div>
+        <h3 id="detailTitle">SmartVoyage 五层架构</h3>
+        <p id="detailBody">点击左侧模块，或按下「开始演示」，观看一次完整请求如何经中枢、A2A、MCP 抵达真实数据并返回。</p>
+      </div>
+      <h2>事件流</h2>
+      <div class="log" id="eventLog" aria-live="polite"></div>
+    </aside>
+
+    <div class="result-toast" id="resultToast">
+      <strong>完整答复已生成</strong>
+      <p>五一成都多云 18–26℃；建议 G1234 高铁；雪山团匹配度高，可一键加入行程。</p>
+    </div>
+
+    <div class="hint">提示：空格播放/暂停 · → 单步 · R 重播 · 点击模块查看说明</div>
+  </main>
+
+  <script>
+    (() => {
+      const canvas = document.getElementById("canvas");
+      const stageText = document.getElementById("stageText");
+      const progressBar = document.getElementById("progressBar");
+      const eventLog = document.getElementById("eventLog");
+      const detailTitle = document.getElementById("detailTitle");
+      const detailBody = document.getElementById("detailBody");
+      const userText = document.getElementById("userText");
+      const userQuote = document.getElementById("userQuote");
+      const resultToast = document.getElementById("resultToast");
+      const playBtn = document.getElementById("playBtn");
+      const pauseBtn = document.getElementById("pauseBtn");
+      const stepBtn = document.getElementById("stepBtn");
+      const replayBtn = document.getElementById("replayBtn");
+      const speedInput = document.getElementById("speed");
+      const speedLabel = document.getElementById("speedLabel");
+      const pkt = document.getElementById("pkt");
+
+      const nodeMeta = {
+        user: {
+          title: "用户提出旅行需求",
+          body: "用户用自然语言一次性表达目的地、时间和多项诉求。系统不要求用户分别打开天气、票务、旅行 App。"
+        },
+        core: {
+          title: "智能协调中枢",
+          body: "负责理解意图、拆分任务、路由协作与结果融合。它是决策层，不直接访问业务数据库。"
+        },
+        memory: {
+          title: "记忆与个性化",
+          body: "补充用户偏好、历史查询与短期对话上下文，让多轮追问和个性化推荐成为可能。"
+        },
+        "agent-weather": {
+          title: "天气 Agent",
+          body: "通过 A2A 接收天气子任务，内置 MCP Client，按标准协议调用天气工具。"
+        },
+        "agent-ticket": {
+          title: "票务 Agent",
+          body: "统一处理火车票、航班、门票等票务搜索、过滤与整理，屏蔽不同票源差异。"
+        },
+        "agent-trip": {
+          title: "旅行服务 Agent",
+          body: "理解偏好并做组合推荐，可调用租车、保险工具，以及基于 Milvus 的 RAG 团游检索。"
+        },
+        "mcp-weather": {
+          title: "天气 MCP Server",
+          body: "把天气能力封装成标准工具。Agent 只需 tools/call，不必关心 API 细节。"
+        },
+        "mcp-ticket": {
+          title: "票务 MCP Server",
+          body: "统一火车 / 航班 / 演唱会票查询入口，让票务 Agent 用同一调用方式访问多源能力。"
+        },
+        "mcp-trip": {
+          title: "旅行服务 MCP Server",
+          body: "提供租车、保险与旅游团语义检索工具，是 Agent 与数据层之间的标准契约。"
+        },
+        "data-api": {
+          title: "和风天气 API",
+          body: "外部实时天气源。MCP 可定时采集或按需补充，保证预报与实况可用。"
+        },
+        "data-weather-db": {
+          title: "天气 MySQL",
+          body: "缓存天气数据，降低外部 API 压力，支撑高频查询。"
+        },
+        "data-ticket-db": {
+          title: "票务 MySQL",
+          body: "存放火车、航班、演唱会等票务模拟数据，供票务工具检索。"
+        },
+        "data-service-db": {
+          title: "租车 / 保险 MySQL",
+          body: "旅行增值服务库存与价格数据，支撑组合推荐。"
+        },
+        "data-milvus": {
+          title: "Milvus 向量库",
+          body: "旅游团语义向量检索，让「雪山团」这类自然语言偏好能匹配到相关产品。"
+        }
+      };
+
+      const stages = [
+        {
+          id: 0,
+          title: "架构总览：用户 → 中枢 → A2A → MCP → 数据",
+          duration: 900,
+          highlight: [],
+          steps: [],
+          flows: [],
+          log: "演示就绪。将走完一次完整旅行请求链路。",
+          detail: nodeMeta.core
+        },
+        {
+          id: 1,
+          title: "用户发出自然语言旅行需求",
+          duration: 1400,
+          highlight: ["user"],
+          steps: [],
+          flows: ["p-user-core"],
+          packet: "p-user-core",
+          log: "用户：五一去成都，查天气和火车票，再推荐雪山团。",
+          detail: nodeMeta.user,
+          typeUser: true
+        },
+        {
+          id: 2,
+          title: "中枢 A：理解意图",
+          duration: 1100,
+          highlight: ["core"],
+          steps: ["a"],
+          flows: [],
+          log: "意图解析 → 地点=成都，日期=五一，需求=[天气,火车票,雪山团]",
+          detail: { title: "理解意图", body: "协调中枢从自然语言中抽出结构化约束，为后续拆任务提供输入。" }
+        },
+        {
+          id: 3,
+          title: "读取记忆与个性化上下文",
+          duration: 1100,
+          highlight: ["core", "memory"],
+          steps: ["a"],
+          flows: ["p-core-mem", "p-mem-core"],
+          packet: "p-mem-core",
+          log: "记忆命中：高铁优先 · 预算中等 · 偏好自然风光",
+          detail: nodeMeta.memory
+        },
+        {
+          id: 4,
+          title: "中枢 B：拆分并行子任务",
+          duration: 1100,
+          highlight: ["core"],
+          steps: ["a", "b"],
+          flows: [],
+          log: "拆出 3 个子任务：天气查询 / 火车票搜索 / 雪山团推荐",
+          detail: { title: "拆分任务", body: "把复合请求拆成可独立执行、可并行的专业任务，并明确每个任务的输入。" }
+        },
+        {
+          id: 5,
+          title: "中枢 C：经 A2A 路由到专业 Agent",
+          duration: 1400,
+          highlight: ["core", "agent-weather", "agent-ticket", "agent-trip"],
+          steps: ["a", "b", "c"],
+          flows: ["p-core-w", "p-core-t", "p-core-r"],
+          packet: "p-core-t",
+          log: "A2A 并行分发 Task → 天气 / 票务 / 旅行服务 Agent",
+          detail: { title: "A2A 路由协作", body: "A2A 决定调用哪个专业 Agent。中枢只发任务与约束，不直接碰底层工具。" }
+        },
+        {
+          id: 6,
+          title: "天气 Agent 通过 MCP 调用天气工具",
+          duration: 1100,
+          highlight: ["agent-weather", "mcp-weather"],
+          steps: ["c"],
+          flows: ["p-w-mcp"],
+          packet: "p-w-mcp",
+          log: "天气 Agent → MCP tools/call get_weather(city=成都, date=五一)",
+          detail: nodeMeta["mcp-weather"]
+        },
+        {
+          id: 7,
+          title: "票务 Agent 通过 MCP 查询火车票",
+          duration: 1100,
+          highlight: ["agent-ticket", "mcp-ticket"],
+          steps: ["c"],
+          flows: ["p-t-mcp"],
+          packet: "p-t-mcp",
+          log: "票务 Agent → MCP tools/call search_tickets(from=本地, to=成都, type=train)",
+          detail: nodeMeta["mcp-ticket"]
+        },
+        {
+          id: 8,
+          title: "旅行 Agent 通过 MCP + RAG 检索雪山团",
+          duration: 1200,
+          highlight: ["agent-trip", "mcp-trip"],
+          steps: ["c"],
+          flows: ["p-r-mcp"],
+          packet: "p-r-mcp",
+          log: "旅行 Agent → MCP tools/call search_tours(query=雪山团, city=成都)",
+          detail: nodeMeta["mcp-trip"]
+        },
+        {
+          id: 9,
+          title: "MCP 访问真实数据与外部系统",
+          duration: 1400,
+          highlight: ["mcp-weather", "mcp-ticket", "mcp-trip", "data-api", "data-weather-db", "data-ticket-db", "data-service-db", "data-milvus"],
+          steps: ["c"],
+          flows: ["p-mcp-data-w", "p-mcp-data-t", "p-mcp-data-r"],
+          packet: "p-mcp-data-t",
+          log: "数据层执行：和风 API / MySQL / Milvus 语义检索",
+          detail: { title: "真实执行层", body: "MySQL、Milvus 与外部 API 完成真实查询。MCP 屏蔽差异，Agent 只看标准工具结果。" }
+        },
+        {
+          id: 10,
+          title: "工具结果经 MCP 返回各 Agent",
+          duration: 1200,
+          highlight: ["mcp-weather", "mcp-ticket", "mcp-trip", "agent-weather", "agent-ticket", "agent-trip"],
+          steps: ["c"],
+          flows: ["p-mcp-w", "p-mcp-t", "p-mcp-r"],
+          packet: "p-mcp-t",
+          log: "MCP Result → 天气实况、可选车次、雪山团候选列表",
+          detail: { title: "MCP 返回", body: "标准结果回传给对应 Agent。调用方式统一，来源可以完全不同。" }
+        },
+        {
+          id: 11,
+          title: "A2A 结果汇聚回协调中枢",
+          duration: 1300,
+          highlight: ["core", "agent-weather", "agent-ticket", "agent-trip"],
+          steps: ["c", "d"],
+          flows: ["p-w-core", "p-t-core", "p-r-core"],
+          packet: "p-t-core",
+          log: "A2A Result → 中枢开始融合多源信息",
+          detail: { title: "结果汇聚", body: "各专业 Agent 把整理后的结果交回中枢，进入融合与叙事生成阶段。" }
+        },
+        {
+          id: 12,
+          title: "中枢 D：融合并返回完整答复",
+          duration: 1600,
+          highlight: ["core", "user"],
+          steps: ["a", "b", "c", "d"],
+          flows: ["p-core-user"],
+          packet: "p-core-user",
+          log: "完整答复返回用户：天气 + 高铁建议 + 雪山团推荐",
+          detail: { title: "融合结果", body: "中枢组合多源信息，生成可执行建议。用户只看到一次完整答复。" },
+          showResult: true
+        }
+      ];
+
+      let stageIndex = 0;
+      let playing = false;
+      let timer = null;
+      let packetAnim = null;
+      let speed = 1;
+
+      function fitCanvas() {
+        const pad = 28;
+        const scale = Math.min(
+          (window.innerWidth - pad * 2) / 1920,
+          (window.innerHeight - pad * 2) / 1080
+        );
+        canvas.style.transform = "scale(" + scale + ")";
+        canvas.style.marginLeft = Math.max(0, (window.innerWidth - 1920 * scale) / 2) + "px";
+        canvas.style.marginTop = Math.max(0, (window.innerHeight - 1080 * scale) / 2) + "px";
+      }
+
+      function clearTimer() {
+        if (timer) {
+          clearTimeout(timer);
+          timer = null;
+        }
+      }
+
+      function stopPacket() {
+        if (packetAnim) {
+          cancelAnimationFrame(packetAnim);
+          packetAnim = null;
+        }
+        pkt.classList.remove("show");
+      }
+
+      function animatePacket(pathId, duration) {
+        stopPacket();
+        const path = document.getElementById(pathId);
+        if (!path) return;
+        const length = path.getTotalLength();
+        const start = performance.now();
+        pkt.classList.add("show");
+
+        function frame(now) {
+          const t = Math.min(1, (now - start) / duration);
+          const ease = t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
+          const point = path.getPointAtLength(length * ease);
+          pkt.setAttribute("cx", point.x);
+          pkt.setAttribute("cy", point.y);
+          if (t < 1) packetAnim = requestAnimationFrame(frame);
+          else pkt.classList.remove("show");
+        }
+        packetAnim = requestAnimationFrame(frame);
+      }
+
+      function addLog(message) {
+        const item = document.createElement("div");
+        item.className = "log-item";
+        const now = new Date();
+        const stamp = [now.getHours(), now.getMinutes(), now.getSeconds()]
+          .map((n) => String(n).padStart(2, "0"))
+          .join(":");
+        item.innerHTML = '<span class="t">' + stamp + "</span>" + message;
+        eventLog.prepend(item);
+        while (eventLog.children.length > 14) eventLog.lastChild.remove();
+      }
+
+      function setDetail(detail) {
+        if (!detail) return;
+        detailTitle.textContent = detail.title;
+        detailBody.textContent = detail.body;
+      }
+
+      function setHighlight(ids, stepIds) {
+        document.querySelectorAll(".card").forEach((el) => {
+          const id = el.dataset.node;
+          const on = !ids.length || ids.includes(id);
+          el.classList.toggle("active", ids.includes(id));
+          el.classList.toggle("dim", ids.length > 0 && !on);
+        });
+        document.querySelectorAll(".pipe-step").forEach((el) => {
+          el.classList.toggle("active", stepIds.includes(el.dataset.step));
+        });
+      }
+
+      function setFlows(flowIds) {
+        document.querySelectorAll(".flow").forEach((el) => {
+          el.classList.toggle("lit", flowIds.includes(el.id));
+        });
+      }
+
+      function typeUserText(done) {
+        const full = "五一去成都，查天气和火车票，再推荐雪山团。";
+        userText.textContent = "";
+        userQuote.classList.add("typing");
+        let i = 0;
+        const tick = () => {
+          userText.textContent = full.slice(0, i);
+          i += 1;
+          if (i <= full.length) {
+            setTimeout(tick, 28 / speed);
+          } else {
+            userQuote.classList.remove("typing");
+            if (done) done();
+          }
+        };
+        tick();
+      }
+
+      function applyStage(index, opts = {}) {
+        const stage = stages[index];
+        stageIndex = index;
+        stageText.textContent = stage.title;
+        progressBar.style.width = ((index / (stages.length - 1)) * 100).toFixed(1) + "%";
+        setHighlight(stage.highlight, stage.steps);
+        setFlows(stage.flows);
+        setDetail(stage.detail);
+        resultToast.classList.toggle("show", !!stage.showResult);
+
+        if (!opts.silentLog) addLog(stage.log);
+
+        if (stage.packet) {
+          animatePacket(stage.packet, Math.max(420, stage.duration / speed * 0.7));
+        } else {
+          stopPacket();
+        }
+
+        if (stage.typeUser && !opts.skipType) {
+          typeUserText();
+        } else if (!stage.typeUser) {
+          userQuote.classList.remove("typing");
+          userText.textContent = "五一去成都，查天气和火车票，再推荐雪山团。";
+        }
+      }
+
+      function scheduleNext() {
+        clearTimer();
+        if (!playing) return;
+        if (stageIndex >= stages.length - 1) {
+          playing = false;
+          document.documentElement.dataset.playing = "0";
+          playBtn.disabled = false;
+          pauseBtn.disabled = true;
+          playBtn.textContent = "▶ 开始演示";
+          return;
+        }
+        const wait = stages[stageIndex].duration / speed;
+        timer = setTimeout(() => {
+          applyStage(stageIndex + 1);
+          scheduleNext();
+        }, wait);
+      }
+
+      function play() {
+        if (stageIndex >= stages.length - 1) stageIndex = 0;
+        playing = true;
+        document.documentElement.dataset.playing = "1";
+        playBtn.disabled = true;
+        pauseBtn.disabled = false;
+        playBtn.textContent = "▶ 演示中";
+        applyStage(stageIndex, { silentLog: false });
+        scheduleNext();
+      }
+
+      function pause() {
+        playing = false;
+        document.documentElement.dataset.playing = "0";
+        clearTimer();
+        playBtn.disabled = false;
+        pauseBtn.disabled = true;
+        playBtn.textContent = "▶ 继续";
+      }
+
+      function step() {
+        pause();
+        if (stageIndex >= stages.length - 1) stageIndex = -1;
+        applyStage(stageIndex + 1);
+      }
+
+      function replay() {
+        pause();
+        eventLog.innerHTML = "";
+        resultToast.classList.remove("show");
+        stageIndex = 0;
+        play();
+      }
+
+      playBtn.addEventListener("click", play);
+      pauseBtn.addEventListener("click", pause);
+      stepBtn.addEventListener("click", step);
+      replayBtn.addEventListener("click", replay);
+
+      speedInput.addEventListener("input", () => {
+        speed = Number(speedInput.value);
+        speedLabel.textContent = speed.toFixed(1) + "×";
+        if (playing) scheduleNext();
+      });
+
+      document.querySelectorAll("[data-node]").forEach((el) => {
+        el.addEventListener("click", () => {
+          const key = el.dataset.node;
+          const meta = nodeMeta[key];
+          if (!meta) return;
+          setDetail(meta);
+          document.querySelectorAll(".card").forEach((card) => {
+            card.classList.toggle("active", card === el);
+            card.classList.remove("dim");
+          });
+          addLog("查看模块：" + meta.title);
+        });
+      });
+
+      window.addEventListener("keydown", (e) => {
+        if (e.target && ["INPUT", "TEXTAREA"].includes(e.target.tagName)) return;
+        if (e.code === "Space") {
+          e.preventDefault();
+          if (playing) pause();
+          else play();
+        } else if (e.code === "ArrowRight") {
+          e.preventDefault();
+          step();
+        } else if (e.key === "r" || e.key === "R") {
+          replay();
+        }
+      });
+
+      addEventListener("resize", fitCanvas);
+      fitCanvas();
+      applyStage(0, { silentLog: true });
+      addLog("加载完成。按空格开始，或点击「开始演示」。");
+    })();
+  </script>
+</body>
+</html>

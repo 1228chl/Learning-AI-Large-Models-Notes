@@ -1,0 +1,679 @@
+<!-- LAYOUT-V5 | wide corridors + packet animation + no overlay on panels -->
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Function Calling：智能点外卖交互演示｜清晰动线版 V5</title>
+<style>
+  :root{
+    --ink:#10243f; --muted:#67809b;
+    --blue:#2f7cf6; --purple:#7c5cff; --orange:#ff8a34; --green:#23b581; --red:#e45858;
+    --panel:rgba(255,255,255,.96); --shadow:0 18px 50px rgba(49,84,122,.14);
+    /* column edges — keep SVG routes strictly between these */
+    --phone-r:368px; --ai-l:456px; --ai-r:1096px; --sys-l:1184px;
+  }
+  *{box-sizing:border-box}
+  html,body{width:100%;height:100%;margin:0;overflow:hidden;background:#dfeaf4;font-family:"Segoe UI","PingFang SC","Microsoft YaHei",system-ui,sans-serif;color:var(--ink)}
+  button,select{font:inherit}
+  #viewport{width:100vw;height:100vh;display:grid;place-items:center;background:
+    radial-gradient(circle at 18% 12%,rgba(47,124,246,.12),transparent 28%),
+    radial-gradient(circle at 86% 78%,rgba(124,92,255,.1),transparent 26%),
+    linear-gradient(135deg,#edf4fa,#dce8f2)}
+  #board{position:relative;width:1600px;height:900px;transform-origin:center center;background:
+    linear-gradient(rgba(255,255,255,.55),rgba(255,255,255,.55)),
+    repeating-linear-gradient(90deg,transparent 0 79px,rgba(71,126,176,.03) 80px),
+    repeating-linear-gradient(0deg,transparent 0 79px,rgba(71,126,176,.03) 80px),
+    linear-gradient(145deg,#f7fbff,#edf5fb 58%,#e5eef7);border:1px solid rgba(255,255,255,.9);box-shadow:0 28px 80px rgba(22,52,86,.24);overflow:hidden}
+
+  .header{position:absolute;inset:0 0 auto;height:104px;padding:18px 34px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #d9e6f1;background:rgba(250,253,255,.92);backdrop-filter:blur(12px);z-index:20}
+  .title-wrap{display:flex;align-items:center;gap:16px}
+  .logo{width:52px;height:52px;border-radius:16px;display:grid;place-items:center;background:linear-gradient(145deg,var(--purple),var(--blue));box-shadow:0 10px 24px rgba(75,93,226,.28);color:#fff;font-size:28px;font-weight:800}
+  h1{font-size:28px;line-height:1.15;margin:0}
+  .subtitle{margin-top:6px;color:var(--muted);font-size:14px}
+  .tag{display:inline-flex;margin-left:10px;padding:4px 10px;border-radius:999px;background:linear-gradient(135deg,#ff8a34,#ffb46f);color:#fff;font-size:11px;font-weight:900;vertical-align:3px;box-shadow:0 5px 14px rgba(255,138,52,.25)}
+  .header-tools{display:flex;align-items:center;gap:10px}
+  .seg{display:flex;padding:4px;border-radius:12px;background:#e9f0f7;border:1px solid #d6e3ee}
+  .seg button{border:0;background:transparent;color:#688099;padding:8px 12px;border-radius:9px;cursor:pointer;font-weight:700}
+  .seg button.active{background:#fff;color:var(--blue);box-shadow:0 4px 10px rgba(44,90,133,.12)}
+  select,.mini-btn{height:40px;border-radius:11px;border:1px solid #d2e0ec;background:#fff;color:#38536f;padding:0 12px;cursor:pointer;font-weight:700;outline:none}
+  select{padding-right:30px}
+
+  .stage{position:absolute;left:0;top:104px;width:1600px;height:676px}
+  .zone-label{position:absolute;top:10px;font-size:12px;font-weight:800;letter-spacing:1.5px;color:#7a91a8;z-index:2}
+  .zl-left{left:48px}.zl-center{left:472px}.zl-right{left:1200px}
+
+  /* corridors sit BELOW panels; panels never get covered */
+  #routes{position:absolute;inset:0;width:1600px;height:676px;pointer-events:none;z-index:1;overflow:visible}
+  .corridor{fill:rgba(255,255,255,.72);stroke:#c5d6e6;stroke-width:1}
+  .corridor.right{fill:rgba(255,250,245,.78);stroke:#e2d0be}
+  .route{fill:none;stroke-width:3;stroke-linecap:round;stroke-linejoin:round;opacity:.14;transition:opacity .25s,stroke-width .25s,filter .25s}
+  .route.active{opacity:1;stroke-width:3.4;stroke-dasharray:10 12;animation:dash .65s linear infinite;filter:drop-shadow(0 0 6px currentColor)}
+  @keyframes dash{to{stroke-dashoffset:-22}}
+  .route.blue{stroke:var(--blue);color:var(--blue)}.route.purple{stroke:var(--purple);color:var(--purple)}
+  .route.orange{stroke:var(--orange);color:var(--orange)}.route.green{stroke:var(--green);color:var(--green)}.route.red{stroke:var(--red);color:var(--red)}
+  .packet{opacity:0;pointer-events:none}
+  .packet.active{opacity:1}
+  .packet-pill{fill:#fff;stroke-width:1.6;filter:drop-shadow(0 4px 10px rgba(20,50,80,.22))}
+  .packet text{font:800 10px "Segoe UI","PingFang SC","Microsoft YaHei",sans-serif}
+  .lane-label{font:800 11px "Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;fill:#7d93a8;opacity:.55}
+  .lane-label.on{opacity:1}
+
+  .panel{position:absolute;border:1px solid rgba(173,198,218,.85);background:var(--panel);border-radius:22px;box-shadow:var(--shadow);z-index:5}
+  .panel-head{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;border-bottom:1px solid #e2ebf2}
+  .panel-title{font-weight:800;font-size:15px;display:flex;align-items:center;gap:8px}
+  .status-pill{font-size:11px;padding:4px 8px;border-radius:999px;background:#eef5fb;color:#6e879e}
+
+  /* Phone */
+  .phone-panel{left:28px;top:36px;width:340px;height:612px;padding:12px;background:linear-gradient(150deg,#18283a,#3c4d61);border-radius:36px}
+  .phone{width:100%;height:100%;background:#f6f8fb;border-radius:26px;overflow:hidden;position:relative;border:1px solid rgba(255,255,255,.3)}
+  .phone-top{height:48px;background:#fff;display:flex;align-items:center;justify-content:space-between;padding:0 14px;border-bottom:1px solid #e8eef4}
+  .brand{font-weight:900;color:#ff6b24}.address{font-size:12px;color:#6a8198}
+  .chat{height:492px;padding:14px;overflow:hidden;background:linear-gradient(#f8fbfd,#f0f5f9)}
+  .bubble{max-width:88%;padding:10px 12px;border-radius:15px;line-height:1.45;font-size:13.5px;margin-bottom:10px;opacity:.25;transform:translateY(4px);transition:.35s}
+  .bubble.show{opacity:1;transform:none}
+  .bubble.user{margin-left:auto;background:linear-gradient(135deg,#317ef5,#5c92ff);color:#fff;border-bottom-right-radius:5px}
+  .bubble.ai{background:#fff;color:#27435f;border:1px solid #dce7f0;border-bottom-left-radius:5px;box-shadow:0 8px 18px rgba(62,96,128,.08)}
+  .typing{display:inline-flex;gap:4px}.typing i{width:5px;height:5px;border-radius:50%;background:#87a1b8;animation:blink 1s infinite}.typing i:nth-child(2){animation-delay:.15s}.typing i:nth-child(3){animation-delay:.3s}@keyframes blink{50%{opacity:.25}}
+  .dish-card,.order-card{background:#fff;border:1px solid #dfe9f1;border-radius:14px;padding:10px;margin:10px 0;opacity:0;transform:scale(.96);transition:.35s;box-shadow:0 10px 22px rgba(54,87,117,.09)}
+  .dish-card.show,.order-card.show{opacity:1;transform:none}
+  .dish-top{display:flex;gap:10px}.dish-img{width:72px;height:58px;border-radius:11px;background:linear-gradient(135deg,#efb15e,#b73b28);position:relative;overflow:hidden}
+  .dish-img:before{content:"🥘";position:absolute;font-size:38px;left:14px;top:5px}
+  .dish-name{font-weight:800;font-size:13.5px}.dish-meta{font-size:11px;color:#7a91a5;margin-top:3px}.price{margin-top:5px;color:#f25e2b;font-weight:900}
+  .confirm{float:right;border:0;background:#ff6f2c;color:#fff;border-radius:999px;padding:5px 10px;font-weight:800;font-size:11px;cursor:pointer}
+  .order-card{border-left:4px solid var(--green)}.order-row{display:flex;justify-content:space-between;font-size:12px;margin:5px 0;color:#5c748b}.order-row b{color:#173957}
+  .phone-input{height:40px;background:#fff;border-top:1px solid #e2eaf1;display:flex;align-items:center;gap:8px;padding:6px 10px}
+  .input-fake{flex:1;height:28px;border-radius:999px;background:#eff4f8;color:#9badbd;font-size:12px;display:flex;align-items:center;padding:0 12px}
+  .send{width:28px;height:28px;border-radius:50%;display:grid;place-items:center;background:var(--blue);color:#fff;font-size:12px}
+
+  /* AI center — fully above routes, never covered */
+  .ai-shell{left:456px;top:36px;width:640px;height:612px;background:rgba(250,253,255,.97);overflow:hidden;display:flex;flex-direction:column}
+  .ai-top{flex:0 0 auto;padding:12px 14px;display:grid;grid-template-columns:1fr 44px 1.2fr;gap:8px;align-items:stretch;border-bottom:1px solid #e0eaf2}
+  .core-card,.functions-card{border-radius:14px;border:1px solid #dce7f0;background:#fff;padding:11px 12px;transition:.3s;min-width:0}
+  .core-card.active,.functions-card.active{border-color:#b7a9ff;box-shadow:0 0 0 3px rgba(124,92,255,.12)}
+  .core-title{display:flex;align-items:center;gap:8px;font-weight:900;font-size:13.5px}
+  .brain{width:28px;height:28px;border-radius:9px;display:grid;place-items:center;color:#fff;background:linear-gradient(135deg,var(--purple),#a278ff);font-size:12px}
+  .core-sub{font-size:11px;color:#738aa0;margin:6px 0 0 36px}
+  .function-chips{display:flex;flex-wrap:wrap;gap:5px;margin-top:7px}
+  .chip{font-size:10px;padding:4px 6px;border-radius:7px;background:#f1f5f9;color:#56718b;border:1px solid #e0e8ef;cursor:help}
+  .chip.selected{background:#fff3e7;color:#c65d18;border-color:#ffbd88;box-shadow:0 0 0 2px rgba(255,138,52,.12)}
+
+  /* LLM → Tool Schema connector (own grid column, no overlay) */
+  .schema-bridge{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;opacity:.35;transition:opacity .25s,transform .25s;pointer-events:none}
+  .schema-bridge .bridge-line{width:100%;height:2px;border-radius:99px;background:#d5c8ff;position:relative}
+  .schema-bridge .bridge-line::after{content:"";position:absolute;right:-1px;top:50%;width:0;height:0;border:5px solid transparent;border-left:7px solid #b9a6ff;transform:translateY(-50%)}
+  .schema-bridge .bridge-cap{font-size:9px;font-weight:800;letter-spacing:.2px;color:#7a68c8;line-height:1;white-space:nowrap}
+  .schema-bridge.on{opacity:1}
+  .schema-bridge.on .bridge-line{background:linear-gradient(90deg,#c4b4ff,var(--purple));box-shadow:0 0 8px rgba(124,92,255,.35);animation:bridgeFlow .8s linear infinite}
+  .schema-bridge.on .bridge-line::after{border-left-color:var(--purple)}
+  .schema-bridge.on .bridge-cap{color:var(--purple)}
+  @keyframes bridgeFlow{to{filter:brightness(1.15)}}
+
+  .ai-body{flex:1;min-height:0;padding:12px 14px;display:grid;grid-template-columns:1.05fr .95fr;gap:12px}
+  .flow-column{display:flex;flex-direction:column;gap:8px;position:relative;padding-left:14px}
+  .flow-column::before{content:"";position:absolute;left:4px;top:10px;bottom:10px;width:3px;border-radius:99px;background:#e4ecf3;transition:.3s}
+  .flow-column.thinking::before{background:linear-gradient(180deg,var(--purple),#c4b4ff);box-shadow:0 0 10px rgba(124,92,255,.35)}
+  .step-card{border:1px solid #dfe8f0;border-radius:13px;background:#fff;padding:10px 12px;min-height:62px;transition:.3s;position:relative;overflow:hidden}
+  .step-card::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:#d9e4ec;transition:.3s}
+  .step-card.active{transform:translateX(3px);box-shadow:0 8px 18px rgba(60,91,122,.1)}
+  .step-card.active.purple{border-color:#b7a9ff}.step-card.active.purple::before{background:var(--purple)}
+  .step-card.active.orange{border-color:#ffc193}.step-card.active.orange::before{background:var(--orange)}
+  .step-card.active.green{border-color:#8bdec2}.step-card.active.green::before{background:var(--green)}
+  .step-card.active.red{border-color:#f1a0a0}.step-card.active.red::before{background:var(--red)}
+  .sc-title{font-weight:800;font-size:12.5px;display:flex;justify-content:space-between;gap:8px}
+  .sc-desc{font-size:11px;line-height:1.4;color:#71879b;margin-top:4px}
+  .badge{font-size:10px;padding:2px 6px;border-radius:999px;background:#f1f5f9;color:#6d8499;flex:0 0 auto}
+  .message-console{border:1px solid #dce6ef;background:#0f2234;border-radius:15px;overflow:hidden;color:#d9eaf6;display:flex;flex-direction:column;min-width:0}
+  .tabs{display:flex;gap:2px;padding:7px;background:#142a3e;border-bottom:1px solid #274057;flex-wrap:wrap}
+  .tab{border:0;background:transparent;color:#7994aa;padding:5px 6px;font-size:10px;border-radius:6px;cursor:pointer}
+  .tab.active{color:#fff;background:#2b455d}
+  .code-wrap{padding:10px 12px;flex:1;overflow:hidden}
+  .code-title{display:flex;justify-content:space-between;font-size:11px;color:#89a4b9;margin-bottom:7px}
+  .code{margin:0;font:11px/1.5 ui-monospace,SFMono-Regular,Consolas,monospace;white-space:pre-wrap;color:#d8e7f2}
+  .code .key{color:#78b7ff}.code .str{color:#ffd28a}.code .num{color:#89e0bd}
+  .cursor{display:inline-block;width:6px;height:13px;background:#bce3ff;vertical-align:-2px;animation:caret 1s steps(1) infinite}@keyframes caret{50%{opacity:0}}
+  .explain-strip{flex:0 0 78px;border-top:1px solid #e0e9f1;padding:12px 14px;background:linear-gradient(90deg,#fbfdff,#f4f9fd);display:flex;align-items:center;gap:12px}
+  .step-num{width:42px;height:42px;border-radius:13px;display:grid;place-items:center;background:linear-gradient(135deg,var(--blue),#6d9dff);color:#fff;font-size:17px;font-weight:900;box-shadow:0 8px 16px rgba(47,124,246,.22)}
+  .explain h3{font-size:14px;margin:0 0 4px}.explain p{margin:0;color:#6b8297;font-size:12px;line-height:1.45}
+  .responsibility{margin-left:auto;padding:8px 10px;border-radius:11px;background:#fff;border:1px solid #dce7f0;font-size:11px;color:#5e768c;min-width:150px}
+  .responsibility b{display:block;color:#213f5b;margin-bottom:2px}
+
+  /* systems */
+  .systems{left:1184px;top:36px;width:388px;height:612px;overflow:hidden;display:flex;flex-direction:column}
+  .sys-grid{padding:12px;display:grid;grid-template-columns:1fr 1fr;gap:8px}
+  .sys-card{height:84px;border:1px solid #dfe8ef;background:#fff;border-radius:13px;padding:10px;transition:.3s}
+  .sys-card.active{border-color:#ffad70;box-shadow:0 0 0 3px rgba(255,138,52,.12);transform:translateY(-2px)}
+  .sys-card.done{border-color:#8bd9bf;background:#f5fffb}
+  .sys-icon{width:28px;height:28px;border-radius:9px;display:grid;place-items:center;background:#eef4f9;font-size:16px}
+  .sys-name{font-weight:800;font-size:12px;margin-top:6px}.sys-status{font-size:10px;color:#7b91a4;margin-top:2px}
+  .sys-card.active .sys-status{color:#c2601c}.sys-card.done .sys-status{color:#218b66}
+  .system-monitor{margin:0 12px;border:1px solid #dce6ee;border-radius:14px;background:#10263a;color:#d8e8f3;overflow:hidden}
+  .monitor-head{padding:8px 10px;font-size:11px;color:#8aa2b5;background:#173148;border-bottom:1px solid #28465f;display:flex;justify-content:space-between}
+  .monitor-body{height:108px;padding:10px;font:10.5px/1.6 ui-monospace,Consolas,monospace;white-space:pre-wrap}
+  .monitor-body .ok{color:#75d8ad}.monitor-body .warn{color:#ffc27b}.monitor-body .bad{color:#ff8b8b}
+  .boundary{margin:10px 12px 12px;padding:9px 11px;border-radius:12px;background:#fff8ef;border:1px solid #ffd5af;color:#a65a20;font-size:11px;line-height:1.5}
+  .boundary b{display:block;color:#81400f;margin-bottom:2px}
+
+  .footer{position:absolute;left:0;bottom:0;width:100%;height:120px;background:rgba(250,253,255,.96);border-top:1px solid #d8e5ef;padding:12px 34px 10px;z-index:20}
+  .timeline{display:flex;align-items:center;margin-bottom:10px}
+  .dot-wrap{flex:1;display:flex;align-items:center}
+  .dot{width:22px;height:22px;border-radius:50%;border:2px solid #cbd9e4;background:#fff;display:grid;place-items:center;font-size:10px;color:#7690a6;cursor:pointer;transition:.25s}
+  .dot.active{border-color:var(--blue);background:var(--blue);color:#fff;box-shadow:0 0 0 4px rgba(47,124,246,.12)}
+  .dot.done{border-color:#8bb6f7;background:#eaf2ff;color:#2f7cf6}
+  .track{height:2px;background:#d8e4ee;flex:1}.track.done{background:#8bb6f7}
+  .controls{display:flex;align-items:center;justify-content:space-between;gap:12px}
+  .buttons{display:flex;gap:8px}
+  .ctrl{height:40px;border-radius:11px;border:1px solid #d1deea;background:#fff;color:#49657e;padding:0 14px;cursor:pointer;font-weight:800}
+  .ctrl.primary{border-color:transparent;color:#fff;background:linear-gradient(135deg,var(--blue),#5f95ff);box-shadow:0 8px 16px rgba(47,124,246,.22)}
+  .ctrl:disabled{opacity:.4;cursor:not-allowed}
+  .legend{display:flex;gap:12px;font-size:11px;color:#698197;align-items:center;flex-wrap:wrap}
+  .lg{display:flex;gap:5px;align-items:center}.lg i{width:14px;height:4px;border-radius:999px;display:inline-block}
+  .speed{display:flex;align-items:center;gap:7px;color:#6c8398;font-size:12px}
+  .speed button{border:1px solid #d5e1eb;background:#fff;border-radius:8px;padding:5px 8px;color:#5f788f;cursor:pointer}
+  .speed button.active{background:#eaf2ff;color:#2f7cf6;border-color:#9fc2f8}
+  .kbd{display:inline-block;padding:2px 6px;border:1px solid #cad8e3;border-bottom-width:2px;border-radius:6px;background:#fff;color:#526b81;font-size:10px}
+
+  .toast{position:absolute;left:50%;top:118px;transform:translate(-50%,-16px);padding:10px 16px;border-radius:12px;background:#173149;color:#fff;font-size:12px;opacity:0;transition:.3s;z-index:40;box-shadow:0 12px 30px rgba(16,40,62,.22)}
+  .toast.show{opacity:1;transform:translate(-50%,0)}
+  .tooltip{position:fixed;display:none;width:270px;padding:12px 13px;border-radius:12px;background:#10263d;color:#fff;font-size:12px;line-height:1.55;z-index:99;box-shadow:0 16px 38px rgba(13,39,65,.28);pointer-events:none}
+  .tooltip b{color:#ffb97f}
+  .compare-banner{display:none;position:absolute;left:456px;top:36px;width:640px;height:612px;border-radius:22px;background:rgba(248,251,254,.98);z-index:15;border:1px solid #d7e4ee;box-shadow:var(--shadow);padding:40px}
+  .compare-banner.show{display:block}
+  .compare-title{font-size:24px;font-weight:900;text-align:center}
+  .compare-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:28px}
+  .compare-box{border-radius:18px;padding:20px;border:1px solid #dae6ef;background:#fff;min-height:230px}
+  .compare-box h3{margin:0 0 12px;font-size:17px}.compare-box p{font-size:13px;line-height:1.7;color:#647c92}
+  .compare-box.no{border-top:5px solid #95a8b8}.compare-box.yes{border-top:5px solid var(--orange)}
+  .compare-arrow{text-align:center;margin:16px 0;color:#7d91a4;font-weight:800}
+  .compare-tip{text-align:center;padding:12px;border-radius:12px;background:#fff3e8;color:#a95116;font-weight:800;margin-top:16px;font-size:13px}
+</style>
+</head>
+<body>
+<div id="viewport">
+  <div id="board">
+    <header class="header">
+      <div class="title-wrap">
+        <div class="logo">ƒ</div>
+        <div>
+          <h1>Function Calling：大模型如何调用真实工具 <span class="tag">清晰动线 V5</span></h1>
+          <div class="subtitle">智能点外卖｜模型提出调用，应用校验执行｜走线只在三栏之间的走廊里流动</div>
+        </div>
+      </div>
+      <div class="header-tools">
+        <div class="seg" aria-label="模式切换">
+          <button id="chatMode">仅聊天</button><button id="fcMode" class="active">Function Calling</button>
+        </div>
+        <select id="scenarioSelect" title="异常分支">
+          <option value="normal">正常流程</option>
+          <option value="missing_address">异常：缺少地址</option>
+          <option value="sold_out">异常：菜品售罄</option>
+          <option value="over_budget">异常：超过预算</option>
+          <option value="bad_args">异常：参数格式错误</option>
+          <option value="tool_error">异常：工具调用失败</option>
+        </select>
+        <button class="mini-btn" id="fullBtn">⛶ 全屏</button>
+      </div>
+    </header>
+
+    <main class="stage">
+      <div class="zone-label zl-left">01 用户与外卖 App</div>
+      <div class="zone-label zl-center">02 AI 应用内部</div>
+      <div class="zone-label zl-right">03 外部业务系统</div>
+
+      <!-- SVG UNDER panels; only drawn in corridor gutters -->
+      <svg id="routes" viewBox="0 0 1600 676" aria-hidden="true">
+        <defs>
+          <marker id="arrowBlue" markerUnits="userSpaceOnUse" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto"><path d="M1 1.5 10 6 1 10.5 2.8 6Z" fill="#2f7cf6"/></marker>
+          <marker id="arrowOrange" markerUnits="userSpaceOnUse" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto"><path d="M1 1.5 10 6 1 10.5 2.8 6Z" fill="#ff8a34"/></marker>
+          <marker id="arrowGreen" markerUnits="userSpaceOnUse" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto"><path d="M1 1.5 10 6 1 10.5 2.8 6Z" fill="#23b581"/></marker>
+          <marker id="arrowRed" markerUnits="userSpaceOnUse" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto"><path d="M1 1.5 10 6 1 10.5 2.8 6Z" fill="#e45858"/></marker>
+          <clipPath id="clipCorridors">
+            <rect x="372" y="40" width="80" height="620"/>
+            <rect x="1100" y="40" width="80" height="620"/>
+          </clipPath>
+        </defs>
+
+        <rect class="corridor" x="376" y="56" width="72" height="580" rx="16"/>
+        <rect class="corridor right" x="1104" y="56" width="72" height="580" rx="16"/>
+
+        <g clip-path="url(#clipCorridors)">
+          <!-- left corridor only (376–448). stubs never enter panels -->
+          <path id="r-user" class="route blue" data-packet="用户请求" data-fill="#2f7cf6" d="M380 170 H404 V118 H448" marker-end="url(#arrowBlue)"/>
+          <path id="r-confirm" class="route blue" data-packet="确认下单" data-fill="#2f7cf6" d="M380 430 H404 V500 H448" marker-end="url(#arrowBlue)"/>
+          <path id="r-final" class="route green" data-packet="最终回复" data-fill="#23b581" d="M448 580 H416 V530 H380" marker-end="url(#arrowGreen)"/>
+
+          <!-- right corridor only (1104–1176) -->
+          <path id="r-call" class="route orange" data-packet="Function Call" data-fill="#ff8a34" d="M1108 290 H1136 V190 H1176" marker-end="url(#arrowOrange)"/>
+          <path id="r-result" class="route green" data-packet="Tool Result" data-fill="#23b581" d="M1176 400 H1148 V460 H1108" marker-end="url(#arrowGreen)"/>
+          <path id="r-order" class="route orange" data-packet="create_order" data-fill="#ff8a34" d="M1108 530 H1136 V490 H1176" marker-end="url(#arrowOrange)"/>
+          <path id="r-order-result" class="route green" data-packet="订单结果" data-fill="#23b581" d="M1176 520 H1148 V560 H1108" marker-end="url(#arrowGreen)"/>
+          <path id="r-error" class="route red" data-packet="调用拦截" data-fill="#e45858" d="M1108 350 H1176" marker-end="url(#arrowRed)"/>
+        </g>
+
+        <!-- traveling packet (outside clip so label stays readable in corridor) -->
+        <g id="packet" class="packet">
+          <rect class="packet-pill" id="packetRect" x="-46" y="-12" width="92" height="24" rx="12" stroke="#2f7cf6"/>
+          <text id="packetText" text-anchor="middle" y="4" fill="#1d4f9a">用户请求</text>
+          <animateMotion id="packetMotion" dur="1.15s" begin="indefinite" fill="freeze" keyPoints="0;1" keyTimes="0;1" calcMode="linear">
+            <mpath href="#r-user"/>
+          </animateMotion>
+        </g>
+
+        <text class="lane-label" id="lbl-left-up" x="412" y="95" text-anchor="middle">请求 ↑</text>
+        <text class="lane-label" id="lbl-left-down" x="412" y="560" text-anchor="middle">回复 ↓</text>
+        <text class="lane-label" id="lbl-right-out" x="1140" y="150" text-anchor="middle">调用 →</text>
+        <text class="lane-label" id="lbl-right-in" x="1140" y="445" text-anchor="middle">← 结果</text>
+      </svg>
+
+      <section class="phone-panel panel" id="phonePanel">
+        <div class="phone">
+          <div class="phone-top"><div class="brand">◉ 鲜达外卖</div><div class="address">📍 公司 · 海淀区</div></div>
+          <div class="chat">
+            <div class="bubble user" id="userBubble">帮我点一份微辣的宫保鸡丁套餐，送到公司，预算 35 元以内。</div>
+            <div class="bubble ai" id="thinkingBubble"><span class="typing"><i></i><i></i><i></i></span> 正在理解你的需求…</div>
+            <div class="dish-card" id="dishCard">
+              <div class="dish-top"><div class="dish-img"></div><div class="dish-info"><div class="dish-name">宫保鸡丁套餐</div><div class="dish-meta">微辣 · 月售 386 · 约 35 分钟</div><div class="price">¥32 <button class="confirm" id="confirmBtn">确认下单</button></div></div></div>
+            </div>
+            <div class="bubble ai" id="confirmBubble">已找到符合条件的菜品，需要我为你下单吗？</div>
+            <div class="bubble user" id="yesBubble">确认下单。</div>
+            <div class="order-card" id="orderCard">
+              <div style="font-weight:900;color:#1f7156">✓ 订单创建成功</div>
+              <div class="order-row"><span>订单号</span><b>OD20260724001</b></div>
+              <div class="order-row"><span>实付金额</span><b>¥32</b></div>
+              <div class="order-row"><span>预计送达</span><b>35 分钟</b></div>
+            </div>
+            <div class="bubble ai" id="finalBubble">订单已经创建，金额 32 元，预计 35 分钟送达公司。</div>
+          </div>
+          <div class="phone-input"><div class="input-fake">输入你的需求…</div><div class="send">➤</div></div>
+        </div>
+      </section>
+
+      <section class="ai-shell panel" id="aiShell">
+        <div class="ai-top">
+          <div class="core-card" id="llmCard"><div class="core-title"><span class="brain">AI</span>LLM 大模型</div><div class="core-sub" id="llmSub">理解意图 · 选择函数 · 生成参数</div></div>
+          <div class="schema-bridge" id="schemaBridge" aria-hidden="true"><div class="bridge-line"></div><div class="bridge-cap">注册</div></div>
+          <div class="functions-card" id="functionsCard"><div class="core-title">🧰 可用函数 <span class="status-pill">Tool Schema</span></div><div class="function-chips">
+            <span class="chip" data-tip="<b>search_dishes</b><br>按菜品、口味、价格和地址搜索可配送商品。<br>参数：keyword, spicy_level, max_price, delivery_address">search_dishes</span>
+            <span class="chip" data-tip="<b>get_dish_detail</b><br>读取菜品详情、配料、价格和库存。">get_dish_detail</span>
+            <span class="chip" data-tip="<b>check_delivery_address</b><br>校验地址是否完整、是否在配送范围内。">check_delivery_address</span>
+            <span class="chip" data-tip="<b>create_order</b><br>创建真实订单。执行前应完成权限和用户确认。">create_order</span>
+            <span class="chip" data-tip="<b>get_order_status</b><br>查询订单、骑手和预计送达时间。">get_order_status</span>
+          </div></div>
+        </div>
+        <div class="ai-body">
+          <div class="flow-column" id="flowColumn">
+            <div class="step-card purple" id="intentCard"><div class="sc-title">① 意图与参数理解 <span class="badge">LLM</span></div><div class="sc-desc" id="intentText">菜品：宫保鸡丁套餐｜口味：微辣｜预算：≤35 元｜地址：公司</div></div>
+            <div class="step-card purple" id="decisionCard"><div class="sc-title">② 函数选择与调用生成 <span class="badge">LLM</span></div><div class="sc-desc" id="decisionText">从已注册函数中选择 search_dishes，并生成结构化 arguments。</div></div>
+            <div class="step-card orange" id="validationCard"><div class="sc-title">③ 校验、授权与执行 <span class="badge">应用程序</span></div><div class="sc-desc" id="validationText">校验函数白名单、必填参数、参数类型、权限和风险级别。</div></div>
+            <div class="step-card green" id="resultCard"><div class="sc-title">④ 工具结果回传 <span class="badge">Tool Result</span></div><div class="sc-desc" id="resultText">应用将外卖 API 的真实结果作为工具消息返回给 LLM。</div></div>
+          </div>
+          <div class="message-console">
+            <div class="tabs">
+              <button class="tab active" data-tab="user">用户消息</button>
+              <button class="tab" data-tab="schema">Tool Schema</button>
+              <button class="tab" data-tab="call">Function Call</button>
+              <button class="tab" data-tab="result">Tool Result</button>
+              <button class="tab" data-tab="final">最终回复</button>
+            </div>
+            <div class="code-wrap"><div class="code-title"><span id="codeLabel">message.user</span><span id="codeState">自然语言</span></div><pre class="code" id="codeBlock"></pre></div>
+          </div>
+        </div>
+        <div class="explain-strip">
+          <div class="step-num" id="stepNum">01</div>
+          <div class="explain"><h3 id="stepTitle">用户提出自然语言需求</h3><p id="stepDesc">用户只负责说清目标，不需要知道函数名、API 或 JSON 参数。</p></div>
+          <div class="responsibility"><b id="ownerTitle">当前责任：用户</b><span id="ownerText">提出自然语言需求</span></div>
+        </div>
+      </section>
+
+      <section class="systems panel">
+        <div class="panel-head"><div class="panel-title">🏢 外卖平台真实系统</div><span class="status-pill" id="apiStatus">等待调用</span></div>
+        <div class="sys-grid">
+          <div class="sys-card" id="sysMerchant"><div class="sys-icon">🏪</div><div class="sys-name">商家与菜品库</div><div class="sys-status">菜单、价格、口味</div></div>
+          <div class="sys-card" id="sysStock"><div class="sys-icon">📦</div><div class="sys-name">库存服务</div><div class="sys-status">实时可售数量</div></div>
+          <div class="sys-card" id="sysAddress"><div class="sys-icon">📍</div><div class="sys-name">地址服务</div><div class="sys-status">范围与地址校验</div></div>
+          <div class="sys-card" id="sysOrder"><div class="sys-icon">🧾</div><div class="sys-name">订单系统</div><div class="sys-status">创建与状态管理</div></div>
+          <div class="sys-card" id="sysPay"><div class="sys-icon">💳</div><div class="sys-name">支付系统</div><div class="sys-status">金额与支付状态</div></div>
+          <div class="sys-card" id="sysDelivery"><div class="sys-icon">🛵</div><div class="sys-name">配送系统</div><div class="sys-status">骑手与预计送达</div></div>
+        </div>
+        <div class="system-monitor"><div class="monitor-head"><span>BUSINESS API MONITOR</span><span id="monitorClock">00:00:00</span></div><div class="monitor-body" id="monitorBody">[idle] waiting for application request…</div></div>
+        <div class="boundary"><b>责任边界</b>LLM 不直接访问数据库，也不亲自执行函数。应用程序接收结构化调用后，才会连接这些真实业务系统。</div>
+      </section>
+
+      <div class="compare-banner" id="compareBanner">
+        <div class="compare-title">同一句话，两种能力边界</div>
+        <div class="compare-grid">
+          <div class="compare-box no"><h3>💬 仅聊天模式</h3><p>LLM 可以理解“你想点外卖”，也可以给出建议，但它没有真实系统的数据与操作权限。</p><div class="compare-arrow">只能生成文字 ↓</div><div class="bubble ai show">我无法访问真实外卖系统，也不能替你下单。</div></div>
+          <div class="compare-box yes"><h3>ƒ Function Calling</h3><p>应用把函数定义提供给 LLM。LLM 生成结构化调用，应用完成校验并执行真实 API。</p><div class="compare-arrow">结构化调用 ↓</div><pre class="code" style="background:#10263a;padding:12px;border-radius:12px">{"name":"search_dishes", ...}</pre></div>
+        </div>
+        <div class="compare-tip">Function Calling 不是给模型“魔法权限”，而是建立一条可校验、可授权、可追踪的工具调用通道。</div>
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="timeline" id="timeline"></div>
+      <div class="controls">
+        <div class="buttons">
+          <button class="ctrl" id="resetBtn">↺ 重置</button>
+          <button class="ctrl" id="prevBtn">← 上一步</button>
+          <button class="ctrl primary" id="playBtn">▶ 开始演示</button>
+          <button class="ctrl" id="nextBtn">下一步 →</button>
+        </div>
+        <div class="legend">
+          <span class="lg"><i style="background:var(--blue)"></i>用户请求</span>
+          <span class="lg"><i style="background:var(--purple)"></i>LLM 决策</span>
+          <span class="lg"><i style="background:var(--orange)"></i>函数调用</span>
+          <span class="lg"><i style="background:var(--green)"></i>工具结果</span>
+        </div>
+        <div class="speed">速度：
+          <button data-speed="2200">慢</button>
+          <button data-speed="1500" class="active">标准</button>
+          <button data-speed="900">快</button>
+          <span class="kbd">Space</span> 播放/暂停
+        </div>
+      </div>
+    </footer>
+    <div class="tooltip" id="tooltip"></div>
+    <div class="toast" id="toast"></div>
+  </div>
+</div>
+<script>
+(() => {
+  const $ = s => document.querySelector(s), $$ = s => [...document.querySelectorAll(s)];
+  const board = $('#board');
+  function fit(){ board.style.transform = `scale(${Math.min(innerWidth/1600, innerHeight/900)})`; }
+  addEventListener('resize', fit); fit();
+
+  const messages = {
+    user:{label:'message.user',state:'自然语言',text:'“帮我点一份微辣的宫保鸡丁套餐，送到公司，预算 35 元以内。”'},
+    schema:{label:'tools[0]',state:'应用提供',text:`{\n  "name": "search_dishes",\n  "description": "搜索可配送菜品",\n  "parameters": {\n    "keyword": "string",\n    "spicy_level": "string",\n    "max_price": "number",\n    "delivery_address": "string"\n  }\n}`},
+    call:{label:'assistant.tool_call',state:'LLM 生成',text:`{\n  "name": "search_dishes",\n  "arguments": {\n    "keyword": "宫保鸡丁套餐",\n    "spicy_level": "微辣",\n    "max_price": 35,\n    "delivery_address": "公司"\n  }\n}`},
+    callOrder:{label:'assistant.tool_call',state:'LLM 生成',text:`{\n  "name": "create_order",\n  "arguments": {\n    "dish_id": "D1024",\n    "quantity": 1,\n    "spicy_level": "微辣",\n    "delivery_address": "公司 · 海淀区",\n    "user_confirmed": true\n  }\n}`},
+    result:{label:'message.tool',state:'真实结果',text:`{\n  "dish_id": "D1024",\n  "name": "宫保鸡丁套餐",\n  "price": 32,\n  "spicy_level": "微辣",\n  "stock": 18,\n  "delivery_time": 35\n}`},
+    resultOrder:{label:'message.tool',state:'真实结果',text:`{\n  "order_id": "OD20260724001",\n  "status": "created",\n  "pay_amount": 32,\n  "payment_status": "pending",\n  "eta_minutes": 35,\n  "rider": "待分配"\n}`},
+    final:{label:'message.assistant',state:'自然语言',text:'“订单已经创建，金额 32 元，预计 35 分钟送达公司。”'}
+  };
+
+  let activeTab='user', step=0, playing=false, timer=null, speed=1500, mode='fc';
+  const maxStep=12;
+
+  // route: corridor SVG id | internal: handled inside AI panel
+  const steps = [
+    {title:'用户提出自然语言需求',desc:'用户只负责说清目标，不需要知道函数名、API 或 JSON 参数。',owner:'用户',ownerText:'提出自然语言需求',tab:'user',route:'r-user',lane:'left-up'},
+    {title:'LLM 理解意图与约束',desc:'模型识别“点外卖”，并抽取菜品、口味、预算和配送地址。',owner:'LLM',ownerText:'理解意图并抽取参数',tab:'user',route:null,internal:'think'},
+    {title:'应用向 LLM 提供函数定义',desc:'函数由应用提前注册；名称、说明、参数 Schema 都是可控边界。',owner:'应用程序',ownerText:'注册工具与参数 Schema',tab:'schema',route:null,internal:'schema'},
+    {title:'LLM 选择最合适的函数',desc:'模型只能从已注册函数中选择，当前先调用 search_dishes。',owner:'LLM',ownerText:'从可用函数中做选择',tab:'schema',route:null,internal:'think'},
+    {title:'LLM 生成结构化 Function Call',desc:'模型返回函数名与 arguments；这只是调用请求，不代表已经执行成功。',owner:'LLM',ownerText:'生成函数名与结构化参数',tab:'call',route:'r-call',lane:'right-out'},
+    {title:'应用校验参数、权限和风险',desc:'白名单、必填字段、类型、地址、权限与高风险确认都在应用层完成。',owner:'应用程序',ownerText:'校验并决定是否执行',tab:'call',route:'r-call',lane:'right-out'},
+    {title:'应用调用真实外卖 API',desc:'真正执行代码的是应用程序；外卖平台查询真实菜单、库存和配送范围。',owner:'外部工具',ownerText:'处理真实业务数据',tab:'call',route:'r-call',lane:'right-out'},
+    {title:'工具结果返回给 LLM',desc:'应用把 API 结果封装成 Tool Result，再作为新消息交给大模型。',owner:'应用程序',ownerText:'接收并回传工具结果',tab:'result',route:'r-result',lane:'right-in'},
+    {title:'用户确认下单',desc:'下单属于真实写操作，必须先获得用户确认，再进入第二轮工具调用。',owner:'用户',ownerText:'确认高影响操作',tab:'result',route:'r-confirm',lane:'left-up'},
+    {title:'LLM 生成 create_order 调用',desc:'用户确认后，模型选择 create_order，并生成包含菜品、地址与确认标记的结构化参数。',owner:'LLM',ownerText:'生成下单 Function Call',tab:'call',msg:'callOrder',route:null,internal:'think'},
+    {title:'应用提交订单到外部平台',desc:'应用再次校验权限与确认标记，然后调用订单 / 支付 / 配送系统真正创建订单。',owner:'应用程序 + 外部系统',ownerText:'执行 create_order',tab:'call',msg:'callOrder',route:'r-order',lane:'right-out'},
+    {title:'订单结果回传给 LLM',desc:'外部平台返回订单号、支付状态与预计送达时间；应用封装为 Tool Result 交给模型。',owner:'外部业务系统',ownerText:'回传订单结果',tab:'result',msg:'resultOrder',route:'r-order-result',lane:'right-in'},
+    {title:'LLM 根据订单结果回复用户',desc:'模型读取真实下单结果，用自然语言告知用户订单已创建。',owner:'LLM',ownerText:'解释工具结果并回复',tab:'final',route:'r-final',lane:'left-down'}
+  ];
+
+  function buildTimeline(){
+    const t=$('#timeline'); t.innerHTML='';
+    for(let i=0;i<=maxStep;i++){
+      const w=document.createElement('div'); w.className='dot-wrap';
+      const d=document.createElement('div'); d.className='dot'; d.textContent=i+1;
+      d.onclick=()=>{pause(); setStep(i)}; w.appendChild(d);
+      if(i<maxStep){const tr=document.createElement('div'); tr.className='track'; w.appendChild(tr)}
+      t.appendChild(w);
+    }
+  }
+  buildTimeline();
+
+  function syntax(text){
+    return text.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+      .replace(/("[^"]+")(?=\s*:)/g,'<span class="key">$1</span>')
+      .replace(/:\s*("[^"]*")/g,': <span class="str">$1</span>')
+      .replace(/:\s*(\d+)/g,': <span class="num">$1</span>');
+  }
+  function resolveMsg(name, msgKey){
+    if(msgKey && messages[msgKey]) return messages[msgKey];
+    if(name==='call' && step>=9) return messages.callOrder;
+    if(name==='result' && step>=11) return messages.resultOrder;
+    return messages[name];
+  }
+  function setTab(name, msgKey){
+    activeTab=name;
+    const uiTab = (name==='callOrder') ? 'call' : (name==='resultOrder') ? 'result' : name;
+    $$('.tab').forEach(b=>b.classList.toggle('active', b.dataset.tab===uiTab));
+    const m=resolveMsg(uiTab, msgKey || (name==='callOrder'||name==='resultOrder'?name:null));
+    if(!m) return;
+    $('#codeLabel').textContent=m.label;
+    $('#codeState').textContent=m.state;
+    $('#codeBlock').innerHTML=syntax(m.text)+'<span class="cursor"></span>';
+  }
+  $$('.tab').forEach(b=>b.onclick=()=>setTab(b.dataset.tab));
+
+  function clearVisuals(){
+    $$('.route').forEach(x=>x.classList.remove('active'));
+    $$('.lane-label').forEach(x=>x.classList.remove('on'));
+    $('#packet').classList.remove('active');
+    $('#schemaBridge').classList.remove('on');
+    $('#flowColumn').classList.remove('thinking');
+    $$('.step-card,.core-card,.functions-card,.sys-card').forEach(x=>x.classList.remove('active','done','red'));
+    ['userBubble','thinkingBubble','dishCard','confirmBubble','yesBubble','orderCard','finalBubble'].forEach(id=>$('#'+id).classList.remove('show'));
+    $('#confirmBubble').textContent='已找到符合条件的菜品，需要我为你下单吗？';
+    $('#decisionText').textContent='从已注册函数中选择 search_dishes，并生成结构化 arguments。';
+    $('#validationText').textContent='校验函数白名单、必填参数、参数类型、权限和风险级别。';
+    $('#resultText').textContent='应用将外卖 API 的真实结果作为工具消息返回给 LLM。';
+    $$('.chip').forEach(c=>c.classList.remove('selected'));
+    $('#apiStatus').textContent='等待调用';
+    $('#monitorBody').innerHTML='[idle] waiting for application request…';
+  }
+
+  function scenario(){ return $('#scenarioSelect').value; }
+  function errorAt(s){
+    const sc=scenario();
+    return (sc==='missing_address'&&s>=5)||(sc==='bad_args'&&s>=5)||(sc==='sold_out'&&s>=7)||(sc==='over_budget'&&s>=7)||(sc==='tool_error'&&s>=7);
+  }
+  function errorInfo(){
+    const map={
+      missing_address:['缺少配送地址','应用校验失败：delivery_address 不能为空。LLM 应向用户追问完整地址。','[validation] ERROR: delivery_address is required'],
+      bad_args:['参数格式错误','应用校验失败：max_price 应为 number，拒绝调用真实 API。','[validation] ERROR: max_price expected number'],
+      sold_out:['菜品售罄','工具返回库存为 0。LLM 应解释原因并提供替代菜品。','[tool] result: stock = 0 · suggest alternatives'],
+      over_budget:['超过预算','工具结果价格为 42 元，超过用户预算 35 元。LLM 应继续筛选。','[tool] result: price 42 > max_price 35'],
+      tool_error:['工具调用失败','外卖 API 暂时不可用。应用记录错误，LLM 向用户说明并建议稍后重试。','[api] 503 Service Unavailable · retry policy triggered']
+    };
+    return map[scenario()]||null;
+  }
+
+  function launchPacket(routeId){
+    const route = $('#'+routeId);
+    if(!route) return;
+    const packet = $('#packet');
+    const motion = $('#packetMotion');
+    const label = route.dataset.packet || '消息';
+    const color = route.dataset.fill || '#2f7cf6';
+    const text = $('#packetText');
+    const rect = $('#packetRect');
+    const width = Math.max(72, label.length * 11 + 20);
+    rect.setAttribute('width', width);
+    rect.setAttribute('x', -width/2);
+    rect.setAttribute('stroke', color);
+    text.textContent = label;
+    text.setAttribute('fill', color);
+    const mpath = motion.querySelector('mpath');
+    mpath.setAttribute('href', '#'+routeId);
+    mpath.setAttributeNS('http://www.w3.org/1999/xlink', 'href', '#'+routeId);
+    packet.classList.add('active');
+    motion.beginElement();
+  }
+
+  function activateRoute(routeId, lane){
+    if(!routeId) return;
+    const el = $('#'+routeId);
+    if(!el) return;
+    el.classList.add('active');
+    if(lane){
+      const map={
+        'left-up':'lbl-left-up','left-down':'lbl-left-down',
+        'right-out':'lbl-right-out','right-in':'lbl-right-in'
+      };
+      const lbl = map[lane] && $('#'+map[lane]);
+      if(lbl) lbl.classList.add('on');
+    }
+    launchPacket(routeId);
+  }
+
+  function applyCumulative(s){
+    clearVisuals();
+    const chips = $$('.chip');
+    $('#userBubble').classList.toggle('show', s>=0);
+    $('#thinkingBubble').classList.toggle('show', s>=1 && s<7);
+    if(s>=1) $('#llmCard').classList.add('active');
+    if(s>=2) $('#functionsCard').classList.add('active');
+    if(s>=3){ $('#intentCard').classList.add('active'); chips[0]?.classList.add('selected'); }
+    if(s>=4) $('#decisionCard').classList.add('active');
+    if(s>=5) $('#validationCard').classList.add('active');
+    if(s>=6){ ['sysMerchant','sysStock','sysAddress'].forEach(id=>$('#'+id).classList.add('active')); $('#apiStatus').textContent='API 执行中'; }
+    if(s>=7 && !errorAt(s)){
+      ['sysMerchant','sysStock','sysAddress'].forEach(id=>$('#'+id).classList.add('done'));
+      $('#resultCard').classList.add('active');
+      $('#dishCard').classList.add('show');
+      $('#confirmBubble').classList.add('show');
+      $('#apiStatus').textContent='查询成功';
+    }
+    // second FC cycle: confirm → create_order → platform → order result → reply
+    if(s>=8 && !errorAt(s)) $('#yesBubble').classList.add('show');
+    if(s>=9 && !errorAt(s)){
+      chips.forEach(c=>c.classList.remove('selected'));
+      chips[3]?.classList.add('selected'); // create_order
+      $('#decisionCard').classList.add('active');
+      $('#decisionText').textContent='用户已确认，选择 create_order，并生成结构化 arguments。';
+      $('#llmCard').classList.add('active');
+    }
+    if(s>=10 && !errorAt(s)){
+      $('#validationCard').classList.add('active');
+      $('#validationText').textContent='校验 user_confirmed、菜品库存与下单权限，然后调用外部订单 API。';
+      ['sysOrder','sysPay','sysDelivery'].forEach(id=>$('#'+id).classList.add('active'));
+      $('#apiStatus').textContent='提交订单中';
+    }
+    if(s>=11 && !errorAt(s)){
+      ['sysOrder','sysPay','sysDelivery'].forEach(id=>$('#'+id).classList.add('done'));
+      $('#resultCard').classList.add('active');
+      $('#resultText').textContent='订单系统返回 order_id、支付状态与预计送达时间。';
+      $('#orderCard').classList.add('show');
+      $('#apiStatus').textContent='订单成功';
+    }
+    if(s>=12 && !errorAt(s)) $('#finalBubble').classList.add('show');
+
+    const data = steps[s];
+    if(data.internal==='schema') $('#schemaBridge').classList.add('on');
+    if(data.internal==='think') $('#flowColumn').classList.add('thinking');
+    if(data.route) activateRoute(data.route, data.lane);
+
+    if(errorAt(s)){
+      const info=errorInfo();
+      $('#validationCard').classList.add('active','red');
+      $('#resultCard').classList.add('active','red');
+      activateRoute('r-error', 'right-out');
+      $('#apiStatus').textContent='已拦截 / 已降级';
+      $('#monitorBody').innerHTML=`<span class="bad">${info[2]}</span>\n<span class="warn">[safe] no unsafe operation executed</span>`;
+      $('#thinkingBubble').classList.remove('show');
+      $('#confirmBubble').classList.add('show');
+      $('#confirmBubble').textContent=info[1];
+    } else if(s>=10){
+      const logs=[
+        '[app] validate tool name: create_order',
+        '<span class="ok">[auth] user_confirmed = true</span>',
+        '<span class="warn">[api] creating order on platform…</span>',
+        s>=11?'<span class="ok">[order] OD20260724001 created</span>':'',
+        s>=11?'<span class="ok">[pay] amount 32 · pending</span>':'',
+        s>=11?'<span class="ok">[delivery] eta 35 min</span>':''
+      ].filter(Boolean).join('\n');
+      $('#monitorBody').innerHTML=logs;
+    } else if(s>=6){
+      const logs=[
+        '[app] validate tool name: search_dishes',
+        '<span class="ok">[auth] permission passed</span>',
+        '<span class="warn">[api] querying menu + stock + address…</span>',
+        s>=7?'<span class="ok">[tool] 1 matching dish returned</span>':''
+      ].filter(Boolean).join('\n');
+      $('#monitorBody').innerHTML=logs;
+    }
+  }
+
+  function setStep(n){
+    step=Math.max(0, Math.min(maxStep, n));
+    applyCumulative(step);
+    const data=steps[step];
+    $('#stepNum').textContent=String(step+1).padStart(2,'0');
+    $('#stepTitle').textContent=data.title;
+    $('#stepDesc').textContent=data.desc;
+    $('#ownerTitle').textContent='当前责任：'+data.owner;
+    $('#ownerText').textContent=data.ownerText;
+    if(errorAt(step)){
+      const info=errorInfo();
+      $('#stepTitle').textContent='异常分支：'+info[0];
+      $('#stepDesc').textContent=info[1];
+      setTab(scenario()==='missing_address'||scenario()==='bad_args'?'call':'result');
+    } else setTab(data.tab, data.msg);
+    $$('.dot').forEach((d,i)=>{ d.classList.toggle('active', i===step); d.classList.toggle('done', i<step); });
+    $$('.track').forEach((t,i)=>t.classList.toggle('done', i<step));
+    $('#prevBtn').disabled=step===0;
+    $('#nextBtn').disabled=step===maxStep;
+    $('#playBtn').textContent=playing?'❚❚ 暂停':(step===0?'▶ 开始演示':'▶ 继续播放');
+  }
+
+  function play(){
+    if(mode!=='fc'){ showToast('请切换到 Function Calling 模式播放完整流程'); return; }
+    if(step>=maxStep) setStep(0);
+    playing=true;
+    $('#playBtn').textContent='❚❚ 暂停';
+    timer=setInterval(()=>{ if(step>=maxStep){ pause(); return; } setStep(step+1); }, speed);
+  }
+  function pause(){ playing=false; clearInterval(timer); timer=null; $('#playBtn').textContent=step===0?'▶ 开始演示':'▶ 继续播放'; }
+  function reset(){ pause(); setStep(0); }
+
+  $('#playBtn').onclick=()=>playing?pause():play();
+  $('#prevBtn').onclick=()=>{ pause(); setStep(step-1); };
+  $('#nextBtn').onclick=()=>{ pause(); setStep(step+1); };
+  $('#resetBtn').onclick=reset;
+  $$('[data-speed]').forEach(b=>b.onclick=()=>{
+    speed=+b.dataset.speed;
+    $$('[data-speed]').forEach(x=>x.classList.toggle('active', x===b));
+    if(playing){ pause(); play(); }
+  });
+  $('#scenarioSelect').onchange=()=>{ reset(); showToast($('#scenarioSelect').selectedOptions[0].textContent); };
+  $('#confirmBtn').onclick=()=>{ if(step<8) setStep(8); else if(step===8) setStep(9); };
+
+  function setMode(m){
+    mode=m; pause();
+    $('#chatMode').classList.toggle('active', m==='chat');
+    $('#fcMode').classList.toggle('active', m==='fc');
+    $('#compareBanner').classList.toggle('show', m==='chat');
+    if(m==='fc') reset();
+  }
+  $('#chatMode').onclick=()=>setMode('chat');
+  $('#fcMode').onclick=()=>setMode('fc');
+  $('#fullBtn').onclick=()=>{ if(!document.fullscreenElement) document.documentElement.requestFullscreen?.(); else document.exitFullscreen?.(); };
+  addEventListener('keydown', e=>{
+    if(e.code==='Space'){ e.preventDefault(); playing?pause():play(); }
+    if(e.key==='ArrowRight'){ pause(); setStep(step+1); }
+    if(e.key==='ArrowLeft'){ pause(); setStep(step-1); }
+  });
+
+  const tip=$('#tooltip');
+  $$('.chip').forEach(c=>{
+    c.onmouseenter=()=>{ tip.innerHTML=c.dataset.tip; tip.style.display='block'; };
+    c.onmousemove=e=>{ tip.style.left=(e.clientX+14)+'px'; tip.style.top=(e.clientY+14)+'px'; };
+    c.onmouseleave=()=>{ tip.style.display='none'; };
+  });
+  function showToast(t){ const x=$('#toast'); x.textContent=t; x.classList.add('show'); setTimeout(()=>x.classList.remove('show'), 1800); }
+  function tick(){ $('#monitorClock').textContent=new Date().toLocaleTimeString('zh-CN',{hour12:false}); requestAnimationFrame(tick); }
+  tick();
+
+  const urlParams=new URLSearchParams(location.search);
+  const debugScenario=urlParams.get('scenario');
+  if(debugScenario && [...$('#scenarioSelect').options].some(o=>o.value===debugScenario)) $('#scenarioSelect').value=debugScenario;
+  const initialStep=Math.max(0, Math.min(maxStep, Number.parseInt(urlParams.get('step')||'0', 10)||0));
+  setStep(initialStep);
+})();
+</script>
+</body>
+</html>
