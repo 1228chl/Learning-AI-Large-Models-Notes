@@ -834,8 +834,20 @@ def evaluate(data_file, dataset_name=""):
 
 ---
 ## 七、第三次训练
-```python
 
+```python
+# 第三次训练（输出日志未记录参数，指标与第二次基本持平，沿用第二次调参配置）
+model = fasttext.train_supervised(
+    input=train_file,
+    epoch=25,         # 同第二次调参配置
+    lr=0.1,           # 默认值
+    wordNgrams=2,     # 捕捉短语
+    dim=200,          # 从 100 提升到 200
+    loss='softmax',   # 默认值
+    minCount=2,       # 过滤低频词
+    bucket=2000000,   # 默认值
+    verbose=2
+)
 ```
 
 ```text
