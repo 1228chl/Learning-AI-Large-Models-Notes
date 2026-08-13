@@ -232,7 +232,8 @@
       }
     ],
     "direction": "horizontal",
-    "width": 461.5
+    "width": 461.5,
+    "collapsed": true
   },
   "left-ribbon": {
     "hiddenItems": {
@@ -248,7 +249,7 @@
       "templater-obsidian:Templater": false
     }
   },
-  "active": "e83158f79f242826",
+  "active": "b9c397e9f32ab073",
   "lastOpenFiles": [
     "AI-Large-Modlels-Notes/Project/EduRAG/Milvus向量数据库.md.tmp.43416.0331112d1fa3",
     "AI-Large-Modlels-Notes/Project/EduRAG/Milvus向量数据库.md.tmp.43416.99c71a680cdd",
