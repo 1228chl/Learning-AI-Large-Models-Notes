@@ -249,8 +249,12 @@
       "templater-obsidian:Templater": false
     }
   },
-  "active": "b9c397e9f32ab073",
+  "active": "e83158f79f242826",
   "lastOpenFiles": [
+    "Interview/DeepSeek-面试题.md",
+    "Interview/DeepSeek-RAG与多Agent高频面试题库.md",
+    "Interview/GPT-RAG与多Agent高频面试题.md",
+    "Interview",
     "AI-Large-Modlels-Notes/Project/EduRAG/Milvus向量数据库.md.tmp.43416.0331112d1fa3",
     "AI-Large-Modlels-Notes/Project/EduRAG/Milvus向量数据库.md.tmp.43416.99c71a680cdd",
     "AI-Large-Modlels-Notes/Project/EduRAG/Milvus向量数据库.md.tmp.43416.36267637266d",
@@ -282,11 +286,7 @@
     "AI-Large-Modlels-Notes/Project/EduAgent/代码版/06-试卷批改Agent/06-13-试卷批改Agent-端到端测试深析.md",
     "AI-Large-Modlels-Notes/Project/EduAgent/代码版/06-试卷批改Agent/06-11-试卷批改Agent-图装配graph深析.md",
     "AI-Large-Modlels-Notes/Project/EduAgent/代码版/06-试卷批改Agent/06-12-试卷批改Agent-HTTP接口exam深析.md",
-    "AI-Large-Modlels-Notes/Project/EduAgent/代码版/06-试卷批改Agent/06-08-试卷批改Agent-三轨组装与汇总.md",
-    "AI-Large-Modlels-Notes/Project/EduAgent/代码版/06-试卷批改Agent/06-09-试卷批改Agent-Human-in-the-Loop与结果发布深析.md",
     "AI-Large-Modlels-Notes/Project/EduAgent/代码版/06-试卷批改Agent",
-    "AI-Large-Modlels-Notes/Project/EduAgent/代码版/05-RAG问答系统",
-    "AI-Large-Modlels-Notes/Project/EduAgent/代码版/04-简历审查Agent",
     "Assets/LangChain组件图.drawio.png",
     "Assets/Image/AI-Large-Modlels-Notes/Project/EduRAG/Milvus向量数据库/1.2.8.3-1.png",
     "Assets/Image/AI-Large-Modlels-Notes/Project/EduRAG/Milvus向量数据库/1.2.8.2-2.png",
