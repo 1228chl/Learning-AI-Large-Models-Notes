@@ -232,8 +232,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 461.5,
-    "collapsed": true
+    "width": 461.5
   },
   "left-ribbon": {
     "hiddenItems": {
@@ -251,6 +250,7 @@
   },
   "active": "e83158f79f242826",
   "lastOpenFiles": [
+    "Interview/GPT-面试题.md",
     "Interview/DeepSeek-面试题.md",
     "Interview/DeepSeek-RAG与多Agent高频面试题库.md",
     "Interview/GPT-RAG与多Agent高频面试题.md",
@@ -285,7 +285,6 @@
     "AI-Large-Modlels-Notes/Project/EduAgent/代码版/07-模拟面试Agent",
     "AI-Large-Modlels-Notes/Project/EduAgent/代码版/06-试卷批改Agent/06-13-试卷批改Agent-端到端测试深析.md",
     "AI-Large-Modlels-Notes/Project/EduAgent/代码版/06-试卷批改Agent/06-11-试卷批改Agent-图装配graph深析.md",
-    "AI-Large-Modlels-Notes/Project/EduAgent/代码版/06-试卷批改Agent/06-12-试卷批改Agent-HTTP接口exam深析.md",
     "AI-Large-Modlels-Notes/Project/EduAgent/代码版/06-试卷批改Agent",
     "Assets/LangChain组件图.drawio.png",
     "Assets/Image/AI-Large-Modlels-Notes/Project/EduRAG/Milvus向量数据库/1.2.8.3-1.png",
