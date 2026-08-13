@@ -14,7 +14,7 @@
               "type": "markdown",
               "state": {
                 "file": "AI-Large-Modlels-Notes/Project/EduRAG/Milvus向量数据库.md",
-                "mode": "preview",
+                "mode": "source",
                 "source": false,
                 "backlinks": false
               },
@@ -232,7 +232,8 @@
       }
     ],
     "direction": "horizontal",
-    "width": 461.5
+    "width": 461.5,
+    "collapsed": true
   },
   "left-ribbon": {
     "hiddenItems": {
@@ -250,6 +251,12 @@
   },
   "active": "e83158f79f242826",
   "lastOpenFiles": [
+    "AI-Large-Modlels-Notes/Project/EduRAG/Milvus向量数据库.md.tmp.43416.0331112d1fa3",
+    "AI-Large-Modlels-Notes/Project/EduRAG/Milvus向量数据库.md.tmp.43416.99c71a680cdd",
+    "AI-Large-Modlels-Notes/Project/EduRAG/Milvus向量数据库.md.tmp.43416.36267637266d",
+    "AI-Large-Modlels-Notes/Project/EduRAG/Milvus向量数据库.md.tmp.43416.58b00a3be63e",
+    "AI-Large-Modlels-Notes/Project/EduRAG/Milvus向量数据库.md.tmp.43416.1d38bdffa7ae",
+    "AI-Large-Modlels-Notes/Project/EduRAG/Milvus向量数据库.md.tmp.43416.cd08bea95d02",
     "AI-Large-Modlels-Notes/Project/EduAgent/代码版/08-系统集成/08-03-Orchestrator-多Agent串联Pipeline.md",
     "AI-Large-Modlels-Notes/Project/EduAgent/代码版/07-模拟面试Agent/07-02-模拟面试Agent-State与枚举.md",
     "Atomic-Cards/卡片总览.md",
@@ -277,15 +284,9 @@
     "AI-Large-Modlels-Notes/Project/EduAgent/代码版/06-试卷批改Agent/06-12-试卷批改Agent-HTTP接口exam深析.md",
     "AI-Large-Modlels-Notes/Project/EduAgent/代码版/06-试卷批改Agent/06-08-试卷批改Agent-三轨组装与汇总.md",
     "AI-Large-Modlels-Notes/Project/EduAgent/代码版/06-试卷批改Agent/06-09-试卷批改Agent-Human-in-the-Loop与结果发布深析.md",
-    "AI-Large-Modlels-Notes/Project/EduAgent/代码版/06-试卷批改Agent/06-07-试卷批改Agent-三轨并行-代码题LLM评估深析.md",
     "AI-Large-Modlels-Notes/Project/EduAgent/代码版/06-试卷批改Agent",
     "AI-Large-Modlels-Notes/Project/EduAgent/代码版/05-RAG问答系统",
     "AI-Large-Modlels-Notes/Project/EduAgent/代码版/04-简历审查Agent",
-    "AI-Large-Modlels-Notes/Project/EduAgent/代码版/03-环境搭建与工程地基",
-    "AI-Large-Modlels-Notes/Project/EduAgent/代码版/01-项目简介",
-    "Atomic-Cards/卡片诊断报告.md.tmp.28668.bc3c7bba77a0",
-    "Atomic-Cards/原子化生成提示词.md.tmp.28668.122e334f0af3",
-    "Atomic-Cards/卡片总览.md.tmp.28668.97a83b31f0e7",
     "Assets/LangChain组件图.drawio.png",
     "Assets/Image/AI-Large-Modlels-Notes/Project/EduRAG/Milvus向量数据库/1.2.8.3-1.png",
     "Assets/Image/AI-Large-Modlels-Notes/Project/EduRAG/Milvus向量数据库/1.2.8.2-2.png",
