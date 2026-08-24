@@ -62,8 +62,7 @@
               "title": "关系图谱"
             }
           }
-        ],
-        "currentTab": 3
+        ]
       }
     ],
     "direction": "vertical"
@@ -250,7 +249,7 @@
       "templater-obsidian:Templater": false
     }
   },
-  "active": "afa5240ff91b88b7",
+  "active": "b9c397e9f32ab073",
   "lastOpenFiles": [
     "Interview/GPT-RAG与多Agent高频面试题.md",
     "Interview/GPT-面试题.md",
