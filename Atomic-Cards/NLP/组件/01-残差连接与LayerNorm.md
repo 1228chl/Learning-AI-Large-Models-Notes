@@ -49,12 +49,12 @@ $$ \text{LayerNorm}(x) = \gamma \odot \frac{x - \mu}{\sigma + \epsilon} + \beta 
 
 ## ML/DL 应用场景
 
-| 应用场景 | 残差连接角色 | LayerNorm 角色 |
-|:--------:|:------------|:--------------|
-| **Transformer** | 每个子层（Self-Attention、FFN）后添加残差连接，使深层梯度顺畅回流 | 每个子层输出后做 LayerNorm，稳定训练过程，Pre-LN 或 Post-LN 两种放置方式 |
-| **ResNet** | 跨层恒等映射，解决 50+/101/152 层网络的退化问题 | 使用 BatchNorm 而非 LayerNorm（CV 任务中 BN 更有效） |
-| **BERT** | 同 Transformer，Post-LN 架构（早期）或 Pre-LN 架构（更稳定） | LayerNorm 放在子层之前（Pre-LN）避免梯度爆炸，现代 LLM 默认 Pre-LN |
-| **GPT / LLaMA** | Pre-LN 残差连接，每层输出直接与输入相加 | Pre-LayerNorm，每个子层输入先归一化再计算 |
+|      应用场景       | 残差连接角色                                       | LayerNorm 角色                                      |
+| :-------------: | :------------------------------------------- | :------------------------------------------------ |
+| **Transformer** | 每个子层（Self-Attention、FFN）后添加残差连接，使深层梯度顺畅回流    | 每个子层输出后做 LayerNorm，稳定训练过程，Pre-LN 或 Post-LN 两种放置方式 |
+|   **ResNet**    | 跨层恒等映射，解决 50+/101/152 层网络的退化问题               | 使用 BatchNorm 而非 LayerNorm（CV 任务中 BN 更有效）          |
+|    **BERT**     | 同 Transformer，Post-LN 架构（早期）或 Pre-LN 架构（更稳定） | LayerNorm 放在子层之前（Pre-LN）避免梯度爆炸，现代 LLM 默认 Pre-LN   |
+| **GPT / LLaMA** | Pre-LN 残差连接，每层输出直接与输入相加                      | Pre-LayerNorm，每个子层输入先归一化再计算                       |
 
 ## 面试追问
 
