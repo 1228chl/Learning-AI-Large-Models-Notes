@@ -13,13 +13,13 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Atomic-Cards/AI-Agent/LangGraph/06-滑动窗口与摘要压缩记忆管理.md",
+                "file": "AI-Large-Modlels-Notes/NLP/06-Transformer.md",
                 "mode": "source",
                 "source": false,
                 "backlinks": false
               },
               "icon": "lucide-file",
-              "title": "06-滑动窗口与摘要压缩记忆管理"
+              "title": "06-Transformer"
             }
           },
           {
@@ -121,7 +121,8 @@
       }
     ],
     "direction": "horizontal",
-    "width": 297.5
+    "width": 297.5,
+    "collapsed": true
   },
   "right": {
     "id": "f07a0c5b7e11463b",
@@ -251,6 +252,10 @@
   },
   "active": "b9c397e9f32ab073",
   "lastOpenFiles": [
+    "AI-Large-Modlels-Notes/NLP/05-注意力机制和Seq2Seq介绍.md",
+    "Atomic-Cards/NLP/架构/02-注意力机制.md",
+    "Atomic-Cards/NLP/架构/03-自注意力与Transformer.md",
+    "Atomic-Cards/AI-Agent/LangGraph/06-滑动窗口与摘要压缩记忆管理.md",
     "Atomic-Cards/AI-Agent/LangChain/03-Pydantic结构化输出.md",
     "Atomic-Cards/AI-Agent/LangChain/02-LangChain组件操作指南.md",
     "Atomic-Cards/AI-Agent/LangChain/01-LangChain六大组件.md",
@@ -273,10 +278,6 @@
     "AI-Large-Modlels-Notes/Project/EduAgent/代码版/03-环境搭建与工程地基/03-05-数据库与JWT鉴权.md",
     "AI-Large-Modlels-Notes/Project/EduAgent/代码版/03-环境搭建与工程地基/03-04-三层兜底重试.md",
     "AI-Large-Modlels-Notes/Project/EduAgent/代码版/03-环境搭建与工程地基/03-03-异常体系.md",
-    "AI-Large-Modlels-Notes/Project/EduAgent/代码版/03-环境搭建与工程地基/03-02-配置中心.md",
-    "AI-Large-Modlels-Notes/Project/EduAgent/代码版/03-环境搭建与工程地基/03-01-结构化日志.md",
-    "Interview/GPT-RAG与多Agent高频面试题.md",
-    "Interview/GPT-面试题.md",
     "Interview",
     "AI-Large-Modlels-Notes/Project/EduRAG/Milvus向量数据库.md.tmp.43416.0331112d1fa3",
     "AI-Large-Modlels-Notes/Project/EduRAG/Milvus向量数据库.md.tmp.43416.99c71a680cdd",
